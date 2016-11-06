@@ -5,7 +5,7 @@ import {Observable} from "rxjs";
 @Injectable()
 export class APIService {
 
-    private apiUrl: string = "./api/";
+    private apiUrl: string = document.getElementsByTagName('base')[0].href + "/api/";
     private headers: Headers = new Headers({
         'Content-Type': 'application/json',
         'Accept': 'application/json'
@@ -29,7 +29,7 @@ export class APIService {
     }
 
     private static removeTrailingSlash(path: string): string {
-        if(path !== undefined && path.startsWith("/"))
+        if (path !== undefined && path.startsWith("/"))
             path = path.substring(1);
         return path;
     }

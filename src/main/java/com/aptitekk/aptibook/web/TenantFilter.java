@@ -34,6 +34,19 @@ public class TenantFilter implements Filter {
 
             if (pathSplit.length >= 2) {
 
+                //Index (Angular)
+                if(pathSplit[1].equals("index.html"))
+                {
+                    filterChain.doFilter(servletRequest, servletResponse);
+                    return;
+                }
+
+                //API
+                if(pathSplit[1].equals("api")) {
+                    filterChain.doFilter(servletRequest, servletResponse);
+                    return;
+                }
+
                 //Resources
                 if (pathSplit[1].matches("packed|images|favicons|error")) {
                     filterChain.doFilter(servletRequest, servletResponse);
@@ -47,16 +60,19 @@ public class TenantFilter implements Filter {
                 if (allowedTenantSlugs.contains(pathSplit[1].toLowerCase())) { //Valid Tenant ID
                     String tenantSlug = pathSplit[1].toLowerCase();
                     httpServletRequest.setAttribute("tenant", tenantSlug);
+                }
 
-                    String url = pathSplit.length >= 3 ? path.substring(path.indexOf("/", 2)) : "/";
+                //API (Including Tenant)
+                if(pathSplit.length > 2 && pathSplit[2].equals("api")) {
+                    String url = path.substring(path.indexOf("/", 2));
                     if (url.contains(";"))
                         url = url.substring(0, url.indexOf(";"));
-
-                    httpServletRequest.getRequestDispatcher("/index.html").forward(servletRequest, servletResponse);
+                    httpServletRequest.getRequestDispatcher(url).forward(servletRequest, servletResponse);
                     return;
                 }
+
+                httpServletRequest.getRequestDispatcher("/index.html").forward(servletRequest, servletResponse);
             }
-            filterChain.doFilter(servletRequest, servletResponse);
         } catch (Exception e) {
             e.printStackTrace();
         }
