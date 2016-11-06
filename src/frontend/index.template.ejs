@@ -32,26 +32,130 @@
         ga('create', 'UA-46481658-2', 'auto');
         ga('send', 'pageview');
     </script>
-</head>
-<body>
-<app>
-    <!-- Temporary app loading content -->
+
     <style type="text/css">
-        .loading-container {
+        #loading {
             width: 100%;
-            font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            opacity: 0;
+            transition: opacity linear 0.5s;
         }
 
-        .loading-container > div, .loading-container > div > h1 {
+        app:empty + #loading {
+            opacity: 1;
+        }
+
+        #loading-background {
             width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            background-image: url('images/loading/background.jpg');
+            background-position: bottom center;
+            background-size: cover;
+            background-repeat: no-repeat;
+
+            z-index: 10000;
+
+            -webkit-animation: fadein 0.5s;
+            -moz-animation: fadein 0.5s;
+            -ms-animation: fadein 0.5s;
+            -o-animation: fadein 0.5s;
+            animation: fadein 0.5s;
+        }
+
+        #loading-color-overlay {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            z-index: 10001;
+
+            background-color: rgba(66, 114, 183, 0.3);
+        }
+
+        #loading-foreground {
+            width: 100%;
+            height: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+
+            z-index: 10002;
+
+            background-image: url('images/loading/logo.svg');
+            background-position: center center;
+            background-size: 10%;
+            background-repeat: no-repeat;
+        }
+
+        @keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Firefox */
+        @-moz-keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Safari and Chrome */
+        @-webkit-keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Internet Explorer */
+        @-ms-keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Opera */
+        @-o-keyframes fadein {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
         }
     </style>
+</head>
+<body>
+<app></app>
 
-    <div class="loading-container">
-        <div class="vcenter" style="height: 100vh">
-            <h1 style="color: #4272b7;text-align: center">Loading</h1>
-        </div>
+<div id="loading">
+    <div id="loading-background">
     </div>
-</app>
+    <div id="loading-color-overlay">
+    </div>
+    <div id="loading-foreground">
+    </div>
+</div>
 </body>
 </html>
