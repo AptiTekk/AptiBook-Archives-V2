@@ -40,11 +40,11 @@ var config = {
             },
             {
                 test: /\.png$/,
-                loader: "url-loader?limit=100000"
+                loader: "url-loader?limit=100000&name=./packed/images/[hash].[ext]"
             },
             {
                 test: /\.jpg$/,
-                loader: "file-loader"
+                loader: "file-loader?name=./packed/images/[hash].[ext]"
             },
             {
                 test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
