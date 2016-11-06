@@ -32,7 +32,7 @@ var config = {
             },
             {
                 test: /\.html/,
-                loader: 'raw-loader'
+                loader: 'html-loader'
             },
             {
                 test: /\.css$/,
@@ -40,7 +40,7 @@ var config = {
             },
             {
                 test: /\.png$/,
-                loader: "url-loader?limit=100000&name=./packed/images/[hash].[ext]"
+                loader: "file-loader?name=./packed/images/[hash].[ext]"
             },
             {
                 test: /\.jpg$/,

@@ -35,14 +35,13 @@ public class TenantFilter implements Filter {
             if (pathSplit.length >= 2) {
 
                 //Resources
-                if (pathSplit[1].matches("scripts|styles|error|bootstrap-3.3.7-dist")) {
+                if (pathSplit[1].matches("packed|images|favicons|error")) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
 
                 List<String> allowedTenantSlugs = new ArrayList<>();
-                allowedTenantSlugs.add("test");
-                allowedTenantSlugs.add("mitch");
+                allowedTenantSlugs.add("dev");
 
                 //Tenants
                 if (allowedTenantSlugs.contains(pathSplit[1].toLowerCase())) { //Valid Tenant ID
@@ -53,7 +52,7 @@ public class TenantFilter implements Filter {
                     if (url.contains(";"))
                         url = url.substring(0, url.indexOf(";"));
 
-                    httpServletRequest.getRequestDispatcher(url).forward(servletRequest, servletResponse);
+                    httpServletRequest.getRequestDispatcher("/index.html").forward(servletRequest, servletResponse);
                     return;
                 }
             }

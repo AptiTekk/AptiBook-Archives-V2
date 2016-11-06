@@ -6,6 +6,7 @@ import {HttpModule} from "@angular/http";
 import * as components from "./components";
 import * as vendors from "./vendors";
 import * as services from "./services";
+import {routes} from "./routes";
 
 const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
 
@@ -14,6 +15,7 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
         BrowserModule,
         FormsModule,
         HttpModule,
+        routes,
         ...mapImports(vendors)
     ],
     providers: [
