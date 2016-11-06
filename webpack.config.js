@@ -8,9 +8,9 @@ var config = {
     devtool: 'source-map',
 
     entry: {
-        polyfills: './src/frontend/polyfills',
-        vendor: './src/frontend/vendor',
-        main: './src/frontend/main'
+        polyfills: './src/frontend/scripts/polyfills',
+        vendor: './src/frontend/scripts/vendor',
+        main: './src/frontend/scripts/main'
     },
 
     output: {
