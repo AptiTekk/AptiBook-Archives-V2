@@ -6,8 +6,8 @@
 
 package com.aptitekk.aptibook.core.dev;
 
-import com.aptitekk.aptibook.LogManager;
 import com.aptitekk.aptibook.core.SpringProfileService;
+import com.aptitekk.aptibook.core.logging.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -22,17 +22,19 @@ import java.util.concurrent.atomic.AtomicBoolean;
 public class DevService {
 
     private SpringProfileService springProfileService;
+    private LogService logService;
     private ProcessMonitor devServerMonitor;
 
     @Autowired
-    public DevService(SpringProfileService springProfileService) {
+    public DevService(SpringProfileService springProfileService, LogService logService) {
         this.springProfileService = springProfileService;
+        this.logService = logService;
     }
 
     @PostConstruct
     private void init() {
         if (springProfileService.isProfileActive(SpringProfileService.Profile.DEV)) {
-            LogManager.log("Development Mode is Enabled");
+            logService.logInfo(getClass(), "Development Mode is Enabled");
             startWebpackWatcher();
         }
     }
@@ -45,24 +47,24 @@ public class DevService {
                 @Override
                 public void processLine(String line) {
                     if (keepPrinting && line.contains("hidden")) {
-                        LogManager.log("----");
+                        logService.logInfo(getClass(), "----");
                         keepPrinting = false;
                     }
 
                     if (keepPrinting)
-                        LogManager.log(line);
+                        logService.logInfo(getClass(), line);
 
                     if (line.contains("Version: webpack")) {
-                        LogManager.log("Web Files Reloaded.");
+                        logService.logInfo(getClass(), "Web Files Reloaded.");
                         keepPrinting = true;
                     }
                 }
             };
             devServerMonitor.start();
 
-            LogManager.log("Webpack Watcher started.");
+            logService.logInfo(getClass(), "Webpack Watcher started.");
         } catch (IOException e) {
-            LogManager.log("Failed to start Webpack Watcher");
+            logService.logInfo(getClass(), "Failed to start Webpack Watcher");
             e.printStackTrace();
         }
     }
@@ -70,7 +72,7 @@ public class DevService {
     @PreDestroy
     private void destroy() {
         if (devServerMonitor != null) {
-            LogManager.log("Stopping Webpack Watcher");
+            logService.logInfo(getClass(), "Stopping Webpack Watcher");
             devServerMonitor.cancel();
         }
     }
