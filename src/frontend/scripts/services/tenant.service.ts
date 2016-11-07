@@ -1,14 +1,21 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {Observable} from "rxjs";
+import {ReplaySubject} from "rxjs";
 
 @Injectable()
 export class TenantService {
 
-    constructor(private apiService: APIService){}
+    private tenant: ReplaySubject<any> = new ReplaySubject(1);
 
-    getTenant(): Observable<any> {
-        return this.apiService.get("tenant");
+    constructor(private apiService: APIService) {
+        apiService.get("tenant").subscribe(
+            response => this.tenant.next(response),
+            err => this.tenant = undefined
+        );
+    }
+
+    getTenant(): ReplaySubject<any> {
+        return this.tenant;
     }
 
 }

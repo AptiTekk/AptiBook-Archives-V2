@@ -7,16 +7,7 @@ import {TenantService} from "../../services/tenant.service";
 })
 export class AppComponent {
 
-    private tenant: Object;
-
     constructor(private tenantService: TenantService) {
-        tenantService.getTenant().subscribe(
-            response => this.tenant = response,
-            err => this.tenant = undefined);
-    }
-
-    public getTenant() {
-        return this.tenant;
     }
 
 }

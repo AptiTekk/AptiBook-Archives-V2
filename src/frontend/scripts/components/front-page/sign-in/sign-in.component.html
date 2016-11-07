@@ -1,0 +1,38 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<form id="loginForm" (submit)="onSubmit()">
+    <div class="alert alert-danger" #alert *ngIf="alertMessage">{{alertMessage}}</div>
+    <div class="form-group">
+        <label for="emailAddressInput">Email Address:</label>
+        <input name="emailAddress" id="emailAddressInput" type="text" class="form-control" [(ngModel)]="emailAddress"/>
+    </div>
+    <div class="form-group">
+        <label for="passwordInput">Password:</label>
+        <input name="password" id="passwordInput" type="password" class="form-control" [(ngModel)]="password"/>
+    </div>
+
+    <button class="btn btn-primary btn-large btn-block" [disabled]="!emailAddress || !password">Sign In</button>
+
+    <hr/>
+
+    <button [routerLink]="['register']" class="btn btn-default btn-block">Register</button>
+
+    <!--
+        <b:commandButton look="default" size="block" ajax="true" action="#{oAuthController.signInWithGoogle}"
+                         update="@form" rendered="#{oAuthController.googleSignInEnabled}">
+            <b:image library="aptibook" name="images/google-sign-in.svg" height="18px"/>
+        </b:commandButton>
+
+        <h:panelGroup rendered="#{registrationController.registrationEnabled}">
+            <hr/>
+
+            <b:button value="Register" outcome="index" look="default" size="block" includeViewParams="true">
+                <f:param name="action" value="register"/>
+            </b:button>
+        </h:panelGroup>
+    -->
+</form>
