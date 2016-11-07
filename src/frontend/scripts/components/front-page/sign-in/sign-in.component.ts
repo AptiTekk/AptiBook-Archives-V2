@@ -2,7 +2,7 @@ import {Component} from "@angular/core";
 
 @Component({
     selector: 'sign-in',
-    template: require("./sign-in.component.html")
+    templateUrl: 'sign-in.component.html'
 })
 export class SignInComponent {
 

@@ -2,6 +2,7 @@ var path = require('path');
 var webpack = require('webpack');
 
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var ExtractTextPlugin = require("extract-text-webpack-plugin");
 
 var config = {
     cache: true,
@@ -24,43 +25,28 @@ var config = {
         loaders: [
             {
                 test: /\.ts$/,
-                loader: 'awesome-typescript-loader'
+                loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
+                exclude: [/\.(spec|e2e)\.ts$/]
             },
             {
                 test: /\.json$/,
-                loader: 'json-loader'
+                loader: 'json'
             },
             {
-                test: /\.html/,
-                loader: 'html-loader'
+                test: /\.html$/,
+                loader: "raw"
             },
             {
                 test: /\.css$/,
-                loader: "style-loader!css-loader"
+                loader: "to-string!style!css"
             },
             {
-                test: /\.png$/,
-                loader: "file-loader?name=./packed/images/[hash].[ext]"
+                test: /\.(png|jpg|gif|svg)$/,
+                loader: "file?name=./packed/images/[hash].[ext]"
             },
             {
-                test: /\.jpg$/,
-                loader: "file-loader?name=./packed/images/[hash].[ext]"
-            },
-            {
-                test: /\.(woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(ttf|eot|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
                 loader: 'file?name=./packed/fonts/[hash].[ext]'
-            },
-            {
-                test: /\.ttf(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file?name=./packed/fonts/[hash].[ext]'
-            },
-            {
-                test: /\.eot(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file?name=./packed/fonts/[hash].[ext]'
-            },
-            {
-                test: /\.svg(\?v=\d+\.\d+\.\d+)?$/,
-                loader: 'file?name=./packed/images/[hash].[ext]'
             }
         ]
     },

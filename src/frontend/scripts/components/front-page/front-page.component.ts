@@ -1,10 +1,10 @@
 import {Component} from "@angular/core";
 import {TenantService} from "../../services/tenant.service";
 
-require('./front-page.component.css');
 @Component({
     selector: 'front-page',
-    template: require('./front-page.component.html'),
+    templateUrl: 'front-page.component.html',
+    styleUrls: ['front-page.component.css']
 })
 export class FrontPageComponent {
 

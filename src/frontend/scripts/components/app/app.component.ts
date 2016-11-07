@@ -3,7 +3,7 @@ import {TenantService} from "../../services/tenant.service";
 
 @Component({
     selector: 'app',
-    template: require('./app.component.html')
+    templateUrl: 'app.component.html'
 })
 export class AppComponent {
 
