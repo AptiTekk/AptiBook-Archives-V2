@@ -8,23 +8,16 @@ package com.aptitekk.aptibook.web;
 
 import com.aptitekk.aptibook.core.domain.RestError;
 import com.aptitekk.aptibook.core.domain.Tenant;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.servlet.http.HttpServletRequest;
-
 @RestController
-@RequestMapping("/tenant")
-public class TenantController {
+public class TenantController extends AptiBookController {
 
-    @Autowired
-    private HttpServletRequest httpServletRequest;
-
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/tenant", method = RequestMethod.GET)
     public ResponseEntity<Object> getTenant() {
         Object tenantAttribute = httpServletRequest.getAttribute("tenant");
         if (tenantAttribute != null) {

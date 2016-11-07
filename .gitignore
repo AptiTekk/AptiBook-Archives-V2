@@ -5,5 +5,5 @@ target/
 /node_modules/
 /src/frontend/**/*.js
 /src/frontend/**/*.js.map
-/src/main/webapp/index.html
-/src/main/webapp/packed/
+/src/main/resources/public/packed/
+/src/main/resources/public/index.html

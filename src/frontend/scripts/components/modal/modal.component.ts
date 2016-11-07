@@ -2,57 +2,7 @@ import {Component, Input, Directive, ViewChild, ElementRef, Output, EventEmitter
 
 @Component({
     selector: 'modal',
-    template: `
-<div #modalRoot
-     class="modal fade"
-     tabindex="-1"
-     role="dialog"
-     (keydown.esc)="closeOnEscape ? closeModal() : 0"
-     [ngClass]="{'fade': _isOpen, 'in': _isOpen }"
-     [ngStyle]="{ 'display': _isOpen ? 'block' : 'none' }"
-     (click)="closeOnOutsideClick ? closeModal() : 0">
-    <div class="modal-dialog"
-         role="document"
-         (click)="$event.stopPropagation();">
-        <div class="modal-content">
-
-            <!-- Header -->
-            <div class="modal-header">
-                <!-- X close button (top right corner) -->
-                <button type="button"
-                        class="close"
-                        aria-label="Close"
-                        (click)="closeModal()"
-                        *ngIf="!hideCloseButton">
-                    <span aria-hidden="true">x</span>
-                </button>
-                <h4 class="modal-title">
-                    {{title}}
-                </h4>
-            </div>
-
-            <!-- Body -->
-            <div class="modal-body">
-                <ng-content select="modal-body"></ng-content>
-            </div>
-
-            <!-- Footer -->
-            <div class="modal-footer">
-                <ng-content select="modal-footer"></ng-content>
-                <button *ngIf="submitButtonLabel" type="button" class="btn btn-primary"
-                        (click)="onSubmit.emit()">{{submitButtonLabel}}
-                </button>
-                <button *ngIf="cancelButtonLabel" type="button" class="btn btn-default" (click)="closeModal()">
-                    {{cancelButtonLabel}}
-                </button>
-                <button *ngIf="dangerSubmitButtonLabel" type="button" class="btn btn-danger pull-left"
-                        (click)="onDangerSubmit.emit()">{{dangerSubmitButtonLabel}}
-                </button>
-            </div>
-        </div>
-    </div>
-</div>
-`
+    templateUrl: 'modal.component.html'
 })
 export class ModalComponent {
     @ViewChild("modalRoot")

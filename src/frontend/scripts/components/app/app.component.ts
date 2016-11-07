@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {TenantService} from "../../services/tenant.service";
+import {TenantService} from "../../services";
 
 @Component({
     selector: 'app',

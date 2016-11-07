@@ -6,6 +6,8 @@
 
 package com.aptitekk.aptibook.web;
 
+import com.aptitekk.aptibook.core.logging.LogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import javax.servlet.*;
@@ -14,9 +16,17 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.logging.LogManager;
 
 @Component
 public class TenantFilter implements Filter {
+
+    private final LogService logService;
+
+    @Autowired
+    public TenantFilter(LogService logService) {
+        this.logService = logService;
+    }
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -48,7 +58,7 @@ public class TenantFilter implements Filter {
                 }
 
                 //Resources
-                if (pathSplit[1].matches("packed|images|favicons|error")) {
+                if (pathSplit[1].matches("packed|splashscreen|favicons|error")) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
@@ -74,7 +84,7 @@ public class TenantFilter implements Filter {
                 httpServletRequest.getRequestDispatcher("/index.html").forward(servletRequest, servletResponse);
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            logService.logException(getClass(), e, "Unhandled Exception");
         }
     }
 

@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Generator: Adobe Illustrator 16.0.0, SVG Export Plug-In . SVG Version: 6.00 Build 0)  -->
+<!DOCTYPE svg  PUBLIC '-//W3C//DTD SVG 1.1//EN'  'http://www.w3.org/Graphics/SVG/1.1/DTD/svg11.dtd' [
+	<!ENTITY ns_extend "http://ns.adobe.com/Extensibility/1.0/">
+	<!ENTITY ns_ai "http://ns.adobe.com/AdobeIllustrator/10.0/">
+	<!ENTITY ns_graphs "http://ns.adobe.com/Graphs/1.0/">
+	<!ENTITY ns_vars "http://ns.adobe.com/Variables/1.0/">
+	<!ENTITY ns_imrep "http://ns.adobe.com/ImageReplacement/1.0/">
+	<!ENTITY ns_sfw "http://ns.adobe.com/SaveForWeb/1.0/">
+	<!ENTITY ns_custom "http://ns.adobe.com/GenericCustomNamespace/1.0/">
+	<!ENTITY ns_adobe_xpath "http://ns.adobe.com/XPath/1.0/">
+]>
+<svg xmlns="http://www.w3.org/2000/svg" enable-background="new 0 0 500 500" xml:space="preserve" height="500px" width="500px" version="1.1" y="0px" x="0px" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 0 500 500">
+<switch>
+	<foreignObject y="0" x="0" height="1" width="1" requiredExtensions="http://ns.adobe.com/AdobeIllustrator/10.0/">
+	</foreignObject>
+	<g>
+		<g id="Underlay">
+			<path id="Background" d="m176.2 379.28c-18.702 41.021-41.272 68.946-71.999 68.946h371.26c12.152 0 22.275-8.673 24.528-20.165v-319.09h-231.63c-9.537 19.037-18.052 41.68-26.076 66.095l-6.755 21.272c-8.355 27.133-16.315 55.713-24.529 83.499-0.533 1.803-1.067 3.603-1.602 5.397-2.816 9.446-5.667 18.783-8.578 27.92-5.001 15.694-10.182 30.794-15.671 44.854l-8.94 21.28z" fill="#E6E7E8"/>
+			<path id="Header" d="m475.47 51.775h-142.06c-27.127 0-47.764 22.684-65.051 57.19h231.64v-37.02c-2.25-11.492-12.38-20.165-24.53-20.165z" fill="#939598"/>
+			<g stroke="#BCBEC0" stroke-miterlimit="10" fill="none">
+				<g id="Horizontal_Bars">
+					<line y2="162.54" x2="246.51" y1="162.54" x1="500"/>
+					<line y2="221.04" x2="228.12" y1="221.04" x1="500"/>
+					<line y2="279.83" x2="211" y1="279.55" x1="500"/>
+					<line y2="338.05" x2="192.52" y1="338.05" x1="500"/>
+					<line y2="396.56" x2="167.64" y1="396.56" x1="500"/>
+				</g>
+				<g id="Vertical_Bars">
+					<line y2="108.97" x2="333.41" y1="448.22" x1="333.41"/>
+					<line y2="448.22" x2="219.99" y1="250" x1="219.99"/>
+					<line y2="108.97" x2="390.12" y1="448.22" x1="390.12"/>
+					<line y2="448.22" x2="276.7" y1="108.97" x1="276.7"/>
+					<line y2="448.22" x2="163.28" y1="404.25" x1="163.28"/>
+					<line y2="448.22" x2="446.83" y1="108.97" x1="446.83"/>
+				</g>
+			</g>
+			<g id="Events" fill="#A7A9AC">
+				<path d="m302.1 175.06h-59.818c-2.288 6.961-4.536 14.064-6.755 21.272h66.573v-21.27z"/>
+				<rect y="298.91" x="362.16" height="21.273" width="114.3"/>
+				<path d="m219.99 358h-34.839c-2.89 7.403-5.866 14.517-8.947 21.274h43.786v-21.27z"/>
+			</g>
+		</g>
+		<g id="Overlay_1_">
+			<g id="Overlay">
+				<path opacity=".1" d="m333.41 51.775c-113.42 0-113.42 396.45-229.21 396.45h371.27" fill="#414042"/>
+				<path d="m200.82 313.15c2.911-9.137 5.762-18.474 8.578-27.92 0.535-1.795 1.069-3.595 1.602-5.397 18.048-61.057 34.868-125.97 57.359-170.87 17.287-34.507 37.924-57.19 65.051-57.19h-307.94c-13.807 0-25 11.193-25 25v346.45c0 13.807 11.193 25 25 25h78.734c45.41 0 73.01-60.96 96.62-135.07z" fill="#4272B7"/>
+				<path d="m121.5 64.275h-27.037l-79.491 189.72 69.6 194.23h19.634c45.402 0 73-60.963 96.616-135.08 2.911-9.137 5.762-18.474 8.578-27.92 0.535-1.795 1.069-3.595 1.602-5.397l-9.303-25.969-80.21-189.58z" fill="#3C629A"/>
+						<defs>
+							<rect id="SVGID_1_" y="64.277" x="14.973" height="189.72" width="186.73"/>
+						</defs>
+						<clipPath id="SVGID_2_">
+							<use overflow="visible" xlink:href="#SVGID_1_"/>
+						</clipPath>
+						<polygon fill="#F1F1F1" points="95.427 64.276 145.18 182.48 62.266 205.34 154.41 205.34 201.7 253.99 121.25 64.276" clip-path="url(#SVGID_2_)"/>
+						<polygon fill="#fff" points="95.427 64.276 14.973 253.99 62.266 205.34 121.25 64.276" clip-path="url(#SVGID_2_)"/>
+			</g>
+		</g>
+	</g>
+</switch>
+</svg>
