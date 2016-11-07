@@ -33,12 +33,22 @@ var config = {
                 loader: 'json'
             },
             {
+                test: /\.component\.html$/,
+                loader: "to-string!html"
+            },
+            {
                 test: /\.html$/,
-                loader: "raw"
+                loader: "html",
+                exclude: [/\.component\.html$/]
+            },
+            {
+                test: /\.component\.css$/,
+                loader: "to-string!css"
             },
             {
                 test: /\.css$/,
-                loader: "to-string!style!css"
+                loader: "style!css",
+                exclude: [/\.component\.css$/]
             },
             {
                 test: /\.(png|jpg|gif|svg)$/,
