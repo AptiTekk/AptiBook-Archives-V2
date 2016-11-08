@@ -40,30 +40,6 @@ hr {
     margin-bottom: 15px !important;
 }
 
-.footer {
-    width: 100%;
-    height: 50px;
-    position: fixed;
-    bottom: 0;
-    z-index: 999;
-    background-color: #4272b7;
-    padding-top: 8px;
-    box-shadow: #aaa 0 10px 25px 0;
-}
-
-.aptibook .footer p {
-    margin-top: 8px;
-    color: #fff;
-}
-
-.aptibook .footer a {
-    color: #fff;
-}
-
-.aptibook .footer a:hover, .footer a:active, .footer a:focus {
-    color: #f1f1f1;
-}
-
 span.no-decoration a:hover, span.no-decoration a:active, span.no-decoration a:focus {
     text-decoration: none;
 }

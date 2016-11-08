@@ -43,16 +43,16 @@ var config = {
                 loader: "to-string!css"
             },
             {
-                test: /\.css$/,
+                test: /\.css(\?v=[\d\.]+)?$/,
                 loader: "style!css",
                 exclude: [/\.component\.css$/]
             },
             {
-                test: /\.(png|jpg|gif|svg)$/,
+                test: /\.(png|jpg|gif|svg)(\?v=[\d\.]+)?$/,
                 loader: "file?name=./packed/images/[hash].[ext]"
             },
             {
-                test: /\.(ttf|eot|woff|woff2)(\?v=\d+\.\d+\.\d+)?$/,
+                test: /\.(ttf|eot|woff|woff2)(\?v=[\d\.]+)?$/,
                 loader: 'file?name=./packed/fonts/[hash].[ext]'
             }
         ]
