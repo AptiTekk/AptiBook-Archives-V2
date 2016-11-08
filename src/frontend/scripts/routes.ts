@@ -8,18 +8,22 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
         component: FrontPageComponent,
         children: [
             {
-                path: 'register',
-                component: RegisterComponent
+                path: 'sign-in',
+                component: SignInComponent,
             },
             {
-                path: '**',
-                component: SignInComponent,
+                path: 'register',
+                component: RegisterComponent,
                 data: {
                     help: [
-                        {title: 'How to Sign In', slug: 'ab-how-to-sign-in'}
+                        {title: 'How to Register', slug: 'ab-how-to-register'}
                     ]
                 }
             }
         ]
+    },
+    {
+        path: '**',
+        redirectTo: 'sign-in'
     }
 ]);

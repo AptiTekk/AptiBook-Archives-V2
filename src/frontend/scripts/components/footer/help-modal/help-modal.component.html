@@ -4,7 +4,7 @@
   ~ Proprietary and confidential.
   -->
 
-<modal #modal [submitButtonLabel]="'Visit Knowledgebase'" (onSubmit)="onVisitKnowledgebase()"
+<modal #modal [submitButtonLabel]="'Visit Knowledgebase'" (onSubmit)="HelpModal.onVisitKnowledgebase()"
        [cancelButtonLabel]="Close" [title]="'AptiBook Help'">
     <modal-body>
         <div *ngIf="helpTopics">
@@ -13,7 +13,7 @@
             <ul>
                 <li *ngFor="let helpTopic of helpTopics">
                     <a target="_blank"
-                       href="https://support.aptitekk.com/{{helpTopic['slug']}}">{{helpTopic['title']}}</a>
+                       href="https://support.aptitekk.com/article/{{helpTopic.slug}}">{{helpTopic.title}}</a>
                 </li>
             </ul>
             <hr/>

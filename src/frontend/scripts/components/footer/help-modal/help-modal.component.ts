@@ -1,6 +1,6 @@
 import {Component, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../modal/modal.component";
-import {ActivatedRoute} from "@angular/router";
+import {HelpService} from "../../../services";
 
 @Component({
     selector: 'help-modal',
@@ -11,21 +11,17 @@ export class HelpModalComponent {
     @ViewChild('modal')
     modal: ModalComponent;
 
-    helpTopics: Object[];
+    helpTopics: [{title: string, slug: string}];
 
-    constructor(private route: ActivatedRoute) {
-        if(route.data['help'] != undefined) {
-            this.helpTopics = route.data['help'];
-        }
-
-        console.log(route.snapshot.data);
+    constructor(helpService: HelpService) {
+        helpService.getCurrentHelpTopics().subscribe(helpTopics => this.helpTopics = helpTopics);
     }
 
     openModal() {
         this.modal.openModal();
     }
 
-    onVisitKnowledgebase() {
+    static onVisitKnowledgebase() {
         let win = window.open('https://support.aptitekk.com/', '_blank');
         if (win) {
             win.focus();
