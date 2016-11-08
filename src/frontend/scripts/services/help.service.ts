@@ -31,7 +31,7 @@ export class HelpService {
                 if (value instanceof NavigationEnd) {
 
                     //Get current url
-                    let currentUrl = value.url;
+                    let currentUrl = (<NavigationEnd> value).urlAfterRedirects;
 
                     //Determine which topics to send
                     let topics: [{title: string, slug: string}];

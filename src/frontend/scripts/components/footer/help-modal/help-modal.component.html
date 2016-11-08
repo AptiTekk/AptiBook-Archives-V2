@@ -4,7 +4,7 @@
   ~ Proprietary and confidential.
   -->
 
-<modal #modal [submitButtonLabel]="'Visit Knowledgebase'" (onSubmit)="HelpModal.onVisitKnowledgebase()"
+<modal #modal [submitButtonLabel]="'Visit Knowledgebase'" (onSubmit)="onVisitKnowledgebase()"
        [cancelButtonLabel]="Close" [title]="'AptiBook Help'">
     <modal-body>
         <div *ngIf="helpTopics">

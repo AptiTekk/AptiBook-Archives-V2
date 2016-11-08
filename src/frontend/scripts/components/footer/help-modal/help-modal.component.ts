@@ -21,7 +21,8 @@ export class HelpModalComponent {
         this.modal.openModal();
     }
 
-    static onVisitKnowledgebase() {
+    //noinspection JSMethodCanBeStatic
+    onVisitKnowledgebase() {
         let win = window.open('https://support.aptitekk.com/', '_blank');
         if (win) {
             win.focus();
