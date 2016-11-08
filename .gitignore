@@ -6,4 +6,3 @@ target/
 /src/frontend/**/*.js
 /src/frontend/**/*.js.map
 /src/main/resources/public/packed/
-/src/main/resources/public/index.html
