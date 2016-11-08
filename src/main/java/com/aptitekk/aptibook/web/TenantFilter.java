@@ -16,7 +16,6 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogManager;
 
 @Component
 public class TenantFilter implements Filter {
@@ -45,14 +44,13 @@ public class TenantFilter implements Filter {
             if (pathSplit.length >= 2) {
 
                 //Index (Angular)
-                if(pathSplit[1].equals("index.html"))
-                {
+                if (pathSplit[1].equals("index.html")) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
 
                 //API
-                if(pathSplit[1].equals("api")) {
+                if (pathSplit[1].equals("api")) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
@@ -72,16 +70,15 @@ public class TenantFilter implements Filter {
                     httpServletRequest.setAttribute("tenant", tenantSlug);
                 }
 
-                //API (Including Tenant)
-                if(pathSplit.length > 2 && pathSplit[2].equals("api")) {
-                    String url = path.substring(path.indexOf("/", 2));
+                String url;
+                if (pathSplit.length > 2) {
+                    url = path.substring(path.indexOf("/", 2));
                     if (url.contains(";"))
                         url = url.substring(0, url.indexOf(";"));
-                    httpServletRequest.getRequestDispatcher(url).forward(servletRequest, servletResponse);
-                    return;
-                }
+                } else
+                    url = "index.html";
 
-                httpServletRequest.getRequestDispatcher("/index.html").forward(servletRequest, servletResponse);
+                httpServletRequest.getRequestDispatcher(url).forward(servletRequest, servletResponse);
             }
         } catch (Exception e) {
             logService.logException(getClass(), e, "Unhandled Exception");

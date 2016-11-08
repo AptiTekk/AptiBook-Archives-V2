@@ -1,9 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var ExtractTextPlugin = require("extract-text-webpack-plugin");
-
 var config = {
     cache: true,
     devtool: 'source-map',
@@ -66,10 +63,6 @@ var config = {
             name: ['polyfills', 'vendor', 'main'].reverse(),
             minChunks: Infinity
         }),
-        new HtmlWebpackPlugin({
-            template: './src/frontend/index.template.ejs',
-            inject: 'body'
-        }),
         new webpack.ProvidePlugin({
             jQuery: 'jquery',
             $: 'jquery',
@@ -78,7 +71,7 @@ var config = {
     ],
 
     resolve: {
-        extensions: ['', '.ts', '.js', '.json', '.css', '.scss', '.html'],
+        extensions: ['', '.ts', '.js', '.json'],
         modulesDirectories: ['node_modules']
     },
 

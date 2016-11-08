@@ -4,7 +4,7 @@
   ~ Proprietary and confidential.
   -->
 
-<form id="loginForm" (submit)="loader.setDisplayed(true);onSubmit()">
+<form id="loginForm" (submit)="onSubmit()">
     <div class="alert alert-danger" #alert *ngIf="alertMessage">{{alertMessage}}</div>
     <div class="form-group">
         <label for="emailAddressInput">Email Address:</label>
