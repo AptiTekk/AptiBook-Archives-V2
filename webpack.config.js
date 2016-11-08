@@ -12,7 +12,7 @@ var config = {
     },
 
     output: {
-        path: path.join(__dirname, 'src/main/resources/public/'),
+        path: path.join(__dirname, 'src/main/webapp/'),
         filename: './packed/scripts/[name].bundle.js',
         sourceMapFilename: './packed/scripts/[name].map',
         chunkFilename: './packed/scripts/[id].chunk.js'
