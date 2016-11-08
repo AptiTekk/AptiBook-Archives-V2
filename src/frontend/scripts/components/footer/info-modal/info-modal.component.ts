@@ -5,22 +5,12 @@ import {ModalComponent} from "../../modal/modal.component";
     selector: 'info-modal',
     templateUrl: 'info-modal.component.html'
 })
-export class InfoModal {
+export class InfoModalComponent {
 
     @ViewChild('modal')
     modal: ModalComponent;
 
-    aptiBookVersion: string = "Unknown";
-
-    constructor() {
-        let metaTags: NodeListOf<HTMLMetaElement> = document.getElementsByTagName('meta');
-        for (let i = 0; i < metaTags.length; i++) {
-            if(metaTags[i].name === "aptibook-version") {
-                this.aptiBookVersion = metaTags[i].content;
-                break;
-            }
-        }
-    }
+    aptiBookVersion: string = "@project.version@";
 
     openModal() {
         this.modal.openModal();

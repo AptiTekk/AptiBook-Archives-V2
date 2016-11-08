@@ -1,8 +1,6 @@
 import {ModuleWithProviders} from "@angular/core";
 import {RouterModule} from "@angular/router";
-import {FrontPageComponent} from "./components/front-page/front-page.component";
-import {SignInComponent} from "./components/front-page/sign-in/sign-in.component";
-import {RegisterComponent} from "./components/front-page/register/register.component";
+import {FrontPageComponent, SignInComponent, RegisterComponent} from "./components/front-page";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -15,7 +13,12 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: '**',
-                component: SignInComponent
+                component: SignInComponent,
+                data: {
+                    help: [
+                        {title: 'How to Sign In', slug: 'ab-how-to-sign-in'}
+                    ]
+                }
             }
         ]
     }
