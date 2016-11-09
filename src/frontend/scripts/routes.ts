@@ -1,6 +1,6 @@
 import {ModuleWithProviders} from "@angular/core";
 import {RouterModule} from "@angular/router";
-import {FrontPageComponent, SignInComponent, RegisterComponent, SecurePageComponent} from "./components";
+import {FrontPageComponent, SignInComponent, RegisterComponent, SecurePageComponent} from "./page-components";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
