@@ -1,6 +1,6 @@
 import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
-import {AppComponent} from "./components/app/app.component";
+import {AppComponent} from "./page-components/app/app.component";
 import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import * as components from "./components";
