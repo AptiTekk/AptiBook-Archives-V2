@@ -8,6 +8,14 @@
     background-color: #fff !important;
     box-shadow: #aaa 0 -5px 20px 1px;
     font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    border: none;
+    border-top-left-radius: 0;
+    border-top-right-radius: 0;
+}
+
+.navbar .collapse {
+    padding-left: 0;
+    padding-right: 0;
 }
 
 .navbar-toggle .icon-bar {
