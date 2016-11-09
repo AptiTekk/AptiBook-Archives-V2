@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {Router} from "@angular/router";
 
 @Component({
     selector: 'sign-in',
@@ -11,13 +12,14 @@ export class SignInComponent {
     emailAddress: string;
     password: string;
 
-    constructor() {
+    constructor(private router: Router) {
         this.emailAddress = "";
         this.password = "";
     }
 
     onSubmit() {
         console.log("Submitted: " + this.emailAddress + " - " + this.password);
+        this.router.navigateByUrl("/secure");
     }
 
 }

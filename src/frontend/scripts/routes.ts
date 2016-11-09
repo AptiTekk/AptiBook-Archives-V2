@@ -1,6 +1,6 @@
 import {ModuleWithProviders} from "@angular/core";
 import {RouterModule} from "@angular/router";
-import {FrontPageComponent, SignInComponent, RegisterComponent} from "./components/front-page";
+import {FrontPageComponent, SignInComponent, RegisterComponent, SecurePageComponent} from "./components";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -21,6 +21,11 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 }
             }
         ]
+
+    },
+    {
+        path: 'secure',
+        component: SecurePageComponent
     },
     {
         path: '**',
