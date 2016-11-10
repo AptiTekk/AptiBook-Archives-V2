@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web;
+package com.aptitekk.aptibook;
 
 import com.aptitekk.aptibook.core.logging.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,12 +18,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Component
-public class TenantFilter implements Filter {
+public class WebFilter implements Filter {
 
     private final LogService logService;
 
     @Autowired
-    public TenantFilter(LogService logService) {
+    public WebFilter(LogService logService) {
         this.logService = logService;
     }
 
@@ -56,7 +56,7 @@ public class TenantFilter implements Filter {
                 }
 
                 //Resources
-                if (pathSplit[1].matches("packed|splashscreen|favicons|error")) {
+                if (pathSplit[1].matches("packed|splashscreen|favicons")) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }

@@ -6,15 +6,13 @@
 
 package com.aptitekk.aptibook.core.logging;
 
-import com.aptitekk.aptibook.core.SpringProfileService;
+import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

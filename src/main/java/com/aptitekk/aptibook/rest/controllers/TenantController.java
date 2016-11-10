@@ -4,10 +4,10 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web;
+package com.aptitekk.aptibook.rest.controllers;
 
-import com.aptitekk.aptibook.core.domain.RestError;
-import com.aptitekk.aptibook.core.domain.Tenant;
+import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.core.domain.rest.RestError;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -22,7 +22,7 @@ public class TenantController extends AptiBookController {
         Object tenantAttribute = httpServletRequest.getAttribute("tenant");
         if (tenantAttribute != null) {
             String tenant = tenantAttribute.toString();
-            return new ResponseEntity<>(new Tenant(tenant), HttpStatus.OK);
+            return new ResponseEntity<>(new Tenant(), HttpStatus.OK);
         } else
             return new ResponseEntity<>(new RestError("Tenant is Inactive"), HttpStatus.BAD_REQUEST);
     }

@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain;
+package com.aptitekk.aptibook.core.domain.rest;
 
 public class RestError {
 

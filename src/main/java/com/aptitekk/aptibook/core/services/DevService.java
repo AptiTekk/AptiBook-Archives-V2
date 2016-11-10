@@ -4,9 +4,9 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.dev;
+package com.aptitekk.aptibook.core.services;
 
-import com.aptitekk.aptibook.core.SpringProfileService;
+import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.aptitekk.aptibook.core.logging.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
