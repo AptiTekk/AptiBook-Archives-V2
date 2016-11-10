@@ -6,9 +6,10 @@
 
 package com.aptitekk.aptibook.core.services.entities;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.repository.CrudRepository;
 
-public interface EntityRepository<T> extends CrudRepository<T, Long>, JpaSpecificationExecutor<T> {
+public interface EntityRepository<T> extends JpaRepository<T, Long>, JpaSpecificationExecutor<T> {
 
 }

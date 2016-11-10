@@ -8,8 +8,8 @@ package com.aptitekk.aptibook.core.services.tenant;
 
 import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.services.PropertiesService;
-import com.aptitekk.aptibook.core.domain.services.TenantService;
+import com.aptitekk.aptibook.core.services.entities.PropertiesService;
+import com.aptitekk.aptibook.core.services.entities.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -48,7 +48,7 @@ public class TenantManagementService {
     private void refreshAllowedTenants() {
         allowedTenants = new HashMap<>();
 
-        for (Tenant tenant : tenantService.getAll()) {
+        for (Tenant tenant : tenantService.findAll()) {
             if (tenant.isActive())
                 allowedTenants.put(tenant.getSlug(), tenant);
         }
@@ -57,7 +57,7 @@ public class TenantManagementService {
     private void refreshDateTimeZones() {
         zoneIdMap = new HashMap<>();
 
-        for (Tenant tenant : tenantService.getAll()) {
+        for (Tenant tenant : tenantService.findAll()) {
             Property dateTimeZoneKey = propertiesService.getPropertyByKey(Property.Key.DATE_TIME_TIMEZONE, tenant);
             try {
                 ZoneId dateTimeZone = ZoneId.of(dateTimeZoneKey.getPropertyValue());

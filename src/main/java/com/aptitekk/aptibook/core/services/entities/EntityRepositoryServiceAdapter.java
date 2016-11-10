@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.core.services.entities;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Example;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -29,48 +30,40 @@ public abstract class EntityRepositoryServiceAdapter<T> {
         return entityRepository.save(entity);
     }
 
-    <S extends T> Iterable<S> save(Iterable<S> entities) {
+    public <S extends T> List<S> save(Iterable<S> entities) {
         return entityRepository.save(entities);
     }
 
-    T findOne(Long id) {
-        return entityRepository.findOne(id);
-    }
-
-    boolean exists(Long id) {
+    public boolean exists(Long id) {
         return entityRepository.exists(id);
     }
 
-    Iterable<T> findAll() {
-        return entityRepository.findAll();
-    }
-
-    Iterable<T> findAll(Iterable<Long> ids) {
-        return entityRepository.findAll(ids);
-    }
-
-    long count() {
-        return entityRepository.count();
-    }
-
-    void delete(Long id) {
-        entityRepository.delete(id);
-    }
-
-    void delete(T entity) {
-        entityRepository.delete(entity);
-    }
-
-    void delete(Iterable<? extends T> entities) {
-        entityRepository.delete(entities);
-    }
-
-    void deleteAll() {
-        entityRepository.deleteAll();
+    public T findOne(Long id) {
+        return entityRepository.findOne(id);
     }
 
     T findOne(Specification<T> specification) {
         return entityRepository.findOne(specification);
+    }
+
+    public List<T> findAll() {
+        return entityRepository.findAll();
+    }
+
+    List<T> findAll(Sort sort) {
+        return entityRepository.findAll(sort);
+    }
+
+    List<T> findAll(Iterable<Long> ids) {
+        return entityRepository.findAll(ids);
+    }
+
+    <S extends T> List<S> findAll(Example<S> example) {
+        return entityRepository.findAll(example);
+    }
+
+    <S extends T> List<S> findAll(Example<S> example, Sort sort) {
+        return entityRepository.findAll(example, sort);
     }
 
     List<T> findAll(Specification<T> specification) {
@@ -85,8 +78,28 @@ public abstract class EntityRepositoryServiceAdapter<T> {
         return entityRepository.findAll(specification, sort);
     }
 
+    long count() {
+        return entityRepository.count();
+    }
+
     long count(Specification<T> specification) {
         return entityRepository.count(specification);
+    }
+
+    public void delete(Long id) {
+        entityRepository.delete(id);
+    }
+
+    public void delete(T entity) {
+        entityRepository.delete(entity);
+    }
+
+    public void deleteInBatch(Iterable<T> entities) {
+        entityRepository.deleteInBatch(entities);
+    }
+
+    public void deleteAllInBatch() {
+        entityRepository.deleteAllInBatch();
     }
 
 }

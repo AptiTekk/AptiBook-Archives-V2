@@ -25,7 +25,7 @@ import java.io.Serializable;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class FileService extends MultiTenantEntityServiceAbstract<File> implements Serializable {
+public class FileService extends MultiTenantEntityServiceAbstract<File> {
 
     private static final int MAX_IMAGE_SIZE_PX = 1000;
 

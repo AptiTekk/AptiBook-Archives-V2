@@ -17,6 +17,7 @@ import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
+import java.util.List;
 
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
@@ -31,21 +32,28 @@ public abstract class MultiTenantEntityServiceAbstract<T extends MultiTenantEnti
         return tenant;
     }
 
-    private class TenantSpecification<S> implements Specification<S> {
-        private Tenant tenant;
+    class TenantSpecification<S> implements Specification<S> {
+        private Tenant defaultTenant;
+        private Tenant differentTenant;
 
-        Specification<S> withTenant(Tenant tenant) {
-            this.tenant = tenant;
+        TenantSpecification(Tenant defaultTenant) {
+            this.defaultTenant = defaultTenant;
+        }
+
+        Specification<S> withDifferentTenant(Tenant tenant) {
+            this.differentTenant = tenant;
             return this;
         }
 
         @Override
         public Predicate toPredicate(Root<S> root, CriteriaQuery<?> criteriaQuery, CriteriaBuilder criteriaBuilder) {
-            return criteriaBuilder.equal(root.get("tenant"), this.tenant);
+            Predicate predicate = criteriaBuilder.equal(root.get("tenant"), this.differentTenant != null ? this.differentTenant : this.defaultTenant);
+            this.differentTenant = null;
+            return predicate;
         }
     }
 
-    private final TenantSpecification<T> tenantFilterSpecification = new TenantSpecification<>();
+    final TenantSpecification<T> tenantFilterSpecification = new TenantSpecification<>(this.tenant);
 
     @PostConstruct
     private void init() {
@@ -60,7 +68,7 @@ public abstract class MultiTenantEntityServiceAbstract<T extends MultiTenantEnti
     }
 
     @Override
-    <S extends T> Iterable<S> save(Iterable<S> entities) {
+    public <S extends T> List<S> save(Iterable<S> entities) {
         for (S entity : entities)
             if (entity.getTenant() == null)
                 entity.setTenant(tenant);
@@ -69,12 +77,12 @@ public abstract class MultiTenantEntityServiceAbstract<T extends MultiTenantEnti
     }
 
     @Override
-    Iterable<T> findAll() {
-        return super.findAll(tenantFilterSpecification.withTenant(this.tenant));
+    public List<T> findAll() {
+        return super.findAll(tenantFilterSpecification);
     }
 
-    Iterable<T> findAllForTenant(Tenant tenant) {
-        return super.findAll(tenantFilterSpecification.withTenant(tenant));
+    public List<T> findAllForTenant(Tenant tenant) {
+        return super.findAll(tenantFilterSpecification.withDifferentTenant(tenant));
     }
 
 }

@@ -7,12 +7,11 @@
 package com.aptitekk.aptibook.core.services.tenant;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.services.TenantService;
+import com.aptitekk.aptibook.core.services.entities.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.web.context.WebApplicationContext;
 
 import javax.annotation.PostConstruct;
 import javax.servlet.http.HttpServletRequest;
