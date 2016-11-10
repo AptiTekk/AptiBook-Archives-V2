@@ -57,7 +57,7 @@ public class TenantManagementService {
     private void refreshDateTimeZones() {
         zoneIdMap = new HashMap<>();
 
-        for (Tenant tenant : tenantService.findAll()) {
+        /*for (Tenant tenant : tenantService.findAll()) {
             Property dateTimeZoneKey = propertiesService.getPropertyByKey(Property.Key.DATE_TIME_TIMEZONE, tenant);
             try {
                 ZoneId dateTimeZone = ZoneId.of(dateTimeZoneKey.getPropertyValue());
@@ -65,7 +65,7 @@ public class TenantManagementService {
             } catch (Exception e) {
                 zoneIdMap.put(tenant, ZoneId.systemDefault());
             }
-        }
+        }*/
     }
 
     /**

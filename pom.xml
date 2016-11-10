@@ -206,6 +206,8 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
+
+        <!-- Database -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
@@ -215,6 +217,12 @@
             <artifactId>postgresql</artifactId>
             <version>${postgresql-version}</version>
         </dependency>
+        <dependency>
+            <groupId>org.liquibase</groupId>
+            <artifactId>liquibase-core</artifactId>
+            <version>3.5.1</version>
+        </dependency>
+        <!-- End Database -->
 
         <!-- Tenant Synchronizer -->
         <dependency>
@@ -229,7 +237,6 @@
             <version>2.8.3</version>
         </dependency>
         <!-- End Tenant Synchronizer -->
-
         <!-- End Spring Boot-->
 
         <!-- Raygun Exception Handler -->

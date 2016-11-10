@@ -16,12 +16,10 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import java.io.Serializable;
-import java.util.List;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class TenantService extends GlobalEntityServiceAbstract<Tenant> implements Serializable {
+public class TenantService extends GlobalEntityServiceAbstract<Tenant> {
 
     @Autowired
     private UserGroupService userGroupService;
@@ -67,22 +65,11 @@ public class TenantService extends GlobalEntityServiceAbstract<Tenant> implement
     }
 
     @Override
-    public <S extends Tenant> S save(S entity) {
+    public Tenant save(Tenant entity) {
         entity = super.save(entity);
 
         initializeNewTenant(entity);
         return entity;
-    }
-
-    @Override
-    public <S extends Tenant> List<S> save(Iterable<S> entities) {
-        List<S> savedEntities = super.save(entities);
-
-        for (S entity : entities) {
-            initializeNewTenant(entity);
-        }
-
-        return savedEntities;
     }
 
     private void initializeNewTenant(Tenant tenant) {

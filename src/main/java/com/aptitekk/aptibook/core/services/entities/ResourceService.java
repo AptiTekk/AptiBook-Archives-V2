@@ -12,11 +12,11 @@ import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -51,12 +51,27 @@ public class ResourceService extends MultiTenantEntityServiceAbstract<Resource> 
 
     @Override
     public List<Resource> findAll() {
-        return super.findAll(tenantFilterSpecification, new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
+        List<Resource> resources = super.findAll();
+        resources.sort(new ResourceComparator());
+        return resources;
     }
 
     @Override
     public List<Resource> findAllForTenant(Tenant tenant) {
-        return super.findAll(tenantFilterSpecification.withDifferentTenant(tenant), new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
+        List<Resource> resources = super.findAllForTenant(tenant);
+        resources.sort(new ResourceComparator());
+        return resources;
+    }
+
+    /**
+     * Sorts Resource Categories by name.
+     */
+    private class ResourceComparator implements Comparator<Resource> {
+
+        @Override
+        public int compare(Resource o1, Resource o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
     }
 
 }

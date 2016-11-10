@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
 import java.io.Serializable;
+import java.util.Comparator;
 import java.util.List;
 
 @Service
@@ -55,12 +56,27 @@ public class ResourceCategoryService extends MultiTenantEntityServiceAbstract<Re
 
     @Override
     public List<ResourceCategory> findAll() {
-        return super.findAll(tenantFilterSpecification, new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
+        List<ResourceCategory> resourceCategories = super.findAll();
+        resourceCategories.sort(new ResourceCategoryComparator());
+        return resourceCategories;
     }
 
     @Override
     public List<ResourceCategory> findAllForTenant(Tenant tenant) {
-        return super.findAll(tenantFilterSpecification.withDifferentTenant(tenant), new Sort(new Sort.Order(Sort.Direction.ASC, "name")));
+        List<ResourceCategory> resourceCategories = super.findAllForTenant(tenant);
+        resourceCategories.sort(new ResourceCategoryComparator());
+        return resourceCategories;
+    }
+
+    /**
+     * Sorts Resource Categories by name.
+     */
+    private class ResourceCategoryComparator implements Comparator<ResourceCategory> {
+
+        @Override
+        public int compare(ResourceCategory o1, ResourceCategory o2) {
+            return o1.getName().compareTo(o2.getName());
+        }
     }
 
 }

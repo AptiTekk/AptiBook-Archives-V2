@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.PostConstruct;
+import javax.persistence.TypedQuery;
 import javax.persistence.criteria.CriteriaBuilder;
 import javax.persistence.criteria.CriteriaQuery;
 import javax.persistence.criteria.Predicate;
@@ -21,7 +22,7 @@ import java.util.List;
 
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-public abstract class MultiTenantEntityServiceAbstract<T extends MultiTenantEntity> extends EntityRepositoryServiceAdapter<T> {
+public abstract class MultiTenantEntityServiceAbstract<T extends MultiTenantEntity> extends EntityRepository<T> {
 
     @Autowired
     private TenantSessionService tenantSessionService;
@@ -61,28 +62,21 @@ public abstract class MultiTenantEntityServiceAbstract<T extends MultiTenantEnti
     }
 
     @Override
-    public <S extends T> S save(S entity) {
+    public T save(T entity) {
         if (entity.getTenant() == null)
             entity.setTenant(tenant);
+
         return super.save(entity);
     }
 
     @Override
-    public <S extends T> List<S> save(Iterable<S> entities) {
-        for (S entity : entities)
-            if (entity.getTenant() == null)
-                entity.setTenant(tenant);
-
-        return super.save(entities);
-    }
-
-    @Override
     public List<T> findAll() {
-        return super.findAll(tenantFilterSpecification);
+        return findAllForTenant(tenant);
     }
 
     public List<T> findAllForTenant(Tenant tenant) {
-        return super.findAll(tenantFilterSpecification.withDifferentTenant(tenant));
+        TypedQuery<T> query = this.entityManager.createQuery("SELECT e FROM " + this.entityType.getSimpleName() + " e WHERE e.tenant = :tenant", entityType).setParameter("tenant", tenant);
+        return query.getResultList();
     }
 
 }

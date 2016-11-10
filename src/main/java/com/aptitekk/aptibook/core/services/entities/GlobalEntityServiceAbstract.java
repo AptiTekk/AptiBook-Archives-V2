@@ -8,7 +8,14 @@ package com.aptitekk.aptibook.core.services.entities;
 
 import com.aptitekk.aptibook.core.domain.entities.GlobalEntity;
 
+import java.util.List;
+
 @SuppressWarnings({"SpringAutowiredFieldsWarningInspection", "SpringJavaAutowiredMembersInspection"})
-public abstract class GlobalEntityServiceAbstract<T extends GlobalEntity> extends EntityRepositoryServiceAdapter<T> {
+public abstract class GlobalEntityServiceAbstract<T extends GlobalEntity> extends EntityRepository<T> {
+
+    @Override
+    public List<T> findAll() {
+        return entityManager.createQuery("SELECT e FROM " + entityType + " e", entityType).getResultList();
+    }
 
 }

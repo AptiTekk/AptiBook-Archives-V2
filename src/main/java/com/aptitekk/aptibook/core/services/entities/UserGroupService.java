@@ -20,7 +20,7 @@ import java.util.Queue;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class UserGroupService extends MultiTenantEntityServiceAbstract<UserGroup> implements Serializable {
+public class UserGroupService extends MultiTenantEntityServiceAbstract<UserGroup> {
 
     public static final String ROOT_GROUP_NAME = "root";
 

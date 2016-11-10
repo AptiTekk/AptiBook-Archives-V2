@@ -7,3 +7,4 @@ target/
 /src/frontend/**/*.js.map
 /src/main/webapp/packed/
 /src/main/resources/application-dev.properties
+/.idea/dataSources/
