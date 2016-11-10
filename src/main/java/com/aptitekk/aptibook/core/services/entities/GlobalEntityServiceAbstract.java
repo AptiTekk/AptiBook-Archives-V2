@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import java.io.Serializable;
 
+@SuppressWarnings({"SpringAutowiredFieldsWarningInspection", "SpringJavaAutowiredMembersInspection"})
 public abstract class GlobalEntityServiceAbstract<T extends GlobalEntity> {
 
     @Autowired

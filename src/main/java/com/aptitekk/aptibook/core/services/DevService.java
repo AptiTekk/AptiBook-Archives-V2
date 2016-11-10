@@ -9,6 +9,8 @@ package com.aptitekk.aptibook.core.services;
 import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.aptitekk.aptibook.core.logging.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -19,6 +21,7 @@ import java.io.InputStreamReader;
 import java.util.concurrent.atomic.AtomicBoolean;
 
 @Service
+@Scope(BeanDefinition.SCOPE_SINGLETON)
 public class DevService {
 
     private SpringProfileService springProfileService;

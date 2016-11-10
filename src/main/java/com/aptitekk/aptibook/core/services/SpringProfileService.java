@@ -7,6 +7,8 @@
 package com.aptitekk.aptibook.core.services;
 
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -14,6 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@Scope(BeanDefinition.SCOPE_SINGLETON)
 public class SpringProfileService {
 
     @Value("${spring.profiles.active:production}")

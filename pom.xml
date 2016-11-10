@@ -240,6 +240,23 @@
             <version>2.7</version>
         </dependency>
         <!-- End Raygun -->
+
+        <!-- Emails -->
+        <dependency>
+            <groupId>com.sparkpost</groupId>
+            <artifactId>sparkpost-lib</artifactId>
+            <version>0.16.1</version>
+        </dependency>
+        <!-- End Emails -->
+
+        <!-- Files -->
+        <dependency>
+            <groupId>net.coobird</groupId>
+            <artifactId>thumbnailator</artifactId>
+            <version>0.4.8</version>
+        </dependency>
+        <!-- End Files -->
+
     </dependencies>
 
 </project>

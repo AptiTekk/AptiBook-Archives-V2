@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.core.services.entities;
 
 import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -15,7 +16,7 @@ import javax.persistence.PersistenceException;
 import java.util.List;
 
 @Service
-@Scope("prototype")
+@Scope(BeanDefinition.SCOPE_PROTOTYPE)
 public class PropertiesService extends MultiTenantEntityServiceAbstract<Property> {
 
     /**

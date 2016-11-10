@@ -11,6 +11,8 @@ import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.services.PropertiesService;
 import com.aptitekk.aptibook.core.domain.services.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
@@ -20,6 +22,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Service
+@Scope(BeanDefinition.SCOPE_SINGLETON)
 public class TenantManagementService {
 
     @Autowired
