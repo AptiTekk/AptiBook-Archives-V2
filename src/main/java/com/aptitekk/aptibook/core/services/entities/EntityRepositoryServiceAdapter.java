@@ -12,12 +12,18 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.jpa.domain.Specification;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
 import java.util.List;
 
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public abstract class EntityRepositoryServiceAdapter<T> {
 
     @Autowired
     private EntityRepository<T> entityRepository;
+
+    @PersistenceContext
+    EntityManager entityManager;
 
     public <S extends T> S save(S entity) {
         return entityRepository.save(entity);

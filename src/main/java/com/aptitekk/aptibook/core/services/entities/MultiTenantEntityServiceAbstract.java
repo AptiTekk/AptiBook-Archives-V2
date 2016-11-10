@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.core.services.entities;
 import com.aptitekk.aptibook.core.domain.entities.MultiTenantEntity;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 
 import javax.annotation.PostConstruct;
@@ -18,9 +19,11 @@ import javax.persistence.criteria.Predicate;
 import javax.persistence.criteria.Root;
 
 
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public abstract class MultiTenantEntityServiceAbstract<T extends MultiTenantEntity> extends EntityRepositoryServiceAdapter<T> {
 
-    private final TenantSessionService tenantSessionService;
+    @Autowired
+    private TenantSessionService tenantSessionService;
 
     private Tenant tenant;
 
@@ -43,10 +46,6 @@ public abstract class MultiTenantEntityServiceAbstract<T extends MultiTenantEnti
     }
 
     private final TenantSpecification<T> tenantFilterSpecification = new TenantSpecification<>();
-
-    public MultiTenantEntityServiceAbstract(TenantSessionService tenantSessionService) {
-        this.tenantSessionService = tenantSessionService;
-    }
 
     @PostConstruct
     private void init() {

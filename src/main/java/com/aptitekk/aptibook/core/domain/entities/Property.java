@@ -8,19 +8,11 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 
 import com.aptitekk.aptibook.ApplicationContextProvider;
-import com.aptitekk.aptibook.core.domain.propertyGroupChangeListeners.DateTimeChangeListener;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.aptitekk.aptibook.web.components.propertyTypes.BooleanField;
-import com.aptitekk.aptibook.web.components.propertyTypes.SelectOneField;
-import com.aptitekk.aptibook.web.components.propertyTypes.SingleLineField;
-import com.aptitekk.aptibook.web.components.propertyTypes.abstractTypes.PropertyType;
 import org.springframework.context.ApplicationContext;
 
-import javax.faces.application.FacesMessage;
-import javax.faces.validator.ValidatorException;
 import javax.persistence.*;
 import java.io.Serializable;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -32,7 +24,7 @@ public class Property extends MultiTenantEntity implements Serializable {
         PERSONALIZATION("Personalization", null),
         REGISTRATION("Registration", null),
         GOOGLE_SIGN_IN("Google Sign In", null),
-        DATE_TIME("Date And Time", DateTimeChangeListener.class);
+        DATE_TIME("Date And Time", null);
 
         private String friendlyName;
         private Class<? extends ChangeListener> propertyGroupChangeListenerClass;
@@ -71,8 +63,8 @@ public class Property extends MultiTenantEntity implements Serializable {
     }
 
     public enum Key {
-
-        PERSONALIZATION_ORGANIZATION_NAME(null, Group.PERSONALIZATION, new SingleLineField("Organization Name", 64)),
+        ;
+        /*PERSONALIZATION_ORGANIZATION_NAME(null, Group.PERSONALIZATION, new SingleLineField("Organization Name", 64)),
 
         REGISTRATION_ENABLED("true", Group.REGISTRATION, new BooleanField("Enable User Registration")),
 
@@ -87,22 +79,22 @@ public class Property extends MultiTenantEntity implements Serializable {
             } catch (Exception e) {
                 throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "The specified timezone was invalid."));
             }
-        });
+        });*/
 
         private final String defaultValue;
         private final Group group;
-        private PropertyType propertyType;
-        private final PropertyValidator validator;
+        /*private PropertyType propertyType;
+        private final PropertyValidator validator;*/
 
-        Key(String defaultValue, Group group, PropertyType propertyType) {
+       /* Key(String defaultValue, Group group, PropertyType propertyType) {
             this(defaultValue, group, propertyType, null);
-        }
+        }*/
 
-        Key(String defaultValue, Group group, PropertyType propertyType, PropertyValidator validator) {
+        Key(String defaultValue, Group group) {
             this.defaultValue = defaultValue;
             this.group = group;
-            this.propertyType = propertyType;
-            this.validator = validator;
+            //this.propertyType = propertyType;
+            //this.validator = validator;
         }
 
         public String getDefaultValue() {
@@ -113,18 +105,18 @@ public class Property extends MultiTenantEntity implements Serializable {
             return group;
         }
 
-        public PropertyType getPropertyType() {
+        /*public PropertyType getPropertyType() {
             return propertyType;
         }
 
         public PropertyValidator getValidator() {
             return validator;
-        }
+        }*/
     }
 
-    public interface PropertyValidator {
+    /*public interface PropertyValidator {
         void validate(Key key, String submittedValue) throws ValidatorException;
-    }
+    }*/
 
     @Id
     @GeneratedValue

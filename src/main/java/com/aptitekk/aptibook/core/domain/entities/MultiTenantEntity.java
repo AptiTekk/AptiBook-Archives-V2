@@ -6,8 +6,6 @@
 
 package com.aptitekk.aptibook.core.domain.entities;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-
 import javax.persistence.FetchType;
 import javax.persistence.ManyToOne;
 import javax.persistence.MappedSuperclass;
