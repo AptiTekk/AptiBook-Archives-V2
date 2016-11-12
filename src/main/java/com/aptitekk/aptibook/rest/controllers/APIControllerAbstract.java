@@ -12,9 +12,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.servlet.http.HttpServletRequest;
 
 @RequestMapping("/api")
-public abstract class AptiBookController {
+public abstract class APIControllerAbstract {
 
+    @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
     @Autowired
-    protected HttpServletRequest httpServletRequest;
+    HttpServletRequest httpServletRequest;
 
 }

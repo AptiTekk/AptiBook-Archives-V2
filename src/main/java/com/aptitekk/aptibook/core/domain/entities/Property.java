@@ -10,6 +10,7 @@ package com.aptitekk.aptibook.core.domain.entities;
 import com.aptitekk.aptibook.ApplicationContextProvider;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import org.springframework.context.ApplicationContext;
+import sun.security.validator.ValidatorException;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -63,38 +64,22 @@ public class Property extends MultiTenantEntity implements Serializable {
     }
 
     public enum Key {
-        ;
-        /*PERSONALIZATION_ORGANIZATION_NAME(null, Group.PERSONALIZATION, new SingleLineField("Organization Name", 64)),
 
-        REGISTRATION_ENABLED("true", Group.REGISTRATION, new BooleanField("Enable User Registration")),
+        PERSONALIZATION_ORGANIZATION_NAME(null, Group.PERSONALIZATION),
 
-        GOOGLE_SIGN_IN_ENABLED("false", Group.GOOGLE_SIGN_IN, new BooleanField("Enable Google Sign In")),
-        GOOGLE_SIGN_IN_WHITELIST("gmail.com, example.com", Group.GOOGLE_SIGN_IN, new SingleLineField("Allowed Domain Names (Comma separated)", 256)),
+        REGISTRATION_ENABLED("true", Group.REGISTRATION),
 
-        DATE_TIME_TIMEZONE("America/Denver", Group.DATE_TIME, new SelectOneField("Timezone", ZoneId.getAvailableZoneIds(), true), (key, submittedValue) -> {
-            try {
-                ZoneId zoneId = ZoneId.of(submittedValue);
-                if (zoneId == null)
-                    throw new Exception("Timezone not found");
-            } catch (Exception e) {
-                throw new ValidatorException(new FacesMessage(FacesMessage.SEVERITY_ERROR, null, "The specified timezone was invalid."));
-            }
-        });*/
+        GOOGLE_SIGN_IN_ENABLED("false", Group.GOOGLE_SIGN_IN),
+        GOOGLE_SIGN_IN_WHITELIST("gmail.com, example.com", Group.GOOGLE_SIGN_IN),
+
+        DATE_TIME_TIMEZONE("America/Denver", Group.DATE_TIME);
 
         private final String defaultValue;
         private final Group group;
-        /*private PropertyType propertyType;
-        private final PropertyValidator validator;*/
-
-       /* Key(String defaultValue, Group group, PropertyType propertyType) {
-            this(defaultValue, group, propertyType, null);
-        }*/
 
         Key(String defaultValue, Group group) {
             this.defaultValue = defaultValue;
             this.group = group;
-            //this.propertyType = propertyType;
-            //this.validator = validator;
         }
 
         public String getDefaultValue() {
@@ -104,19 +89,7 @@ public class Property extends MultiTenantEntity implements Serializable {
         public Group getGroup() {
             return group;
         }
-
-        /*public PropertyType getPropertyType() {
-            return propertyType;
-        }
-
-        public PropertyValidator getValidator() {
-            return validator;
-        }*/
     }
-
-    /*public interface PropertyValidator {
-        void validate(Key key, String submittedValue) throws ValidatorException;
-    }*/
 
     @Id
     @GeneratedValue

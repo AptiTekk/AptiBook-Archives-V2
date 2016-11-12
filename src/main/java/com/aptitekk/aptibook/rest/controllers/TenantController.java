@@ -17,8 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class TenantController extends AptiBookController {
-
+public class TenantController extends APIControllerAbstract {
 
     private TenantService tenantService;
 

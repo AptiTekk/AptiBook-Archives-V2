@@ -22,6 +22,9 @@ public abstract class MultiTenantRepositoryAbstract<T extends MultiTenantEntity>
     @Autowired
     private HttpServletRequest httpRequest;
 
+    @Autowired
+    private TenantService tenantService;
+
     private Tenant tenant;
 
     public Tenant getTenant() {
@@ -32,15 +35,18 @@ public abstract class MultiTenantRepositoryAbstract<T extends MultiTenantEntity>
     private void init() {
         try {
             if (httpRequest != null)
-                httpRequest.getAttribute("currentTenant");
+                httpRequest.getAttribute("tenant");
         } catch (Exception ignored) {
             httpRequest = null;
         }
 
         if (httpRequest != null) {
-            Object attribute = httpRequest.getAttribute("currentTenant");
-            if (attribute != null && attribute instanceof Tenant)
-                this.tenant = (Tenant) attribute;
+            Object attribute = httpRequest.getAttribute("tenant");
+            if (attribute != null) {
+                Tenant tenantBySlug = tenantService.getTenantBySlug(attribute.toString());
+                if (tenantBySlug != null)
+                    this.tenant = tenantBySlug;
+            }
         }
     }
 

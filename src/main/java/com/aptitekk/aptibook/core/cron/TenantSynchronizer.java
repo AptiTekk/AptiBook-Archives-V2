@@ -263,7 +263,7 @@ public class TenantSynchronizer {
 
         try {
             tenantService.save(tenant);
-            logService.logInfo(getClass(), "Created new Tenant with ID " + tenant.getId() + ", Subscription ID " + tenant.getSubscriptionId() + ", Slug " + tenant.getSlug() + ", and Tier " + tier);
+            logService.logInfo(getClass(), "Created new Tenant for Subscription ID " + tenant.getSubscriptionId() + " with Slug " + tenant.getSlug() + " and Tier " + tier);
             return tenant;
         } catch (Exception e) {
             logService.logException(getClass(), e, "Could not create Tenant for Subscription ID " + tenant.getSubscriptionId());

@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook;
+package com.aptitekk.aptibook.rest.security;
 
 import com.aptitekk.aptibook.core.logging.LogService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;

@@ -92,6 +92,7 @@ public class Tenant extends GlobalEntity {
         }
     }
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Tier tier;
 
