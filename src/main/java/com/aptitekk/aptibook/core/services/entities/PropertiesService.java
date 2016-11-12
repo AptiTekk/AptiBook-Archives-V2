@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class PropertiesService extends MultiTenantEntityServiceAbstract<Property> {
+public class PropertiesService extends MultiTenantRepositoryAbstract<Property> {
 
     /**
      * Gets the Property Entity that matches the Property Key, within the current Tenant.

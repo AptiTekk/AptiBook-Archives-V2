@@ -19,7 +19,7 @@ import java.util.List;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ReservationFieldEntryService extends MultiTenantEntityServiceAbstract<ReservationFieldEntry> implements Serializable {
+public class ReservationFieldEntryService extends MultiTenantRepositoryAbstract<ReservationFieldEntry> implements Serializable {
 
     public List<ReservationFieldEntry> getAllForReservation(Reservation reservation) {
         if (reservation == null)

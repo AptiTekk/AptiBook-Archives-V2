@@ -27,7 +27,7 @@ import java.util.stream.Stream;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class NotificationService extends MultiTenantEntityServiceAbstract<Notification> implements Serializable {
+public class NotificationService extends MultiTenantRepositoryAbstract<Notification> implements Serializable {
 
     @Autowired
     private UserGroupService userGroupService;

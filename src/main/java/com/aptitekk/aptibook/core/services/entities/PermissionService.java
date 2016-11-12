@@ -20,7 +20,7 @@ import java.util.List;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class PermissionService extends MultiTenantEntityServiceAbstract<Permission> implements Serializable {
+public class PermissionService extends MultiTenantRepositoryAbstract<Permission> implements Serializable {
 
     public List<Permission> getAllJoinUsersAndGroups() {
         try {

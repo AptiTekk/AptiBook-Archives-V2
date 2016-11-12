@@ -22,7 +22,7 @@ import java.util.List;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class UserService extends MultiTenantEntityServiceAbstract<User> implements Serializable {
+public class UserService extends MultiTenantRepositoryAbstract<User> implements Serializable {
 
     public static final String ADMIN_EMAIL_ADDRESS = "admin";
 

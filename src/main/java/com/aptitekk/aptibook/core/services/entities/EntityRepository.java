@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.core.services.entities;
 
 import org.springframework.stereotype.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
 import javax.persistence.EntityManager;
@@ -15,6 +16,7 @@ import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 @Repository
+@Transactional
 public abstract class EntityRepository<T> {
 
     Class<T> entityType;

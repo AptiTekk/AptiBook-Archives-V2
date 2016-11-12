@@ -4,53 +4,37 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain.rest.woocommerce.subscription.objects;
+package com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions;
 
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
-@JsonInclude(JsonInclude.Include.NON_NULL)
-@JsonPropertyOrder({
-        "key",
-        "label",
-        "value"
-})
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class MetaItem {
 
-    @JsonProperty("key")
     private String key;
-    @JsonProperty("label")
     private String label;
-    @JsonProperty("value")
     private String value;
 
-    @JsonProperty("key")
     public String getKey() {
         return key;
     }
 
-    @JsonProperty("key")
     public void setKey(String key) {
         this.key = key;
     }
 
-    @JsonProperty("label")
     public String getLabel() {
         return label;
     }
 
-    @JsonProperty("label")
     public void setLabel(String label) {
         this.label = label;
     }
 
-    @JsonProperty("value")
     public String getValue() {
         return value;
     }
 
-    @JsonProperty("value")
     public void setValue(String value) {
         this.value = value;
     }

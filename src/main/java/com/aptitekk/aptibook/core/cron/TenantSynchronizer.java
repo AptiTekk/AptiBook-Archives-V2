@@ -7,25 +7,23 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.rest.woocommerce.subscription.objects.*;
-import com.aptitekk.aptibook.core.domain.rest.woocommerce.util.WooCommerceSecurityFilter;
+import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.WooCommerceRestFetcher;
+import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.LineItem;
+import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.MetaItem;
+import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Status;
+import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Subscription;
 import com.aptitekk.aptibook.core.logging.LogService;
 import com.aptitekk.aptibook.core.services.StartupService;
 import com.aptitekk.aptibook.core.services.entities.TenantService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
-import org.jboss.resteasy.client.jaxrs.ResteasyClient;
-import org.jboss.resteasy.client.jaxrs.ResteasyClientBuilder;
-import org.jboss.resteasy.client.jaxrs.ResteasyWebTarget;
-import org.jboss.resteasy.client.jaxrs.engines.URLConnectionEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.threeten.extra.Days;
 
-import javax.ws.rs.ClientErrorException;
-import javax.ws.rs.ServerErrorException;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -34,22 +32,26 @@ import java.util.List;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 public class TenantSynchronizer {
 
-    private static final String WOOCOMMERCE_URL = System.getenv("WOOCOMMERCE_URL");
-    private static final String WOOCOMMERCE_CK = System.getenv("WOOCOMMERCE_CK");
-    private static final String WOOCOMMERCE_CS = System.getenv("WOOCOMMERCE_CS");
-
     private static final String URL_SLUG_META_KEY = "URL Slug";
 
-    @Autowired
-    private TenantService tenantService;
+    private final TenantService tenantService;
+
+    private final TenantManagementService tenantManagementService;
+
+    private final WooCommerceRestFetcher wooCommerceRestFetcher;
+
+    private final LogService logService;
 
     @Autowired
-    private TenantManagementService tenantManagementService;
-
-    @Autowired
-    private LogService logService;
+    public TenantSynchronizer(TenantService tenantService, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService) {
+        this.tenantService = tenantService;
+        this.tenantManagementService = tenantManagementService;
+        this.wooCommerceRestFetcher = wooCommerceRestFetcher;
+        this.logService = logService;
+    }
 
     @Scheduled(cron = "* * * * *") //Every minute
+    @Async
     public void synchronizeTenants() {
         logService.logDebug(getClass(), "Synchronizing Tenants...");
 
@@ -58,22 +60,23 @@ public class TenantSynchronizer {
             return;
         }
 
-        if (WOOCOMMERCE_URL == null || WOOCOMMERCE_CK == null || WOOCOMMERCE_CS == null) {
-            logService.logError(getClass(), "Failed to Synchronize due to missing environment variable(s).");
+        if (!WooCommerceRestFetcher.isReady()) {
+            logService.logError(getClass(), "Failed to Synchronize because WooCommerceRestFetcher is not ready.");
             return;
         }
 
-        List<Subscription> subscriptions = getSubscriptions();
+        List<Subscription> subscriptions = wooCommerceRestFetcher.getSubscriptions();
+
         if (subscriptions != null) {
 
             /*
               Contains a list of the encountered subscriptions containing AptiBook, by ID.
-              Used for disabling tenants which have had their subscription removed from WooCommerce.
+              Used for disabling tenants which have had their subscriptions removed from WooCommerce.
              */
             List<Integer> subscriptionIdsEncountered = new ArrayList<>();
 
             for (Subscription subscription : subscriptions) {
-                //Check for all the AptiBook instances within this subscription
+                //Check for all the AptiBook instances within this subscriptions
                 List<LineItem> lineItems = subscription.getLineItems();
                 if (lineItems != null && !lineItems.isEmpty()) {
                     for (LineItem lineItem : lineItems) {
@@ -101,7 +104,7 @@ public class TenantSynchronizer {
                             if (currentTenant != null && !tier.equals(currentTenant.getTier()))
                                 changeTenantTier(currentTenant, tier);
 
-                            //Set Tenant Active or Inactive based on its subscription status.
+                            //Set Tenant Active or Inactive based on its subscriptions status.
                             Status status = subscription.getStatus();
                             if (currentTenant == null) {
                                 if (status == Status.ACTIVE) {
@@ -140,35 +143,6 @@ public class TenantSynchronizer {
 
         tenantManagementService.refresh();
         logService.logDebug(getClass(), "Synchronization Complete.");
-    }
-
-    /**
-     * Contacts WooCommerce and retrieves a list of Subscriptions.
-     *
-     * @return The list of Subscriptions.
-     */
-    private List<Subscription> getSubscriptions() {
-        URLConnectionEngine urlConnectionEngine = new URLConnectionEngine();
-
-        ResteasyClientBuilder builder = new ResteasyClientBuilder();
-        builder.register(new WooCommerceSecurityFilter(
-                WOOCOMMERCE_CK,
-                WOOCOMMERCE_CS));
-        builder.httpEngine(urlConnectionEngine);
-        ResteasyClient webClient = builder.build();
-        ResteasyWebTarget webTarget = webClient.target(WOOCOMMERCE_URL);
-        SubscriptionService service = webTarget.proxy(SubscriptionService.class);
-        try {
-            return service.getAll().getSubscriptions();
-        } catch (ClientErrorException e) {
-            logService.logException(getClass(), e, "Could not Synchronize Tenants due to Client Error");
-        } catch (ServerErrorException e) {
-            logService.logError(getClass(), "Could not Synchronize Tenants due to Server Error: " + e.getMessage());
-        } catch (Exception e) {
-            logService.logException(getClass(), e, "Could not Synchronize Tenants due to Unknown Error.");
-        }
-
-        return null;
     }
 
     /**
@@ -253,9 +227,9 @@ public class TenantSynchronizer {
     }
 
     /**
-     * Creates a new tenant using the specified subscription ID and slug.
+     * Creates a new tenant using the specified subscriptions ID and slug.
      *
-     * @param subscriptionId The ID of the tenant's subscription (from WooCommerce)
+     * @param subscriptionId The ID of the tenant's subscriptions (from WooCommerce)
      * @param slug           The slug of the tenant.
      * @return The newly created tenant, unless one already existed with the specified parameters, or the slug was null.
      */
@@ -276,7 +250,7 @@ public class TenantSynchronizer {
         }
 
         if (tenantService.getTenantBySubscriptionId(subscriptionId) != null) {
-            logService.logError(getClass(), "Could not Create Tenant: Another tenant with this subscription ID exists! (" + subscriptionId + ")");
+            logService.logError(getClass(), "Could not Create Tenant: Another tenant with this subscriptions ID exists! (" + subscriptionId + ")");
             return null;
         }
 

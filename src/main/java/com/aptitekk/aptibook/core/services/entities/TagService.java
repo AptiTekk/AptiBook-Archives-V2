@@ -18,7 +18,7 @@ import java.io.Serializable;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class TagService extends MultiTenantEntityServiceAbstract<Tag> implements Serializable {
+public class TagService extends MultiTenantRepositoryAbstract<Tag> implements Serializable {
 
     @Override
     public void delete(Tag tag) {

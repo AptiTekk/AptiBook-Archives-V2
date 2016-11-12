@@ -14,9 +14,9 @@ SET client_min_messages = warning;
 --
 
 CREATE TABLE file (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   data bytea,
-  tenant_id integer NOT NULL
+  tenant_id BIGINT NOT NULL
 );
 
 --
@@ -37,13 +37,13 @@ CACHE 1;
 --
 
 CREATE TABLE notification (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   body TEXT,
   creation timestamp without time zone,
   notif_read boolean,
   subject TEXT,
-  tenant_id integer NOT NULL,
-  user_id integer
+  tenant_id BIGINT NOT NULL,
+  user_id BIGINT
 );
 
 --
@@ -51,9 +51,9 @@ CREATE TABLE notification (
 --
 
 CREATE TABLE permission (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   descriptor TEXT,
-  tenant_id integer NOT NULL
+  tenant_id BIGINT NOT NULL
 );
 
 --
@@ -61,10 +61,10 @@ CREATE TABLE permission (
 --
 
 CREATE TABLE property (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   propertykey TEXT,
   propertyvalue TEXT,
-  tenant_id integer NOT NULL
+  tenant_id BIGINT NOT NULL
 );
 
 --
@@ -72,15 +72,15 @@ CREATE TABLE property (
 --
 
 CREATE TABLE reservation (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   datecreated timestamp without time zone,
   endtime timestamp without time zone,
   starttime timestamp without time zone,
   status TEXT,
   title TEXT,
-  tenant_id integer NOT NULL,
-  resource_id integer,
-  user_id integer
+  tenant_id BIGINT NOT NULL,
+  resource_id BIGINT,
+  user_id BIGINT
 );
 
 --
@@ -88,13 +88,13 @@ CREATE TABLE reservation (
 --
 
 CREATE TABLE reservationdecision (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   approved boolean NOT NULL,
   comment TEXT,
-  tenant_id integer NOT NULL,
-  reservation_id integer NOT NULL,
-  user_id integer NOT NULL,
-  usergroup_id integer NOT NULL
+  tenant_id BIGINT NOT NULL,
+  reservation_id BIGINT NOT NULL,
+  user_id BIGINT NOT NULL,
+  usergroup_id BIGINT NOT NULL
 );
 
 --
@@ -102,13 +102,13 @@ CREATE TABLE reservationdecision (
 --
 
 CREATE TABLE reservationfield (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   description TEXT,
   multiline boolean NOT NULL,
   required boolean NOT NULL,
   title TEXT,
-  tenant_id integer NOT NULL,
-  resourcecategory_id integer
+  tenant_id BIGINT NOT NULL,
+  resourcecategory_id BIGINT
 );
 
 --
@@ -116,8 +116,8 @@ CREATE TABLE reservationfield (
 --
 
 CREATE TABLE reservationfield_reservationfieldentry (
-  reservationfield_id integer NOT NULL,
-  reservationfieldentries_id integer NOT NULL
+  reservationfield_id BIGINT NOT NULL,
+  reservationfieldentries_id BIGINT NOT NULL
 );
 
 --
@@ -125,11 +125,11 @@ CREATE TABLE reservationfield_reservationfieldentry (
 --
 
 CREATE TABLE reservationfieldentry (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   content TEXT,
-  tenant_id integer NOT NULL,
-  field_id integer,
-  reservation_id integer
+  tenant_id BIGINT NOT NULL,
+  field_id BIGINT,
+  reservation_id BIGINT
 );
 
 --
@@ -137,13 +137,13 @@ CREATE TABLE reservationfieldentry (
 --
 
 CREATE TABLE resource (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   name TEXT,
   needsapproval boolean,
-  tenant_id integer NOT NULL,
-  image_id integer,
-  owner_id integer,
-  resourcecategory_id integer
+  tenant_id BIGINT NOT NULL,
+  image_id BIGINT,
+  owner_id BIGINT,
+  resourcecategory_id BIGINT
 );
 
 --
@@ -151,8 +151,8 @@ CREATE TABLE resource (
 --
 
 CREATE TABLE resource_tag (
-  resources_id integer NOT NULL,
-  tags_id integer NOT NULL
+  resources_id BIGINT NOT NULL,
+  tags_id BIGINT NOT NULL
 );
 
 --
@@ -160,9 +160,9 @@ CREATE TABLE resource_tag (
 --
 
 CREATE TABLE resourcecategory (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   name TEXT,
-  tenant_id integer NOT NULL
+  tenant_id BIGINT NOT NULL
 );
 
 --
@@ -170,10 +170,10 @@ CREATE TABLE resourcecategory (
 --
 
 CREATE TABLE tag (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   name TEXT,
-  tenant_id integer NOT NULL,
-  resourcecategory_id integer NOT NULL
+  tenant_id BIGINT NOT NULL,
+  resourcecategory_id BIGINT NOT NULL
 );
 
 --
@@ -181,10 +181,10 @@ CREATE TABLE tag (
 --
 
 CREATE TABLE tenant (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   active boolean NOT NULL,
   slug TEXT NOT NULL,
-  subscriptionid integer NOT NULL,
+  subscriptionid BIGINT NOT NULL,
   timesetinactive timestamp without time zone
 );
 
@@ -193,7 +193,7 @@ CREATE TABLE tenant (
 --
 
 CREATE TABLE "user" (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   emailaddress TEXT,
   firstname TEXT,
   hashedpassword TEXT,
@@ -204,7 +204,7 @@ CREATE TABLE "user" (
   userstate TEXT,
   verificationcode TEXT,
   verified boolean NOT NULL,
-  tenant_id integer NOT NULL
+  tenant_id BIGINT NOT NULL
 );
 
 --
@@ -212,8 +212,8 @@ CREATE TABLE "user" (
 --
 
 CREATE TABLE user_permission (
-  users_id integer NOT NULL,
-  permissions_id integer NOT NULL
+  users_id BIGINT NOT NULL,
+  permissions_id BIGINT NOT NULL
 );
 
 --
@@ -221,8 +221,8 @@ CREATE TABLE user_permission (
 --
 
 CREATE TABLE user_usergroup (
-  users_id integer NOT NULL,
-  usergroups_id integer NOT NULL
+  users_id BIGINT NOT NULL,
+  usergroups_id BIGINT NOT NULL
 );
 
 --
@@ -230,10 +230,10 @@ CREATE TABLE user_usergroup (
 --
 
 CREATE TABLE usergroup (
-  id integer NOT NULL,
+  id BIGINT NOT NULL,
   name TEXT,
-  tenant_id integer NOT NULL,
-  parent_id integer
+  tenant_id BIGINT NOT NULL,
+  parent_id BIGINT
 );
 
 --
@@ -241,8 +241,8 @@ CREATE TABLE usergroup (
 --
 
 CREATE TABLE usergroup_permission (
-  usergroups_id integer NOT NULL,
-  permissions_id integer NOT NULL
+  usergroups_id BIGINT NOT NULL,
+  permissions_id BIGINT NOT NULL
 );
 
 --

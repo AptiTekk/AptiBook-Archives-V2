@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook;
 
 import com.aptitekk.aptibook.core.logging.LogService;
+import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,16 +15,16 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 @Component
 public class WebFilter implements Filter {
 
+    private TenantManagementService tenantManagementService;
     private final LogService logService;
 
     @Autowired
-    public WebFilter(LogService logService) {
+    public WebFilter(TenantManagementService tenantManagementService, LogService logService) {
+        this.tenantManagementService = tenantManagementService;
         this.logService = logService;
     }
 
@@ -61,11 +62,8 @@ public class WebFilter implements Filter {
                     return;
                 }
 
-                List<String> allowedTenantSlugs = new ArrayList<>();
-                allowedTenantSlugs.add("dev");
-
                 //Tenants
-                if (allowedTenantSlugs.contains(pathSplit[1].toLowerCase())) { //Valid Tenant ID
+                if (tenantManagementService.getAllowedTenantSlugs().contains(pathSplit[1].toLowerCase())) { //Valid Tenant ID
                     String tenantSlug = pathSplit[1].toLowerCase();
                     httpServletRequest.setAttribute("tenant", tenantSlug);
                 }

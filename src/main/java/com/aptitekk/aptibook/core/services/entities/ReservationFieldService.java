@@ -17,7 +17,7 @@ import java.util.List;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ReservationFieldService extends MultiTenantEntityServiceAbstract<ReservationField> implements Serializable {
+public class ReservationFieldService extends MultiTenantRepositoryAbstract<ReservationField> implements Serializable {
 
     public List<ReservationField> getAllForResourceCategory(ResourceCategory resourceCategory) {
         return entityManager

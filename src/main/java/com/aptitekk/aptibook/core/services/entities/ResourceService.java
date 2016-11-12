@@ -21,7 +21,7 @@ import java.util.List;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ResourceService extends MultiTenantEntityServiceAbstract<Resource> implements Serializable {
+public class ResourceService extends MultiTenantRepositoryAbstract<Resource> implements Serializable {
 
     @Autowired
     private ResourceCategoryService resourceCategoryService;

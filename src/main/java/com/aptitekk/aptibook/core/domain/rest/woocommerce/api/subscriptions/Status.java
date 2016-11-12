@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain.rest.woocommerce.subscription.objects;
+package com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions;
 
 import com.fasterxml.jackson.annotation.JsonCreator;
 

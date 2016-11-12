@@ -21,11 +21,10 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.io.Serializable;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class FileService extends MultiTenantEntityServiceAbstract<File> {
+public class FileService extends MultiTenantRepositoryAbstract<File> {
 
     private static final int MAX_IMAGE_SIZE_PX = 1000;
 

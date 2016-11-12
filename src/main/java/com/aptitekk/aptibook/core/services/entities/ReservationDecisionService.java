@@ -11,10 +11,8 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
-import java.io.Serializable;
-
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ReservationDecisionService extends MultiTenantEntityServiceAbstract<ReservationDecision> {
+public class ReservationDecisionService extends MultiTenantRepositoryAbstract<ReservationDecision> {
 
 }

@@ -10,7 +10,6 @@ import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
-import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
@@ -20,7 +19,7 @@ import java.util.List;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ResourceCategoryService extends MultiTenantEntityServiceAbstract<ResourceCategory> implements Serializable {
+public class ResourceCategoryService extends MultiTenantRepositoryAbstract<ResourceCategory> implements Serializable {
 
     /**
      * Finds ResourceCategory by its name, within the current Tenant.

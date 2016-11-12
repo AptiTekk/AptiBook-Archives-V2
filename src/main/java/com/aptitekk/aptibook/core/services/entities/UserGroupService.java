@@ -12,7 +12,6 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,7 +19,7 @@ import java.util.Queue;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class UserGroupService extends MultiTenantEntityServiceAbstract<UserGroup> {
+public class UserGroupService extends MultiTenantRepositoryAbstract<UserGroup> {
 
     public static final String ROOT_GROUP_NAME = "root";
 

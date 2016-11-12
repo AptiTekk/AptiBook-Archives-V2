@@ -19,7 +19,7 @@ import javax.persistence.PersistenceException;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class TenantService extends GlobalEntityServiceAbstract<Tenant> {
+public class TenantService extends GlobalRepositoryAbstract<Tenant> {
 
     @Autowired
     private UserGroupService userGroupService;

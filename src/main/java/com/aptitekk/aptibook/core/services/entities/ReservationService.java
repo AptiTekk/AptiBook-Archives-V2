@@ -22,7 +22,7 @@ import java.util.*;
 
 @Service
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ReservationService extends MultiTenantEntityServiceAbstract<Reservation> implements Serializable {
+public class ReservationService extends MultiTenantRepositoryAbstract<Reservation> implements Serializable {
 
     @Autowired
     ResourceService resourceService;
