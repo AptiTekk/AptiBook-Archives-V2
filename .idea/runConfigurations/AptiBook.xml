@@ -2,7 +2,7 @@
   <configuration default="false" name="AptiBook" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <extension name="coverage" enabled="false" merge="false" sample_coverage="true" runner="idea" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.aptitekk.aptibook.AptiBook" />
-    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=dev" />
+    <option name="PROGRAM_PARAMETERS" value="--spring.profiles.active=development" />
     <option name="ALTERNATIVE_JRE_PATH" />
     <module name="AptiBook" />
     <envs>

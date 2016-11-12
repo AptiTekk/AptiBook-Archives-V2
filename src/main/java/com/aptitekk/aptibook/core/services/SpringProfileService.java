@@ -26,7 +26,7 @@ public class SpringProfileService {
 
     public enum Profile {
         PRODUCTION("production"),
-        DEV("dev");
+        DEV("development");
 
         private String profileName;
 
