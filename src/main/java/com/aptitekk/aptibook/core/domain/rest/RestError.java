@@ -8,18 +8,18 @@ package com.aptitekk.aptibook.core.domain.rest;
 
 public class RestError {
 
-    private String errorMessage;
+    private String error;
 
-    public RestError(String errorMessage){
-        this.errorMessage = errorMessage;
+    public RestError(String error) {
+        this.error = error;
     }
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public String getError() {
+        return error;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setError(String error) {
+        this.error = error;
     }
 
     @Override
@@ -29,12 +29,12 @@ public class RestError {
 
         RestError restError = (RestError) o;
 
-        return errorMessage != null ? errorMessage.equals(restError.errorMessage) : restError.errorMessage == null;
+        return error != null ? error.equals(restError.error) : restError.error == null;
     }
 
     @Override
     public int hashCode() {
-        return errorMessage != null ? errorMessage.hashCode() : 0;
+        return error != null ? error.hashCode() : 0;
     }
 
 }

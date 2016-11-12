@@ -6,9 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers;
 
-import com.aptitekk.aptibook.core.domain.rest.RestError;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -27,12 +25,12 @@ public class TenantController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/tenant", method = RequestMethod.GET)
-    public ResponseEntity<Object> getTenant() {
+    public ResponseEntity<?> getTenant() {
         Object tenantAttribute = httpServletRequest.getAttribute("tenant");
         if (tenantAttribute != null) {
-            return new ResponseEntity<>(tenantAttribute, HttpStatus.OK);
+            return ok(tenantAttribute);
         }
-        return new ResponseEntity<>(new RestError("Tenant is Inactive"), HttpStatus.BAD_REQUEST);
+        return badRequest("Tenant is Inactive");
     }
 
 }

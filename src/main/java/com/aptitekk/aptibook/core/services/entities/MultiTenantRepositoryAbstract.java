@@ -10,6 +10,7 @@ import com.aptitekk.aptibook.core.domain.entities.MultiTenantEntity;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -42,6 +43,21 @@ public abstract class MultiTenantRepositoryAbstract<T extends MultiTenantEntity>
             entity.setTenant(getTenant());
 
         return super.save(entity);
+    }
+
+    public T findInCurrentTenant(Long id) {
+        Tenant tenant = getTenant();
+        if (tenant == null || id == null)
+            return null;
+
+        try {
+            return this.entityManager.createQuery("SELECT e FROM " + this.entityType.getSimpleName() + " e WHERE e.id = :id AND e.tenant = :tenant", entityType)
+                    .setParameter("id", id)
+                    .setParameter("tenant", tenant)
+                    .getSingleResult();
+        } catch (NoResultException e) {
+            return null;
+        }
     }
 
     @Override

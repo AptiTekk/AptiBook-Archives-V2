@@ -35,7 +35,7 @@ public abstract class EntityRepository<T> {
         return this.entityManager.merge(entity);
     }
 
-    public T find(int id) {
+    public T find(Long id) {
         return this.entityManager.find(this.entityType, id);
     }
 
