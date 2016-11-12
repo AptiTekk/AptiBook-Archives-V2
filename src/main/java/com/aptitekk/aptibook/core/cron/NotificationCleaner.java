@@ -15,6 +15,7 @@ import com.aptitekk.aptibook.core.services.entities.TenantService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.threeten.extra.Days;
@@ -26,20 +27,25 @@ import java.util.List;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 public class NotificationCleaner {
 
-    @Autowired
-    private TenantService tenantService;
+    private final TenantService tenantService;
+
+    private final NotificationService notificationService;
+
+    private final LogService logService;
 
     @Autowired
-    private NotificationService notificationService;
-
-    @Autowired
-    private LogService logService;
+    public NotificationCleaner(TenantService tenantService, NotificationService notificationService, LogService logService) {
+        this.tenantService = tenantService;
+        this.notificationService = notificationService;
+        this.logService = logService;
+    }
 
     /**
      * Cleans up Notifications every hour.
      * If the Notification is >= 3 days old and has been read, it will be removed.
      */
     @Scheduled(cron = "0 * * * *") //Every hour.
+    @Async
     private void cleanReadNotifications() {
         logService.logDebug(getClass(), "Cleaning Notifications...");
 
