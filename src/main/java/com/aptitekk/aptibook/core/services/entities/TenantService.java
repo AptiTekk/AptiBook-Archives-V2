@@ -42,7 +42,7 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
     @Autowired
     private SpringProfileService springProfileService;
 
-    public Tenant getTenantBySubscriptionId(int subscriptionId) {
+    public Tenant findTenantBySubscriptionId(int subscriptionId) {
         try {
             return entityManager
                     .createQuery("SELECT t FROM Tenant t WHERE t.subscriptionId = ?1", Tenant.class)
@@ -53,7 +53,7 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
         }
     }
 
-    public Tenant getTenantBySlug(String slug) {
+    public Tenant findTenantBySlug(String slug) {
         try {
             return entityManager
                     .createQuery("SELECT t FROM Tenant t WHERE t.slug = ?1", Tenant.class)
@@ -66,9 +66,12 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
 
     @Override
     public Tenant save(Tenant entity) {
+        boolean newTenant = entity.getId() == null;
         entity = super.save(entity);
 
-        initializeNewTenant(entity);
+        if (newTenant)
+            initializeNewTenant(entity);
+
         return entity;
     }
 

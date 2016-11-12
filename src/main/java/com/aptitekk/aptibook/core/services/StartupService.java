@@ -23,13 +23,17 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 public class StartupService implements Serializable {
 
-    @Autowired
-    private TenantService tenantService;
+    private final TenantService tenantService;
 
-    @Autowired
-    private TenantSynchronizer tenantSynchronizer;
+    private final TenantSynchronizer tenantSynchronizer;
 
     private static final AtomicBoolean started = new AtomicBoolean(false);
+
+    @Autowired
+    public StartupService(TenantService tenantService, TenantSynchronizer tenantSynchronizer) {
+        this.tenantService = tenantService;
+        this.tenantSynchronizer = tenantSynchronizer;
+    }
 
     @PostConstruct
     public void init() {

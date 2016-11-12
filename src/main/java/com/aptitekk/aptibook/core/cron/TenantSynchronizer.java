@@ -86,7 +86,7 @@ public class TenantSynchronizer {
                         if ((tier = Tenant.Tier.getTierBySku(lineItem.getSku())) != null) {
                             subscriptionIdsEncountered.add(subscription.getId());
 
-                            Tenant currentTenant = tenantService.getTenantBySubscriptionId(subscription.getId());
+                            Tenant currentTenant = tenantService.findTenantBySubscriptionId(subscription.getId());
 
                             //Change Tenant slug if needed.
                             String slug = getSlugFromLineItem(lineItem);
@@ -174,7 +174,7 @@ public class TenantSynchronizer {
             return;
 
         String previousSlug = tenant.getSlug();
-        if (tenantService.getTenantBySlug(newSlug) == null) {
+        if (tenantService.findTenantBySlug(newSlug) == null) {
             tenant.setSlug(newSlug);
             try {
                 tenant = tenantService.save(tenant);
@@ -244,12 +244,12 @@ public class TenantSynchronizer {
             return null;
         }
 
-        if (tenantService.getTenantBySlug(slug) != null) {
+        if (tenantService.findTenantBySlug(slug) != null) {
             logService.logError(getClass(), "Could not Create Tenant: Another tenant with this slug exists! (" + slug + ")");
             return null;
         }
 
-        if (tenantService.getTenantBySubscriptionId(subscriptionId) != null) {
+        if (tenantService.findTenantBySubscriptionId(subscriptionId) != null) {
             logService.logError(getClass(), "Could not Create Tenant: Another tenant with this subscriptions ID exists! (" + subscriptionId + ")");
             return null;
         }

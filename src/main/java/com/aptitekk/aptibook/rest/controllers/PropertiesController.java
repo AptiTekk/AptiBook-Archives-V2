@@ -18,19 +18,18 @@ import org.springframework.web.context.WebApplicationContext;
 import java.util.List;
 
 @RestController
-@Scope(WebApplicationContext.SCOPE_REQUEST)
 public class PropertiesController extends APIControllerAbstract {
 
     private final PropertiesService propertiesService;
 
     @Autowired
     public PropertiesController(PropertiesService propertiesService) {
-        System.out.println("Properties");
         this.propertiesService = propertiesService;
     }
 
     @RequestMapping(value = "/properties", method = RequestMethod.GET)
     public List<Property> getProperties() {
+
         return this.propertiesService.findAll();
     }
 
