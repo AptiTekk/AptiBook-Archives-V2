@@ -7,19 +7,29 @@
 package com.aptitekk.aptibook.rest.controllers;
 
 import com.aptitekk.aptibook.core.domain.rest.RestError;
+import com.aptitekk.aptibook.core.services.LogService;
+import com.aptitekk.aptibook.core.services.auth.AuthService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 @RequestMapping("/api")
 public abstract class APIControllerAbstract {
+
+    @Autowired
+    AuthService authService;
+
+    @Autowired
+    LogService logService;
 
     ResponseEntity<Object> ok(Object entity) {
         return new ResponseEntity<>(entity, HttpStatus.OK);
     }
 
     ResponseEntity<Object> badRequest() {
-        return badRequest(null);
+        return badRequest("");
     }
 
     ResponseEntity<Object> badRequest(String message) {
@@ -27,7 +37,12 @@ public abstract class APIControllerAbstract {
     }
 
     ResponseEntity<Object> unauthorized() {
-        return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        return unauthorized("");
     }
+
+    ResponseEntity<Object> unauthorized(String message) {
+        return new ResponseEntity<>(new RestError(message), HttpStatus.UNAUTHORIZED);
+    }
+
 
 }

@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -35,12 +36,16 @@ public class User extends MultiTenantEntity implements Serializable {
 
     private String location;
 
+    @JsonIgnore
     private String hashedPassword;
 
+    @JsonIgnore
     private String verificationCode;
 
+    @JsonIgnore
     private boolean verified;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private State userState;
 
@@ -49,16 +54,20 @@ public class User extends MultiTenantEntity implements Serializable {
         PENDING;
     }
 
+    @JsonIgnore
     @SuppressWarnings("JpaAttributeTypeInspection")
     private Map<Notification.Type, Boolean> notificationTypeSettings = new HashMap<>();
 
+    @JsonIgnore
     @ManyToMany
     private List<UserGroup> userGroups = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @OrderBy("dateCreated desc")
     private List<Reservation> reservations = new ArrayList<>();
 
+    @JsonIgnore
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     private List<ReservationDecision> reservationDecisions = new ArrayList<>();
 

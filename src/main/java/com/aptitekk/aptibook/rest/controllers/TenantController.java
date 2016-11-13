@@ -17,16 +17,9 @@ import javax.servlet.http.HttpServletRequest;
 @RestController
 public class TenantController extends APIControllerAbstract {
 
-    private HttpServletRequest httpServletRequest;
-
-    @Autowired
-    public TenantController(HttpServletRequest httpServletRequest) {
-        this.httpServletRequest = httpServletRequest;
-    }
-
     @RequestMapping(value = "/tenant", method = RequestMethod.GET)
-    public ResponseEntity<?> getTenant() {
-        Object tenantAttribute = httpServletRequest.getAttribute("tenant");
+    public ResponseEntity<?> getTenant(HttpServletRequest request) {
+        Object tenantAttribute = request.getAttribute("tenant");
         if (tenantAttribute != null) {
             return ok(tenantAttribute);
         }
