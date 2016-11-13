@@ -15,7 +15,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-@RequestMapping("/api")
 public abstract class APIControllerAbstract {
 
     @Autowired
@@ -23,6 +22,10 @@ public abstract class APIControllerAbstract {
 
     @Autowired
     LogService logService;
+
+    ResponseEntity<Object> ok() {
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 
     ResponseEntity<Object> ok(Object entity) {
         return new ResponseEntity<>(entity, HttpStatus.OK);

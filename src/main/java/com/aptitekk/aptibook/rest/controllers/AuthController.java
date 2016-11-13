@@ -8,17 +8,17 @@ package com.aptitekk.aptibook.rest.controllers;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.rest.controllers.annotations.APIController;
 import org.postgresql.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-@RestController
+@APIController
 public class AuthController extends APIControllerAbstract {
 
     private final UserRepository userRepository;
@@ -28,7 +28,7 @@ public class AuthController extends APIControllerAbstract {
         this.userRepository = userRepository;
     }
 
-    @RequestMapping(value = "/auth/main", method = RequestMethod.GET)
+    @RequestMapping(value = "auth/sign-in", method = RequestMethod.GET)
     public ResponseEntity<?> basicAuthentication(HttpServletRequest request, HttpServletResponse response) {
         String authorizationHeader = request.getHeader("Authorization");
 
@@ -78,6 +78,12 @@ public class AuthController extends APIControllerAbstract {
 
             return badRequest("Authorization header was empty.");
         }
+    }
+
+    @RequestMapping(value = "auth/sign-out", method = RequestMethod.GET)
+    public ResponseEntity<?> signOut(HttpServletResponse response) {
+        authService.signOutCurrentUser(response);
+        return ok();
     }
 
 }

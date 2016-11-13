@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.rest.controllers;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
+import com.aptitekk.aptibook.rest.controllers.annotations.APIController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController
+@APIController
 public class PropertiesController extends APIControllerAbstract {
 
     private final PropertiesRepository propertiesRepository;
