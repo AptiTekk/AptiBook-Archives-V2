@@ -92,7 +92,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
      * @param password     The password of the user to check (raw).
      * @return The User if the credentials are correct, or null if they are not.
      */
-    public User getUserWithCredentials(String emailAddress, String password) {
+    public User findUserWithCredentials(String emailAddress, String password) {
         if (emailAddress == null || password == null || getTenant() == null) {
             return null;
         }
@@ -119,7 +119,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
      * @param descriptor The permission to filter users by.
      * @return A list of users with either the given permission or full permissions. Includes admin.
      */
-    public List<User> getUsersWithPermission(Permission.Descriptor descriptor) {
+    public List<User> findUsersWithPermission(Permission.Descriptor descriptor) {
         try {
             List<User> usersWithPermission = entityManager
                     .createQuery("SELECT distinct u from User u LEFT JOIN fetch u.permissions p WHERE (p.descriptor = ?1 OR p.descriptor = ?2) AND u.tenant = ?3", User.class)

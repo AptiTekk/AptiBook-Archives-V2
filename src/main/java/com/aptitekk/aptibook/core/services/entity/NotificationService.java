@@ -54,7 +54,7 @@ public class NotificationService {
     }
 
     public void sendNewUserRegistrationNotifications(User newUser) {
-        List<User> recipients = userRepository.getUsersWithPermission(Permission.Descriptor.USERS_MODIFY_ALL);
+        List<User> recipients = userRepository.findUsersWithPermission(Permission.Descriptor.USERS_MODIFY_ALL);
         for (User user : recipients) {
             sendNotification(Notification.Type.TYPE_APPROVAL_REQUEST,
                     "New User Registration",
