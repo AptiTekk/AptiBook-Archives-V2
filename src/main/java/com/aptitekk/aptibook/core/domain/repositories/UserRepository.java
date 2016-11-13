@@ -12,13 +12,8 @@ import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import java.io.Serializable;
 import java.util.List;
 
 @EntityRepository
@@ -32,8 +27,8 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
      * @param verificationCode The verification code of the User to search for.
      * @return A User Entity with the specified registration code, or null if one does not exist.
      */
-    public User findByCode(String verificationCode) {
-        return findByCode(verificationCode, getTenant());
+    public User findByVerificationCode(String verificationCode) {
+        return findByVerificationCode(verificationCode, getTenant());
     }
 
     /**
@@ -43,7 +38,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
      * @param tenant           The Tenant of the User to search for.
      * @return A User Entity with the specified registration code, or null if one does not exist.
      */
-    public User findByCode(String verificationCode, Tenant tenant) {
+    public User findByVerificationCode(String verificationCode, Tenant tenant) {
         if (verificationCode == null || tenant == null) {
             return null;
         }
