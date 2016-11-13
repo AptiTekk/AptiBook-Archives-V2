@@ -8,7 +8,7 @@ package com.aptitekk.aptibook.core.domain.rest.woocommerce.api;
 
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Subscription;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Subscriptions;
-import com.aptitekk.aptibook.core.logging.LogService;
+import com.aptitekk.aptibook.core.services.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;

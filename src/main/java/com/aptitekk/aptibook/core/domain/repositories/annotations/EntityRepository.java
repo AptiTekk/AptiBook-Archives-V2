@@ -4,15 +4,15 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.domain.repositories.annotations;
 
-import com.aptitekk.aptibook.core.domain.entities.ReservationDecision;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Repository;
 
-@Service
+import java.lang.annotation.Inherited;
+
+@Repository
 @Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ReservationDecisionService extends MultiTenantRepositoryAbstract<ReservationDecision> {
-
+public @interface EntityRepository {
 }

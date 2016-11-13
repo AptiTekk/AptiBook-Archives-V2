@@ -8,10 +8,10 @@ package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.logging.LogService;
+import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.StartupService;
-import com.aptitekk.aptibook.core.services.entities.NotificationService;
-import com.aptitekk.aptibook.core.services.entities.TenantService;
+import com.aptitekk.aptibook.core.domain.repositories.NotificationRepository;
+import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -27,16 +27,16 @@ import java.util.List;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 public class NotificationCleaner {
 
-    private final TenantService tenantService;
+    private final TenantRepository tenantRepository;
 
-    private final NotificationService notificationService;
+    private final NotificationRepository notificationRepository;
 
     private final LogService logService;
 
     @Autowired
-    public NotificationCleaner(TenantService tenantService, NotificationService notificationService, LogService logService) {
-        this.tenantService = tenantService;
-        this.notificationService = notificationService;
+    public NotificationCleaner(TenantRepository tenantRepository, NotificationRepository notificationRepository, LogService logService) {
+        this.tenantRepository = tenantRepository;
+        this.notificationRepository = notificationRepository;
         this.logService = logService;
     }
 
@@ -55,13 +55,13 @@ public class NotificationCleaner {
         }
 
         int numNotificationsRemoved = 0;
-        List<Tenant> tenants = tenantService.findAll();
+        List<Tenant> tenants = tenantRepository.findAll();
         for (Tenant tenant : tenants) {
-            List<Notification> notifications = notificationService.findAllForTenant(tenant);
+            List<Notification> notifications = notificationRepository.findAllForTenant(tenant);
             for (Notification notification : notifications) {
                 if (notification.getRead() && Days.between(notification.getCreation(), ZonedDateTime.now()).getAmount() > 3) {
                     try {
-                        notificationService.delete(notification);
+                        notificationRepository.delete(notification);
                         numNotificationsRemoved++;
                     } catch (Exception e) {
                         logService.logException(getClass(), e, "Could not delete Notification on cleanup.");

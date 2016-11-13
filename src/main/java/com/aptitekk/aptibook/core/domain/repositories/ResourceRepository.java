@@ -4,27 +4,19 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 
 import javax.persistence.PersistenceException;
-import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-@Service
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ResourceService extends MultiTenantRepositoryAbstract<Resource> implements Serializable {
-
-    @Autowired
-    private ResourceCategoryService resourceCategoryService;
+@EntityRepository
+public class ResourceRepository extends MultiTenantEntityRepositoryAbstract<Resource> {
 
     /**
      * Finds Resource by its name within an Resource Category.
@@ -39,10 +31,10 @@ public class ResourceService extends MultiTenantRepositoryAbstract<Resource> imp
 
         try {
             return entityManager
-                    .createQuery("SELECT r FROM Resource r WHERE r.name = ?1 AND r.resourceCategory = ?2 AND r.tenant = ?3", Resource.class)
-                    .setParameter(1, name)
-                    .setParameter(2, resourceCategory)
-                    .setParameter(3, getTenant())
+                    .createQuery("SELECT r FROM Resource r WHERE r.name = :name AND r.resourceCategory = :resourceCategory AND r.tenant = :tenant", Resource.class)
+                    .setParameter("name", name)
+                    .setParameter("resourceCategory", resourceCategory)
+                    .setParameter("tenant", getTenant())
                     .getSingleResult();
         } catch (PersistenceException e) {
             return null;

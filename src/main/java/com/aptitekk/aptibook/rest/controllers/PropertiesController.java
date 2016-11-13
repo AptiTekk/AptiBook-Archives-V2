@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers;
 
 import com.aptitekk.aptibook.core.domain.entities.Property;
-import com.aptitekk.aptibook.core.services.entities.PropertiesService;
+import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,22 +18,22 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class PropertiesController extends APIControllerAbstract {
 
-    private final PropertiesService propertiesService;
+    private final PropertiesRepository propertiesRepository;
 
     @Autowired
-    public PropertiesController(PropertiesService propertiesService) {
-        this.propertiesService = propertiesService;
+    public PropertiesController(PropertiesRepository propertiesRepository) {
+        this.propertiesRepository = propertiesRepository;
     }
 
     @RequestMapping(value = "/properties", method = RequestMethod.GET)
     public ResponseEntity<?> getProperties() {
-        return ok(propertiesService.findAll());
+        return ok(propertiesRepository.findAll());
     }
 
     @RequestMapping(value = "/properties/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getProperty(@PathVariable("id") Long id) {
         if (id != null) {
-            Property property = propertiesService.findInCurrentTenant(id);
+            Property property = propertiesRepository.findInCurrentTenant(id);
             if (property != null) {
                 return ok(property);
             }
@@ -45,10 +45,10 @@ public class PropertiesController extends APIControllerAbstract {
     @RequestMapping(value = "/properties/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> setPropertyValue(@PathVariable("id") Long id, String value) {
         if (id != null && value != null) {
-            Property property = propertiesService.findInCurrentTenant(id);
+            Property property = propertiesRepository.findInCurrentTenant(id);
             if (property != null) {
                 property.setPropertyValue(value);
-                return ok(propertiesService.save(property));
+                return ok(propertiesRepository.save(property));
             }
         }
 

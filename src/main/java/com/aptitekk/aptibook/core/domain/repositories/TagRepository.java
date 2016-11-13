@@ -4,11 +4,12 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.Tag;
+import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -16,20 +17,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.PersistenceException;
 import java.io.Serializable;
 
-@Service
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class TagService extends MultiTenantRepositoryAbstract<Tag> implements Serializable {
-
-    @Override
-    public void delete(Tag tag) {
-        if (tag != null) {
-            for (Resource resource : tag.getResources()) {
-                resource.getTags().remove(tag);
-            }
-        }
-
-        super.delete(tag);
-    }
+@EntityRepository
+public class TagRepository extends MultiTenantEntityRepositoryAbstract<Tag> {
 
     public Tag findByName(ResourceCategory resourceCategory, String name) {
         if (resourceCategory == null || name == null)
@@ -44,6 +33,17 @@ public class TagService extends MultiTenantRepositoryAbstract<Tag> implements Se
         } catch (PersistenceException e) {
             return null;
         }
+    }
+
+    @Override
+    public void delete(Tag tag) {
+        if (tag != null) {
+            for (Resource resource : tag.getResources()) {
+                resource.getTags().remove(tag);
+            }
+        }
+
+        super.delete(tag);
     }
 
 }

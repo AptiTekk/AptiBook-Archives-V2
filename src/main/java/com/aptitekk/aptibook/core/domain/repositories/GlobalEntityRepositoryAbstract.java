@@ -4,14 +4,16 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.domain.entities.GlobalEntity;
+import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 
 import java.util.List;
 
 @SuppressWarnings({"SpringAutowiredFieldsWarningInspection", "SpringJavaAutowiredMembersInspection"})
-public abstract class GlobalRepositoryAbstract<T extends GlobalEntity> extends EntityRepository<T> {
+@EntityRepository
+public abstract class GlobalEntityRepositoryAbstract<T extends GlobalEntity> extends EntityRepositoryAbstract<T> {
 
     @Override
     public List<T> findAll() {

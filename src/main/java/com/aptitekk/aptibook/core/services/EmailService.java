@@ -4,11 +4,10 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.services;
 
 
 import com.aptitekk.aptibook.core.domain.entities.Notification;
-import com.aptitekk.aptibook.core.logging.LogService;
 import com.sparkpost.Client;
 import com.sparkpost.exception.SparkPostException;
 import com.sparkpost.model.AddressAttributes;
@@ -23,21 +22,24 @@ import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.io.Serializable;
 import java.util.*;
 
 
 @Service
 @Scope(BeanDefinition.SCOPE_SINGLETON)
-public class EmailService implements Serializable {
+public class EmailService {
 
     private static final String API_KEY = System.getenv("SPARKPOST_API_KEY");
     private static final String API_URL = System.getenv("SPARKPOST_API_URL");
 
     private Client client;
 
+    private final LogService logService;
+
     @Autowired
-    private LogService logService;
+    public EmailService(LogService logService) {
+        this.logService = logService;
+    }
 
     @PostConstruct
     private void init() {

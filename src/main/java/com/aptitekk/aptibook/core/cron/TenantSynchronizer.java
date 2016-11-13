@@ -7,18 +7,17 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.WooCommerceRestFetcher;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.LineItem;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.MetaItem;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Status;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Subscription;
-import com.aptitekk.aptibook.core.logging.LogService;
+import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.StartupService;
-import com.aptitekk.aptibook.core.services.entities.TenantService;
+import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -29,12 +28,13 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@Scope(BeanDefinition.SCOPE_SINGLETON)
 public class TenantSynchronizer {
 
     private static final String URL_SLUG_META_KEY = "URL Slug";
 
-    private final TenantService tenantService;
+    private final TenantRepository tenantRepository;
+
+    private final TenantIntegrityService tenantIntegrityService;
 
     private final TenantManagementService tenantManagementService;
 
@@ -43,11 +43,12 @@ public class TenantSynchronizer {
     private final LogService logService;
 
     @Autowired
-    public TenantSynchronizer(TenantService tenantService, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService) {
-        this.tenantService = tenantService;
+    public TenantSynchronizer(TenantRepository tenantRepository, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService, TenantIntegrityService tenantIntegrityService) {
+        this.tenantRepository = tenantRepository;
         this.tenantManagementService = tenantManagementService;
         this.wooCommerceRestFetcher = wooCommerceRestFetcher;
         this.logService = logService;
+        this.tenantIntegrityService = tenantIntegrityService;
     }
 
     @Scheduled(cron = "* * * * *") //Every minute
@@ -86,7 +87,7 @@ public class TenantSynchronizer {
                         if ((tier = Tenant.Tier.getTierBySku(lineItem.getSku())) != null) {
                             subscriptionIdsEncountered.add(subscription.getId());
 
-                            Tenant currentTenant = tenantService.findTenantBySubscriptionId(subscription.getId());
+                            Tenant currentTenant = tenantRepository.findTenantBySubscriptionId(subscription.getId());
 
                             //Change Tenant slug if needed.
                             String slug = getSlugFromLineItem(lineItem);
@@ -133,7 +134,7 @@ public class TenantSynchronizer {
                 }
             }
 
-            for (Tenant tenant : tenantService.findAll()) {
+            for (Tenant tenant : tenantRepository.findAll()) {
                 if (subscriptionIdsEncountered.contains(tenant.getSubscriptionId()))
                     continue;
 
@@ -174,10 +175,10 @@ public class TenantSynchronizer {
             return;
 
         String previousSlug = tenant.getSlug();
-        if (tenantService.findTenantBySlug(newSlug) == null) {
+        if (tenantRepository.findTenantBySlug(newSlug) == null) {
             tenant.setSlug(newSlug);
             try {
-                tenant = tenantService.save(tenant);
+                tenant = tenantRepository.save(tenant);
                 logService.logInfo(getClass(), "Updated Slug For Tenant ID " + tenant.getId() + ". Previously: " + previousSlug + "; Now: " + newSlug);
             } catch (Exception e) {
                 logService.logException(getClass(), e, "Could not update slug for Tenant ID " + tenant.getId());
@@ -200,7 +201,7 @@ public class TenantSynchronizer {
         Tenant.Tier previousTier = tenant.getTier();
         tenant.setTier(newTier);
         try {
-            tenant = tenantService.save(tenant);
+            tenant = tenantRepository.save(tenant);
             logService.logInfo(getClass(), "Updated Tier For Tenant ID " + tenant.getId() + ". Previously: " + previousTier + "; Now: " + newTier);
         } catch (Exception e) {
             logService.logException(getClass(), e, "Could not update slug for Tenant ID " + tenant.getId());
@@ -219,7 +220,7 @@ public class TenantSynchronizer {
 
         tenant.setActive(active);
         try {
-            tenant = tenantService.save(tenant);
+            tenant = tenantRepository.save(tenant);
             logService.logInfo(getClass(), "Set Tenant ID " + tenant.getId() + (active ? " Active." : " Inactive."));
         } catch (Exception e) {
             logService.logException(getClass(), e, "Could not set Tenant ID " + tenant.getId() + (active ? " Active" : " Inactive"));
@@ -244,12 +245,12 @@ public class TenantSynchronizer {
             return null;
         }
 
-        if (tenantService.findTenantBySlug(slug) != null) {
+        if (tenantRepository.findTenantBySlug(slug) != null) {
             logService.logError(getClass(), "Could not Create Tenant: Another tenant with this slug exists! (" + slug + ")");
             return null;
         }
 
-        if (tenantService.findTenantBySubscriptionId(subscriptionId) != null) {
+        if (tenantRepository.findTenantBySubscriptionId(subscriptionId) != null) {
             logService.logError(getClass(), "Could not Create Tenant: Another tenant with this subscriptions ID exists! (" + subscriptionId + ")");
             return null;
         }
@@ -262,7 +263,8 @@ public class TenantSynchronizer {
         tenant.setAdminEmail(adminEmail);
 
         try {
-            tenantService.save(tenant);
+            tenant = tenantRepository.save(tenant);
+            tenantIntegrityService.initializeNewTenant(tenant);
             logService.logInfo(getClass(), "Created new Tenant for Subscription ID " + tenant.getSubscriptionId() + " with Slug " + tenant.getSlug() + " and Tier " + tier);
             return tenant;
         } catch (Exception e) {
@@ -279,7 +281,7 @@ public class TenantSynchronizer {
     private void deleteTenant(Tenant tenant) {
         try {
             Long tenantId = tenant.getId();
-            tenantService.delete(tenant);
+            tenantRepository.delete(tenant);
             logService.logInfo(getClass(), "Deleted Tenant with ID " + tenantId + " due to being inactive for 30 days.");
         } catch (Exception e) {
             logService.logException(getClass(), e, "Could not delete Tenant with ID " + tenant.getId());

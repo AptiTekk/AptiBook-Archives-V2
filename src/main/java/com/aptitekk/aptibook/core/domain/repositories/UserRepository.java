@@ -4,13 +4,14 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -20,14 +21,10 @@ import javax.persistence.PersistenceException;
 import java.io.Serializable;
 import java.util.List;
 
-@Service
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class UserService extends MultiTenantRepositoryAbstract<User> implements Serializable {
+@EntityRepository
+public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
 
     public static final String ADMIN_EMAIL_ADDRESS = "admin";
-
-    @Autowired
-    private PermissionService permissionService;
 
     /**
      * Finds User Entity by its email address, within the current Tenant.

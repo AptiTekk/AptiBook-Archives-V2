@@ -4,10 +4,11 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.domain.entities.MultiTenantEntity;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.NoResultException;
@@ -17,7 +18,7 @@ import java.util.List;
 
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-public abstract class MultiTenantRepositoryAbstract<T extends MultiTenantEntity> extends EntityRepository<T> {
+public abstract class MultiTenantEntityRepositoryAbstract<T extends MultiTenantEntity> extends EntityRepositoryAbstract<T> {
 
     @Autowired
     private HttpServletRequest httpRequest;

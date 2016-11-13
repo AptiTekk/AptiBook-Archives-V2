@@ -4,82 +4,20 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.*;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
+import com.aptitekk.aptibook.core.domain.entities.Reservation;
+import com.aptitekk.aptibook.core.domain.entities.Resource;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.services.annotations.EntityService;
 
-import javax.persistence.PersistenceException;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Queue;
 
-@Service
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class UserGroupService extends MultiTenantRepositoryAbstract<UserGroup> {
-
-    public static final String ROOT_GROUP_NAME = "root";
-
-    @Override
-    public void delete(UserGroup userGroup) {
-        if (userGroup != null) {
-            //Remove user assignments
-            for (User user : userGroup.getUsers()) {
-                user.getUserGroups().remove(userGroup);
-            }
-        }
-
-        super.delete(userGroup);
-    }
-
-    /**
-     * Finds Group Entity by its name, within the current Tenant.
-     *
-     * @param userGroupName The name of the group to search for.
-     * @return A User Group with the specified name, or null if one does not exist.
-     */
-    public UserGroup findByName(String userGroupName) {
-        return findByName(userGroupName, getTenant());
-    }
-
-    /**
-     * Finds Group Entity by its name, within the specified Tenant.
-     *
-     * @param userGroupName The name of the group to search for.
-     * @param tenant        The Tenant of the User Group to search for.
-     * @return A User Group with the specified name, or null if one does not exist.
-     */
-    public UserGroup findByName(String userGroupName, Tenant tenant) {
-        if (userGroupName == null || tenant == null)
-            return null;
-
-        try {
-            return entityManager
-                    .createQuery("SELECT g FROM UserGroup g WHERE g.name = :name AND g.tenant = :tenant", UserGroup.class)
-                    .setParameter("name", userGroupName)
-                    .setParameter("tenant", tenant)
-                    .getSingleResult();
-        } catch (PersistenceException e) {
-            return null;
-        }
-    }
-
-    /**
-     * @return The Root UserGroup of the current Tenant.
-     */
-    public UserGroup getRootGroup() {
-        return getRootGroup(getTenant());
-    }
-
-    /**
-     * @return The Root UserGroup of the specified Tenant.
-     */
-    public UserGroup getRootGroup(Tenant tenant) {
-        return findByName(ROOT_GROUP_NAME, tenant);
-    }
+@EntityService
+public class UserGroupService {
 
     /**
      * Returns a list containing all usergroups above and including the usergroup passed in.

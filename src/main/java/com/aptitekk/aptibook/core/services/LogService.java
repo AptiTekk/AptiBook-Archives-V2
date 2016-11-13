@@ -4,9 +4,8 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.logging;
+package com.aptitekk.aptibook.core.services;
 
-import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.mindscapehq.raygun4java.core.RaygunClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

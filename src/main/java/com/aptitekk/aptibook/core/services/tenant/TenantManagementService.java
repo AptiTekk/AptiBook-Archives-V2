@@ -6,10 +6,9 @@
 
 package com.aptitekk.aptibook.core.services.tenant;
 
-import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.services.entities.PropertiesService;
-import com.aptitekk.aptibook.core.services.entities.TenantService;
+import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
+import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -26,10 +25,10 @@ import java.util.Set;
 public class TenantManagementService {
 
     @Autowired
-    private TenantService tenantService;
+    private TenantRepository tenantRepository;
 
     @Autowired
-    private PropertiesService propertiesService;
+    private PropertiesRepository propertiesRepository;
 
     private Map<String, Tenant> allowedTenants;
 
@@ -48,7 +47,7 @@ public class TenantManagementService {
     private void refreshAllowedTenants() {
         allowedTenants = new HashMap<>();
 
-        for (Tenant tenant : tenantService.findAll()) {
+        for (Tenant tenant : tenantRepository.findAll()) {
             if (tenant.isActive())
                 allowedTenants.put(tenant.getSlug(), tenant);
         }
@@ -58,7 +57,7 @@ public class TenantManagementService {
         zoneIdMap = new HashMap<>();
 
         /*for (Tenant tenant : tenantService.findAll()) {
-            Property dateTimeZoneKey = propertiesService.getPropertyByKey(Property.Key.DATE_TIME_TIMEZONE, tenant);
+            Property dateTimeZoneKey = propertiesService.findPropertyByKey(Property.Key.DATE_TIME_TIMEZONE, tenant);
             try {
                 ZoneId dateTimeZone = ZoneId.of(dateTimeZoneKey.getPropertyValue());
                 zoneIdMap.put(tenant, dateTimeZone);

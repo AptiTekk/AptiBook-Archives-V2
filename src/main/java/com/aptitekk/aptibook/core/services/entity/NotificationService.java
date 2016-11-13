@@ -4,39 +4,36 @@
  * Proprietary and confidential.
  */
 
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.services.entity;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.repositories.NotificationRepository;
+import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.core.services.EmailService;
+import com.aptitekk.aptibook.core.services.annotations.EntityService;
 import com.aptitekk.aptibook.core.util.TimeCommons;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
-import javax.persistence.PersistenceException;
-import java.io.Serializable;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
-@Service
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class NotificationService extends MultiTenantRepositoryAbstract<Notification> implements Serializable {
+@EntityService
+public class NotificationService {
+
+    private final NotificationRepository notificationRepository;
+
+    private final UserGroupService userGroupService;
+
+    private final EmailService emailService;
+
+    private final UserRepository userRepository;
 
     @Autowired
-    private UserGroupService userGroupService;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private UserService userService;
+    public NotificationService(NotificationRepository notificationRepository, UserGroupService userGroupService, EmailService emailService, UserRepository userRepository) {
+        this.notificationRepository = notificationRepository;
+        this.userGroupService = userGroupService;
+        this.emailService = emailService;
+        this.userRepository = userRepository;
+    }
 
     public void sendNotification(Notification.Type type, String subject, String body, List<UserGroup> userGroupList) {
         if (subject == null || body == null || userGroupList == null)
@@ -51,13 +48,13 @@ public class NotificationService extends MultiTenantRepositoryAbstract<Notificat
 
     public void sendNotification(Notification.Type type, String subject, String body, User user) {
         Notification notification = new Notification(user, subject, body);
-        notification = save(notification);
+        notification = notificationRepository.save(notification);
         if (!user.isAdmin() && (type == null || user.getNotificationTypeSettings().get(type)))
             emailService.sendEmailNotification(notification);
     }
 
     public void sendNewUserRegistrationNotifications(User newUser) {
-        List<User> recipients = userService.getUsersWithPermission(Permission.Descriptor.USERS_MODIFY_ALL);
+        List<User> recipients = userRepository.getUsersWithPermission(Permission.Descriptor.USERS_MODIFY_ALL);
         for (User user : recipients) {
             sendNotification(Notification.Type.TYPE_APPROVAL_REQUEST,
                     "New User Registration",
@@ -155,37 +152,5 @@ public class NotificationService extends MultiTenantRepositoryAbstract<Notificat
                         + "</b> has been Cancelled.",
                 reservation.getUser()
         );
-    }
-
-    public void markAllAsReadForUser(User user) {
-        try {
-            entityManager
-                    .createQuery("UPDATE Notification n SET n.notif_read = true WHERE n.user = ?1")
-                    .setParameter(1, user)
-                    .executeUpdate();
-        } catch (PersistenceException ignored) {
-        }
-    }
-
-    public List<Notification> getAllForUser(User user) {
-        if (user == null)
-            return null;
-
-        try {
-            List<Notification> result = entityManager
-                    .createQuery("SELECT n FROM Notification n WHERE n.user = :user", Notification.class)
-                    .setParameter("user", user)
-                    .getResultList();
-
-            Comparator<Notification> comparator = Comparator.comparing(Notification::getRead);
-            comparator = comparator.reversed();
-            comparator = comparator.thenComparing(Notification::getCreation);
-            comparator = comparator.reversed();
-            Stream<Notification> notificationStream = result.stream().sorted(comparator);
-
-            return notificationStream.collect(Collectors.toList());
-        } catch (PersistenceException e) {
-            return null;
-        }
     }
 }

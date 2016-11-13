@@ -4,10 +4,11 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
@@ -17,9 +18,8 @@ import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
-@Service
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class ResourceCategoryService extends MultiTenantRepositoryAbstract<ResourceCategory> implements Serializable {
+@EntityRepository
+public class ResourceCategoryRepository extends MultiTenantEntityRepositoryAbstract<ResourceCategory> {
 
     /**
      * Finds ResourceCategory by its name, within the current Tenant.

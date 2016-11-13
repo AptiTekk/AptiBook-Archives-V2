@@ -4,16 +4,15 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.services.entity;
 
 import com.aptitekk.aptibook.core.domain.entities.File;
-import com.aptitekk.aptibook.core.logging.LogService;
+import com.aptitekk.aptibook.core.domain.repositories.FileRepository;
+import com.aptitekk.aptibook.core.services.LogService;
+import com.aptitekk.aptibook.core.services.annotations.EntityService;
 import net.coobird.thumbnailator.Thumbnails;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
 import javax.imageio.ImageIO;
 import javax.servlet.http.Part;
@@ -22,14 +21,20 @@ import java.awt.image.BufferedImage;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 
-@Service
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class FileService extends MultiTenantRepositoryAbstract<File> {
+@EntityService
+public class FileService {
 
-    private static final int MAX_IMAGE_SIZE_PX = 1000;
+    private final FileRepository fileRepository;
+
+    private final LogService logService;
 
     @Autowired
-    private LogService logService;
+    public FileService(FileRepository fileRepository, LogService logService) {
+        this.fileRepository = fileRepository;
+        this.logService = logService;
+    }
+
+    private static final int MAX_IMAGE_SIZE_PX = 1000;
 
     /**
      * Uploads the image, scales it, and crops it.
@@ -78,7 +83,7 @@ public class FileService extends MultiTenantRepositoryAbstract<File> {
             File file = new File();
             file.setData(output);
 
-            return save(file);
+            return fileRepository.save(file);
         } else {
             logService.logError(getClass(), "Attempt to upload image failed due to a null byte array output.");
             return null;

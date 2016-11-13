@@ -7,8 +7,8 @@
 package com.aptitekk.aptibook.rest.security;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.logging.LogService;
-import com.aptitekk.aptibook.core.services.entities.TenantService;
+import com.aptitekk.aptibook.core.services.LogService;
+import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -22,13 +22,13 @@ import java.io.IOException;
 public class WebFilter implements Filter {
 
     private TenantManagementService tenantManagementService;
-    private TenantService tenantService;
+    private TenantRepository tenantRepository;
     private final LogService logService;
 
     @Autowired
-    public WebFilter(TenantManagementService tenantManagementService, TenantService tenantService, LogService logService) {
+    public WebFilter(TenantManagementService tenantManagementService, TenantRepository tenantRepository, LogService logService) {
         this.tenantManagementService = tenantManagementService;
-        this.tenantService = tenantService;
+        this.tenantRepository = tenantRepository;
         this.logService = logService;
     }
 
@@ -69,7 +69,7 @@ public class WebFilter implements Filter {
                 //Tenants
                 if (tenantManagementService.getAllowedTenantSlugs().contains(pathSplit[1].toLowerCase())) { //Valid Tenant ID
                     String tenantSlug = pathSplit[1].toLowerCase();
-                    Tenant tenant = tenantService.findTenantBySlug(tenantSlug);
+                    Tenant tenant = tenantRepository.findTenantBySlug(tenantSlug);
                     httpServletRequest.setAttribute("tenant", tenant);
                 }
 

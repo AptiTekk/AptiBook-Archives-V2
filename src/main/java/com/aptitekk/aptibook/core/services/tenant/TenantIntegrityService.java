@@ -4,78 +4,48 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.services.tenant;
 
 import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.repositories.*;
+import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-
-import javax.persistence.PersistenceException;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
-@Scope(BeanDefinition.SCOPE_PROTOTYPE)
-public class TenantService extends GlobalRepositoryAbstract<Tenant> {
+@Transactional
+public class TenantIntegrityService {
+
+    private final UserGroupRepository userGroupRepository;
+
+    private final UserRepository userRepository;
+
+    private final ResourceCategoryRepository resourceCategoryRepository;
+
+    private final PropertiesRepository propertiesRepository;
+
+    private final PermissionRepository permissionRepository;
+
+    private final EmailService emailService;
+
+    private final SpringProfileService springProfileService;
 
     @Autowired
-    private UserGroupService userGroupService;
-
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private ResourceCategoryService resourceCategoryService;
-
-    @Autowired
-    private PropertiesService propertiesService;
-
-    @Autowired
-    private PermissionService permissionService;
-
-    @Autowired
-    private EmailService emailService;
-
-    @Autowired
-    private SpringProfileService springProfileService;
-
-    public Tenant findTenantBySubscriptionId(int subscriptionId) {
-        try {
-            return entityManager
-                    .createQuery("SELECT t FROM Tenant t WHERE t.subscriptionId = ?1", Tenant.class)
-                    .setParameter(1, subscriptionId)
-                    .getSingleResult();
-        } catch (PersistenceException e) {
-            return null;
-        }
+    public TenantIntegrityService(UserGroupRepository userGroupRepository, UserRepository userRepository, ResourceCategoryRepository resourceCategoryRepository, PropertiesRepository propertiesRepository, PermissionRepository permissionRepository, EmailService emailService, SpringProfileService springProfileService) {
+        this.userGroupRepository = userGroupRepository;
+        this.userRepository = userRepository;
+        this.resourceCategoryRepository = resourceCategoryRepository;
+        this.propertiesRepository = propertiesRepository;
+        this.permissionRepository = permissionRepository;
+        this.emailService = emailService;
+        this.springProfileService = springProfileService;
     }
 
-    public Tenant findTenantBySlug(String slug) {
-        try {
-            return entityManager
-                    .createQuery("SELECT t FROM Tenant t WHERE t.slug = ?1", Tenant.class)
-                    .setParameter(1, slug)
-                    .getSingleResult();
-        } catch (PersistenceException e) {
-            return null;
-        }
-    }
-
-    @Override
-    public Tenant save(Tenant entity) {
-        boolean newTenant = entity.getId() == null;
-        entity = super.save(entity);
-
-        if (newTenant)
-            initializeNewTenant(entity);
-
-        return entity;
-    }
-
-    private void initializeNewTenant(Tenant tenant) {
+    public void initializeNewTenant(Tenant tenant) {
         ensureTenantIntegrity(tenant);
         addDefaultResourceCategories(tenant);
     }
@@ -88,11 +58,11 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
     }
 
     private void checkForRootGroup(Tenant tenant) {
-        if (userGroupService.getRootGroup(tenant) == null) {
-            UserGroup rootGroup = new UserGroup(UserGroupService.ROOT_GROUP_NAME);
+        if (userGroupRepository.findRootGroup(tenant) == null) {
+            UserGroup rootGroup = new UserGroup(UserGroupRepository.ROOT_GROUP_NAME);
             rootGroup.setTenant(tenant);
             try {
-                userGroupService.save(rootGroup);
+                userGroupRepository.save(rootGroup);
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -100,12 +70,12 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
     }
 
     private void checkForAdminUser(Tenant tenant) {
-        User adminUser = userService.findByEmailAddress(UserService.ADMIN_EMAIL_ADDRESS, tenant);
+        User adminUser = userRepository.findByEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS, tenant);
         if (adminUser == null) {
 
             try {
                 adminUser = new User();
-                adminUser.setEmailAddress(UserService.ADMIN_EMAIL_ADDRESS);
+                adminUser.setEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS);
 
                 if (springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
                     String password = PasswordGenerator.generateRandomPassword(10);
@@ -126,7 +96,7 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
                 adminUser.setTenant(tenant);
 
                 try {
-                    userService.save(adminUser);
+                    userRepository.save(adminUser);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -138,14 +108,14 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
     }
 
     private void ensureAdminHasRootGroup(Tenant tenant) {
-        User adminUser = userService.findByEmailAddress(UserService.ADMIN_EMAIL_ADDRESS, tenant);
+        User adminUser = userRepository.findByEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS, tenant);
         if (adminUser != null) {
-            UserGroup rootGroup = userGroupService.getRootGroup(tenant);
+            UserGroup rootGroup = userGroupRepository.findRootGroup(tenant);
             if (rootGroup != null) {
                 if (!adminUser.getUserGroups().contains(rootGroup)) {
                     try {
                         adminUser.getUserGroups().add(rootGroup);
-                        userService.save(adminUser);
+                        userRepository.save(adminUser);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -155,7 +125,7 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
     }
 
     private void writeDefaultProperties(Tenant tenant) {
-        Iterable<Property> currentProperties = propertiesService.findAllForTenant(tenant);
+        Iterable<Property> currentProperties = propertiesRepository.findAllForTenant(tenant);
 
         for (Property.Key key : Property.Key.values()) {
             boolean foundProperty = false;
@@ -173,7 +143,7 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
                 property.setPropertyValue(key.getDefaultValue());
                 property.setTenant(tenant);
                 try {
-                    propertiesService.save(property);
+                    propertiesRepository.save(property);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -182,7 +152,7 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
     }
 
     private void writeDefaultPermissions(Tenant tenant) {
-        Iterable<Permission> currentPermissions = permissionService.findAllForTenant(tenant);
+        Iterable<Permission> currentPermissions = permissionRepository.findAllForTenant(tenant);
 
         for (Permission.Descriptor descriptor : Permission.Descriptor.values()) {
             boolean foundPermission = false;
@@ -199,7 +169,7 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
                 permission.setDescriptor(descriptor);
                 permission.setTenant(tenant);
                 try {
-                    permissionService.save(permission);
+                    permissionRepository.save(permission);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -208,14 +178,15 @@ public class TenantService extends GlobalRepositoryAbstract<Tenant> {
     }
 
     private void addDefaultResourceCategories(Tenant tenant) {
-        if (resourceCategoryService.findAllForTenant(tenant).isEmpty()) {
+        if (resourceCategoryRepository.findAllForTenant(tenant).isEmpty()) {
             try {
                 ResourceCategory resourceCategory = new ResourceCategory("Rooms");
                 resourceCategory.setTenant(tenant);
-                resourceCategoryService.save(resourceCategory);
+                resourceCategoryRepository.save(resourceCategory);
             } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
+
 }

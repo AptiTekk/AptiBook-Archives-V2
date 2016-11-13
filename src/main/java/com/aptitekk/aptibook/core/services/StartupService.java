@@ -8,7 +8,8 @@ package com.aptitekk.aptibook.core.services;
 
 import com.aptitekk.aptibook.core.cron.TenantSynchronizer;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.services.entities.TenantService;
+import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
+import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -23,15 +24,18 @@ import java.util.concurrent.atomic.AtomicBoolean;
 @Scope(BeanDefinition.SCOPE_SINGLETON)
 public class StartupService implements Serializable {
 
-    private final TenantService tenantService;
+    private final TenantRepository tenantRepository;
+
+    private final TenantIntegrityService tenantIntegrityService;
 
     private final TenantSynchronizer tenantSynchronizer;
 
     private static final AtomicBoolean started = new AtomicBoolean(false);
 
     @Autowired
-    public StartupService(TenantService tenantService, TenantSynchronizer tenantSynchronizer) {
-        this.tenantService = tenantService;
+    public StartupService(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, TenantSynchronizer tenantSynchronizer) {
+        this.tenantRepository = tenantRepository;
+        this.tenantIntegrityService = tenantIntegrityService;
         this.tenantSynchronizer = tenantSynchronizer;
     }
 
@@ -39,8 +43,8 @@ public class StartupService implements Serializable {
     public void init() {
         TimeZone.setDefault(TimeZone.getTimeZone("UTC"));
 
-        for (Tenant tenant : tenantService.findAll()) {
-            tenantService.ensureTenantIntegrity(tenant);
+        for (Tenant tenant : tenantRepository.findAll()) {
+            tenantIntegrityService.ensureTenantIntegrity(tenant);
         }
 
         started.set(true);

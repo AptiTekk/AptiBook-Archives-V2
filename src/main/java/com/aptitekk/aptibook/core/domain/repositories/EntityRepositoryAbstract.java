@@ -4,9 +4,10 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.entities;
+package com.aptitekk.aptibook.core.domain.repositories;
 
-import org.springframework.stereotype.Repository;
+import com.aptitekk.aptibook.core.services.LogService;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.PostConstruct;
@@ -15,11 +16,14 @@ import javax.persistence.PersistenceContext;
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
-@Repository
+@SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 @Transactional
-public abstract class EntityRepository<T> {
+public abstract class EntityRepositoryAbstract<T> {
 
     Class<T> entityType;
+
+    @Autowired
+    LogService logService;
 
     @PostConstruct
     private void init() {
