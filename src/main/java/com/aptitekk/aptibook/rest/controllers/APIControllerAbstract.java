@@ -44,5 +44,8 @@ public abstract class APIControllerAbstract {
         return new ResponseEntity<>(new RestError(message), HttpStatus.UNAUTHORIZED);
     }
 
+    ResponseEntity<Object> noPermission() {
+        return new ResponseEntity<>(new RestError("You do not have permission."), HttpStatus.UNAUTHORIZED);
+    }
 
 }

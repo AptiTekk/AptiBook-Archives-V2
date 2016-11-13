@@ -6,10 +6,12 @@
 
 package com.aptitekk.aptibook.core.services.auth;
 
+import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.SpringProfileService;
+import com.aptitekk.aptibook.core.services.entity.PermissionService;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,13 +31,15 @@ public class AuthService {
     private final HttpServletRequest httpServletRequest;
     private final SpringProfileService springProfileService;
     private final UserRepository userRepository;
+    private final PermissionService permissionService;
     private final LogService logService;
 
     @Autowired
-    public AuthService(HttpServletRequest httpServletRequest, SpringProfileService springProfileService, UserRepository userRepository, LogService logService) {
+    public AuthService(HttpServletRequest httpServletRequest, SpringProfileService springProfileService, UserRepository userRepository, PermissionService permissionService, LogService logService) {
         this.httpServletRequest = httpServletRequest;
         this.springProfileService = springProfileService;
         this.userRepository = userRepository;
+        this.permissionService = permissionService;
         this.logService = logService;
     }
 
@@ -100,6 +104,7 @@ public class AuthService {
         }
 
         cookie.setMaxAge(604800);
+        cookie.setPath("/" + userRepository.getTenant().getSlug() + "/api");
 
         httpServletResponse.addCookie(cookie);
     }
@@ -132,6 +137,34 @@ public class AuthService {
         }
 
         return null;
+    }
+
+    /**
+     * Determines if the current user has the given permission.
+     *
+     * @param descriptor The permission descriptor to check for.
+     * @return True if they have permission, false if they do not or the current user is null.
+     */
+    public boolean doesCurrentUserHavePermission(Permission.Descriptor descriptor) {
+        User currentUser = getCurrentUser();
+        return currentUser != null &&
+                (currentUser.isAdmin()
+                        || permissionService.userHasPermission(currentUser, descriptor)
+                        || permissionService.userHasPermission(currentUser, Permission.Descriptor.GENERAL_FULL_PERMISSIONS));
+    }
+
+    /**
+     * Determines if the current user has one or more permissions within a given permission group.
+     *
+     * @param group The permission group to look for permissions within.
+     * @return True if they have one or more permissions, false if they do not or the current user is null.
+     */
+    public boolean doesCurrentUserHavePermissionOfGroup(Permission.Group group) {
+        User currentUser = getCurrentUser();
+        return currentUser != null &&
+                (currentUser.isAdmin()
+                        || permissionService.userHasPermissionOfGroup(currentUser, group)
+                        || permissionService.userHasPermission(currentUser, Permission.Descriptor.GENERAL_FULL_PERMISSIONS));
     }
 
 }
