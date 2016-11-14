@@ -7,8 +7,8 @@
 package com.aptitekk.aptibook.rest.security;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
+import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -17,6 +17,7 @@ import javax.servlet.*;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.util.Arrays;
 
 @Component
 public class WebFilter implements Filter {
@@ -43,49 +44,65 @@ public class WebFilter implements Filter {
             HttpServletRequest httpServletRequest = (HttpServletRequest) servletRequest;
             HttpServletResponse httpServletResponse = (HttpServletResponse) servletResponse;
 
-            String path = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length());
-            String[] pathSplit = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length()).split("/");
+            String path = httpServletRequest.getRequestURI().substring(httpServletRequest.getContextPath().length()).replaceAll("//", "/");
+            String[] pathSplit = path.split("/");
 
             if (pathSplit.length >= 2) {
+                boolean beenFiltered = httpServletRequest.getAttribute("filtered") != null;
+                boolean cameFromTenant = httpServletRequest.getAttribute("tenant") != null;
+
+                //Resources
+                if (pathSplit[1].matches("packed|splashscreen|favicons|favicon.ico")) {
+                    filterChain.doFilter(servletRequest, servletResponse);
+                    return;
+                }
+
+                //Root RestControllers
+                if (pathSplit[1].matches("error|ping")) {
+                    filterChain.doFilter(servletRequest, servletResponse);
+                    return;
+                }
 
                 //Index (Angular)
-                if (pathSplit[1].equals("index.html")) {
+                if (pathSplit[1].equals("index.html") && beenFiltered) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
 
                 //API
-                if (pathSplit[1].equals("api")) {
+                if (pathSplit[1].equals("api") && beenFiltered && cameFromTenant) {
                     filterChain.doFilter(servletRequest, servletResponse);
-                    return;
                 }
 
-                //Resources
-                if (pathSplit[1].matches("packed|splashscreen|favicons")) {
-                    filterChain.doFilter(servletRequest, servletResponse);
-                    return;
-                }
+                httpServletRequest.setAttribute("filtered", true);
 
                 //Tenants
                 if (tenantManagementService.getAllowedTenantSlugs().contains(pathSplit[1].toLowerCase())) { //Valid Tenant ID
                     String tenantSlug = pathSplit[1].toLowerCase();
                     Tenant tenant = tenantRepository.findTenantBySlug(tenantSlug);
                     httpServletRequest.setAttribute("tenant", tenant);
+
+                    String url;
+                    if (pathSplit.length > 2) {
+                        url = path.substring(path.indexOf("/", 2));
+                        if (url.contains(";"))
+                            url = url.substring(0, url.indexOf(";"));
+                    } else
+                        url = "/index.html";
+
+                    httpServletRequest.getRequestDispatcher(url).forward(servletRequest, servletResponse);
+                    return;
                 }
-
-                String url;
-                if (pathSplit.length > 2) {
-                    url = path.substring(path.indexOf("/", 2));
-                    if (url.contains(";"))
-                        url = url.substring(0, url.indexOf(";"));
-                } else
-                    url = "index.html";
-
-                httpServletRequest.getRequestDispatcher(url).forward(servletRequest, servletResponse);
             }
+
+            notFound(httpServletRequest, httpServletResponse);
         } catch (Exception e) {
             logService.logException(getClass(), e, "Unhandled Exception");
         }
+    }
+
+    private void notFound(HttpServletRequest request, HttpServletResponse response) {
+        response.setStatus(404);
     }
 
     @Override
