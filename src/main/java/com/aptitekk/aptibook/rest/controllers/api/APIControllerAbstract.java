@@ -35,7 +35,7 @@ public abstract class APIControllerAbstract {
     }
 
     ResponseEntity<Object> badRequest(String message) {
-        return new ResponseEntity<>(new RestError(message), HttpStatus.BAD_REQUEST);
+        return createErrorResponseEntity(message, HttpStatus.BAD_REQUEST);
     }
 
     ResponseEntity<Object> unauthorized() {
@@ -43,11 +43,11 @@ public abstract class APIControllerAbstract {
     }
 
     ResponseEntity<Object> unauthorized(String message) {
-        return new ResponseEntity<>(new RestError(message), HttpStatus.UNAUTHORIZED);
+        return createErrorResponseEntity(message, HttpStatus.UNAUTHORIZED);
     }
 
     ResponseEntity<Object> noPermission() {
-        return new ResponseEntity<>(new RestError("You do not have permission."), HttpStatus.UNAUTHORIZED);
+        return createErrorResponseEntity("You do not have permission.", HttpStatus.UNAUTHORIZED);
     }
 
     ResponseEntity<Object> serverError() {
@@ -55,7 +55,19 @@ public abstract class APIControllerAbstract {
     }
 
     ResponseEntity<Object> serverError(String message) {
-        return new ResponseEntity<>(new RestError(message), HttpStatus.INTERNAL_SERVER_ERROR);
+        return createErrorResponseEntity(message, HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    ResponseEntity<?> notImplemented() {
+        return notImplemented("This is not available.");
+    }
+
+    ResponseEntity<Object> notImplemented(String message) {
+        return createErrorResponseEntity(message, HttpStatus.NOT_IMPLEMENTED);
+    }
+
+    private ResponseEntity<Object> createErrorResponseEntity(String message, HttpStatus httpStatus) {
+        return new ResponseEntity<>(new RestError(message), httpStatus);
     }
 
 }
