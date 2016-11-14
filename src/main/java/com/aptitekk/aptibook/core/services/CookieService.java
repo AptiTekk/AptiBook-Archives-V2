@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.core.services;
 
-import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
+import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import org.jasypt.exceptions.EncryptionOperationNotPossibleException;
 import org.jasypt.util.text.BasicTextEncryptor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,13 +22,11 @@ public class CookieService {
     private static final String ENCRYPTION_KEY = "xof@SqzU5z5X&m3qaJMSj$3WNo@JmYPmog*L%dZooLI3ldVnoc";
 
     private final SpringProfileService springProfileService;
-    private final TenantSessionService tenantSessionService;
     private final LogService logService;
 
     @Autowired
-    public CookieService(SpringProfileService springProfileService, TenantSessionService tenantSessionService, LogService logService) {
+    public CookieService(SpringProfileService springProfileService, LogService logService) {
         this.springProfileService = springProfileService;
-        this.tenantSessionService = tenantSessionService;
         this.logService = logService;
     }
 
@@ -78,8 +76,8 @@ public class CookieService {
         }
     }
 
-    public void storeEncryptedCookie(String key, String value, int maxAgeSeconds, HttpServletResponse response) {
-        if (key == null || value == null)
+    public void storeEncryptedCookie(String key, String value, int maxAgeSeconds, Tenant tenant, HttpServletResponse response) {
+        if (key == null || value == null || tenant == null)
             return;
 
         Cookie cookie = new Cookie(key, encryptCookieData(value));
@@ -89,7 +87,7 @@ public class CookieService {
         }
 
         cookie.setMaxAge(maxAgeSeconds);
-        cookie.setPath("/" + tenantSessionService.getTenant().getSlug());
+        cookie.setPath("/" + tenant.getSlug());
         response.addCookie(cookie);
     }
 
@@ -109,14 +107,14 @@ public class CookieService {
         return null;
     }
 
-    public void deleteCookie(String key, HttpServletResponse response) {
+    public void deleteCookie(String key, Tenant tenant, HttpServletResponse response) {
         if (key == null)
             return;
 
         Cookie cookie = new Cookie(key, null);
 
         cookie.setMaxAge(0);
-        cookie.setPath("/" + tenantSessionService.getTenant().getSlug());
+        cookie.setPath("/" + tenant.getSlug());
         response.addCookie(cookie);
     }
 
