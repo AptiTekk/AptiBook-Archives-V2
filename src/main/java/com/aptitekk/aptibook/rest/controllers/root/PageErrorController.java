@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.rest.controllers;
+package com.aptitekk.aptibook.rest.controllers.root;
 
 import org.springframework.boot.autoconfigure.web.ErrorController;
 import org.springframework.stereotype.Controller;

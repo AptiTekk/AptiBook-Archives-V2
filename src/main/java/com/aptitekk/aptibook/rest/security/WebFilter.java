@@ -83,7 +83,7 @@ public class WebFilter implements Filter {
                     httpServletRequest.setAttribute("tenant", tenant);
 
                     String url;
-                    if (pathSplit.length > 2) {
+                    if (pathSplit.length > 2 && pathSplit[2].equals("api")) {
                         url = path.substring(path.indexOf("/", 2));
                         if (url.contains(";"))
                             url = url.substring(0, url.indexOf(";"));

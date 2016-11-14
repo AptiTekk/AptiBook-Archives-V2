@@ -4,11 +4,11 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.rest.controllers;
+package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.rest.controllers.annotations.APIController;
+import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.postgresql.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;

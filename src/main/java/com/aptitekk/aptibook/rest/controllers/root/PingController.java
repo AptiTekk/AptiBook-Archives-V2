@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.rest.controllers;
+package com.aptitekk.aptibook.rest.controllers.root;
 
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;

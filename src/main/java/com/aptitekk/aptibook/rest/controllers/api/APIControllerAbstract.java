@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.rest.controllers;
+package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
@@ -12,7 +12,6 @@ import com.aptitekk.aptibook.core.services.auth.AuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public abstract class APIControllerAbstract {
@@ -49,6 +48,14 @@ public abstract class APIControllerAbstract {
 
     ResponseEntity<Object> noPermission() {
         return new ResponseEntity<>(new RestError("You do not have permission."), HttpStatus.UNAUTHORIZED);
+    }
+
+    ResponseEntity<Object> serverError() {
+        return serverError("Internal Server Error");
+    }
+
+    ResponseEntity<Object> serverError(String message) {
+        return new ResponseEntity<>(new RestError(message), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
 }

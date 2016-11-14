@@ -4,13 +4,13 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.rest.controllers;
+package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
 import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
-import com.aptitekk.aptibook.rest.controllers.annotations.APIController;
+import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
