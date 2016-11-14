@@ -8,12 +8,11 @@ package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.domain.entities.MultiTenantEntity;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
+import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.NoResultException;
 import javax.persistence.TypedQuery;
-import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 
@@ -21,21 +20,10 @@ import java.util.List;
 public abstract class MultiTenantEntityRepositoryAbstract<T extends MultiTenantEntity> extends EntityRepositoryAbstract<T> {
 
     @Autowired
-    private HttpServletRequest httpRequest;
+    private TenantSessionService tenantSessionService;
 
     public Tenant getTenant() {
-        try {
-            if (httpRequest != null)
-                httpRequest.getAttribute("tenant");
-        } catch (Exception ignored) {
-        }
-
-        if (httpRequest != null) {
-            Object attribute = httpRequest.getAttribute("tenant");
-            if (attribute != null && attribute instanceof Tenant)
-                return (Tenant) attribute;
-        }
-        return null;
+        return tenantSessionService.getTenant();
     }
 
     @Override

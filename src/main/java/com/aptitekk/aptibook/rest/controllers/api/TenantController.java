@@ -4,17 +4,16 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.rest.controllers;
+package com.aptitekk.aptibook.rest.controllers.api;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
 
-@RestController
+@APIController
 public class TenantController extends APIControllerAbstract {
 
     @RequestMapping(value = "/tenant", method = RequestMethod.GET)

@@ -8,9 +8,13 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 
 import com.aptitekk.aptibook.ApplicationContextProvider;
+import com.aptitekk.aptibook.core.domain.entities.propertyValidators.BooleanPropertyValidator;
+import com.aptitekk.aptibook.core.domain.entities.propertyValidators.MaxLengthPropertyValidator;
+import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
+import com.aptitekk.aptibook.core.domain.entities.propertyValidators.TimeZonePropertyValidator;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.context.ApplicationContext;
-import sun.security.validator.ValidatorException;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -65,21 +69,29 @@ public class Property extends MultiTenantEntity implements Serializable {
 
     public enum Key {
 
-        PERSONALIZATION_ORGANIZATION_NAME(null, Group.PERSONALIZATION),
+        PERSONALIZATION_ORGANIZATION_NAME("Organization Name", null, Group.PERSONALIZATION, new MaxLengthPropertyValidator(64)),
 
-        REGISTRATION_ENABLED("true", Group.REGISTRATION),
+        REGISTRATION_ENABLED("User Registration Enabled", "true", Group.REGISTRATION, new BooleanPropertyValidator()),
 
-        GOOGLE_SIGN_IN_ENABLED("false", Group.GOOGLE_SIGN_IN),
-        GOOGLE_SIGN_IN_WHITELIST("gmail.com, example.com", Group.GOOGLE_SIGN_IN),
+        GOOGLE_SIGN_IN_ENABLED("Google Sign-In Enabled", "false", Group.GOOGLE_SIGN_IN, new BooleanPropertyValidator()),
+        GOOGLE_SIGN_IN_WHITELIST("Allowed Google Sign-In Domain Names (Comma Separated)", "gmail.com, example.org", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256)),
 
-        DATE_TIME_TIMEZONE("America/Denver", Group.DATE_TIME);
+        DATE_TIME_TIMEZONE("Timezone", "America/Denver", Group.DATE_TIME, new TimeZonePropertyValidator());
 
+        private String fieldLabel;
         private final String defaultValue;
         private final Group group;
+        private PropertyValidator propertyValidator;
 
-        Key(String defaultValue, Group group) {
+        Key(String fieldLabel, String defaultValue, Group group, PropertyValidator propertyValidator) {
+            this.fieldLabel = fieldLabel;
             this.defaultValue = defaultValue;
             this.group = group;
+            this.propertyValidator = propertyValidator;
+        }
+
+        public String getFieldLabel() {
+            return fieldLabel;
         }
 
         public String getDefaultValue() {
@@ -89,12 +101,17 @@ public class Property extends MultiTenantEntity implements Serializable {
         public Group getGroup() {
             return group;
         }
+
+        public PropertyValidator getPropertyValidator() {
+            return propertyValidator;
+        }
     }
 
     @Id
     @GeneratedValue
     private Long id;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private Key propertyKey;
 
@@ -124,6 +141,10 @@ public class Property extends MultiTenantEntity implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getFieldLabel() {
+        return this.propertyKey.getFieldLabel();
     }
 
     @Override
