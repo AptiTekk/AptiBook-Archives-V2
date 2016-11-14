@@ -58,7 +58,7 @@ public class WebFilter implements Filter {
                 }
 
                 //Root RestControllers
-                if (pathSplit[1].matches("error|ping")) {
+                if (pathSplit[1].matches("error|ping|oauth")) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
