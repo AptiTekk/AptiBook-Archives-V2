@@ -34,7 +34,7 @@ export class APIService {
         return path;
     }
 
-    get(path: string): Observable<any> {
+    public get(path: string): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.get(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
             .map(APIService.checkForErrors)
@@ -42,7 +42,7 @@ export class APIService {
             .map(APIService.convertToJson);
     }
 
-    post(path: string, data: any): Observable<any> {
+    public post(path: string, data: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.post(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
             .map(APIService.checkForErrors)
@@ -50,7 +50,7 @@ export class APIService {
             .map(APIService.convertToJson);
     }
 
-    remove(path: string): Observable<any> {
+    public remove(path: string): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.delete(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
             .map(APIService.checkForErrors)
