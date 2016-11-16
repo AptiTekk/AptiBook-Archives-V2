@@ -1,7 +1,5 @@
 import {Component} from "@angular/core";
 import {TenantService} from "../../services/tenant.service";
-import {AuthService} from "../../services/auth.service";
-import {Router} from "@angular/router";
 
 @Component({
     selector: 'front-page',
@@ -12,10 +10,7 @@ export class FrontPageComponent {
 
     private tenantSlug: string;
 
-    constructor(router: Router, tenantService: TenantService, authService: AuthService) {
-        authService.getUser().subscribe(
-            response => router.navigateByUrl("/secure"),
-            err => err);
+    constructor(tenantService: TenantService) {
         tenantService.getTenant().subscribe(response => this.tenantSlug = response.slug);
     }
 

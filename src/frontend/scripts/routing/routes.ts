@@ -1,6 +1,7 @@
 import {ModuleWithProviders} from "@angular/core";
 import {RouterModule} from "@angular/router";
-import {FrontPageComponent, SignInComponent, RegisterComponent, SecurePageComponent} from "./page-components";
+import {FrontPageComponent, SignInComponent, RegisterComponent, SecurePageComponent} from "../page-components";
+import {FrontPageGuard} from "./guards";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -14,14 +15,9 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             {
                 path: 'register',
                 component: RegisterComponent,
-                data: {
-                    help: [
-                        {title: 'How to Register', slug: 'ab-how-to-register'}
-                    ]
-                }
             }
-        ]
-
+        ],
+        canActivate: [FrontPageGuard]
     },
     {
         path: 'secure',
