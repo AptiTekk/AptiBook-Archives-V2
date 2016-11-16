@@ -4,4 +4,114 @@
   ~ Proprietary and confidential.
   -->
 
-My Account
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a [routerLink]="['', 'secure']">Home</a></li>
+        <li class="active">My Account</li>
+    </ol>
+
+    <h3>Account Settings for {{user.emailAddress}}</h3>
+    <hr/>
+
+    <div class="row">
+        <div class="col-xs-12 col-md-6">
+            <form (submit)="onAccountDetailsSubmit()">
+                <h4>Personal Information</h4>
+                <hr/>
+
+                <div class="form-group">
+                    <label for="emailAddressField">Email Address:</label>
+                    <input name="emailAddress" id="emailAddressField" class="form-control" [ngModel]="user.emailAddress"
+                           readonly="readonly">
+                </div>
+
+                <div class="form-group">
+                    <label for="firstNameField">First Name:</label>
+                    <input name="firstName" id="firstNameField" class="form-control" ([ngModel])="user.firstName">
+                </div>
+
+                <div class="form-group">
+                    <label for="lastNameField">Last Name:</label>
+                    <input name="lastName" id="lastNameField" class="form-control" ([ngModel])="user.lastName">
+                </div>
+
+                <div class="form-group">
+                    <label for="phoneNumberField">Phone Number:</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-phone"></i>
+                        </div>
+                        <input name="phoneNumber" id="phoneNumberField" class="form-control"
+                               ([ngModel])="user.phoneNumber">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="locationField">Location:</label>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-map-marker"></i>
+                        </div>
+                        <input name="location" id="locationField" class="form-control" ([ngModel])="user.location">
+                    </div>
+                </div>
+
+                <h4>Change Password</h4>
+                <hr/>
+                <div class="row">
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="newPasswordField">New Password:</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-asterisk"></i>
+                                </div>
+                                <input name="newPassword" id="newPasswordField" class="form-control"
+                                       ([ngModel])="user.newPassword">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xs-12 col-md-6">
+                        <div class="form-group">
+                            <label for="confirmPasswordField">Confirm Password:</label>
+                            <div class="input-group">
+                                <div class="input-group-addon">
+                                    <i class="fa fa-asterisk"></i>
+                                </div>
+                                <input name="confirmPassword" id="confirmPasswordField" class="form-control">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <hr/>
+
+                <div class="btn-toolbar">
+                    <button class="btn btn-primary">Save Changes</button>
+                </div>
+            </form>
+        </div>
+
+        <div class="col-xs-12 col-md-4" *ngIf="user.admin || user.userGroups != undefined">
+            <h4>Assigned Groups</h4>
+            <hr/>
+            <div *ngIf="user.admin">
+                <p>The admin account is automatically granted full permissions. No Groups need to be assigned.</p>
+            </div>
+            <div *ngIf="!user.admin">
+                <ul>
+                    <li *ngFor="let userGroup of user.userGroups">
+                        {{userGroup.name}}
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-xs-12 col-md-4">
+            <h4>Email Notification Preferences</h4>
+            <hr/>
+        </div>
+
+    </div>
+
+</div>

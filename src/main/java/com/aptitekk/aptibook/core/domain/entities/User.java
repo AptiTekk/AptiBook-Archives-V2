@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,6 +19,7 @@ import java.util.Map;
 
 
 @SuppressWarnings("JpaDataSourceORMInspection")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 @Table(name = "\"user\"")
 public class User extends MultiTenantEntity implements Serializable {
@@ -58,7 +60,6 @@ public class User extends MultiTenantEntity implements Serializable {
     @SuppressWarnings("JpaAttributeTypeInspection")
     private Map<Notification.Type, Boolean> notificationTypeSettings = new HashMap<>();
 
-    @JsonIgnore
     @ManyToMany
     private List<UserGroup> userGroups = new ArrayList<>();
 
@@ -204,7 +205,7 @@ public class User extends MultiTenantEntity implements Serializable {
      *
      * @return The user's full name.
      */
-    public String getFullname() {
+    public String getFullName() {
         if (getFirstName() == null || getFirstName().isEmpty())
             return getEmailAddress();
         else

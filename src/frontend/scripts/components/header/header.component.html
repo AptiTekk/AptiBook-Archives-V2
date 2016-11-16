@@ -36,7 +36,7 @@
                     </li>
 
                     <!-- AptiBook Configuration Dropdown -->
-                    <li class="dropdown" *ngIf="user.admin || user.permissions.length > 0">
+                    <li class="dropdown" *ngIf="user.admin">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <span><i class="fa fa-cogs"></i></span>
                             AptiBook Configuration
@@ -57,7 +57,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <span><i class="fa fa-user"></i></span>
-                            {{user.fullname}}
+                            {{user.fullName}}
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
@@ -87,7 +87,7 @@
                     <li class="nav-notifications">
                         <a href="#" [routerLink]="['', 'secure', 'my', 'notifications']">
                             <span><i class="fa fa-bell"></i></span>
-                            <span class="notifications-badge badge" *ngIf="user.notifications.length > 0">{{user.notifications.length}}</span>
+                            <span class="notifications-badge badge" *ngIf="user.notifications != undefined">{{user.notifications.length}}</span>
                         </a>
                     </li>
                 </ul>

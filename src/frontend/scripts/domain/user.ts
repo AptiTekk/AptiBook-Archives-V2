@@ -1,12 +1,13 @@
 export interface User {
     id: number;
-    emailAddress: String;
-    firstName: String;
-    lastName: String;
-    phoneNumber: String;
-    location: String;
+    emailAddress: string;
+    firstName: string;
+    lastName: string;
+    fullName: string;
+    phoneNumber: string;
+    location: string;
     notifications;
-    "permissions";
+    permissions;
+    userGroups;
     admin: boolean;
-    fullname: String;
 }

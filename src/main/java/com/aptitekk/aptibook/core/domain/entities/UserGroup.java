@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -14,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class UserGroup extends MultiTenantEntity implements Serializable {
 

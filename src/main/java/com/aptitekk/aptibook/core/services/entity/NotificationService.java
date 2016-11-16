@@ -58,7 +58,7 @@ public class NotificationService {
         for (User user : recipients) {
             sendNotification(Notification.Type.TYPE_APPROVAL_REQUEST,
                     "New User Registration",
-                    "A new user, <b>" + newUser.getFullname() +
+                    "A new user, <b>" + newUser.getFullName() +
                             "</b>, has registered for AptiBook, and is waiting for approval to sign in. " +
                             "Please approve or reject this user.",
                     user);
@@ -76,7 +76,7 @@ public class NotificationService {
                             + reservation.getResource().getName()
                             + "</b> has been requested by "
                             + "<b>"
-                            + reservation.getUser().getFullname()
+                            + reservation.getUser().getFullName()
                             + "</b>"
                             + ".",
                     userGroupService.getHierarchyUp(reservation.getResource().getOwner()));
@@ -87,7 +87,7 @@ public class NotificationService {
                             + reservation.getResource().getName()
                             + "</b> has been automatically <i>approved</i> for "
                             + "<b>"
-                            + reservation.getUser().getFullname()
+                            + reservation.getUser().getFullName()
                             + "</b>"
                             + ".",
                     userGroupService.getHierarchyUp(reservation.getResource().getOwner()));
@@ -131,7 +131,7 @@ public class NotificationService {
                         + "</b> for <b>"
                         + reservation.getTitle()
                         + "</b>, which was requested by <b>"
-                        + reservation.getUser().getFullname()
+                        + reservation.getUser().getFullName()
                         + "</b> from <b>"
                         + reservation.getStartTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> to <b>"
