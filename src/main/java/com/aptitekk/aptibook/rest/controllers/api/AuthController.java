@@ -81,7 +81,7 @@ public class AuthController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "auth/sign-out", method = RequestMethod.GET)
-    public ResponseEntity<Void> signOut(HttpServletResponse response) {
+    public ResponseEntity<?> signOut(HttpServletResponse response) {
         authService.signOutCurrentUser(response);
         return noContent();
     }

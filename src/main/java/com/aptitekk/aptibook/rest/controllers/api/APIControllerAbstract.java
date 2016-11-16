@@ -67,7 +67,7 @@ public abstract class APIControllerAbstract {
     }
 
     private ResponseEntity<Object> createErrorResponseEntity(String message, HttpStatus httpStatus) {
-        return new ResponseEntity<>(new RestError(message), httpStatus);
+        return ResponseEntity.status(httpStatus).body(new RestError(message));
     }
 
 }
