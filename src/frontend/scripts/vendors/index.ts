@@ -1,1 +1,0 @@
-export {TagInputModule} from "ng2-tag-input";

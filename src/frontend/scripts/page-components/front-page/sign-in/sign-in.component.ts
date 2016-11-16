@@ -2,6 +2,7 @@ import {Component, ViewChild} from "@angular/core";
 import {Router} from "@angular/router";
 import {LoaderComponent} from "../../../components/loader/loader.component";
 import {OAuthService} from "../../../services/oauth.service";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
     selector: 'sign-in',
@@ -18,7 +19,7 @@ export class SignInComponent {
     password: string;
     googleSignInUrl: string;
 
-    constructor(private router: Router, private oAuthService: OAuthService) {
+    constructor(private router: Router, private oAuthService: OAuthService, private authService: AuthService) {
         this.emailAddress = "";
         this.password = "";
         this.oAuthService.getGoogleOAuthUrl().subscribe(
@@ -31,9 +32,13 @@ export class SignInComponent {
     }
 
     onSubmit() {
-        console.log("Submitted: " + this.emailAddress + " - " + this.password);
         this.loader.setDisplayed(true);
-        this.router.navigateByUrl("/secure");
+        this.authService.signIn(this.emailAddress, this.password).subscribe(
+            response => this.router.navigateByUrl("/secure"),
+            err => {
+                this.alertMessage = err.json().error;
+                this.loader.setDisplayed(false);
+            });
     }
 
     onGoogleSignIn() {

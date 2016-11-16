@@ -13,10 +13,9 @@ export class FrontPageComponent {
     private tenantSlug: string;
 
     constructor(router: Router, tenantService: TenantService, authService: AuthService) {
-        authService.getUser().subscribe(user => {
-            if (user != null)
-                router.navigateByUrl("/secure");
-        });
+        authService.getUser().subscribe(
+            response => router.navigateByUrl("/secure"),
+            err => err);
         tenantService.getTenant().subscribe(response => this.tenantSlug = response.slug);
     }
 

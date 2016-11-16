@@ -22,12 +22,12 @@ public abstract class APIControllerAbstract {
     @Autowired
     LogService logService;
 
-    ResponseEntity<Object> ok() {
-        return new ResponseEntity<>(HttpStatus.OK);
+    ResponseEntity<?> ok(Object entity) {
+        return ResponseEntity.ok(entity);
     }
 
-    ResponseEntity<Object> ok(Object entity) {
-        return new ResponseEntity<>(entity, HttpStatus.OK);
+    ResponseEntity<Void> noContent() {
+        return ResponseEntity.noContent().build();
     }
 
     ResponseEntity<Object> badRequest() {

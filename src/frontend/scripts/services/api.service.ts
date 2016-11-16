@@ -34,8 +34,16 @@ export class APIService {
         return path;
     }
 
-    public get(path: string): Observable<any> {
-        let options = new RequestOptions({headers: this.headers});
+    public get(path: string, additionalHeaders?: Headers): Observable<any> {
+        let options;
+        if(additionalHeaders) {
+            let newHeaders: Headers = new Headers(this.headers);
+            additionalHeaders.forEach((values: string[], name: string) => {
+                values.forEach((value: string) => newHeaders.append(name, value));
+            });
+            options = new RequestOptions({headers: newHeaders});
+        }
+        else options = new RequestOptions({headers: this.headers});
         return this.http.get(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
             .map(APIService.checkForErrors)
             .catch(e => Observable.throw(e))
