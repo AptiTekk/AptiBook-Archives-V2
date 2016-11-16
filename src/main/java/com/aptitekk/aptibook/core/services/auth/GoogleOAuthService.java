@@ -71,14 +71,14 @@ public class GoogleOAuthService {
             if (googleUserInfo != null) {
 
                 //Find user from google email.
-                User user = userRepository.findByEmailAddress(googleUserInfo.getEmail(), tenant);
+                User user = userRepository.findByEmailAddress(googleUserInfo.getEmailAddress(), tenant);
 
                 //User does not yet exist
                 if (user == null) {
 
                     //Create user
                     user = new User();
-                    user.setEmailAddress(googleUserInfo.getEmail());
+                    user.setEmailAddress(googleUserInfo.getEmailAddress());
                     user.setFirstName(googleUserInfo.getFirstName());
                     user.setLastName(googleUserInfo.getLastName());
                     user.setTenant(tenant);

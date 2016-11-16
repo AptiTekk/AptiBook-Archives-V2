@@ -6,9 +6,14 @@
 
 package com.aptitekk.aptibook.core.domain.rest.oauth;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class GoogleUserInfo {
+
+    @JsonProperty("email")
+    private String emailAddress;
 
     @JsonProperty("given_name")
     private String firstName;
@@ -16,10 +21,12 @@ public class GoogleUserInfo {
     @JsonProperty("family_name")
     private String lastName;
 
-    private String email;
-
     @JsonProperty("picture")
     private String pictureUrl;
+
+    public String getEmailAddress() {
+        return emailAddress;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -27,10 +34,6 @@ public class GoogleUserInfo {
 
     public String getLastName() {
         return lastName;
-    }
-
-    public String getEmail() {
-        return email;
     }
 
     public String getPictureUrl() {
