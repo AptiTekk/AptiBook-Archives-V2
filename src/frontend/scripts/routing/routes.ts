@@ -1,6 +1,13 @@
 import {ModuleWithProviders} from "@angular/core";
 import {RouterModule} from "@angular/router";
-import {FrontPageComponent, SignInComponent, RegisterComponent, SecurePageComponent} from "../page-components";
+import {
+    FrontPageComponent,
+    SignInComponent,
+    RegisterComponent,
+    SecurePageComponent,
+    AccountPageComponent,
+    NotificationsPageComponent
+} from "../page-components";
 import {FrontPageGuard, SecureGuard} from "./guards";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
@@ -10,11 +17,11 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
         children: [
             {
                 path: 'sign-in',
-                component: SignInComponent,
+                component: SignInComponent
             },
             {
                 path: 'register',
-                component: RegisterComponent,
+                component: RegisterComponent
             }
         ],
         canActivate: [FrontPageGuard]
@@ -22,6 +29,20 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
         path: 'secure',
         component: SecurePageComponent,
+        children: [
+            {
+                path: '',
+                component: null
+            },
+            {
+                path: 'my/account',
+                component: AccountPageComponent
+            },
+            {
+                path: 'my/notifications',
+                component: NotificationsPageComponent
+            }
+        ],
         canActivate: [SecureGuard]
     },
     {
