@@ -13,6 +13,24 @@ export class HeaderComponent {
     @Input()
     nonInteractive: boolean;
 
+    //TODO: Add route urls
+    reservationManagementLinks: [{icon: string, label: string}] = [
+        {icon: 'hourglass-half', label: 'Pending'},
+        {icon: 'calendar-check-o', label: 'Approved'},
+        {icon: 'calendar-times-o', label: 'Rejected'},
+        {icon: 'calendar', label: 'Calendar'}
+    ];
+
+    //TODO: Add route urls and permissions
+    configurationLinks: [{icon: string, label: string, indented: boolean}] = [
+        {icon: 'folder-open', label: 'Resource Categories', indented: false},
+        {icon: 'tags', label: 'Resources', indented: true},
+        {icon: 'sitemap', label: 'User Groups', indented: false},
+        {icon: 'user', label: 'Users', indented: true},
+        {icon: 'unlock', label: 'Permissions', indented: false},
+        {icon: 'cog', label: 'Properties', indented: false}
+    ];
+
     user: User;
 
     constructor(private router: Router, private authService: AuthService) {

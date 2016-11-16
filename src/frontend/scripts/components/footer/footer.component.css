@@ -9,6 +9,7 @@
     height: 50px;
     position: fixed;
     bottom: 0;
+    font-family: "Droid Sans", sans-serif;
     z-index: 999;
     background-color: #4272b7;
     padding-top: 8px;
