@@ -37,15 +37,19 @@ export class SignInComponent {
                         this.alertMessage = "Unfortunately, Sign In with Google failed because access was denied."
                 }
             });
+
+        //Subscribe to auth messages
+        this.authService.getAuthMessage().subscribe(message => this.alertMessage = message);
     }
 
     onSubmit() {
         this.loader.setDisplayed(true);
         this.authService.signIn(this.emailAddress, this.password).subscribe(
-            response => this.router.navigateByUrl("/secure"),
-            err => {
-                this.alertMessage = err.json().error;
-                this.loader.setDisplayed(false);
+            (successful: boolean) => {
+                if (successful)
+                    this.router.navigateByUrl("/secure");
+                else
+                    this.loader.setDisplayed(false);
             });
     }
 

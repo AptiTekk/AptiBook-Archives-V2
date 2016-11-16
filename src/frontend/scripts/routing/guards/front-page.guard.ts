@@ -2,6 +2,7 @@ import {AuthService} from "../../services/auth.service";
 import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
+import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class FrontPageGuard implements CanActivate {
@@ -13,11 +14,12 @@ export class FrontPageGuard implements CanActivate {
         return Observable.create(listener => {
             this.authService.getUser().subscribe(
                 user => {
-                    this.router.navigateByUrl("/secure");
-                    listener.next(false);
-                },
-                err => {
-                    listener.next(true);
+                    if (!isNullOrUndefined(user)) {
+                        this.router.navigateByUrl("/secure");
+                        listener.next(false);
+                    } else {
+                        listener.next(true);
+                    }
                 });
         }).take(1);
     }

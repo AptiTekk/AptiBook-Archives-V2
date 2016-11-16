@@ -38,7 +38,13 @@ export class HeaderComponent {
     }
 
     onSignOut() {
-        this.authService.signOut().subscribe(resp => this.router.navigateByUrl(""));
+        this.authService.signOut().subscribe(
+            (value: boolean) => {
+                if (value)
+                    this.router.navigateByUrl("");
+                else
+                    console.log("Could not sign out!")
+            });
     }
 
 }
