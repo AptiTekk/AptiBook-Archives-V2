@@ -44,7 +44,7 @@ public class OAuthUrlController extends APIControllerAbstract {
     private class OAuthURL {
         private String url;
 
-        public OAuthURL(String url) {
+        OAuthURL(String url) {
             this.url = url;
         }
 

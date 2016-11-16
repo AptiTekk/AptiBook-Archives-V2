@@ -1,5 +1,5 @@
 import {Component, ViewChild} from "@angular/core";
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute} from "@angular/router";
 import {LoaderComponent} from "../../../components/loader/loader.component";
 import {OAuthService} from "../../../services/oauth.service";
 import {AuthService} from "../../../services/auth.service";
@@ -19,15 +19,23 @@ export class SignInComponent {
     password: string;
     googleSignInUrl: string;
 
-    constructor(private router: Router, private oAuthService: OAuthService, private authService: AuthService) {
-        this.emailAddress = "";
-        this.password = "";
+    constructor(private router: Router, private activeRoute: ActivatedRoute, private oAuthService: OAuthService, private authService: AuthService) {
+        //Get the Google Sign In URL
         this.oAuthService.getGoogleOAuthUrl().subscribe(
             resp => {
                 this.googleSignInUrl = resp.url;
             },
             err => {
                 this.googleSignInUrl = undefined;
+            });
+
+        //Check for errors in the parameters
+        this.activeRoute.queryParams.subscribe(
+            params => {
+                if (params['googleError'] != undefined) {
+                    if (params['googleError'] === "access_denied")
+                        this.alertMessage = "Unfortunately, Sign In with Google failed because access was denied."
+                }
             });
     }
 
