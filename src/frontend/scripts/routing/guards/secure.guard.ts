@@ -4,7 +4,7 @@ import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 
 @Injectable()
-export class FrontPageGuard implements CanActivate {
+export class SecureGuard implements CanActivate {
 
     constructor(private authService: AuthService, private router: Router) {
     }
@@ -13,11 +13,11 @@ export class FrontPageGuard implements CanActivate {
         return Observable.create(listener => {
             this.authService.getUser().subscribe(
                 user => {
-                    this.router.navigateByUrl("/secure");
-                    listener.next(false);
+                    listener.next(true);
                 },
                 err => {
-                    listener.next(true);
+                    this.router.navigateByUrl("/");
+                    listener.next(false);
                 });
         }).take(1);
     }

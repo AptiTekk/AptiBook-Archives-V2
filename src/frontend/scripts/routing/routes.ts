@@ -1,7 +1,7 @@
 import {ModuleWithProviders} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {FrontPageComponent, SignInComponent, RegisterComponent, SecurePageComponent} from "../page-components";
-import {FrontPageGuard} from "./guards";
+import {FrontPageGuard, SecureGuard} from "./guards";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -21,7 +21,8 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
     },
     {
         path: 'secure',
-        component: SecurePageComponent
+        component: SecurePageComponent,
+        canActivate: [SecureGuard]
     },
     {
         path: '**',
