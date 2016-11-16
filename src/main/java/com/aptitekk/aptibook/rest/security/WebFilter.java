@@ -72,6 +72,7 @@ public class WebFilter implements Filter {
                 //API
                 if (pathSplit[1].equals("api") && beenFiltered && cameFromTenant) {
                     filterChain.doFilter(servletRequest, servletResponse);
+                    return;
                 }
 
                 httpServletRequest.setAttribute("filtered", true);

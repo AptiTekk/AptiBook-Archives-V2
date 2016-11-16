@@ -5,7 +5,7 @@
       <driver-ref>postgresql</driver-ref>
       <synchronize>true</synchronize>
       <jdbc-driver>org.postgresql.Driver</jdbc-driver>
-      <jdbc-url>jdbc:postgresql://util.aptitekk.com:2000/aptibook_dev1</jdbc-url>
+      <jdbc-url>jdbc:postgresql://192.168.2.1:5432/aptibook_dev1</jdbc-url>
     </data-source>
   </component>
 </project>

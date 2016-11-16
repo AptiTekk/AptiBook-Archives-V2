@@ -8,3 +8,5 @@ target/
 /src/main/webapp/packed/
 /.idea/dataSources/
 /src/main/resources/application-development.properties
+/.idea/dataSources.local.xml
+/.idea/dataSources.xml

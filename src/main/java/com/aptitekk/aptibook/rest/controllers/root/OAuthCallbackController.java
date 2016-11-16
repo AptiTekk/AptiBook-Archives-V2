@@ -39,20 +39,29 @@ public class OAuthCallbackController {
     @RequestMapping("oauth/google")
     public void onOAuthCallback(HttpServletResponse httpServletResponse,
                                 @RequestParam(value = "state", required = false) String state,
-                                @RequestParam(value = "code", required = false) String code) {
-        if (state != null && !state.isEmpty() && code != null && !code.isEmpty()) {
+                                @RequestParam(value = "code", required = false) String code,
+                                @RequestParam(value = "error", required = false) String error) {
+        if (state != null && !state.isEmpty()) {
+
+            //Determine Tenant from state
             String[] stateSplit = state.split("=");
             if (stateSplit.length == 2) {
                 String tenantSlug = stateSplit[1];
                 Tenant tenant = tenantRepository.findTenantBySlug(tenantSlug);
-                if (tenant != null) {
-                    User user = googleOAuthService.getUserFromCode(tenant, code);
-                    if (user != null) {
-                        authService.setUserOfTenant(user, tenant, httpServletResponse);
+
+                //Check for code and set the appropriate user if the code exists.
+                if (code != null && !code.isEmpty()) {
+                    if (tenant != null) {
+                        User user = googleOAuthService.getUserFromCode(tenant, code);
+                        if (user != null) {
+                            authService.setUserOfTenant(user, tenant, httpServletResponse);
+                        }
                     }
                 }
+
+                //Redirect to Tenant index
                 try {
-                    httpServletResponse.sendRedirect("/" + tenantSlug + "/");
+                    httpServletResponse.sendRedirect("/" + tenantSlug + (error != null ? "?googleError=" + error : ""));
                     return;
                 } catch (IOException e) {
                     logService.logException(getClass(), e, "Could not redirect to tenant root");
@@ -60,6 +69,7 @@ public class OAuthCallbackController {
             }
         }
 
+        //If all else fails, redirect to index of app.
         try {
             httpServletResponse.sendRedirect("/");
         } catch (IOException e) {

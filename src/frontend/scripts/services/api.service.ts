@@ -14,13 +14,11 @@ export class APIService {
     constructor(private http: Http) {
     }
 
-    private static convertToJson(response: Response): any {
-        return response.json();
-    }
-
-    private static checkForErrors(response: Response): Response {
+    private static checkForErrors(response: Response): any {
         if (response.status >= 200 && response.status < 300) {
-            return response;
+            if (response.text().length > 0)
+                return response.json();
+            return undefined;
         } else {
             let error = new Error(response.statusText);
             error['response'] = response;
@@ -34,28 +32,33 @@ export class APIService {
         return path;
     }
 
-    get(path: string): Observable<any> {
-        let options = new RequestOptions({headers: this.headers});
+    public get(path: string, additionalHeaders?: Headers): Observable<any> {
+        let options;
+        if (additionalHeaders) {
+            let newHeaders: Headers = new Headers(this.headers);
+            additionalHeaders.forEach((values: string[], name: string) => {
+                values.forEach((value: string) => newHeaders.append(name, value));
+            });
+            options = new RequestOptions({headers: newHeaders});
+        }
+        else options = new RequestOptions({headers: this.headers});
         return this.http.get(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
             .map(APIService.checkForErrors)
-            .catch(e => Observable.throw(e))
-            .map(APIService.convertToJson);
+            .catch(e => Observable.throw(e));
     }
 
-    post(path: string, data: any): Observable<any> {
+    public post(path: string, data: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.post(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
             .map(APIService.checkForErrors)
-            .catch(e => Observable.throw(e))
-            .map(APIService.convertToJson);
+            .catch(e => Observable.throw(e));
     }
 
-    remove(path: string): Observable<any> {
+    public remove(path: string): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.delete(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
             .map(APIService.checkForErrors)
-            .catch(e => Observable.throw(e))
-            .map(APIService.convertToJson);
+            .catch(e => Observable.throw(e));
     }
 
 }

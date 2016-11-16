@@ -35,10 +35,23 @@ public class OAuthUrlController extends APIControllerAbstract {
         if (Boolean.parseBoolean(googleSignInProperty.getPropertyValue())) {
             String signInUrl = googleOAuthService.getSignInUrl(tenantSessionService.getTenant());
             if (signInUrl != null)
-                return ok(signInUrl);
+                return ok(new OAuthURL(signInUrl));
             return serverError();
         }
         return notImplemented();
+    }
+
+    private class OAuthURL {
+        private String url;
+
+        OAuthURL(String url) {
+            this.url = url;
+        }
+
+        public String getUrl() {
+            return this.url;
+        }
+
     }
 
 }

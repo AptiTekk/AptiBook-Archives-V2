@@ -7,7 +7,7 @@
 .navbar {
     background-color: #fff !important;
     box-shadow: #aaa 0 -5px 20px 1px;
-    font-family: "Open Sans", Helvetica, Arial, sans-serif;
+    font-family: "Droid Sans", sans-serif;
     border: none;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -99,6 +99,7 @@
     .nav-notifications {
         float: right;
         width: 80px;
+        padding-top: 2px;
         background-color: rgba(0, 0, 0, 0.1);
     }
 
