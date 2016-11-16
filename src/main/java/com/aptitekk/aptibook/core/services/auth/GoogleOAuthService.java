@@ -11,6 +11,7 @@ import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.oauth.GoogleUserInfo;
 import com.aptitekk.aptibook.core.services.LogService;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.apis.GoogleApi20;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
@@ -18,8 +19,6 @@ import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
 import com.github.scribejava.core.model.Verb;
 import com.github.scribejava.core.oauth.OAuth20Service;
-import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -65,9 +64,10 @@ public class GoogleOAuthService {
             googleOAuthService.signRequest(accessToken, request);
             Response response = request.send();
 
-            //Usee GSON to parse the request into an object
-            Gson gson = new GsonBuilder().create();
-            GoogleUserInfo googleUserInfo = gson.fromJson(response.getBody(), GoogleUserInfo.class);
+            //Use ObjectMapper to parse the JSON as an Object
+            ObjectMapper objectMapper = new ObjectMapper();
+            GoogleUserInfo googleUserInfo = objectMapper.readValue(response.getBody(), GoogleUserInfo.class);
+
             if (googleUserInfo != null) {
 
                 //Find user from google email.
