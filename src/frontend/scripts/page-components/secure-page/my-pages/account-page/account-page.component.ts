@@ -20,6 +20,10 @@ export class AccountPageComponent {
         authService.getUser().subscribe(user => this.user = user);
     }
 
+    doPasswordsMatch(): boolean {
+        return this.user.newPassword == undefined || this.user.confirmPassword == undefined || this.user.newPassword === this.user.confirmPassword;
+    }
+
     onAccountDetailsSubmit() {
         if (!isNullOrUndefined(this.user.newPassword) && this.user.newPassword.length == 0)
             this.user.newPassword = undefined;
