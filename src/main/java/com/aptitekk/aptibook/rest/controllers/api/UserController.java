@@ -6,6 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
+import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
@@ -61,7 +62,7 @@ public class UserController extends APIControllerAbstract {
 
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> deleteUser(@PathVariable long id, @RequestBody User user) {
+    public ResponseEntity<?> deleteUser(@PathVariable long id, @RequestBody UserWithPassword user) {
         if (user != null) {
             User currentUser = userRepository.findInCurrentTenant(id);
             if (currentUser != null &&
@@ -80,26 +81,45 @@ public class UserController extends APIControllerAbstract {
                 if (user.getFirstName() != null)
                     if (!user.getFirstName().matches("[^<>;=]*"))
                         return badRequest("The First Name cannot contain these characters: < > ; =");
+                    else if (user.getFirstName().length() > 30)
+                        return badRequest("The First Name must be 30 characters or less.");
                     else
                         currentUser.setFirstName(user.getFirstName());
 
                 if (user.getLastName() != null)
                     if (!user.getLastName().matches("[^<>;=]*"))
                         return badRequest("The Last Name cannot contain these characters: < > ; =");
+                    else if (user.getLastName().length() > 30)
+                        return badRequest("The Last Name must be 30 characters or less.");
                     else
                         currentUser.setLastName(user.getLastName());
 
                 if (user.getPhoneNumber() != null)
                     if (!user.getPhoneNumber().matches("[^<>;=]*"))
                         return badRequest("The Phone Number cannot contain these characters: < > ; =");
+                    else if (user.getFirstName().length() > 30)
+                        return badRequest("The Phone Number must be 30 characters or less.");
                     else
                         currentUser.setPhoneNumber(user.getPhoneNumber());
 
                 if (user.getLocation() != null)
                     if (!user.getLocation().matches("[^<>;=]*"))
                         return badRequest("The Location cannot contain these characters: < > ; =");
+                    else if (user.getFirstName().length() > 250)
+                        return badRequest("The Location must be 250 characters or less.");
                     else
                         currentUser.setLocation(user.getLocation());
+
+                if (user.getNewPassword() != null)
+                    if (user.getNewPassword().length() > 30)
+                        return badRequest("The Password must be 30 characters or less.");
+                    else
+                        try {
+                            currentUser.setHashedPassword(PasswordStorage.createHash(user.getNewPassword()));
+                        } catch (PasswordStorage.CannotPerformOperationException e) {
+                            logService.logException(getClass(), e, "Could not hash password from PATCH.");
+                            return serverError("Could not save new password.");
+                        }
 
                 userRepository.save(currentUser);
 
@@ -138,6 +158,19 @@ public class UserController extends APIControllerAbstract {
         }
 
         return user;
+    }
+
+    private static class UserWithPassword extends User {
+
+        private String newPassword;
+
+        String getNewPassword() {
+            return newPassword;
+        }
+
+        public void setNewPassword(String newPassword) {
+            this.newPassword = newPassword;
+        }
     }
 
 }

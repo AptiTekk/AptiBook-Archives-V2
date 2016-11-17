@@ -1,6 +1,6 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {User} from "../domain/user";
+import {User} from "../models/user.model";
 import {Observable} from "rxjs";
 import {isNullOrUndefined} from "util";
 

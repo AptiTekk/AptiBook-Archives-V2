@@ -95,6 +95,19 @@ span.no-decoration a:hover, span.no-decoration a:active, span.no-decoration a:fo
 
 /* ---------------------------------- END COLOR MODIFICATIONS ---------------------------------- */
 
+/* ---------------------------------- FORM MODIFICATIONS ---------------------------------- */
+
+/*.app .input-group .input-group-addon {
+    height: 35px;
+    width: 35px;
+}
+
+.app .input-group .form-control {
+    height: 35px;
+}*/
+
+/* ---------------------------------- END FORM MODIFICATIONS ---------------------------------- */
+
 /* ---------------------------------- BEGIN PANEL MODIFICATIONS ---------------------------------- */
 
 .aptibook .panel.panel-primary {

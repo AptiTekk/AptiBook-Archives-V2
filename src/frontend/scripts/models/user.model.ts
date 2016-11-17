@@ -1,3 +1,4 @@
+import {UserGroup} from "./user-group.model";
 export interface User {
     id: number;
     emailAddress: string;
@@ -7,7 +8,9 @@ export interface User {
     phoneNumber: string;
     location: string;
     notifications;
+    notificationTypeSettings;
     permissions;
-    userGroups;
+    userGroups: UserGroup[];
     admin: boolean;
+    newPassword: string;
 }

@@ -8,8 +8,14 @@
     <div class="alert alert-danger" #alert *ngIf="alertMessage">{{alertMessage}}</div>
     <div class="form-group">
         <label for="emailAddressInput">Email Address:</label>
-        <input name="emailAddress" id="emailAddressInput" type="text" class="form-control" [(ngModel)]="emailAddress"
-               required="required"/>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-at"></i>
+            </span>
+            <input name="emailAddress" id="emailAddressInput" type="text" class="form-control"
+                   [(ngModel)]="emailAddress"
+                   required/>
+        </div>
     </div>
 
     <div class="form-group">
@@ -26,16 +32,28 @@
 
     <div class="form-group">
         <label for="passwordInput">Password:</label>
-        <input name="password" id="passwordInput" type="password" class="form-control" [(ngModel)]="password"/>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-asterisk"></i>
+            </span>
+            <input name="password" id="passwordInput" type="password" class="form-control" [(ngModel)]="password" required/>
+        </div>
     </div>
 
     <div class="form-group">
         <label for="confirmPasswordInput">Confirm Password:</label>
-        <input name="confirmPasswordInput" id="confirmPasswordInput" type="password" class="form-control"
-               [(ngModel)]="confirmPassword"/>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-asterisk"></i>
+            </span>
+            <input name="confirmPasswordInput" id="confirmPasswordInput" type="password" class="form-control"
+                   [(ngModel)]="confirmPassword" required/>
+        </div>
     </div>
 
-    <button class="btn btn-primary btn-large btn-block" [disabled]="!emailAddress || !firstName || !lastName || !password || !confirmPassword">Register</button>
+    <button class="btn btn-primary btn-large btn-block"
+            [disabled]="!emailAddress || !firstName || !lastName || !password || !confirmPassword">Register
+    </button>
 
     <hr/>
 

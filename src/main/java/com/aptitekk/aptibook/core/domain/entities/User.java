@@ -56,7 +56,6 @@ public class User extends MultiTenantEntity implements Serializable {
         PENDING;
     }
 
-    @JsonIgnore
     @SuppressWarnings("JpaAttributeTypeInspection")
     private Map<Notification.Type, Boolean> notificationTypeSettings = new HashMap<>();
 
