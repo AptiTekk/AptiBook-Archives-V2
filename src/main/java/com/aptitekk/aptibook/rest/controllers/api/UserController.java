@@ -11,6 +11,7 @@ import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
+import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,14 +38,7 @@ public class UserController extends APIControllerAbstract {
             for (User user : users) {
                 user.setNotifications(null);
                 user.setPermissions(null);
-                for (UserGroup userGroup : user.getUserGroups()) {
-                    userGroup.setUsers(null);
-                    userGroup.setPermissions(null);
-                    userGroup.setResources(null);
-                    userGroup.setParent(null);
-                    userGroup.setChildren(null);
-                    userGroup.setReservationDecisions(null);
-                }
+                cleanUpUser(user);
             }
 
             return ok(users);
@@ -59,14 +53,7 @@ public class UserController extends APIControllerAbstract {
 
         if (user != null &&
                 (user.equals(authService.getCurrentUser()) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))) {
-            for (UserGroup userGroup : user.getUserGroups()) {
-                userGroup.setParent(null);
-                userGroup.setUsers(null);
-                userGroup.setReservationDecisions(null);
-                userGroup.setResources(null);
-                userGroup.setChildren(null);
-            }
-            return ok(user);
+            return ok(cleanUpUser(user));
         }
 
         return noPermission();
@@ -79,18 +66,44 @@ public class UserController extends APIControllerAbstract {
             User currentUser = userRepository.findInCurrentTenant(id);
             if (currentUser != null &&
                     (currentUser.equals(authService.getCurrentUser()) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))) {
-                if (!currentUser.isAdmin()) {
-                    if (user.isAdmin())
-                        return badRequest("Cannot promote non-admin to admin.");
-                    if (user.getEmailAddress().equals("admin"))
-                        return badRequest("The Email Address 'admin' is reserved.");
-                }
 
                 User otherUser = userRepository.findByEmailAddress(user.getEmailAddress());
-                if (otherUser != null && !otherUser.equals(user))
+                if (otherUser != null && !otherUser.getId().equals(id))
                     return badRequest("The Email Address is already in use.");
 
-                //TODO: Check fields for valid content
+                if (user.getEmailAddress() != null)
+                    if (!currentUser.isAdmin() && !EmailValidator.getInstance().isValid(user.getEmailAddress()))
+                        return badRequest("The Email Address is invalid.");
+                    else
+                        currentUser.setEmailAddress(user.getEmailAddress());
+
+                if (user.getFirstName() != null)
+                    if (!user.getFirstName().matches("[^<>;=]*"))
+                        return badRequest("The First Name cannot contain these characters: < > ; =");
+                    else
+                        currentUser.setFirstName(user.getFirstName());
+
+                if (user.getLastName() != null)
+                    if (!user.getLastName().matches("[^<>;=]*"))
+                        return badRequest("The Last Name cannot contain these characters: < > ; =");
+                    else
+                        currentUser.setLastName(user.getLastName());
+
+                if (user.getPhoneNumber() != null)
+                    if (!user.getPhoneNumber().matches("[^<>;=]*"))
+                        return badRequest("The Phone Number cannot contain these characters: < > ; =");
+                    else
+                        currentUser.setPhoneNumber(user.getPhoneNumber());
+
+                if (user.getLocation() != null)
+                    if (!user.getLocation().matches("[^<>;=]*"))
+                        return badRequest("The Location cannot contain these characters: < > ; =");
+                    else
+                        currentUser.setLocation(user.getLocation());
+
+                userRepository.save(currentUser);
+
+                return ok(cleanUpUser(currentUser));
             }
 
             return noPermission();
@@ -103,12 +116,28 @@ public class UserController extends APIControllerAbstract {
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
         User user = userRepository.findInCurrentTenant(id);
 
-        if (user != null && authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
-            userRepository.delete(user);
-            return noContent();
+        if (user != null) {
+            if (user.isAdmin())
+                return badRequest("Admin cannot be deleted.");
+            if (authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
+                userRepository.delete(user);
+                return noContent();
+            }
         }
 
         return noPermission();
+    }
+
+    private User cleanUpUser(User user) {
+        for (UserGroup userGroup : user.getUserGroups()) {
+            userGroup.setParent(null);
+            userGroup.setUsers(null);
+            userGroup.setReservationDecisions(null);
+            userGroup.setResources(null);
+            userGroup.setChildren(null);
+        }
+
+        return user;
     }
 
 }

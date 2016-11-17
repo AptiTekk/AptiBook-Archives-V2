@@ -12,7 +12,7 @@ export class FrontPageGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         return Observable.create(listener => {
-            this.authService.getUser().subscribe(
+            this.authService.getUser().take(1).subscribe(
                 user => {
                     if (!isNullOrUndefined(user)) {
                         this.router.navigateByUrl("/secure");
@@ -23,5 +23,4 @@ export class FrontPageGuard implements CanActivate {
                 });
         }).take(1);
     }
-
 }

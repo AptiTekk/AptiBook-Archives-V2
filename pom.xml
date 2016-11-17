@@ -273,6 +273,11 @@
             <artifactId>sparkpost-lib</artifactId>
             <version>0.16.1</version>
         </dependency>
+        <dependency>
+            <groupId>commons-validator</groupId>
+            <artifactId>commons-validator</artifactId>
+            <version>1.5.1</version>
+        </dependency>
         <!-- End Emails -->
 
         <!-- Files -->

@@ -19,6 +19,14 @@
                 <h4>Personal Information</h4>
                 <hr/>
 
+                <div class="alert alert-danger" *ngIf="alertMessage != undefined">
+                    {{alertMessage}}
+                </div>
+
+                <div class="alert alert-info" *ngIf="successMessage != undefined">
+                    {{successMessage}}
+                </div>
+
                 <div class="form-group">
                     <label for="emailAddressField">Email Address:</label>
                     <input name="emailAddress" id="emailAddressField" class="form-control" [ngModel]="user.emailAddress"
@@ -27,12 +35,12 @@
 
                 <div class="form-group">
                     <label for="firstNameField">First Name:</label>
-                    <input name="firstName" id="firstNameField" class="form-control" ([ngModel])="user.firstName">
+                    <input name="firstName" id="firstNameField" class="form-control" [(ngModel)]="user.firstName">
                 </div>
 
                 <div class="form-group">
                     <label for="lastNameField">Last Name:</label>
-                    <input name="lastName" id="lastNameField" class="form-control" ([ngModel])="user.lastName">
+                    <input name="lastName" id="lastNameField" class="form-control" [(ngModel)]="user.lastName">
                 </div>
 
                 <div class="form-group">
@@ -42,7 +50,7 @@
                             <i class="fa fa-phone"></i>
                         </div>
                         <input name="phoneNumber" id="phoneNumberField" class="form-control"
-                               ([ngModel])="user.phoneNumber">
+                               [(ngModel)]="user.phoneNumber">
                     </div>
                 </div>
 
@@ -52,7 +60,7 @@
                         <div class="input-group-addon">
                             <i class="fa fa-map-marker"></i>
                         </div>
-                        <input name="location" id="locationField" class="form-control" ([ngModel])="user.location">
+                        <input name="location" id="locationField" class="form-control" [(ngModel)]="user.location">
                     </div>
                 </div>
 
@@ -66,8 +74,8 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-asterisk"></i>
                                 </div>
-                                <input name="newPassword" id="newPasswordField" class="form-control"
-                                       ([ngModel])="user.newPassword">
+                                <input type="password" name="newPassword" id="newPasswordField" class="form-control"
+                                       [(ngModel)]="user.newPassword">
                             </div>
                         </div>
                     </div>
@@ -78,7 +86,8 @@
                                 <div class="input-group-addon">
                                     <i class="fa fa-asterisk"></i>
                                 </div>
-                                <input name="confirmPassword" id="confirmPasswordField" class="form-control">
+                                <input type="password" name="confirmPassword" id="confirmPasswordField"
+                                       class="form-control">
                             </div>
                         </div>
                     </div>
