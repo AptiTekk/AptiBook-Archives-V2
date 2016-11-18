@@ -116,6 +116,8 @@ public class TenantSynchronizer {
         } catch (PasswordStorage.CannotPerformOperationException e) {
             logService.logException(getClass(), e, "Could not hash demo user's password");
         }
+
+        tenantManagementService.refresh();
     }
 
 
