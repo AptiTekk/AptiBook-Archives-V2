@@ -103,9 +103,9 @@ public class NotificationService {
                     "Reservation Approved",
                     "Your Reservation for <b>" + reservation.getResource().getName()
                             + "</b> from <b>"
-                            + reservation.getStartTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> to <b>"
-                            + reservation.getEndTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> has been Approved!",
                     reservation.getUser());
         } else if (reservation.getStatus() == Reservation.Status.REJECTED) {
@@ -113,9 +113,9 @@ public class NotificationService {
                     "Reservation Rejected",
                     "Your Reservation for <b>" + reservation.getResource().getName()
                             + "</b> from <b>"
-                            + reservation.getStartTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> to <b>"
-                            + reservation.getEndTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> has been Rejected.",
                     reservation.getUser());
         }
@@ -133,9 +133,9 @@ public class NotificationService {
                         + "</b>, which was requested by <b>"
                         + reservation.getUser().getFullName()
                         + "</b> from <b>"
-                        + reservation.getStartTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> to <b>"
-                        + reservation.getEndTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b>, has been Cancelled.",
                 userGroupService.getHierarchyUp(reservation.getResource().getOwner())
         );
@@ -146,9 +146,9 @@ public class NotificationService {
                         + "</b> for <b>"
                         + reservation.getTitle()
                         + "</b> from <b>"
-                        + reservation.getStartTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> to <b>"
-                        + reservation.getEndTime().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> has been Cancelled.",
                 reservation.getUser()
         );

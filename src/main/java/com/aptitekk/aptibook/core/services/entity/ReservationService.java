@@ -60,11 +60,11 @@ public class ReservationService {
                 continue;
 
             //If the reservation's end time is before our start time, we're okay.
-            if (reservation.getEndTime().isBefore(startTime))
+            if (reservation.getEnd().isBefore(startTime))
                 continue;
 
             //If the reservation's start time is after our end time, we're okay.
-            if (reservation.getStartTime().isAfter(endTime))
+            if (reservation.getStart().isAfter(endTime))
                 continue;
 
             //All checks failed, there was a conflict.

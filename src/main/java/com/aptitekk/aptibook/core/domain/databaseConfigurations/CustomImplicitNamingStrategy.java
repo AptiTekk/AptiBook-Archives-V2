@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain.hibernate;
+package com.aptitekk.aptibook.core.domain.databaseConfigurations;
 
 import org.hibernate.boot.model.naming.*;
 

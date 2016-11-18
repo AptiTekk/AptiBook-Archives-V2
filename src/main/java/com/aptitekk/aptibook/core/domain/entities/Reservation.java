@@ -40,9 +40,9 @@ public class Reservation extends MultiTenantEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
 
-    private ZonedDateTime startTime;
+    private ZonedDateTime start;
 
-    private ZonedDateTime endTime;
+    private ZonedDateTime end;
 
     @ManyToOne
     private Resource resource;
@@ -94,20 +94,20 @@ public class Reservation extends MultiTenantEntity implements Serializable {
         this.status = status;
     }
 
-    public ZonedDateTime getStartTime() {
-        return startTime;
+    public ZonedDateTime getStart() {
+        return start;
     }
 
-    public void setStartTime(ZonedDateTime startTime) {
-        this.startTime = startTime;
+    public void setStart(ZonedDateTime startTime) {
+        this.start = startTime;
     }
 
-    public ZonedDateTime getEndTime() {
-        return endTime;
+    public ZonedDateTime getEnd() {
+        return end;
     }
 
-    public void setEndTime(ZonedDateTime endTime) {
-        this.endTime = endTime;
+    public void setEnd(ZonedDateTime endTime) {
+        this.end = endTime;
     }
 
     public Resource getResource() {
@@ -155,12 +155,12 @@ public class Reservation extends MultiTenantEntity implements Serializable {
         return EqualsHelper.areEquals(getTitle(), other.getTitle())
                 && EqualsHelper.areEquals(getDateCreated(), other.getDateCreated())
                 && EqualsHelper.areEquals(getStatus(), other.getStatus())
-                && EqualsHelper.areEquals(getStartTime(), other.getStartTime())
-                && EqualsHelper.areEquals(getEndTime(), other.getEndTime());
+                && EqualsHelper.areEquals(getStart(), other.getStart())
+                && EqualsHelper.areEquals(getEnd(), other.getEnd());
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getTitle(), getDateCreated(), getStatus(), getStartTime(), getEndTime());
+        return EqualsHelper.calculateHashCode(getTitle(), getDateCreated(), getStatus(), getStart(), getEnd());
     }
 }

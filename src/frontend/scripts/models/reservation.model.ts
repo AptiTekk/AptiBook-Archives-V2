@@ -3,8 +3,8 @@ export interface Reservation {
     dateCreated: string;
     title: string;
     status: string;
-    startTime: string;
-    endTime: string;
+    start: string;
+    end: string;
     resource: number;
     user: number;
     decisions: number[];
