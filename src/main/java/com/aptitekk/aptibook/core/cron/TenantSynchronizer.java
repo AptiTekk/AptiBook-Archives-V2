@@ -6,8 +6,8 @@
 
 package com.aptitekk.aptibook.core.cron;
 
+import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
@@ -53,7 +53,6 @@ public class TenantSynchronizer {
     private final UserRepository userRepository;
 
 
-
     private final LogService logService;
 
     @Autowired
@@ -68,38 +67,54 @@ public class TenantSynchronizer {
         this.userRepository = userRepository;
     }
 
-    @Scheduled(cron = "* * * * *")
+    /**
+     * Deletes and re-builds the demo Tenant every 24 hours.
+     */
+    @Scheduled(cron = "0 0 * * *") //Every 24 hours
     @Async
-    public void initNewDemo() {
+    public void rebuildDemoTenant() {
+
+        //Find and delete old demo tenant
         Tenant tenant = tenantRepository.findTenantBySlug("demo");
-        if(tenant != null) {
-            deleteTenant(tenant);
-            Tenant newTenant = new Tenant();
-            newTenant.setSubscriptionId(tenant.getSubscriptionId());
-            newTenant.setSlug(tenant.getSlug());
-            newTenant.setAdminEmail(tenant.getAdminEmail());
-            newTenant.setTier(tenant.getTier());
-            Tenant demoTenant = tenantRepository.save(newTenant);
-            tenantIntegrityService.initializeNewTenant(demoTenant);
-            UserGroup userGroup = new UserGroup();
-            userGroup.setName("admin");
-            userGroup = userGroupRepository.save(userGroup);
-            UserGroup userGroup1 = new UserGroup();
-            userGroup1.setName("teachers");
-            userGroup1.setParent(userGroup);
-            userGroup1 = userGroupRepository.save(userGroup1);
+        if (tenant != null) {
+            tenantRepository.delete(tenant);
+        }
+
+        //Create new demo tenant
+        Tenant newTenant = new Tenant();
+        newTenant.setSlug("demo");
+        newTenant.setTier(Tenant.Tier.PLATINUM);
+        newTenant.setSubscriptionId(-1);
+        newTenant.setActive(true);
+        newTenant.setAdminEmail(null);
+        newTenant = tenantRepository.save(newTenant);
+        tenantIntegrityService.initializeNewTenant(newTenant);
+
+        //Add User Groups
+        UserGroup administratorsUserGroup = new UserGroup();
+        administratorsUserGroup.setName("Administrators");
+        administratorsUserGroup.setParent(userGroupRepository.findRootGroup(newTenant));
+        administratorsUserGroup.setTenant(newTenant);
+        administratorsUserGroup = userGroupRepository.save(administratorsUserGroup);
+
+        UserGroup teachersUserGroup = new UserGroup();
+        teachersUserGroup.setName("Teachers");
+        teachersUserGroup.setParent(administratorsUserGroup);
+        teachersUserGroup.setTenant(newTenant);
+        teachersUserGroup = userGroupRepository.save(teachersUserGroup);
+
+        //Add Users
+        try {
             User user = new User();
-            user.setHashedPassword("test");
             user.setEmailAddress("test@test.com");
             user.setFirstName("John");
             user.setLastName("Doe");
-            List<UserGroup> groupList = new ArrayList<>();
-            groupList.add(userGroup);
-            groupList.add(userGroup1);
-            user.setUserGroups(groupList);
-            userRepository.save(user);
-        }else {
-            System.out.println("Null");
+            user.setHashedPassword(PasswordStorage.createHash("test"));
+            user.getUserGroups().add(administratorsUserGroup);
+            user.setTenant(newTenant);
+            user = userRepository.save(user);
+        } catch (PasswordStorage.CannotPerformOperationException e) {
+            logService.logException(getClass(), e, "Could not hash demo user's password");
         }
     }
 
@@ -189,6 +204,10 @@ public class TenantSynchronizer {
 
             for (Tenant tenant : tenantRepository.findAll()) {
                 if (subscriptionIdsEncountered.contains(tenant.getSubscriptionId()))
+                    continue;
+
+                //The demo tenant should not be set inactive.
+                if (tenant.getSlug().equals("demo"))
                     continue;
 
                 changeTenantActive(tenant, false);
