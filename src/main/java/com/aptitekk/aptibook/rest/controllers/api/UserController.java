@@ -11,6 +11,7 @@ import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -56,60 +57,60 @@ public class UserController extends APIControllerAbstract {
 
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> deleteUser(@PathVariable long id, @RequestBody UserWithPassword user) {
-        if (user != null) {
+    public ResponseEntity<?> deleteUser(@PathVariable long id, @RequestBody UserPatch userPatch) {
+        if (userPatch != null) {
             User currentUser = userRepository.findInCurrentTenant(id);
             if (currentUser != null &&
                     (currentUser.equals(authService.getCurrentUser()) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))) {
 
-                User otherUser = userRepository.findByEmailAddress(user.getEmailAddress());
+                User otherUser = userRepository.findByEmailAddress(userPatch.getEmailAddress());
                 if (otherUser != null && !otherUser.getId().equals(id))
                     return badRequest("The Email Address is already in use.");
 
-                if (user.getEmailAddress() != null)
-                    if (!currentUser.isAdmin() && !EmailValidator.getInstance().isValid(user.getEmailAddress()))
+                if (userPatch.getEmailAddress() != null)
+                    if (!currentUser.isAdmin() && !EmailValidator.getInstance().isValid(userPatch.getEmailAddress()))
                         return badRequest("The Email Address is invalid.");
                     else
-                        currentUser.setEmailAddress(user.getEmailAddress());
+                        currentUser.setEmailAddress(userPatch.getEmailAddress());
 
-                if (user.getFirstName() != null)
-                    if (!user.getFirstName().matches("[^<>;=]*"))
+                if (userPatch.getFirstName() != null)
+                    if (!userPatch.getFirstName().matches("[^<>;=]*"))
                         return badRequest("The First Name cannot contain these characters: < > ; =");
-                    else if (user.getFirstName().length() > 30)
+                    else if (userPatch.getFirstName().length() > 30)
                         return badRequest("The First Name must be 30 characters or less.");
                     else
-                        currentUser.setFirstName(user.getFirstName());
+                        currentUser.setFirstName(userPatch.getFirstName());
 
-                if (user.getLastName() != null)
-                    if (!user.getLastName().matches("[^<>;=]*"))
+                if (userPatch.getLastName() != null)
+                    if (!userPatch.getLastName().matches("[^<>;=]*"))
                         return badRequest("The Last Name cannot contain these characters: < > ; =");
-                    else if (user.getLastName().length() > 30)
+                    else if (userPatch.getLastName().length() > 30)
                         return badRequest("The Last Name must be 30 characters or less.");
                     else
-                        currentUser.setLastName(user.getLastName());
+                        currentUser.setLastName(userPatch.getLastName());
 
-                if (user.getPhoneNumber() != null)
-                    if (!user.getPhoneNumber().matches("[^<>;=]*"))
+                if (userPatch.getPhoneNumber() != null)
+                    if (!userPatch.getPhoneNumber().matches("[^<>;=]*"))
                         return badRequest("The Phone Number cannot contain these characters: < > ; =");
-                    else if (user.getFirstName().length() > 30)
+                    else if (userPatch.getFirstName().length() > 30)
                         return badRequest("The Phone Number must be 30 characters or less.");
                     else
-                        currentUser.setPhoneNumber(user.getPhoneNumber());
+                        currentUser.setPhoneNumber(userPatch.getPhoneNumber());
 
-                if (user.getLocation() != null)
-                    if (!user.getLocation().matches("[^<>;=]*"))
+                if (userPatch.getLocation() != null)
+                    if (!userPatch.getLocation().matches("[^<>;=]*"))
                         return badRequest("The Location cannot contain these characters: < > ; =");
-                    else if (user.getFirstName().length() > 250)
+                    else if (userPatch.getFirstName().length() > 250)
                         return badRequest("The Location must be 250 characters or less.");
                     else
-                        currentUser.setLocation(user.getLocation());
+                        currentUser.setLocation(userPatch.getLocation());
 
-                if (user.getNewPassword() != null)
-                    if (user.getNewPassword().length() > 30)
+                if (userPatch.getNewPassword() != null)
+                    if (userPatch.getNewPassword().length() > 30)
                         return badRequest("The Password must be 30 characters or less.");
                     else
                         try {
-                            currentUser.setHashedPassword(PasswordStorage.createHash(user.getNewPassword()));
+                            currentUser.setHashedPassword(PasswordStorage.createHash(userPatch.getNewPassword()));
                         } catch (PasswordStorage.CannotPerformOperationException e) {
                             logService.logException(getClass(), e, "Could not hash password from PATCH.");
                             return serverError("Could not save new password.");
@@ -142,7 +143,8 @@ public class UserController extends APIControllerAbstract {
         return noPermission();
     }
 
-    private static class UserWithPassword extends User {
+    @JsonIgnoreProperties({"userGroups"})
+    private static class UserPatch extends User {
 
         private String newPassword;
 
