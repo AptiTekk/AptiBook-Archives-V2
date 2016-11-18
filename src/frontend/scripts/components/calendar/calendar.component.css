@@ -4,6 +4,8 @@
  * Proprietary and confidential.
  */
 
+/* Event Styling */
+
 .calendar .fc-event {
     border: 2px solid #ededed;
     background-color: #4272b7;
@@ -18,43 +20,7 @@
     display: none;
 }
 
-.calendar .fc-day-grid td.fc-day.fc-today {
-    background-color: #fff;
-}
-
-.calendar .fc-day-grid td.fc-day-top.fc-today {
-    border-top: 4px solid #4272b7;
-    color: #4272b7;
-    font-weight: bold;
-}
-
-.calendar .fc-time-grid td.fc-day.fc-today {
-    background-color: #e3efff;
-}
-
-.calendar td.fc-day-top.fc-today {
-    color: inherit;
-}
-
-.calendar button {
-    border: none;
-    background: #eee none;
-    box-shadow: none;
-}
-
-.calendar button:focus {
-    outline: none;
-}
-
-.calendar button.fc-state-active {
-    background-color: #4272b7;
-    color: #fff;
-    text-shadow: none;
-}
-
-.calendar .fc-button-group button:last-child {
-    margin-right: 0;
-}
+/* Event Status Styling */
 
 .calendar .fc-event.pending {
     background-color: #fff;
@@ -83,4 +49,54 @@
 .calendar .fc-event.cancelled .fc-content {
     color: #333;
     text-decoration: line-through;
+}
+
+/* Day Grid Styling */
+
+.calendar .fc-day-grid td.fc-day.fc-today {
+    background-color: #fff;
+}
+
+.calendar .fc-basicWeek-view .fc-day-grid td.fc-day.fc-today, .calendar .fc-basicDay-view .fc-day-grid td.fc-day.fc-today {
+    box-shadow: inset #4272b7 0 8px 0 0;
+}
+
+.calendar .fc-day-grid td.fc-day-top.fc-today {
+    border-top: 4px solid #4272b7;
+    color: #4272b7;
+    font-weight: bold;
+}
+
+.calendar td.fc-day-top.fc-today {
+    color: inherit;
+}
+
+.calendar .fc-list-empty {
+    background-color: #fff;
+}
+
+/* Button Styling */
+
+.calendar button {
+    border: none;
+    background: #eee none;
+    box-shadow: none;
+}
+
+.calendar button.fc-state-hover {
+    background-color: #ddd;
+}
+
+.calendar button:focus {
+    outline: none;
+}
+
+.calendar button.fc-state-active {
+    background-color: #4272b7;
+    color: #fff;
+    text-shadow: none;
+}
+
+.calendar .fc-button-group > * {
+    margin: 0;
 }

@@ -16,6 +16,9 @@ export class CalendarComponent implements AfterViewInit {
     events: [{id: number, title: string, start: any, end: any, status: string}];
 
     @Input()
+    eventFeedUrl: string;
+
+    @Input()
     allowSelection: boolean = true;
 
     @Input()
@@ -30,12 +33,12 @@ export class CalendarComponent implements AfterViewInit {
             header: {
                 left: 'title',
                 center: '',
-                right: 'today month,basicWeek,basicDay prev,next'
+                right: 'today month,basicWeek,listWeek,basicDay prev,next'
             },
             fixedWeekCount: false,
             editable: false,
             eventLimit: false, // allow "more" link when too many events
-            events: this.events,
+            events: this.events != undefined ? this.events : this.eventFeedUrl != undefined ? this.eventFeedUrl : [],
 
             eventRender: (event, element) => {
                 if (this.allowSelection)
