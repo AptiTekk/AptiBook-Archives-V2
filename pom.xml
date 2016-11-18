@@ -230,7 +230,7 @@
         </dependency>
         <!-- End Database -->
 
-        <!-- REST Consuming -->
+        <!-- REST -->
         <dependency>
             <groupId>com.fasterxml.jackson.core</groupId>
             <artifactId>jackson-databind</artifactId>
@@ -240,7 +240,12 @@
             <artifactId>scribejava-apis</artifactId>
             <version>3.0.0</version>
         </dependency>
-        <!-- End REST Consuming -->
+        <dependency>
+            <groupId>org.modelmapper</groupId>
+            <artifactId>modelmapper</artifactId>
+            <version>0.7.7</version>
+        </dependency>
+        <!-- End REST -->
         <!-- End Spring Boot-->
 
         <!-- Raygun Exception Handler -->

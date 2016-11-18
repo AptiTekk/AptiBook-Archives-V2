@@ -1,5 +1,6 @@
 import {Component} from "@angular/core";
 import {APIService} from "../../../services/api.service";
+import {TenantService} from "../../../services/tenant.service";
 
 @Component({
     selector: 'dashboard-page',
@@ -7,12 +8,14 @@ import {APIService} from "../../../services/api.service";
 })
 export class DashboardPageComponent {
 
-    constructor(public apiService: APIService) {
+    private timezone: string;
 
+    constructor(public apiService: APIService, private tenantService: TenantService) {
+        tenantService.getTenant().subscribe(tenant => this.timezone = tenant.timezone)
     }
 
     onCalendarEventClicked(id: number) {
-        alert("Clicked: "+id);
+        alert("Clicked: " + id);
     }
 
 }

@@ -24,6 +24,9 @@ export class CalendarComponent implements AfterViewInit {
     @Input()
     hiddenStatuses: string[];
 
+    @Input()
+    timezone: string = 'UTC';
+
     @Output()
     eventSelected: EventEmitter<number> = new EventEmitter<number>();
 
@@ -39,6 +42,7 @@ export class CalendarComponent implements AfterViewInit {
             editable: false,
             eventLimit: false, // allow "more" link when too many events
             events: this.events != undefined ? this.events : this.eventFeedUrl != undefined ? this.eventFeedUrl : [],
+            timezone: this.timezone,
 
             eventRender: (event, element) => {
                 if (this.allowSelection)
