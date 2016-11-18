@@ -1,3 +1,3 @@
 export * from './app/app.component';
 export * from './front-page';
-export * from './secure-page/secure-page.component';
+export * from './secure-page';

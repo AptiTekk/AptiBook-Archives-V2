@@ -1,6 +1,8 @@
 import {Component, ViewChild} from "@angular/core";
-import {Router} from "@angular/router";
+import {Router, ActivatedRoute} from "@angular/router";
 import {LoaderComponent} from "../../../components/loader/loader.component";
+import {OAuthService} from "../../../services/oauth.service";
+import {AuthService} from "../../../services/auth.service";
 
 @Component({
     selector: 'sign-in',
@@ -15,16 +17,44 @@ export class SignInComponent {
 
     emailAddress: string;
     password: string;
+    googleSignInUrl: string;
 
-    constructor(private router: Router) {
-        this.emailAddress = "";
-        this.password = "";
+    constructor(private router: Router, private activeRoute: ActivatedRoute, private oAuthService: OAuthService, private authService: AuthService) {
+        //Get the Google Sign In URL
+        this.oAuthService.getGoogleOAuthUrl().subscribe(
+            resp => {
+                this.googleSignInUrl = resp.url;
+            },
+            err => {
+                this.googleSignInUrl = undefined;
+            });
+
+        //Check for errors in the parameters
+        this.activeRoute.queryParams.subscribe(
+            params => {
+                if (params['googleError'] != undefined) {
+                    if (params['googleError'] === "access_denied")
+                        this.alertMessage = "Unfortunately, Sign In with Google failed because access was denied."
+                }
+            });
+
+        //Subscribe to auth messages
+        this.authService.getAuthMessage().subscribe(message => this.alertMessage = message);
     }
 
     onSubmit() {
-        console.log("Submitted: " + this.emailAddress + " - " + this.password);
         this.loader.setDisplayed(true);
-        this.router.navigateByUrl("/secure");
+        this.authService.signIn(this.emailAddress, this.password).subscribe(
+            (successful: boolean) => {
+                if (successful)
+                    this.router.navigateByUrl("/secure");
+                else
+                    this.loader.setDisplayed(false);
+            });
+    }
+
+    onGoogleSignIn() {
+        window.location.href = this.googleSignInUrl;
     }
 
 }
