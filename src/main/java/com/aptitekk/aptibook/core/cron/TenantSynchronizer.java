@@ -7,7 +7,12 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+
+import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
+import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.WooCommerceRestFetcher;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.LineItem;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.MetaItem;
@@ -15,6 +20,7 @@ import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Stat
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Subscription;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.StartupService;
+import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,16 +46,63 @@ public class TenantSynchronizer {
 
     private final WooCommerceRestFetcher wooCommerceRestFetcher;
 
+    private final UserGroupService userGroupService;
+
+    private final UserGroupRepository userGroupRepository;
+
+    private final UserRepository userRepository;
+
+
+
     private final LogService logService;
 
     @Autowired
-    public TenantSynchronizer(TenantRepository tenantRepository, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService, TenantIntegrityService tenantIntegrityService) {
+    public TenantSynchronizer(TenantRepository tenantRepository, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService, TenantIntegrityService tenantIntegrityService, UserGroupService userGroupService, UserGroupRepository userGroupRepository, UserRepository userRepository) {
         this.tenantRepository = tenantRepository;
         this.tenantManagementService = tenantManagementService;
         this.wooCommerceRestFetcher = wooCommerceRestFetcher;
         this.logService = logService;
         this.tenantIntegrityService = tenantIntegrityService;
+        this.userGroupService = userGroupService;
+        this.userGroupRepository = userGroupRepository;
+        this.userRepository = userRepository;
     }
+
+    @Scheduled(cron = "* * * * *")
+    @Async
+    public void initNewDemo() {
+        Tenant tenant = tenantRepository.findTenantBySlug("demo");
+        if(tenant != null) {
+            deleteTenant(tenant);
+            Tenant newTenant = new Tenant();
+            newTenant.setSubscriptionId(tenant.getSubscriptionId());
+            newTenant.setSlug(tenant.getSlug());
+            newTenant.setAdminEmail(tenant.getAdminEmail());
+            newTenant.setTier(tenant.getTier());
+            Tenant demoTenant = tenantRepository.save(newTenant);
+            tenantIntegrityService.initializeNewTenant(demoTenant);
+            UserGroup userGroup = new UserGroup();
+            userGroup.setName("admin");
+            userGroup = userGroupRepository.save(userGroup);
+            UserGroup userGroup1 = new UserGroup();
+            userGroup1.setName("teachers");
+            userGroup1.setParent(userGroup);
+            userGroup1 = userGroupRepository.save(userGroup1);
+            User user = new User();
+            user.setHashedPassword("test");
+            user.setEmailAddress("test@test.com");
+            user.setFirstName("John");
+            user.setLastName("Doe");
+            List<UserGroup> groupList = new ArrayList<>();
+            groupList.add(userGroup);
+            groupList.add(userGroup1);
+            user.setUserGroups(groupList);
+            userRepository.save(user);
+        }else {
+            System.out.println("Null");
+        }
+    }
+
 
     @Scheduled(cron = "* * * * *") //Every minute
     @Async
