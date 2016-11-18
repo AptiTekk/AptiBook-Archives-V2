@@ -14,6 +14,10 @@ export class APIService {
     constructor(private http: Http) {
     }
 
+    public getApiUrlFromEndpoint(endpoint: string): string {
+        return this.apiUrl + APIService.removeTrailingSlash(endpoint);
+    }
+
     private static checkForErrors(response: Response): any {
         if (response.status >= 200 && response.status < 300) {
             if (response.text().length > 0)
