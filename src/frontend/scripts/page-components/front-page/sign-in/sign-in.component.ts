@@ -21,13 +21,7 @@ export class SignInComponent {
 
     constructor(private router: Router, private activeRoute: ActivatedRoute, private oAuthService: OAuthService, private authService: AuthService) {
         //Get the Google Sign In URL
-        this.oAuthService.getGoogleOAuthUrl().subscribe(
-            resp => {
-                this.googleSignInUrl = resp.url;
-            },
-            err => {
-                this.googleSignInUrl = undefined;
-            });
+        this.oAuthService.getGoogleOAuthUrl().subscribe(url => this.googleSignInUrl = url);
 
         //Check for errors in the parameters
         this.activeRoute.queryParams.subscribe(

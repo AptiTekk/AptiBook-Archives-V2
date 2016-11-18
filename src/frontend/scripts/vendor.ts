@@ -7,6 +7,7 @@ import "@angular/router";
 import "rxjs";
 
 import 'jquery';
+
 import 'bootstrap/dist/js/bootstrap';
 require("!style!css!bootstrap/dist/css/bootstrap.css");
 require("!style!css!../styles/style.css");

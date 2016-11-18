@@ -54,6 +54,20 @@ export class APIService {
             .catch(e => Observable.throw(e));
     }
 
+    public put(path: string, data: any): Observable<any> {
+        let options = new RequestOptions({headers: this.headers});
+        return this.http.put(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
+            .map(APIService.checkForErrors)
+            .catch(e => Observable.throw(e));
+    }
+
+    public patch(path: string, data: any): Observable<any> {
+        let options = new RequestOptions({headers: this.headers});
+        return this.http.patch(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
+            .map(APIService.checkForErrors)
+            .catch(e => Observable.throw(e));
+    }
+
     public remove(path: string): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.delete(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
