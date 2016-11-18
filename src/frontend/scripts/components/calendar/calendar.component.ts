@@ -1,4 +1,14 @@
-import {Component, ViewChild, AfterViewInit, ViewEncapsulation, Input, Output, EventEmitter} from "@angular/core";
+import {
+    Component,
+    ViewChild,
+    AfterViewInit,
+    ViewEncapsulation,
+    Input,
+    Output,
+    EventEmitter,
+    OnChanges,
+    SimpleChanges
+} from "@angular/core";
 declare const $: any;
 
 @Component({
@@ -7,7 +17,7 @@ declare const $: any;
     styleUrls: ['calendar.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class CalendarComponent implements AfterViewInit {
+export class CalendarComponent implements AfterViewInit, OnChanges {
 
     @ViewChild('calendarContainer')
     calendarContainer;
@@ -31,6 +41,14 @@ export class CalendarComponent implements AfterViewInit {
     eventSelected: EventEmitter<number> = new EventEmitter<number>();
 
     ngAfterViewInit(): void {
+        this.buildCalendar();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        $(this.calendarContainer.nativeElement).fullCalendar('option', 'timezone', this.timezone != undefined ? this.timezone : false);
+    }
+
+    private buildCalendar(): void {
         $(this.calendarContainer.nativeElement).fullCalendar({
             height: 'parent',
             header: {
@@ -39,8 +57,8 @@ export class CalendarComponent implements AfterViewInit {
                 right: 'today month,basicWeek,listWeek,basicDay prev,next'
             },
             fixedWeekCount: false,
-            editable: false,
-            eventLimit: false, // allow "more" link when too many events
+            editable: false, //Drag and drop
+            eventLimit: true, //"More" link below too many events on a day
             events: this.events != undefined ? this.events : this.eventFeedUrl != undefined ? this.eventFeedUrl : [],
             timezone: this.timezone,
 
@@ -61,6 +79,4 @@ export class CalendarComponent implements AfterViewInit {
             }
         });
     }
-
-
 }
