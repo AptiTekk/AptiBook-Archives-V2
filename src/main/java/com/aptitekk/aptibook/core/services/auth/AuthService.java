@@ -80,6 +80,15 @@ public class AuthService {
     }
 
     /**
+     * Determines if the user is signed in or not.
+     *
+     * @return True if the user is signed in, false otherwise.
+     */
+    public boolean isUserSignedIn() {
+        return cookieService.getDataFromEncryptedCookie(COOKIE_NAME, request) != null;
+    }
+
+    /**
      * Signs the current user out by deleting its Cookie.
      *
      * @param response The HttpServletResponse to store the deletion cookie in.

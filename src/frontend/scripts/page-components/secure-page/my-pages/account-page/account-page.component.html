@@ -116,27 +116,31 @@
                 </div>
             </form>
         </div>
-
-        <div class="col-xs-12 col-md-4" *ngIf="user.admin || user.userGroups != undefined">
-            <h4>Assigned Groups</h4>
-            <hr/>
-            <div *ngIf="user.admin">
-                <p>The admin account is automatically granted full permissions. No Groups need to be assigned.</p>
-            </div>
-            <div *ngIf="!user.admin">
-                <ul>
-                    <li *ngFor="let userGroup of user.userGroups">
-                        {{userGroup.name}}
-                    </li>
-                </ul>
-            </div>
-        </div>
-
         <div class="col-xs-12 col-md-4">
-            <h4>Email Notification Preferences</h4>
-            <hr/>
-        </div>
 
+            <div class="row">
+                <div class="col-xs-12" *ngIf="user.admin || user.userGroups != undefined">
+                    <h4>Assigned Groups</h4>
+                    <hr/>
+                    <div *ngIf="user.admin">
+                        <p>The admin account is automatically granted full permissions. No Groups need to be
+                            assigned.</p>
+                    </div>
+                    <div *ngIf="!user.admin">
+                        <tree [userGroup]="rootUserGroup" [showRoot]="true" [selectable]="false" [dragAndDrop]="false"
+                              [higlightedUserGroupIds]="user.userGroups"></tree>
+                    </div>
+                </div>
+            </div>
+
+            <div class="row">
+                <div class="col-xs-12">
+                    <h4>Email Notification Preferences</h4>
+                    <hr/>
+                </div>
+            </div>
+
+        </div>
     </div>
 
 </div>

@@ -9,7 +9,6 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.validator.routines.EmailValidator;
@@ -36,11 +35,6 @@ public class UserController extends APIControllerAbstract {
     public ResponseEntity<?> getUsers() {
         if (authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
             List<User> users = userRepository.findAll();
-            for (User user : users) {
-                user.setNotifications(null);
-                user.setPermissions(null);
-                cleanUpUser(user);
-            }
 
             return ok(users);
         }
@@ -54,7 +48,7 @@ public class UserController extends APIControllerAbstract {
 
         if (user != null &&
                 (user.equals(authService.getCurrentUser()) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))) {
-            return ok(cleanUpUser(user));
+            return ok(user);
         }
 
         return noPermission();
@@ -123,7 +117,7 @@ public class UserController extends APIControllerAbstract {
 
                 userRepository.save(currentUser);
 
-                return ok(cleanUpUser(currentUser));
+                return ok(currentUser);
             }
 
             return noPermission();
@@ -146,18 +140,6 @@ public class UserController extends APIControllerAbstract {
         }
 
         return noPermission();
-    }
-
-    private User cleanUpUser(User user) {
-        for (UserGroup userGroup : user.getUserGroups()) {
-            userGroup.setParent(null);
-            userGroup.setUsers(null);
-            userGroup.setReservationDecisions(null);
-            userGroup.setResources(null);
-            userGroup.setChildren(null);
-        }
-
-        return user;
     }
 
     private static class UserWithPassword extends User {

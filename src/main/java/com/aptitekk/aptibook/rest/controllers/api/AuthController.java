@@ -56,7 +56,7 @@ public class AuthController extends APIControllerAbstract {
 
                             if (user != null) {
                                 authService.setCurrentUser(user, response);
-                                return ok(cleanUpUser(user));
+                                return ok(user);
                             }
 
                             return unauthorized("The Email Address or Password supplied was incorrect.");
@@ -74,22 +74,11 @@ public class AuthController extends APIControllerAbstract {
         } else {
             User currentUser = authService.getCurrentUser();
             if (currentUser != null) {
-                return ok(cleanUpUser(currentUser));
+                return ok(currentUser);
             }
 
             return badRequest("Authorization header was empty.");
         }
-    }
-
-    private User cleanUpUser(User user) {
-        for (UserGroup userGroup : user.getUserGroups()) {
-            userGroup.setUsers(null);
-            userGroup.setParent(null);
-            userGroup.setChildren(null);
-            userGroup.setResources(null);
-            userGroup.setReservationDecisions(null);
-        }
-        return user;
     }
 
     @RequestMapping(value = "auth/sign-out", method = RequestMethod.GET)

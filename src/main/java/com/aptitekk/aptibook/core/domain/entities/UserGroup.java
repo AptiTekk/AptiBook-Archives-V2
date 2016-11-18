@@ -7,14 +7,14 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class UserGroup extends MultiTenantEntity implements Serializable {
@@ -28,9 +28,11 @@ public class UserGroup extends MultiTenantEntity implements Serializable {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     private List<Resource> resources;
 
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany(mappedBy = "userGroups")
     private List<User> users = new ArrayList<>();
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
     private UserGroup parent;
 

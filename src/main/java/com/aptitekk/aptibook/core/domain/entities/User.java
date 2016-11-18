@@ -7,8 +7,7 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -18,8 +17,8 @@ import java.util.List;
 import java.util.Map;
 
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @SuppressWarnings("JpaDataSourceORMInspection")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 @Table(name = "\"user\"")
 public class User extends MultiTenantEntity implements Serializable {
@@ -59,6 +58,7 @@ public class User extends MultiTenantEntity implements Serializable {
     @SuppressWarnings("JpaAttributeTypeInspection")
     private Map<Notification.Type, Boolean> notificationTypeSettings = new HashMap<>();
 
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany
     private List<UserGroup> userGroups = new ArrayList<>();
 

@@ -3,6 +3,8 @@ import {AuthService} from "../../../../services/auth.service";
 import {User} from "../../../../models/user.model";
 import {UserService} from "../../../../services/user.service";
 import {isNullOrUndefined} from "util";
+import {UserGroup} from "../../../../models/user-group.model";
+import {UserGroupService} from "../../../../services/usergroup.service";
 
 @Component({
     selector: 'my-account',
@@ -13,15 +15,19 @@ export class AccountPageComponent {
     successMessage: string;
     passwordSuccessMessage: string;
     alertMessage: string;
+
     user: User;
 
-    constructor(private authService: AuthService, private userService: UserService) {
+    rootUserGroup: UserGroup;
+
+    constructor(private authService: AuthService, private userService: UserService, private userGroupService: UserGroupService) {
         authService.reloadUser();
         authService.getUser().subscribe(user => this.user = user);
+        userGroupService.getRootUserGroup().subscribe(userGroup => this.rootUserGroup = userGroup);
     }
 
     doPasswordsMatch(): boolean {
-        return this.user.newPassword == undefined || this.user.confirmPassword == undefined || this.user.newPassword === this.user.confirmPassword;
+        return this.user.newPassword === this.user.confirmPassword;
     }
 
     onAccountDetailsSubmit() {

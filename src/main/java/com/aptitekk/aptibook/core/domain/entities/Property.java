@@ -13,7 +13,10 @@ import com.aptitekk.aptibook.core.domain.entities.propertyValidators.MaxLengthPr
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.TimeZonePropertyValidator;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.context.ApplicationContext;
 
 import javax.persistence.*;
@@ -21,6 +24,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class Property extends MultiTenantEntity implements Serializable {
 
