@@ -130,77 +130,7 @@ span.no-decoration a:hover, span.no-decoration a:active, span.no-decoration a:fo
 
 /* ---------------------------------- BEGIN CALENDAR EVENT MODIFICATIONS ---------------------------------- */
 
-.aptibook .fc-event {
-    border: 2px solid #ededed;
-    background-color: #4272b7;
-}
 
-.aptibook .interactive-events .fc .fc-event {
-    cursor: pointer;
-}
-
-.aptibook .fc-time-grid-event .fc-bg {
-    display: none;
-}
-
-.aptibook .fc-day-grid td.fc-day.fc-today {
-    background-color: #fff;
-}
-
-.aptibook .fc-day-grid td.fc-day-number.fc-today {
-    border-top: 4px solid #4272b7;
-    color: #4272b7;
-    font-weight: bold;
-}
-
-.aptibook .fc-time-grid td.fc-day.fc-today {
-    background-color: #e3efff;
-}
-
-.aptibook td.fc-day-number.fc-today {
-    color: inherit;
-}
-
-.aptibook .fc button {
-    border: none;
-}
-
-.aptibook .fc .fc-button-group button {
-    margin-right: 5px;
-}
-
-.aptibook .fc .fc-button-group button:last-child {
-    margin-right: 0;
-}
-
-.aptibook .fc-event.pending {
-    background-color: #fff;
-    border: 1px dashed #666;
-}
-
-.aptibook .fc-event.pending .fc-content {
-    color: #666;
-}
-
-.aptibook .fc-event.rejected {
-    background-color: #f2dede;
-    border: 1px solid #ebccd1;
-}
-
-.aptibook .fc-event.rejected .fc-content {
-    color: #333;
-    text-decoration: line-through;
-}
-
-.aptibook .fc-event.cancelled {
-    background-color: #ddd;
-    border: 1px solid #333;
-}
-
-.aptibook .fc-event.cancelled .fc-content {
-    color: #333;
-    text-decoration: line-through;
-}
 
 /* ---------------------------------- END CALENDAR EVENT MODIFICATIONS ---------------------------------- */
 

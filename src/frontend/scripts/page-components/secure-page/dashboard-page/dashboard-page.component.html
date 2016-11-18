@@ -1,0 +1,14 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div class="container-fluid" style="height: calc(100vh - 50px - 50px - 20px)">
+    <div class="row" style="height: 100%">
+        <div class="col-xs-12 col-md-8" style="height: calc(100% - 20px)">
+            <calendar [events]="events" [hiddenStatuses]="['rejected']"
+                      (eventSelected)="onCalendarEventClicked($event)"></calendar>
+        </div>
+    </div>
+</div>

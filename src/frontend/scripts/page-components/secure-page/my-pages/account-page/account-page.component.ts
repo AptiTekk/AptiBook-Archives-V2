@@ -7,7 +7,7 @@ import {UserGroup} from "../../../../models/user-group.model";
 import {UserGroupService} from "../../../../services/usergroup.service";
 
 @Component({
-    selector: 'my-account',
+    selector: 'my-account-page',
     templateUrl: 'account-page.component.html'
 })
 export class AccountPageComponent {

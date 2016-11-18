@@ -5,6 +5,7 @@ import {
     SignInComponent,
     RegisterComponent,
     SecurePageComponent,
+    DashboardPageComponent,
     AccountPageComponent,
     NotificationsPageComponent
 } from "../page-components";
@@ -32,7 +33,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
         children: [
             {
                 path: '',
-                component: null
+                component: DashboardPageComponent
             },
             {
                 path: 'my/account',

@@ -1,4 +1,5 @@
 export * from './alert/alert.component';
+export * from './calendar/calendar.component';
 export * from './footer';
 export * from "./header/header.component";
 export * from "./loader/loader.component";
