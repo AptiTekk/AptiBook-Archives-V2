@@ -42,6 +42,14 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
 
     private calendarBuilt: boolean = false;
 
+    constructor() {
+        window.onresize = (event) => {
+            if (this.calendarBuilt) {
+                $(this.calendarContainer.nativeElement).fullCalendar('render');
+            }
+        };
+    }
+
     ngAfterViewInit(): void {
         this.buildCalendar();
     }

@@ -75,6 +75,10 @@
     background-color: #fff;
 }
 
+.calendar .fc-scroller {
+    overflow-y: hidden !important;
+}
+
 /* Button Styling */
 
 .calendar button {
