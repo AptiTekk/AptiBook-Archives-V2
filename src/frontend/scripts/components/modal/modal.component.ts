@@ -43,7 +43,7 @@ export class ModalComponent {
         this._isOpen = true;
         document.body.appendChild(this.backdropElement);
         window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
-        document.body.className += " modal-open";
+        document.body.classList.add("modal-open");
     }
 
     closeModal() {
@@ -52,7 +52,7 @@ export class ModalComponent {
 
         this._isOpen = false;
         document.body.removeChild(this.backdropElement);
-        document.body.className = document.body.className.replace(/modal-open\b/, "");
+        document.body.classList.remove("modal-open");
     }
 
     get isOpen(): boolean {

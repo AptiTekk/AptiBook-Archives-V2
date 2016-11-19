@@ -37,6 +37,9 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
     @Input()
     timezone: string = 'UTC';
 
+    @Input()
+    title: string;
+
     @Output()
     eventSelected: EventEmitter<number> = new EventEmitter<number>();
 
@@ -58,23 +61,26 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
         if (!this.calendarBuilt)
             return;
 
-        for (let propName in changes) {
-            switch (propName) {
-                case 'timezone':
-                    $(this.calendarContainer.nativeElement).fullCalendar('option', 'timezone', this.getTimezoneToUse());
-                    break;
-                case 'events':
-                case 'eventFeedUrl':
-                    //Remove any existing event sources
-                    $(this.calendarContainer.nativeElement).fullCalendar('removeEventSources');
+        try {
+            for (let propName in changes) {
+                switch (propName) {
+                    case 'timezone':
+                        $(this.calendarContainer.nativeElement).fullCalendar('option', 'timezone', this.getTimezoneToUse());
+                        break;
+                    case 'events':
+                    case 'eventFeedUrl':
+                        //Remove any existing event sources
+                        $(this.calendarContainer.nativeElement).fullCalendar('removeEventSources');
 
-                    if (this.events != undefined || this.eventFeedUrl != undefined) {
-                        //Add the new event source
-                        $(this.calendarContainer.nativeElement).fullCalendar('addEventSource',
-                            this.getEventsToUse())
-                    }
-                    break;
+                        if (this.events != undefined || this.eventFeedUrl != undefined) {
+                            //Add the new event source
+                            $(this.calendarContainer.nativeElement).fullCalendar('addEventSource',
+                                this.getEventsToUse())
+                        }
+                        break;
+                }
             }
+        } catch (ignored) {
         }
     }
 
@@ -116,6 +122,10 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                     this.eventSelected.next(calEvent);
             }
         });
+
+        if (this.title != undefined)
+            this.calendarContainer.nativeElement.getElementsByClassName('fc-center')[0].innerHTML = "<h3>" + this.title + "</h3>";
+
         this.calendarBuilt = true;
     }
 }

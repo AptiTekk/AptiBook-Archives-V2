@@ -19,6 +19,7 @@
                 <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
                           [hiddenStatuses]="['rejected', 'cancelled']"
                           [timezone]="timezone"
+                          [title]="'Public Calendar'"
                           (eventSelected)="onCalendarEventClicked($event)"></calendar>
             </div>
         </div>
