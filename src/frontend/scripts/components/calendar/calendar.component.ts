@@ -40,12 +40,42 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
     @Output()
     eventSelected: EventEmitter<number> = new EventEmitter<number>();
 
+    private calendarBuilt: boolean = false;
+
     ngAfterViewInit(): void {
         this.buildCalendar();
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        $(this.calendarContainer.nativeElement).fullCalendar('option', 'timezone', this.timezone != undefined ? this.timezone : false);
+        if (!this.calendarBuilt)
+            return;
+
+        for (let propName in changes) {
+            switch (propName) {
+                case 'timezone':
+                    $(this.calendarContainer.nativeElement).fullCalendar('option', 'timezone', this.getTimezoneToUse());
+                    break;
+                case 'events':
+                case 'eventFeedUrl':
+                    //Remove any existing event sources
+                    $(this.calendarContainer.nativeElement).fullCalendar('removeEventSources');
+
+                    if (this.events != undefined || this.eventFeedUrl != undefined) {
+                        //Add the new event source
+                        $(this.calendarContainer.nativeElement).fullCalendar('addEventSource',
+                            this.getEventsToUse())
+                    }
+                    break;
+            }
+        }
+    }
+
+    private getEventsToUse(): any {
+        return this.events != undefined ? this.events : this.eventFeedUrl != undefined ? this.eventFeedUrl : [];
+    }
+
+    private getTimezoneToUse(): any {
+        return this.timezone != undefined ? this.timezone : false;
     }
 
     private buildCalendar(): void {
@@ -59,8 +89,8 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
             fixedWeekCount: false,
             editable: false, //Drag and drop
             eventLimit: true, //"More" link below too many events on a day
-            events: this.events != undefined ? this.events : this.eventFeedUrl != undefined ? this.eventFeedUrl : [],
-            timezone: this.timezone,
+            events: this.getEventsToUse(),
+            timezone: this.getTimezoneToUse(),
 
             eventRender: (event, element) => {
                 if (this.allowSelection)
@@ -78,5 +108,6 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                     this.eventSelected.next(calEvent.id);
             }
         });
+        this.calendarBuilt = true;
     }
 }
