@@ -7,12 +7,8 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.crypto.PasswordStorage;
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.UserGroup;
-import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
-import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
-import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.WooCommerceRestFetcher;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.LineItem;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.MetaItem;
@@ -52,11 +48,17 @@ public class TenantSynchronizer {
 
     private final UserRepository userRepository;
 
+    private final ResourceCategoryRepository resourceCategoryRepository;
+
+    private final ResourceRepository resourceRepository;
+
+    private final TagRepository tagRepository;
+
 
     private final LogService logService;
 
     @Autowired
-    public TenantSynchronizer(TenantRepository tenantRepository, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService, TenantIntegrityService tenantIntegrityService, UserGroupService userGroupService, UserGroupRepository userGroupRepository, UserRepository userRepository) {
+    public TenantSynchronizer(TenantRepository tenantRepository, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService, TenantIntegrityService tenantIntegrityService, UserGroupService userGroupService, UserGroupRepository userGroupRepository, UserRepository userRepository,  ResourceCategoryRepository resourceCategoryRepository ,ResourceRepository resourceRepository ,TagRepository tagRepository) {
         this.tenantRepository = tenantRepository;
         this.tenantManagementService = tenantManagementService;
         this.wooCommerceRestFetcher = wooCommerceRestFetcher;
@@ -65,6 +67,9 @@ public class TenantSynchronizer {
         this.userGroupService = userGroupService;
         this.userGroupRepository = userGroupRepository;
         this.userRepository = userRepository;
+        this.resourceCategoryRepository = resourceCategoryRepository;
+        this.resourceRepository = resourceRepository;
+        this.tagRepository = tagRepository;
     }
 
     /**
@@ -117,6 +122,37 @@ public class TenantSynchronizer {
             logService.logException(getClass(), e, "Could not hash demo user's password");
         }
 
+        //Add Resource Categories
+        ResourceCategory resourceCategory= new ResourceCategory();
+        resourceCategory.setName("Laptop Carts");
+        resourceCategory.setTenant(newTenant);
+        List<Tag> tags = new ArrayList<>();
+        Tag adobeTag = new Tag();
+        adobeTag.setName("adobe");
+        adobeTag.setTenant(newTenant);
+        adobeTag = tagRepository.save(adobeTag);
+        tags.add(adobeTag);
+        Tag officeTag = new Tag();
+        officeTag.setName("office");
+        tags.add(officeTag);
+        Tag chromebookTag = new Tag();
+        chromebookTag.setName("chromebook");
+        tags.add(chromebookTag);
+        resourceCategory.setTags(tags);
+        resourceCategory = resourceCategoryRepository.save(resourceCategory);
+
+        //Add resources
+        Resource cart1 = new Resource();
+        cart1.setName("Cart 1");
+        cart1.setResourceCategory(resourceCategory);
+        cart1.setTenant(newTenant);
+        resourceRepository.save(cart1);
+
+        Resource cart2 = new Resource();
+        cart2.setName("Cart 2");
+        cart2.setResourceCategory(resourceCategory);
+        cart2.setTenant(newTenant);
+        resourceRepository.save(cart2);
         tenantManagementService.refresh();
     }
 
