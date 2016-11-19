@@ -4,19 +4,6 @@
  * Proprietary and confidential.
  */
 
-/*#loading {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: 100;
-    background: rgba(255, 255, 255, 0.6) url("#{resource['aptibook:images/spinner.gif']}") no-repeat center;
-    transition: opacity 0.1s ease-in-out;
-    opacity: 0;
-    pointer-events: none;
-}*/
-
 ._hiddenUplFile {
     top: 0;
     margin: 0;
@@ -46,93 +33,6 @@ span.no-decoration a:hover, span.no-decoration a:active, span.no-decoration a:fo
     margin-top: 0;
     margin-bottom: 0;
 }
-
-/* ---------------------------------- BEGIN COLOR MODIFICATIONS ---------------------------------- */
-
-.app a {
-    color: #4272b7;
-}
-
-.app .btn-primary,
-.app .pagination > .active > a,
-.app .pagination > .active > span,
-.app .pagination > .active > a:hover,
-.app .pagination > .active > span:hover,
-.app .pagination > .active > a:focus,
-.app .pagination > .active > span:focus,
-.app .btn-primary.disabled:hover,
-.app .btn-primary[disabled]:hover,
-.app fieldset[disabled] .btn-primary:hover,
-.app .btn-primary.disabled:focus,
-.app .btn-primary[disabled]:focus,
-.app fieldset[disabled] .btn-primary:focus,
-.app .btn-primary.disabled.focus,
-.app .btn-primary[disabled].focus,
-.app fieldset[disabled] .btn-primary.focus {
-    background-color: #4272b7;
-    border-color: #39629C;
-}
-
-.app .btn-primary:hover {
-    background-color: #39629C;
-    border-color: #39629C;
-}
-
-.app .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
-.app .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
-    background: #4272b7;
-}
-
-.app .ui-state-highlight,
-.app .ui-widget-content .ui-state-highlight,
-.app .ui-widget-header .ui-state-highlight {
-    background-color: #4272b7;
-}
-
-.app .ui-widget-content .fc-today.ui-state-highlight {
-    background: none;
-}
-
-/* ---------------------------------- END COLOR MODIFICATIONS ---------------------------------- */
-
-/* ---------------------------------- FORM MODIFICATIONS ---------------------------------- */
-
-/*.app .input-group .input-group-addon {
-    height: 35px;
-    width: 35px;
-}
-
-.app .input-group .form-control {
-    height: 35px;
-}*/
-
-/* ---------------------------------- END FORM MODIFICATIONS ---------------------------------- */
-
-/* ---------------------------------- BEGIN PANEL MODIFICATIONS ---------------------------------- */
-
-.aptibook .panel.panel-primary {
-    box-shadow: #666 0 0 10px -2px;
-    border: none;
-}
-
-.aptibook .panel.panel-primary .panel-heading {
-    background-color: #4272b7;
-    box-shadow: #666 0 5px 10px -5px;
-    color: white;
-    border: none;
-}
-
-.aptibook .panel.panel-primary .panel-heading a:after {
-    color: white;
-}
-
-/* ---------------------------------- END PANEL MODIFICATIONS ---------------------------------- */
-
-/* ---------------------------------- BEGIN CALENDAR EVENT MODIFICATIONS ---------------------------------- */
-
-
-
-/* ---------------------------------- END CALENDAR EVENT MODIFICATIONS ---------------------------------- */
 
 /* ---------------------------------- BEGIN RESULTS PAGE MODIFICATIONS ---------------------------------- */
 

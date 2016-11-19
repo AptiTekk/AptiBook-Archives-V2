@@ -1,6 +1,7 @@
 import {Component} from "@angular/core";
 import {APIService} from "../../../services/api.service";
 import {TenantService} from "../../../services/tenant.service";
+import {Reservation} from "../../../models/reservation.model";
 
 @Component({
     selector: 'dashboard-page',
@@ -14,8 +15,8 @@ export class DashboardPageComponent {
         tenantService.getTenant().subscribe(tenant => this.timezone = tenant.timezone)
     }
 
-    onCalendarEventClicked(id: number) {
-        alert("Clicked: " + id);
+    onCalendarEventClicked(event: Reservation) {
+        alert("Clicked: " + event.title);
     }
 
 }

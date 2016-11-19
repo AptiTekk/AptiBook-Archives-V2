@@ -105,7 +105,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
             },
             eventClick: (calEvent, jsEvent, view) => {
                 if (this.allowSelection)
-                    this.eventSelected.next(calEvent.id);
+                    this.eventSelected.next(calEvent);
             }
         });
         this.calendarBuilt = true;
