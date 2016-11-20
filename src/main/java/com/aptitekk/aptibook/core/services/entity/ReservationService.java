@@ -11,7 +11,7 @@ import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
 
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class ReservationService {
      * @param endTime          The reservation end time
      * @return A list of available resources during the selected times.
      */
-    public List<Resource> findAvailableResources(ResourceCategory resourceCategory, ZonedDateTime startTime, ZonedDateTime endTime) {
+    public List<Resource> findAvailableResources(ResourceCategory resourceCategory, LocalDateTime startTime, LocalDateTime endTime) {
         //This list contains all the resources for the given ResourceCategory.
         List<Resource> resourcesOfType = resourceCategory.getResources();
         //This list is what will be returned, it will contain all of the resources that are available for reservation.
@@ -49,7 +49,7 @@ public class ReservationService {
      * @param endTime   The reservation end time
      * @return true if available, false if not.
      */
-    public boolean isResourceAvailableForReservation(Resource resource, ZonedDateTime startTime, ZonedDateTime endTime) {
+    public boolean isResourceAvailableForReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime) {
         //Iterate over all reservations of the resource and check for intersections
         for (Reservation reservation : resource.getReservations()) {
             //Ignore rejected reservations.

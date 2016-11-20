@@ -18,7 +18,6 @@
             <div class="calendar-container" style="height: calc(100vh - 50px - 50px - 40px);">
                 <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
                           [hiddenStatuses]="['rejected', 'cancelled']"
-                          [timezone]="timezone"
                           [title]="'Public Calendar'"
                           (eventSelected)="onCalendarEventClicked($event)"></calendar>
             </div>

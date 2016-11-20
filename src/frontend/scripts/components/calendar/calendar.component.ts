@@ -35,9 +35,6 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
     hiddenStatuses: string[];
 
     @Input()
-    timezone: string = 'UTC';
-
-    @Input()
     title: string;
 
     @Output()
@@ -64,9 +61,6 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
         try {
             for (let propName in changes) {
                 switch (propName) {
-                    case 'timezone':
-                        $(this.calendarContainer.nativeElement).fullCalendar('option', 'timezone', this.getTimezoneToUse());
-                        break;
                     case 'events':
                     case 'eventFeedUrl':
                         //Remove any existing event sources
@@ -88,10 +82,6 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
         return this.events != undefined ? this.events : this.eventFeedUrl != undefined ? this.eventFeedUrl : [];
     }
 
-    private getTimezoneToUse(): any {
-        return this.timezone != undefined ? this.timezone : false;
-    }
-
     private buildCalendar(): void {
         $(this.calendarContainer.nativeElement).fullCalendar({
             height: 'parent',
@@ -104,12 +94,9 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
             editable: false, //Drag and drop
             eventLimit: true, //"More" link below too many events on a day
             events: this.getEventsToUse(),
-            timezone: this.getTimezoneToUse(),
+            timezone: 'local',
 
             eventRender: (event, element) => {
-                if (this.allowSelection)
-                    element[0].classList.add("fc-event-selectable");
-
                 if (event.status != undefined) {
                     if (this.hiddenStatuses != undefined && this.hiddenStatuses.map(string => string.toLowerCase()).includes(event.status.toLowerCase()))
                         return false;

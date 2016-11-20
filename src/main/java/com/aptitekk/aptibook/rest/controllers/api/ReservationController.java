@@ -32,22 +32,13 @@ public class ReservationController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
-    public ResponseEntity<?> getReservationsBetweenDates(@RequestParam("start") String start, @RequestParam("end") String end, @RequestParam(value = "timezone", required = false) String timezone) {
+    public ResponseEntity<?> getReservationsBetweenDates(@RequestParam("start") String start, @RequestParam("end") String end) {
         if (authService.isUserSignedIn()) {
-            ZoneId zoneId = ZoneId.systemDefault();
-            if (timezone != null) {
-                try {
-                    zoneId = ZoneId.of(timezone);
-                } catch (Exception ignored) {
-                    return badRequest("Invalid Timezone");
-                }
-            }
-
             try {
                 LocalDate startTime = LocalDate.parse(start, DATE_TIME_FORMATTER);
                 LocalDate endTime = LocalDate.parse(end, DATE_TIME_FORMATTER);
 
-                return ok(reservationRepository.findAllBetweenDates(startTime.atStartOfDay(zoneId), endTime.atStartOfDay(zoneId)));
+                return ok(reservationRepository.findAllBetweenDates(startTime.atStartOfDay(), endTime.atStartOfDay()));
             } catch (DateTimeParseException e) {
                 return badRequest("Could not parse start or end time. Proper format: yyyy-MM-dd.");
             }

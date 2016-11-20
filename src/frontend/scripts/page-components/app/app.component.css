@@ -8,6 +8,8 @@
     color: #4272b7;
 }
 
+/* Button Styling */
+
 .app .btn-primary,
 .app .pagination > .active > a,
 .app .pagination > .active > span,
@@ -33,6 +35,12 @@
     border-color: #39629C;
 }
 
+app button.btn:focus {
+    outline: none;
+}
+
+/* Switch Styling */
+
 .app .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
 .app .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
     background: #4272b7;
@@ -42,8 +50,4 @@
 .app .ui-widget-content .ui-state-highlight,
 .app .ui-widget-header .ui-state-highlight {
     background-color: #4272b7;
-}
-
-.app .ui-widget-content .fc-today.ui-state-highlight {
-    background: none;
 }

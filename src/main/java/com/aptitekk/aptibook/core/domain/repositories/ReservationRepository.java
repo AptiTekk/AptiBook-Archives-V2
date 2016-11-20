@@ -12,7 +12,7 @@ import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 
 import javax.persistence.TypedQuery;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
@@ -28,7 +28,7 @@ public class ReservationRepository extends MultiTenantEntityRepositoryAbstract<R
      * @param end   The end date. Should be after the start date.
      * @return A list of reservations between the specified dates, or null if any date is null or the end date is not after the start date.
      */
-    public List<Reservation> findAllBetweenDates(ZonedDateTime start, ZonedDateTime end) {
+    public List<Reservation> findAllBetweenDates(LocalDateTime start, LocalDateTime end) {
         return findAllBetweenDates(start, end, null, (ResourceCategory[]) null);
     }
 
@@ -41,7 +41,7 @@ public class ReservationRepository extends MultiTenantEntityRepositoryAbstract<R
      * @param resourceCategories The categories to filter by. Null if no category filtering should be performed.
      * @return A list of reservations between the specified dates, or null if any date is null or the end date is not after the start date.
      */
-    public List<Reservation> findAllBetweenDates(ZonedDateTime start, ZonedDateTime end, ResourceCategory... resourceCategories) {
+    public List<Reservation> findAllBetweenDates(LocalDateTime start, LocalDateTime end, ResourceCategory... resourceCategories) {
         return findAllBetweenDates(start, end, null, resourceCategories);
     }
 
@@ -55,7 +55,7 @@ public class ReservationRepository extends MultiTenantEntityRepositoryAbstract<R
      * @param resourceCategories The categories to filter by. Null if no category filtering should be performed.
      * @return A list of reservations between the specified dates, or null if any date is null or the end date is not after the start date.
      */
-    public List<Reservation> findAllBetweenDates(ZonedDateTime start, ZonedDateTime end, User user, ResourceCategory... resourceCategories) {
+    public List<Reservation> findAllBetweenDates(LocalDateTime start, LocalDateTime end, User user, ResourceCategory... resourceCategories) {
         if (start == null || end == null || start.isAfter(end))
             return null;
 
