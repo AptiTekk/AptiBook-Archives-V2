@@ -1,8 +1,8 @@
 import {Component, ViewChild} from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
 import {LoaderComponent} from "../../../components/loader/loader.component";
-import {OAuthService} from "../../../services/oauth.service";
-import {AuthService} from "../../../services/auth.service";
+import {OAuthService} from "../../../services/stateful/oauth.service";
+import {AuthService} from "../../../services/singleton/auth.service";
 
 @Component({
     selector: 'sign-in',

@@ -14,7 +14,7 @@
             <div class="upcoming-reservations-section"
                  [@makingNewReservation]="!makingNewReservation">
                 <upcoming-reservations-panel></upcoming-reservations-panel>
-                <button class="btn btn-primary btn-block" (click)="onNewReservationButtonClicked()">
+                <button class="btn btn-primary btn-block" (click)="onNewReservationStart()">
                     <i class="fa fa-plus"></i>
                     New Reservation
                 </button>
@@ -23,10 +23,23 @@
             <!-- New Reservation -->
             <div class="new-reservation-section" style="opacity: 0"
                  [@makingNewReservation]="makingNewReservation">
-                <button class="btn btn-default btn-block" (click)="onCancelNewReservationButtonClicked()">
-                    <i class="fa fa-arrow-left"></i>
-                    Cancel
-                </button>
+
+                <h3>New Reservation</h3>
+                <hr/>
+
+                <p>When would you like to make a reservation?
+                    Use the date and time selectors below and click next when you are ready.</p>
+
+                <div class="btn-group btn-block">
+                    <button class="btn btn-default" style="width: 50%" (click)="onCancelNewReservation()">
+                        <i class="fa fa-arrow-left"></i>
+                        Cancel
+                    </button>
+                    <button class="btn btn-primary" style="width: 50%" (click)="onNewReservationNext()">
+                        Next
+                        <i class="fa fa-arrow-right"></i>
+                    </button>
+                </div>
             </div>
         </div>
 

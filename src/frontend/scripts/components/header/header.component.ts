@@ -1,6 +1,6 @@
 import {Component, Input} from "@angular/core";
 import {User} from "../../models/user.model";
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from "../../services/singleton/auth.service";
 import {Router} from "@angular/router";
 
 @Component({

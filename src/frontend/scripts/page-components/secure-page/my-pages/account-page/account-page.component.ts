@@ -1,10 +1,10 @@
 import {Component} from "@angular/core";
-import {AuthService} from "../../../../services/auth.service";
+import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
-import {UserService} from "../../../../services/user.service";
+import {UserService} from "../../../../services/singleton/user.service";
 import {isNullOrUndefined} from "util";
 import {UserGroup} from "../../../../models/user-group.model";
-import {UserGroupService} from "../../../../services/usergroup.service";
+import {UserGroupService} from "../../../../services/singleton/usergroup.service";
 
 @Component({
     selector: 'my-account-page',

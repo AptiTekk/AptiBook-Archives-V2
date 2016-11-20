@@ -1,6 +1,6 @@
 import {Component, trigger, state, style, transition, animate} from "@angular/core";
 import {Reservation} from "../../../models/reservation.model";
-import {APIService} from "../../../services/api.service";
+import {APIService} from "../../../services/singleton/api.service";
 
 @Component({
     selector: 'dashboard-page',
@@ -24,12 +24,16 @@ export class DashboardPageComponent {
         //TODO: Modal window
     }
 
-    onNewReservationButtonClicked() {
+    onNewReservationStart() {
         this.makingNewReservation = true;
     }
 
-    onCancelNewReservationButtonClicked() {
+    onCancelNewReservation() {
         this.makingNewReservation = false;
+    }
+
+    onNewReservationNext() {
+
     }
 
 }

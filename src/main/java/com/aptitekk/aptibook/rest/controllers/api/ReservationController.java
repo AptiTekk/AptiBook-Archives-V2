@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
+import org.apache.commons.lang3.time.DateUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -16,14 +17,15 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
-import java.time.format.DateTimeParseException;
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 
 @APIController
 public class ReservationController extends APIControllerAbstract {
 
-    private static final DateTimeFormatter DATE_TIME_FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+    private final String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'hh:mm:ss", "yyyy-MM-dd'T'hh:mm", "yyyy-MM-dd"};
 
     private final ReservationRepository reservationRepository;
 
@@ -36,12 +38,14 @@ public class ReservationController extends APIControllerAbstract {
     public ResponseEntity<?> getReservationsBetweenDates(@RequestParam("start") String start, @RequestParam("end") String end) {
         if (authService.isUserSignedIn()) {
             try {
-                LocalDate startTime = LocalDate.parse(start, DATE_TIME_FORMATTER);
-                LocalDate endTime = LocalDate.parse(end, DATE_TIME_FORMATTER);
+                Date startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
+                Date endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
+                LocalDateTime startLocalDateTime = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+                LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
 
-                return ok(reservationRepository.findReservationsWithFilters(startTime.atStartOfDay(), endTime.atStartOfDay(), null, null));
-            } catch (DateTimeParseException e) {
-                return badRequest("Could not parse start or end time. Proper format: yyyy-MM-dd.");
+                return ok(reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, null, null));
+            } catch (ParseException e) {
+                return badRequest("Could not parse start or end time.");
             }
         }
         return unauthorized();
@@ -56,17 +60,20 @@ public class ReservationController extends APIControllerAbstract {
             User user = authService.getCurrentUser();
             if (user.isAdmin() || user.getId().equals(id)) {
                 try {
-                    LocalDate startTime = null;
-                    LocalDate endTime = null;
+                    Date startDate = null;
+                    Date endDate = null;
 
                     if (start != null)
-                        startTime = LocalDate.parse(start, DATE_TIME_FORMATTER);
+                        startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
                     if (end != null)
-                        endTime = LocalDate.parse(end, DATE_TIME_FORMATTER);
+                        endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
 
-                    return ok(reservationRepository.findReservationsWithFilters(startTime != null ? startTime.atStartOfDay() : null, endTime != null ? endTime.atStartOfDay() : null, user, null));
-                } catch (DateTimeParseException e) {
-                    return badRequest("Could not parse start or end time. Proper format: yyyy-MM-dd.");
+                    LocalDateTime startLocalDateTime = startDate != null ? LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()) : null;
+                    LocalDateTime endLocalDateTime = endDate != null ? LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()) : null;
+
+                    return ok(reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, user, null));
+                } catch (ParseException e) {
+                    return badRequest("Could not parse start or end time.");
                 }
             }
             return noPermission();

@@ -1,4 +1,4 @@
-import {AuthService} from "../../services/auth.service";
+import {AuthService} from "../../services/singleton/auth.service";
 import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
