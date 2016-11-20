@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, trigger} from "@angular/core";
 import {Reservation} from "../../../../models/reservation.model";
 import {AuthService} from "../../../../services/auth.service";
 import {ReservationService} from "../../../../services/reservation.service";

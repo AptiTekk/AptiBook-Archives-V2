@@ -15,7 +15,7 @@ export class FrontPageGuard implements CanActivate {
             this.authService.getUser().take(1).subscribe(
                 user => {
                     if (!isNullOrUndefined(user)) {
-                        this.router.navigateByUrl("/secure");
+                        this.router.navigateByUrl("/secure/dashboard");
                         listener.next(false);
                     } else {
                         listener.next(true);

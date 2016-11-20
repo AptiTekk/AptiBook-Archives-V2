@@ -10,6 +10,7 @@ import {
     NotificationsPageComponent
 } from "../page-components";
 import {FrontPageGuard, SecureGuard} from "./guards";
+import {UpcomingReservationsPanelComponent} from "../page-components/secure-page/dashboard-page/upcoming-reservations-panel/upcoming-reservations-panel.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -32,7 +33,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
         component: SecurePageComponent,
         children: [
             {
-                path: '',
+                path: 'dashboard',
                 component: DashboardPageComponent
             },
             {
@@ -42,6 +43,10 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             {
                 path: 'my/notifications',
                 component: NotificationsPageComponent
+            },
+            {
+                path: '**',
+                redirectTo: 'dashboard'
             }
         ],
         canActivate: [SecureGuard]
