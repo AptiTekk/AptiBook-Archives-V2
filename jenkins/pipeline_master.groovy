@@ -25,7 +25,7 @@ node {
 }
 
 def checkoutFromGit() {
-    def branch = "Mitch"
+    def branch = "master"
     def url = "ssh://git@util.aptitekk.com:2005/ab/aptibook-angular.git"
     def credentialsId = "542239bb-3d63-40bc-9cfa-e5ed56a1fc5b"
 
