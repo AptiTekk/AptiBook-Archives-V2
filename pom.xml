@@ -28,6 +28,9 @@
         <exec-maven-version>1.5.0</exec-maven-version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+
+        <!--suppress CheckTagEmptyBody -->
+        <script.extension></script.extension>
     </properties>
 
     <build>
