@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -36,9 +37,11 @@ public class Resource extends MultiTenantEntity implements Serializable {
     @OrderBy("dateCreated desc")
     private List<Reservation> reservations = new ArrayList<>();
 
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     private ResourceCategory resourceCategory;
 
+    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     private UserGroup owner;
 

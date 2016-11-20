@@ -1,5 +1,7 @@
 import {Component} from "@angular/core";
 import {Reservation} from "../../../../models/reservation.model";
+import {AuthService} from "../../../../services/auth.service";
+import {ReservationService} from "../../../../services/reservation.service";
 
 @Component({
     selector: 'upcoming-reservations-panel',
@@ -8,77 +10,23 @@ import {Reservation} from "../../../../models/reservation.model";
 })
 export class UpcomingReservationsPanelComponent {
 
-    upcomingReservations: Reservation[] = [
-        {
-            id: 10,
-            title: 'CRT Testing',
-            status: 'APPROVED',
-            dateCreated: '11/10/2016 2:00 PM',
-            start: '11/18/2016 3:00 PM',
-            end: '11/18/2016 4:00 PM',
-            resource: 1,
-            user: 1,
-            decisions: [1],
-            fieldEntries: [1]
-        },
-        {
-            id: 10,
-            title: 'Book Club',
-            status: 'APPROVED',
-            dateCreated: '11/10/2016 2:00 PM',
-            start: '11/18/2016 3:00 PM',
-            end: '11/18/2016 4:00 PM',
-            resource: 1,
-            user: 1,
-            decisions: [1],
-            fieldEntries: [1]
-        },
-        {
-            id: 10,
-            title: 'Essay Research',
-            status: 'PENDING',
-            dateCreated: '11/10/2016 2:00 PM',
-            start: '11/18/2016 3:00 PM',
-            end: '11/18/2016 4:00 PM',
-            resource: 2,
-            user: 1,
-            decisions: [1],
-            fieldEntries: [1]
-        },
-        {
-            id: 10,
-            title: 'CRT Testing',
-            status: 'APPROVED',
-            dateCreated: '11/10/2016 2:00 PM',
-            start: '11/18/2016 3:00 PM',
-            end: '11/18/2016 4:00 PM',
-            resource: 1,
-            user: 1,
-            decisions: [1],
-            fieldEntries: [1]
-        },
-        {
-            id: 10,
-            title: 'CRT Testing',
-            status: 'APPROVED',
-            dateCreated: '11/10/2016 2:00 PM',
-            start: '11/18/2016 3:00 PM',
-            end: '11/18/2016 4:00 PM',
-            resource: 1,
-            user: 1,
-            decisions: [1],
-            fieldEntries: [1]
-        }
-    ];
+    reservations: Reservation[];
+
+    constructor(authService: AuthService, reservationService: ReservationService) {
+        authService.getUser().subscribe(user => {
+            if (user != undefined)
+                reservationService.getUpcomingUserReservations(user).subscribe(reservations => this.reservations = reservations);
+        });
+    }
 
     //noinspection JSMethodCanBeStatic
     getStatusLabelText(reservation: Reservation) {
-        return reservation.status === "APPROVED" ? "Approved" : reservation.status === "PENDING" ? "Pending" : "Unknown";
+        return reservation.approved ? "Approved" : reservation.pending ? "Pending" : "Unknown";
     }
 
     //noinspection JSMethodCanBeStatic
     getStatusLabelClassSuffix(reservation: Reservation) {
-        return reservation.status === "APPROVED" ? "success" : reservation.status === "PENDING" ? "default" : "warning";
+        return reservation.approved ? "success" : reservation.pending ? "default" : "warning";
     }
 
 }

@@ -11,9 +11,10 @@ import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 
+import javax.annotation.Nullable;
 import javax.persistence.TypedQuery;
 import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -22,71 +23,59 @@ import java.util.Map;
 public class ReservationRepository extends MultiTenantEntityRepositoryAbstract<Reservation> {
 
     /**
-     * Retrieves reservations from the database that occur within the specified dates.
+     * Retrieves reservations from the database as defined by the filters.
+     * If a start time is specified, no reservations ending before that time will be returned.
+     * If an end time is specified, no reservations starting after that time will be returned.
+     * If a user is specified, only reservations belonging to that user will be returned.
+     * If a resourceCategory is specified, only reservations belonging to that category will be returned.
      *
-     * @param start The start date.
-     * @param end   The end date. Should be after the start date.
+     * @param start            The start date.
+     * @param end              The end date. Should be after the start date.
+     * @param user             The user to filter by. Null if no user filtering should be performed.
+     * @param resourceCategory The category to filter by. Null if no category filtering should be performed.
      * @return A list of reservations between the specified dates, or null if any date is null or the end date is not after the start date.
      */
-    public List<Reservation> findAllBetweenDates(LocalDateTime start, LocalDateTime end) {
-        return findAllBetweenDates(start, end, null, (ResourceCategory[]) null);
-    }
+    public List<Reservation> findReservationsWithFilters(@Nullable LocalDateTime start, @Nullable LocalDateTime end, @Nullable User user, @Nullable ResourceCategory resourceCategory) {
 
-    /**
-     * Retrieves reservations from the database that occur within the specified dates.
-     * Only reservations within the specified categories will be returned.
-     *
-     * @param start              The start date.
-     * @param end                The end date. Should be after the start date.
-     * @param resourceCategories The categories to filter by. Null if no category filtering should be performed.
-     * @return A list of reservations between the specified dates, or null if any date is null or the end date is not after the start date.
-     */
-    public List<Reservation> findAllBetweenDates(LocalDateTime start, LocalDateTime end, ResourceCategory... resourceCategories) {
-        return findAllBetweenDates(start, end, null, resourceCategories);
-    }
+        StringBuilder queryBuilder = new StringBuilder("SELECT r FROM Reservation r JOIN r.resource re WHERE ");
+        HashMap<String, Object> parameterMap = new HashMap<>();
 
-    /**
-     * Retrieves reservations from the database that occur within the specified dates.
-     * Only reservations within the specified categories will be returned.
-     *
-     * @param start              The start date.
-     * @param end                The end date. Should be after the start date.
-     * @param user               The user to filter by. Null if no user filtering should be performed.
-     * @param resourceCategories The categories to filter by. Null if no category filtering should be performed.
-     * @return A list of reservations between the specified dates, or null if any date is null or the end date is not after the start date.
-     */
-    public List<Reservation> findAllBetweenDates(LocalDateTime start, LocalDateTime end, User user, ResourceCategory... resourceCategories) {
-        if (start == null || end == null || start.isAfter(end))
-            return null;
-
-        if (resourceCategories != null)
-            if (resourceCategories.length == 0)
-                return null;
-
-        StringBuilder queryBuilder = new StringBuilder("SELECT r FROM Reservation r JOIN r.resource a WHERE ((r.start BETWEEN ?1 AND ?2) OR (r.start < ?1 AND r.end > ?1)) AND r.tenant = ?3 ");
-        HashMap<Integer, Object> parameterMap = new HashMap<>();
-
-        if (resourceCategories != null) {
-            queryBuilder.append("AND a.resourceCategory IN ?4 ");
-            parameterMap.put(4, Arrays.asList(resourceCategories));
+        if (start != null && end == null) {
+            queryBuilder.append("r.end >= :start AND ");
+            parameterMap.put("start", start);
+        } else if (start == null && end != null) {
+            queryBuilder.append("r.start <= :end AND ");
+            parameterMap.put("end", end);
+        } else {
+            queryBuilder.append("(r.end >= :start AND r.start <= :end) AND ");
+            parameterMap.put("start", start);
+            parameterMap.put("end", end);
         }
 
         if (user != null) {
-            queryBuilder.append("AND r.user = ?5 ");
-            parameterMap.put(5, user);
+            queryBuilder.append("r.user = :user AND ");
+            parameterMap.put("user", user);
+        }
+
+        if (resourceCategory != null) {
+            queryBuilder.append("re.resourceCategory = :resourceCategory AND ");
+            parameterMap.put("resourceCategory", resourceCategory);
         }
 
         TypedQuery<Reservation> query = entityManager
-                .createQuery(queryBuilder.toString(), Reservation.class)
-                .setParameter(1, start)
-                .setParameter(2, end)
-                .setParameter(3, getTenant());
+                .createQuery(queryBuilder.append("r.tenant = :tenant").toString(), Reservation.class)
+                .setParameter("tenant", getTenant());
 
-        for (Map.Entry<Integer, Object> parameter : parameterMap.entrySet()) {
+        for (Map.Entry<String, Object> parameter : parameterMap.entrySet()) {
             query.setParameter(parameter.getKey(), parameter.getValue());
         }
 
-        return query.getResultList();
+        try {
+            return query.getResultList();
+        } catch (Exception e) {
+            logService.logException(getClass(), e, "Could not get Reservations with Filters");
+            return new ArrayList<>();
+        }
     }
 
 }
