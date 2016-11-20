@@ -6,6 +6,7 @@ import "@angular/http";
 import "@angular/router";
 import "rxjs";
 import "jquery";
+import "moment";
 import "fullcalendar/dist/fullcalendar";
 import "bootstrap/dist/js/bootstrap";
 

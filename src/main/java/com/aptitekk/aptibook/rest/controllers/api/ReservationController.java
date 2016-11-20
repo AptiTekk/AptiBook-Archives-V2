@@ -25,7 +25,7 @@ import java.util.Date;
 @APIController
 public class ReservationController extends APIControllerAbstract {
 
-    private final String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'hh:mm:ss", "yyyy-MM-dd'T'hh:mm", "yyyy-MM-dd"};
+    private final String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
 
     private final ReservationRepository reservationRepository;
 
