@@ -39,6 +39,6 @@ def checkoutFromGit() {
 }
 
 def runTests(nodeJsHome, mvnHome) {
-    sh "${nodeJsHome}/npm run build"
+    sh "${nodeJsHome}/bin/npm run build"
     sh "${mvnHome}/bin/mvn clean install -U"
 }
