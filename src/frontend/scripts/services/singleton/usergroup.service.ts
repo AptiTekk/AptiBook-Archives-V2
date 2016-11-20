@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {Observable, ReplaySubject} from "rxjs";
 import {isNullOrUndefined} from "util";
-import {UserGroup} from "../models/user-group.model";
+import {UserGroup} from "../../models/user-group.model";
 
 @Injectable()
 export class UserGroupService {

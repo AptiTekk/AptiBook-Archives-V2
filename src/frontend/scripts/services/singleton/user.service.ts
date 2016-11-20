@@ -1,9 +1,9 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {User} from "../models/user.model";
+import {User} from "../../models/user.model";
 import {Observable} from "rxjs";
 import {isNullOrUndefined} from "util";
-import {Reservation} from "../models/reservation.model";
+import {Reservation} from "../../models/reservation.model";
 
 @Injectable()
 export class UserService {

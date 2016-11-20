@@ -2,7 +2,7 @@ import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {Observable, ReplaySubject} from "rxjs";
 import {Headers} from "@angular/http";
-import {User} from "../models/user.model";
+import {User} from "../../models/user.model";
 
 @Injectable()
 export class AuthService {

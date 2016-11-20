@@ -1,7 +1,7 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {ReplaySubject} from "rxjs";
-import {Tenant} from "../models/tenant.model";
+import {Tenant} from "../../models/tenant.model";
 
 @Injectable()
 export class TenantService {

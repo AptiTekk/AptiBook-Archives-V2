@@ -6,6 +6,7 @@
 
 node {
     def mvnHome = tool "Maven"
+    def nodeJsHome = tool "NodeJS"
 
     try {
         stage "Checkout"
@@ -13,7 +14,7 @@ node {
         checkoutFromGit()
 
         stage "Test"
-        runTests(mvnHome)
+        runTests(nodeJsHome, mvnHome)
         slackSend color: "good", message: "[Job ${env.BUILD_NUMBER}] All tests for the ${env.JOB_NAME} Pipeline have passed."
 
     } catch (err) {
@@ -37,6 +38,7 @@ def checkoutFromGit() {
     ])
 }
 
-def runTests(mvnHome) {
-    sh "${mvnHome}/bin/mvn clean install -P build-production -U"
+def runTests(nodeJsHome, mvnHome) {
+    sh "${nodeJsHome}/npm run build"
+    sh "${mvnHome}/bin/mvn clean install -U"
 }
