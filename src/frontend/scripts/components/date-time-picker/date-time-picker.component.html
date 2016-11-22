@@ -4,4 +4,16 @@
   ~ Proprietary and confidential.
   -->
 
-<div #container class="date-time-picker"></div>
+<div *ngIf="inline" class="date-time-picker">
+    <div #container></div>
+</div>
+<div *ngIf="!inline" class="date-time-picker">
+    <div class="form-group">
+        <div #container class='input-group date'>
+            <input type='text' class="form-control"/>
+            <span class="input-group-addon">
+                <span class="glyphicon glyphicon-calendar"></span>
+            </span>
+        </div>
+    </div>
+</div>

@@ -1,15 +1,4 @@
-import {
-    Component,
-    Input,
-    DoCheck,
-    trigger,
-    state,
-    style,
-    animate,
-    transition,
-    Output,
-    EventEmitter
-} from "@angular/core";
+import {Component, Input, trigger, state, style, animate, transition, Output, EventEmitter} from "@angular/core";
 import {Subscription, Observable} from "rxjs";
 
 @Component({
@@ -24,22 +13,20 @@ import {Subscription, Observable} from "rxjs";
         ])
     ]
 })
-export class AlertComponent implements DoCheck {
+export class AlertComponent {
 
-    private oldMessage: string;
-
-    visible: boolean = false;
+    timerRunning: boolean = false;
 
     visibilityTimer: Subscription;
+
+    @Input()
+    displayed: boolean = false;
 
     @Input()
     message: string;
 
     @Input()
     severity: string = "info";
-
-    @Input()
-    autoClose: boolean = false;
 
     @Input()
     autoCloseDelay: number = 2000;
@@ -51,42 +38,31 @@ export class AlertComponent implements DoCheck {
      * Starts the autoClose timer if it is enabled
      */
     private startTimer() {
-        if (this.autoClose)
-            this.visibilityTimer = Observable.timer(this.autoCloseDelay).subscribe(
-                i => {
-                    this.visible = false;
-                    this.oldMessage = undefined;
-                    this.message = undefined;
-                    this.onAutoClose.next();
-                });
+        this.timerRunning = true;
+        this.visibilityTimer = Observable.timer(this.autoCloseDelay).subscribe(
+            i => {
+                this.onAutoClose.next();
+                this.stopTimer();
+            });
     }
 
     /**
      * Stops the running autoClose timer if it exists.
      */
     private stopTimer() {
+        this.timerRunning = false;
         if (this.visibilityTimer != undefined) {
             this.visibilityTimer.unsubscribe();
             this.visibilityTimer = undefined;
         }
     }
 
-    ngDoCheck(): void {
-        //Check for changes
-        if (this.oldMessage != this.message) {
+    display(message?: string) {
+        if (message != undefined)
+            this.message = message;
 
-            //It changed
-            this.oldMessage = this.message;
-            if (this.message != undefined) {
-                this.visible = true;
-
-                this.stopTimer();
-                this.startTimer();
-
-            } else {
-                this.stopTimer();
-                this.visible = false;
-            }
-        }
+        this.stopTimer();
+        this.startTimer();
     }
+
 }

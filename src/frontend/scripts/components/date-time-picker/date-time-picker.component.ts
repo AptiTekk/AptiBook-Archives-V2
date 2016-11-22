@@ -9,6 +9,8 @@ import {
     SimpleChanges
 } from "@angular/core";
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
+import moment = require("moment");
+import Moment = moment.Moment;
 declare const $: any;
 
 @Component({
@@ -41,10 +43,10 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
     stacked: boolean = false;
 
     @Input()
-    format: string = "MM/dd/YYYY h:mm a";
+    format: string = "dddd, MM/DD/YYYY, h:mm a";
 
     @Input()
-    minDate: any;
+    minDate: Moment;
 
     ngAfterViewInit(): void {
         this.buildDateTimePicker();
@@ -61,8 +63,6 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
                 switch (propName) {
                     case 'minDate':
                         dateTimePicker.data("DateTimePicker").minDate(this.getMinDateToUse());
-                        dateTimePicker.data("DateTimePicker").disabled();
-                        dateTimePicker.data("DateTimePicker").enabled();
                         break;
                 }
             }
@@ -70,8 +70,15 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
         }
     }
 
+    private static removeSeconds(date) {
+        if (!date)
+            return undefined;
+
+        return date.seconds(0).milliseconds(0);
+    }
+
     private getMinDateToUse() {
-        return this.minDate != undefined ? this.minDate : false;
+        return this.minDate != undefined ? DateTimePickerComponent.removeSeconds(this.minDate) : false;
     }
 
     private buildDateTimePicker() {
@@ -81,7 +88,8 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
             inline: this.inline,
             sideBySide: this.stacked || this.sideBySide,
             format: this.format != undefined ? this.format : false,
-            minDate: this.getMinDateToUse()
+            minDate: this.getMinDateToUse(),
+            allowInputToggle: !this.inline
         });
 
         if (this.stacked) {
@@ -96,14 +104,14 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
             this.propagateChange(e.date);
         });
 
-        this.propagateChange(dateTimePicker.data("DateTimePicker").date());
+        this.propagateChange(DateTimePickerComponent.removeSeconds(dateTimePicker.data("DateTimePicker").date()));
 
         this.dateTimePickerBuilt = true;
     }
 
     setDate(date) {
         if (this.dateTimePickerBuilt && date != undefined)
-            $(this.container.nativeElement).data("DateTimePicker").date(date);
+            $(this.container.nativeElement).data("DateTimePicker").date(DateTimePickerComponent.removeSeconds(date));
     }
 
     propagateChange = (_: any) => {

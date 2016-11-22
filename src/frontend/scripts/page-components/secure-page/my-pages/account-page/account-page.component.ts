@@ -1,10 +1,11 @@
-import {Component} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
 import {UserService} from "../../../../services/singleton/user.service";
 import {isNullOrUndefined} from "util";
 import {UserGroup} from "../../../../models/user-group.model";
 import {UserGroupService} from "../../../../services/singleton/usergroup.service";
+import {AlertComponent} from "../../../../components/alert/alert.component";
 
 @Component({
     selector: 'my-account-page',
@@ -12,9 +13,14 @@ import {UserGroupService} from "../../../../services/singleton/usergroup.service
 })
 export class AccountPageComponent {
 
-    successMessage: string;
-    passwordSuccessMessage: string;
-    alertMessage: string;
+    @ViewChild('errorAlert')
+    errorAlert: AlertComponent;
+
+    @ViewChild('personalInfoAlert')
+    personalInfoAlert: AlertComponent;
+
+    @ViewChild('passwordsInfoAlert')
+    passwordsInfoAlert: AlertComponent;
 
     user: User;
 
@@ -37,17 +43,13 @@ export class AccountPageComponent {
         this.userService.patchUser(this.user).take(1).subscribe((value: boolean) => {
             if (value) {
                 this.authService.reloadUser();
-                this.successMessage = "Personal Information updated successfully.";
-                if (!isNullOrUndefined(this.user.newPassword))
-                    this.passwordSuccessMessage = "Password updated successfully.";
-                else
-                    this.passwordSuccessMessage = undefined;
-                this.alertMessage = undefined;
+                this.personalInfoAlert.display("Personal Information updated successfully.");
+                if (!isNullOrUndefined(this.user.newPassword)) {
+                    this.passwordsInfoAlert.display("Password updated successfully.");
+                }
             }
             else {
-                this.successMessage = undefined;
-                this.alertMessage = "Unfortunately, we could not update your Account Settings.";
-                this.passwordSuccessMessage = undefined;
+                this.errorAlert.display("Unfortunately, we could not update your Account Settings.");
             }
         })
     }

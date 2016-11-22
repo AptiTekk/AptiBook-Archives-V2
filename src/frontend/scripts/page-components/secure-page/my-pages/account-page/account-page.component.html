@@ -16,11 +16,9 @@
                 <h4>Personal Information</h4>
                 <hr/>
 
-                <alert [severity]="'danger'" [message]="alertMessage" [autoClose]="true"
-                       (onAutoClose)="alertMessage = undefined"></alert>
+                <alert #errorAlert [severity]="'danger'"></alert>
 
-                <alert [severity]="'info'" [message]="successMessage" [autoClose]="true"
-                       (onAutoClose)="successMessage = undefined"></alert>
+                <alert #personalInfoAlert [severity]="'info'"></alert>
 
                 <div class="form-group">
                     <label for="emailAddressField">Email Address:</label>
@@ -70,11 +68,10 @@
                 <h4>Change Password</h4>
                 <hr/>
 
-                <alert [severity]="'info'" [message]="passwordSuccessMessage" [autoClose]="true"
-                       (onAutoClose)="passwordSuccessMessage = undefined"></alert>
+                <alert #passwordsInfoAlert [severity]="'info'"></alert>
 
-                <alert [severity]="'warning'"
-                       [message]="!doPasswordsMatch() ? 'The Passwords do not match!' : undefined"></alert>
+                <alert [severity]="'warning'" [message]="'The Passwords do not match!'"
+                       [displayed]="!doPasswordsMatch()"></alert>
 
                 <div class="row">
                     <div class="col-xs-12 col-md-6">
