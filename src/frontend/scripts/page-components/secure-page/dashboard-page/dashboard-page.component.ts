@@ -6,9 +6,9 @@ import {APIService} from "../../../services/singleton/api.service";
     selector: 'dashboard-page',
     templateUrl: 'dashboard-page.component.html',
     animations: [
-        trigger('makingNewReservation', [
-            state('true', style({opacity: 1})),
-            state('false', style({opacity: 0, 'height': '0', 'pointer-events': 'none'})),
+        trigger('sidebarDisplayStatus', [
+            state('visible', style({opacity: 1})),
+            state('hidden', style({overflow: 'hidden', opacity: 0, 'height': '0', 'pointer-events': 'none'})),
             transition('* => *', animate('200ms'))
         ])
     ]
@@ -30,10 +30,6 @@ export class DashboardPageComponent {
 
     onCancelNewReservation() {
         this.makingNewReservation = false;
-    }
-
-    onNewReservationNext() {
-
     }
 
 }

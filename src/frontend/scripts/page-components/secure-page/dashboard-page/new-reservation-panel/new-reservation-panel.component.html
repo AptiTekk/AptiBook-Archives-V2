@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<h3>New Reservation - {{step == 0 ? 'Start' : 'End'}} Time</h3>
+<hr/>
+
+<p>Please select the {{step == 0 ? 'start' : 'end'}} time of your reservation.</p>
+
+<div *ngIf="step == 0">
+    <div class="form-group">
+        <date-time-picker [(ngModel)]="startDate" [inline]="true" [format]="'MM/dd/YYYY'"></date-time-picker>
+    </div>
+
+    The date is: {{startDate.format("MM/DD/YYYY")}}
+
+    <div class="form-group">
+        <date-time-picker [(ngModel)]="startTime" [inline]="true" [format]="'h:mm a'"></date-time-picker>
+    </div>
+
+    The time is: {{startTime.format("h:mm a")}}
+
+    <div class="btn-group btn-block">
+        <button class="btn btn-default" style="width: 50%" (click)="onCancel()">
+            <i class="fa fa-arrow-left"></i>
+            Cancel
+        </button>
+        <button class="btn btn-primary" style="width: 50%" (click)="onNext()">
+            Next
+            <i class="fa fa-arrow-right"></i>
+        </button>
+    </div>
+</div>
+
+<div *ngIf="step == 1">
+    <div class="form-group">
+        <date-time-picker [(ngModel)]="endDate" [inline]="true" [format]="'MM/dd/YYYY'"></date-time-picker>
+    </div>
+
+    The date is: {{endDate.format("MM/DD/YYYY")}}
+
+    <div class="form-group">
+        <date-time-picker [(ngModel)]="endTime" [inline]="true" [format]="'h:mm a'"></date-time-picker>
+    </div>
+
+    The time is: {{endTime.format("h:mm a")}}
+
+    <div class="btn-group btn-block">
+        <button class="btn btn-default" style="width: 50%" (click)="onPrevious()">
+            <i class="fa fa-arrow-left"></i>
+            Previous
+        </button>
+        <button class="btn btn-primary" style="width: 50%" (click)="onSearch()">
+            Search
+            <i class="fa fa-search"></i>
+        </button>
+    </div>
+</div>
