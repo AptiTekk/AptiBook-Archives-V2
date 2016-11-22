@@ -1,4 +1,4 @@
-import {Component, Output, EventEmitter, trigger, state, style, transition, animate} from "@angular/core";
+import {Component, Output, EventEmitter} from "@angular/core";
 import * as moment from "moment";
 import Moment = moment.Moment;
 
@@ -7,12 +7,12 @@ import Moment = moment.Moment;
     templateUrl: 'new-reservation-panel.component.html',
     styleUrls: ['new-reservation-panel.component.css'],
     /*animations: [
-        trigger('stepDisplayStatus', [
-            state('visible', style({opacity: 1})),
-            state('hidden', style({display: 'none', opacity: 0, 'pointer-events': 'none'})),
-            transition('* => *', animate('200ms'))
-        ])
-    ]*/
+     trigger('stepDisplayStatus', [
+     state('visible', style({opacity: 1})),
+     state('hidden', style({display: 'none', opacity: 0, 'pointer-events': 'none'})),
+     transition('* => *', animate('200ms'))
+     ])
+     ]*/
 })
 export class NewReservationPanelComponent {
 
@@ -22,10 +22,7 @@ export class NewReservationPanelComponent {
     step: number = 0;
 
     startDate: Moment = moment();
-    startTime: Moment = moment();
-
     endDate: Moment = moment();
-    endTime: Moment = moment();
 
     onCancel() {
         this.cancelled.next();

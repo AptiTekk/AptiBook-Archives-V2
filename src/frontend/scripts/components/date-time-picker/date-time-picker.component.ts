@@ -1,4 +1,13 @@
-import {Component, AfterViewInit, ViewChild, Input, forwardRef, ViewEncapsulation} from "@angular/core";
+import {
+    Component,
+    AfterViewInit,
+    ViewChild,
+    Input,
+    forwardRef,
+    ViewEncapsulation,
+    OnChanges,
+    SimpleChanges
+} from "@angular/core";
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 declare const $: any;
 
@@ -15,7 +24,7 @@ declare const $: any;
         }
     ]
 })
-export class DateTimePickerComponent implements AfterViewInit, ControlValueAccessor {
+export class DateTimePickerComponent implements AfterViewInit, OnChanges, ControlValueAccessor {
 
     dateTimePickerBuilt: boolean = false;
 
@@ -29,10 +38,40 @@ export class DateTimePickerComponent implements AfterViewInit, ControlValueAcces
     sideBySide: boolean = false;
 
     @Input()
+    stacked: boolean = false;
+
+    @Input()
     format: string = "MM/dd/YYYY h:mm a";
+
+    @Input()
+    minDate: any;
 
     ngAfterViewInit(): void {
         this.buildDateTimePicker();
+    }
+
+    ngOnChanges(changes: SimpleChanges): void {
+        if (!this.dateTimePickerBuilt)
+            return;
+
+        let dateTimePicker = $(this.container.nativeElement);
+
+        try {
+            for (let propName in changes) {
+                switch (propName) {
+                    case 'minDate':
+                        dateTimePicker.data("DateTimePicker").minDate(this.getMinDateToUse());
+                        dateTimePicker.data("DateTimePicker").disabled();
+                        dateTimePicker.data("DateTimePicker").enabled();
+                        break;
+                }
+            }
+        } catch (ignored) {
+        }
+    }
+
+    private getMinDateToUse() {
+        return this.minDate != undefined ? this.minDate : false;
     }
 
     private buildDateTimePicker() {
@@ -40,9 +79,15 @@ export class DateTimePickerComponent implements AfterViewInit, ControlValueAcces
 
         dateTimePicker.datetimepicker({
             inline: this.inline,
-            sideBySide: this.sideBySide,
-            format: this.format != undefined ? this.format : false
+            sideBySide: this.stacked || this.sideBySide,
+            format: this.format != undefined ? this.format : false,
+            minDate: this.getMinDateToUse()
         });
+
+        if(this.stacked) {
+            dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.remove("col-md-6");
+            dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.remove("col-md-6");
+        }
 
         dateTimePicker.on("dp.change", e => {
             this.propagateChange(e.date);

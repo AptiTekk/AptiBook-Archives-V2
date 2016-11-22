@@ -11,16 +11,8 @@
 
 <div *ngIf="step == 0">
     <div class="form-group">
-        <date-time-picker [(ngModel)]="startDate" [inline]="true" [format]="'MM/dd/YYYY'"></date-time-picker>
+        <date-time-picker [(ngModel)]="startDate" [inline]="true" [stacked]="true"></date-time-picker>
     </div>
-
-    The date is: {{startDate.format("MM/DD/YYYY")}}
-
-    <div class="form-group">
-        <date-time-picker [(ngModel)]="startTime" [inline]="true" [format]="'h:mm a'"></date-time-picker>
-    </div>
-
-    The time is: {{startTime.format("h:mm a")}}
 
     <div class="btn-group btn-block">
         <button class="btn btn-default" style="width: 50%" (click)="onCancel()">
@@ -36,16 +28,9 @@
 
 <div *ngIf="step == 1">
     <div class="form-group">
-        <date-time-picker [(ngModel)]="endDate" [inline]="true" [format]="'MM/dd/YYYY'"></date-time-picker>
+        <date-time-picker [(ngModel)]="endDate" [minDate]="startDate" [inline]="true"
+                          [stacked]="true"></date-time-picker>
     </div>
-
-    The date is: {{endDate.format("MM/DD/YYYY")}}
-
-    <div class="form-group">
-        <date-time-picker [(ngModel)]="endTime" [inline]="true" [format]="'h:mm a'"></date-time-picker>
-    </div>
-
-    The time is: {{endTime.format("h:mm a")}}
 
     <div class="btn-group btn-block">
         <button class="btn btn-default" style="width: 50%" (click)="onPrevious()">
