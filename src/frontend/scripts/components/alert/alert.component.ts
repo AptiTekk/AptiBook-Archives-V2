@@ -57,12 +57,17 @@ export class AlertComponent {
         }
     }
 
-    display(message?: string) {
+    display(message?: string, autoClose: boolean = true) {
         if (message != undefined)
             this.message = message;
 
-        this.stopTimer();
-        this.startTimer();
+        if (autoClose) {
+            this.displayed = false;
+            this.stopTimer();
+            this.startTimer();
+        } else {
+            this.displayed = true;
+        }
     }
 
 }

@@ -5,7 +5,7 @@
   -->
 
 <form id="loginForm" (submit)="onSubmit()">
-    <alert [message]="alertMessage" [severity]="'danger'"></alert>
+    <alert #loginAlert [severity]="'danger'"></alert>
 
     <div class="form-group">
         <label for="emailAddressInput">Email Address:</label>

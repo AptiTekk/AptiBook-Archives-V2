@@ -1,5 +1,5 @@
 import {AuthService} from "../../services/singleton/auth.service";
-import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate} from "@angular/router";
+import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate, UrlSegment} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {isNullOrUndefined} from "util";
@@ -17,8 +17,13 @@ export class SecureGuard implements CanActivate {
                     if (!isNullOrUndefined(user)) {
                         listener.next(true);
                     } else {
-                        if (this.router.isActive("/secure", false))
-                            this.router.navigateByUrl("/");
+                        let urlSegments: UrlSegment[] = route.url;
+                        for (let segment of urlSegments) {
+                            if (segment.toString() === "secure") {
+                                this.router.navigateByUrl("/");
+                                break;
+                            }
+                        }
                         listener.next(false);
                     }
                 });

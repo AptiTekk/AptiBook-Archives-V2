@@ -22,8 +22,14 @@
 
                 <div class="form-group">
                     <label for="emailAddressField">Email Address:</label>
-                    <input name="emailAddress" id="emailAddressField" class="form-control" [ngModel]="user.emailAddress"
-                           readonly>
+                    <div class="input-group">
+                        <div class="input-group-addon">
+                            <i class="fa fa-at"></i>
+                        </div>
+                        <input name="emailAddress" id="emailAddressField" class="form-control"
+                               [ngModel]="user.emailAddress"
+                               readonly>
+                    </div>
                 </div>
 
                 <div class="row">
