@@ -84,9 +84,12 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
             minDate: this.getMinDateToUse()
         });
 
-        if(this.stacked) {
+        if (this.stacked) {
             dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.remove("col-md-6");
+            dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.add("col-xs-12");
+
             dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.remove("col-md-6");
+            dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.add("col-xs-12");
         }
 
         dateTimePicker.on("dp.change", e => {

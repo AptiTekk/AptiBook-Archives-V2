@@ -4,42 +4,49 @@
   ~ Proprietary and confidential.
   -->
 
-<h3>New Reservation - {{step == 0 ? 'Start' : 'End'}} Time</h3>
-<hr/>
+<panel [type]="'primary'" [title]="'New Reservation - ' + (step == 0 ? 'Start' : 'End') + ' Time'">
+    <panel-body>
+        <p>Please select the {{step == 0 ? 'start' : 'end'}} time of your reservation.</p>
 
-<p>Please select the {{step == 0 ? 'start' : 'end'}} time of your reservation.</p>
+        <div *ngIf="step == 0">
+            <div class="form-group">
+                <date-time-picker [(ngModel)]="startDate" [inline]="true" [stacked]="true"></date-time-picker>
+            </div>
+        </div>
 
-<div *ngIf="step == 0">
-    <div class="form-group">
-        <date-time-picker [(ngModel)]="startDate" [inline]="true" [stacked]="true"></date-time-picker>
-    </div>
+        <div *ngIf="step == 1">
+            <div class="form-group">
+                <date-time-picker [(ngModel)]="endDate" [minDate]="startDate" [inline]="true"
+                                  [stacked]="true"></date-time-picker>
+            </div>
+        </div>
+    </panel-body>
 
-    <div class="btn-group btn-block">
-        <button class="btn btn-default" style="width: 50%" (click)="onCancel()">
-            <i class="fa fa-arrow-left"></i>
-            Cancel
-        </button>
-        <button class="btn btn-primary" style="width: 50%" (click)="onNext()">
-            Next
-            <i class="fa fa-arrow-right"></i>
-        </button>
-    </div>
-</div>
+    <panel-footer>
+        <div *ngIf="step == 0">
+            <div class="btn-group btn-block">
+                <button class="btn btn-default" style="width: 50%" (click)="onCancel()">
+                    <i class="fa fa-times"></i>
+                    Cancel
+                </button>
+                <button class="btn btn-primary" style="width: 50%" (click)="onNext()">
+                    Next
+                    <i class="fa fa-arrow-right"></i>
+                </button>
+            </div>
+        </div>
 
-<div *ngIf="step == 1">
-    <div class="form-group">
-        <date-time-picker [(ngModel)]="endDate" [minDate]="startDate" [inline]="true"
-                          [stacked]="true"></date-time-picker>
-    </div>
-
-    <div class="btn-group btn-block">
-        <button class="btn btn-default" style="width: 50%" (click)="onPrevious()">
-            <i class="fa fa-arrow-left"></i>
-            Previous
-        </button>
-        <button class="btn btn-primary" style="width: 50%" (click)="onSearch()">
-            Search
-            <i class="fa fa-search"></i>
-        </button>
-    </div>
-</div>
+        <div *ngIf="step == 1">
+            <div class="btn-group btn-block">
+                <button class="btn btn-default" style="width: 50%" (click)="onPrevious()">
+                    <i class="fa fa-arrow-left"></i>
+                    Previous
+                </button>
+                <button class="btn btn-primary" style="width: 50%" (click)="onSearch()">
+                    Search
+                    <i class="fa fa-search"></i>
+                </button>
+            </div>
+        </div>
+    </panel-footer>
+</panel>
