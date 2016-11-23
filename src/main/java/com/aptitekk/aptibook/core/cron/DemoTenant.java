@@ -127,7 +127,7 @@ public class DemoTenant {
         User user1 = new User();
         try {
 
-            user.setEmailAddress("test@test.com");
+            user.setEmailAddress("john_doe@test.com");
             user.setFirstName("John");
             user.setLastName("Doe");
             user.setHashedPassword(PasswordStorage.createHash("test"));
@@ -135,7 +135,7 @@ public class DemoTenant {
             user.setTenant(newTenant);
             user = userRepository.save(user);
 
-            user1.setEmailAddress("test@test.com");
+            user1.setEmailAddress("toby_smith@test.com");
             user1.setFirstName("Toby");
             user1.setLastName("Smith");
             user1.setHashedPassword(PasswordStorage.createHash("test"));
