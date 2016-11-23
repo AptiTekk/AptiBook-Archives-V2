@@ -60,12 +60,10 @@ public class TenantSynchronizer {
 
     }
 
-
-
-    @Scheduled(cron = "* * * * *") //Every minute
+    @Scheduled(cron = "0 * * * * *") //Every minute
     @Async
     public void synchronizeTenants() {
-        logService.logDebug(getClass(), "Synchronizing Tenants...");
+        logService.logInfo(getClass(), "Synchronizing Tenants...");
 
         if (!StartupService.isStarted()) {
             logService.logInfo(getClass(), "Skipping run since AptiBook is not started.");

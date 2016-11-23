@@ -9,7 +9,6 @@ package com.aptitekk.aptibook.core.cron;
 import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.*;
-
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
@@ -25,7 +24,6 @@ import java.util.List;
 
 @Service
 public class DemoTenant {
-
 
     private final TenantRepository tenantRepository;
 
@@ -71,12 +69,13 @@ public class DemoTenant {
     }
 
 
-    @Scheduled(cron = "0 0 0 1/1 * ? *")
-    @Async
     /**
      * Deletes and re-builds the demo Tenant every 24 hours.
      */
+    @Scheduled(cron = "0 0 0 * * *")
+    @Async
     public void rebuildDemoTenant() {
+        logService.logInfo(getClass(), "Rebuilding Demo Tenant...");
 
         //Find and delete old demo tenant
         Tenant tenant = tenantRepository.findTenantBySlug("demo");

@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -26,9 +27,11 @@ public class Tag extends MultiTenantEntity implements Comparable<Tag> {
 
     private String name;
 
+    @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     private ResourceCategory resourceCategory;
 
+    @JsonIgnore
     @ManyToMany(mappedBy = "tags")
     private List<Resource> resources = new ArrayList<>();
 

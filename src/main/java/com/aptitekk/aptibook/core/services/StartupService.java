@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.core.services;
 
 import com.aptitekk.aptibook.core.cron.DemoTenant;
+import com.aptitekk.aptibook.core.cron.NotificationCleaner;
 import com.aptitekk.aptibook.core.cron.TenantSynchronizer;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
@@ -29,6 +30,7 @@ public class StartupService implements Serializable {
 
     private final TenantIntegrityService tenantIntegrityService;
 
+    private final NotificationCleaner notificationCleaner;
     private final TenantSynchronizer tenantSynchronizer;
 
     private final DemoTenant demoTenant;
@@ -36,9 +38,10 @@ public class StartupService implements Serializable {
     private static final AtomicBoolean started = new AtomicBoolean(false);
 
     @Autowired
-    public StartupService(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, TenantSynchronizer tenantSynchronizer, DemoTenant demoTenant) {
+    public StartupService(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, NotificationCleaner notificationCleaner, TenantSynchronizer tenantSynchronizer, DemoTenant demoTenant) {
         this.tenantRepository = tenantRepository;
         this.tenantIntegrityService = tenantIntegrityService;
+        this.notificationCleaner = notificationCleaner;
         this.tenantSynchronizer = tenantSynchronizer;
         this.demoTenant = demoTenant;
     }
@@ -53,6 +56,7 @@ public class StartupService implements Serializable {
 
         started.set(true);
 
+        notificationCleaner.cleanReadNotifications();
         tenantSynchronizer.synchronizeTenants();
         demoTenant.rebuildDemoTenant();
     }
