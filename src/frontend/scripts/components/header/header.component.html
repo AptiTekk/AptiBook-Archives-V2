@@ -7,21 +7,28 @@
 <div class="navbar navbar-default">
     <div class="container-fluid">
         <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"
+                    *ngIf="!nonInteractive">
+                <span class="sr-only">Toggle Navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
             <a [style.cursor]="nonInteractive ? 'default' : 'pointer'"
                [style.pointer-events]="nonInteractive ? 'none' : 'all'"
-               [routerLink]="['', 'secure']" class="navbar-brand">
+               [routerLink]="['', 'secure', 'dashboard']" class="navbar-brand">
                 <img src="logo.svg"/>
             </a>
         </div>
-        <div class="collapse navbar-collapse" *ngIf="!nonInteractive">
+        <div class="collapse navbar-collapse" id="navbar-collapse" *ngIf="!nonInteractive">
             <div id="header">
 
                 <ul class="nav navbar-nav navbar-right" *ngIf="user != undefined">
 
                     <!-- Reservation Management Dropdown -->
-                    <li class="dropdown" *ngIf="user.admin">
+                    <li class="dropdown" *ngIf="user.admin || user.userGroups.length > 0">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
-                            <span><i class="fa fa-cogs"></i></span>
+                            <span><i class="fa fa-calendar-check-o"></i></span>
                             Reservation Management
                             <span class="caret"></span>
                         </a>
@@ -36,7 +43,7 @@
                     </li>
 
                     <!-- AptiBook Configuration Dropdown -->
-                    <li class="dropdown" *ngIf="user.admin || user.permissions.length > 0">
+                    <li class="dropdown" *ngIf="user.admin">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <span><i class="fa fa-cogs"></i></span>
                             AptiBook Configuration
@@ -57,7 +64,7 @@
                     <li class="dropdown">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <span><i class="fa fa-user"></i></span>
-                            {{user.fullname}}
+                            {{user.fullName}}
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">

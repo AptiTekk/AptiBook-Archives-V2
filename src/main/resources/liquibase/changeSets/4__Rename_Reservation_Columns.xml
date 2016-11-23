@@ -1,0 +1,19 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<!-- Created 11/18/2016-->
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <!-- Renames the "startTime" and "endTime" columns of Reservation to "start" and "end" -->
+    <changeSet id="4" author="MitchTalmadge">
+        <renameColumn tableName="reservation" oldColumnName="starttime" newColumnName="start"/>
+        <renameColumn tableName="reservation" oldColumnName="endtime" newColumnName="end"/>
+    </changeSet>
+
+</databaseChangeLog>

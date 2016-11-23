@@ -5,10 +5,10 @@ import {FormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import * as components from "./components";
 import * as pageComponents from "./page-components";
-//import * as vendors from "./vendors";
-import * as services from "./services";
+import * as singletons from "./services/singleton";
 import {routes} from "./routing/routes";
 import * as guards from "./routing/guards";
+//import * as vendors from "./vendors";
 
 const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
 
@@ -21,7 +21,7 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
         //...mapImports(vendors)
     ],
     providers: [
-        ...mapImports(services),
+        ...mapImports(singletons),
         ...mapImports(guards)
     ],
     declarations: [

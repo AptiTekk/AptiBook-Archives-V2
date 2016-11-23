@@ -1,6 +1,6 @@
 import {Component, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../modal/modal.component";
-import {HelpService} from "../../../services";
+import {HelpService} from "../../../services/singleton";
 
 @Component({
     selector: 'help-modal',

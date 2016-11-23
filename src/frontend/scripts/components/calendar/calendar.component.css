@@ -1,0 +1,140 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+/* Event Styling */
+
+.calendar .fc-event {
+    border: 2px solid #ededed;
+    background-color: #4272b7;
+    color: #fff;
+}
+
+.calendar.selectable .fc-event {
+    cursor: pointer;
+}
+
+.calendar .fc-list-item-title > a:hover {
+    text-decoration: none;
+}
+
+.calendar.selectable .fc-list-item-title > a {
+    cursor: pointer;
+}
+
+.calendar .fc-time-grid-event .fc-bg {
+    display: none;
+}
+
+.calendar .fc-event-dot {
+    background-color: #4272b7;
+}
+
+/* Event Status Styling */
+
+.calendar .fc-event.pending {
+    background-color: #fff;
+    border: 1px dashed #666;
+}
+
+.calendar .fc-event.pending .fc-content {
+    color: #666;
+}
+
+.calendar .fc-event.rejected {
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+}
+
+.calendar .fc-event.rejected .fc-content {
+    color: #333;
+    text-decoration: line-through;
+}
+
+.calendar .fc-event.cancelled {
+    background-color: #ddd;
+    border: 1px solid #333;
+}
+
+.calendar .fc-event.cancelled .fc-content {
+    color: #333;
+    text-decoration: line-through;
+}
+
+/* Day Grid Styling */
+
+.calendar .fc-day-grid td.fc-day.fc-today {
+    background-color: #fff;
+}
+
+.calendar .fc-basicWeek-view .fc-day-grid td.fc-day, .calendar .fc-basicDay-view .fc-day-grid td.fc-day {
+    box-shadow: inset #eee 0 8px 0 0;
+}
+
+.calendar .fc-basicWeek-view .fc-day-grid td.fc-day.fc-today, .calendar .fc-basicDay-view .fc-day-grid td.fc-day.fc-today {
+    box-shadow: inset #4272b7 0 8px 0 0;
+}
+
+.calendar .fc-basicWeek-view .fc-event-container, .calendar .fc-basicDay-view .fc-event-container {
+    padding-top: 10px;
+}
+
+.calendar .fc-day-grid td.fc-day-top.fc-today {
+    border-top: 4px solid #4272b7;
+    color: #4272b7;
+    font-weight: bold;
+}
+
+.calendar td.fc-day-top.fc-today {
+    color: inherit;
+}
+
+.calendar .fc-list-empty {
+    background-color: #fff;
+}
+
+.calendar .fc-scroller {
+    overflow-y: hidden !important;
+}
+
+/* Button Styling */
+
+.calendar button {
+    border: none;
+    background: #eee none;
+    box-shadow: none;
+}
+
+.calendar button.fc-state-hover {
+    background-color: #ddd;
+}
+
+.calendar button:focus {
+    outline: none;
+}
+
+.calendar button.fc-state-active {
+    background-color: #4272b7;
+    color: #fff;
+    text-shadow: none;
+}
+
+.calendar .fc-button-group > * {
+    margin: 0;
+}
+
+/* Header Styling */
+
+.calendar h3 {
+    margin: 0;
+}
+
+@media (max-width: 992px) {
+
+    .calendar h2, .calendar h3 {
+        font-size: 20px;
+    }
+
+}

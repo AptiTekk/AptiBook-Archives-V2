@@ -5,26 +5,42 @@
   -->
 
 <form id="loginForm" (submit)="onSubmit()">
-    <div class="alert alert-danger" #alert *ngIf="alertMessage != undefined">{{alertMessage}}</div>
+    <alert #loginAlert [severity]="'danger'"></alert>
+
     <div class="form-group">
         <label for="emailAddressInput">Email Address:</label>
-        <input name="emailAddress" id="emailAddressInput" type="text" class="form-control" [(ngModel)]="emailAddress"/>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-at"></i>
+            </span>
+            <input name="emailAddress" id="emailAddressInput" type="text" class="form-control"
+                   [(ngModel)]="emailAddress"/>
+        </div>
     </div>
+
     <div class="form-group">
         <label for="passwordInput">Password:</label>
-        <input name="password" id="passwordInput" type="password" class="form-control" [(ngModel)]="password"/>
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="fa fa-asterisk"></i>
+            </span>
+            <input name="password" id="passwordInput" type="password" class="form-control" [(ngModel)]="password"/>
+        </div>
     </div>
 
-    <button class="btn btn-primary btn-large btn-block" [disabled]="!emailAddress || !password">Sign In</button>
-
+    <div class="form-group">
+        <button class="btn btn-primary btn-large btn-block" [disabled]="!emailAddress || !password">Sign In</button>
+    </div>
 </form>
 
-<button class="btn btn-default btn-block" *ngIf="googleSignInUrl" (click)="onGoogleSignIn()">
-    <img src="./google-sign-in.svg" height="18px"/>
-</button>
+<div class="form-group">
+    <button class="btn btn-default btn-block" *ngIf="googleSignInUrl" (click)="onGoogleSignIn()">
+        <img src="./google-sign-in.svg" height="18px"/>
+    </button>
+</div>
 
 <hr/>
 
-<button [routerLink]="['', 'register']" class="btn btn-default btn-block">Register</button>
+<button [routerLink]="['/register']" class="btn btn-default btn-block">Register</button>
 
 <loader #loader></loader>

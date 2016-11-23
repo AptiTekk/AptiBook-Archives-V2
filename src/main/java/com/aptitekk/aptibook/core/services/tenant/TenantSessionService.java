@@ -24,15 +24,13 @@ public class TenantSessionService {
 
     public Tenant getTenant() {
         try {
-            if (request != null)
-                request.getAttribute("tenant");
+            if (request != null) {
+                Object attribute = request.getAttribute("tenant");
+                if (attribute != null && attribute instanceof Tenant)
+                    return (Tenant) attribute;
+            }
         } catch (Exception ignored) {
-        }
-
-        if (request != null) {
-            Object attribute = request.getAttribute("tenant");
-            if (attribute != null && attribute instanceof Tenant)
-                return (Tenant) attribute;
+            //No request
         }
         return null;
     }

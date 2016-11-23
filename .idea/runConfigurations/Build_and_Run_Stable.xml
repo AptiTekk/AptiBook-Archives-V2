@@ -16,8 +16,6 @@
           </option>
           <option name="profilesMap">
             <map>
-              <entry key="development" value="false" />
-              <entry key="build-production" value="true" />
               <entry key="run-production" value="true" />
             </map>
           </option>

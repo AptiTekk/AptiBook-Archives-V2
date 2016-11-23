@@ -103,7 +103,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
                     .setParameter("emailAddress", emailAddress.toLowerCase())
                     .setParameter("tenant", getTenant())
                     .getSingleResult();
-            if (user != null) {
+            if (user != null && user.getHashedPassword() != null) {
                 if (PasswordStorage.verifyPassword(password, user.getHashedPassword()))
                     return user;
             }
