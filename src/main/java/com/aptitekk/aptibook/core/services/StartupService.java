@@ -6,6 +6,7 @@
 
 package com.aptitekk.aptibook.core.services;
 
+import com.aptitekk.aptibook.core.cron.DemoTenant;
 import com.aptitekk.aptibook.core.cron.TenantSynchronizer;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
@@ -30,13 +31,16 @@ public class StartupService implements Serializable {
 
     private final TenantSynchronizer tenantSynchronizer;
 
+    private final DemoTenant demoTenant;
+
     private static final AtomicBoolean started = new AtomicBoolean(false);
 
     @Autowired
-    public StartupService(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, TenantSynchronizer tenantSynchronizer) {
+    public StartupService(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, TenantSynchronizer tenantSynchronizer, DemoTenant demoTenant) {
         this.tenantRepository = tenantRepository;
         this.tenantIntegrityService = tenantIntegrityService;
         this.tenantSynchronizer = tenantSynchronizer;
+        this.demoTenant = demoTenant;
     }
 
     @PostConstruct
@@ -50,7 +54,7 @@ public class StartupService implements Serializable {
         started.set(true);
 
         tenantSynchronizer.synchronizeTenants();
-        tenantSynchronizer.rebuildDemoTenant();
+        demoTenant.rebuildDemoTenant();
     }
 
     public static boolean isStarted() {

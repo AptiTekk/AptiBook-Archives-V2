@@ -46,10 +46,12 @@ public class Reservation extends MultiTenantEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
 
+    @Column(name="\"start\"")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
     private LocalDateTime start;
 
+    @Column(name="\"end\"")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
     private LocalDateTime end;
