@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="SqlDialectMappings">
-    <file url="dbSrc:///8d03b8d/83761dcc-8656-4b07-a34b-1e7646070c5b" dialect="PostgreSQL" />
+    <file url="dbSrc:///c91bf70d/c773d21f-3b12-449d-a2bb-630388162d2b" dialect="PostgreSQL" />
     <file url="file://$PROJECT_DIR$/src/main/resources/liquibase/changeSets/sql/1.sql" dialect="PostgreSQL" />
   </component>
 </project>

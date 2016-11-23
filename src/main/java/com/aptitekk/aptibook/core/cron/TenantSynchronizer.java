@@ -19,14 +19,23 @@ import com.aptitekk.aptibook.core.services.StartupService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.threeten.extra.Days;
 
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -54,11 +63,18 @@ public class TenantSynchronizer {
 
     private final TagRepository tagRepository;
 
+    private final PermissionRepository permissionRepository;
+
+    private final ReservationDecisionRepository reservationDecisionRepository;
+
+    private final ReservationRepository reservationRepository;
+
+    private final TenantSessionService tenantSessionService;
 
     private final LogService logService;
 
     @Autowired
-    public TenantSynchronizer(TenantRepository tenantRepository, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService, TenantIntegrityService tenantIntegrityService, UserGroupService userGroupService, UserGroupRepository userGroupRepository, UserRepository userRepository,  ResourceCategoryRepository resourceCategoryRepository ,ResourceRepository resourceRepository ,TagRepository tagRepository) {
+    public TenantSynchronizer(TenantRepository tenantRepository, TenantSessionService tenantSessionService, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService, TenantIntegrityService tenantIntegrityService, UserGroupService userGroupService, UserGroupRepository userGroupRepository, UserRepository userRepository,  ResourceCategoryRepository resourceCategoryRepository ,ResourceRepository resourceRepository ,TagRepository tagRepository, PermissionRepository permissionRepository, ReservationDecisionRepository reservationDecisionRepository, ReservationRepository reservationRepository) {
         this.tenantRepository = tenantRepository;
         this.tenantManagementService = tenantManagementService;
         this.wooCommerceRestFetcher = wooCommerceRestFetcher;
@@ -70,6 +86,10 @@ public class TenantSynchronizer {
         this.resourceCategoryRepository = resourceCategoryRepository;
         this.resourceRepository = resourceRepository;
         this.tagRepository = tagRepository;
+        this.permissionRepository = permissionRepository;
+        this.reservationDecisionRepository = reservationDecisionRepository;
+        this.reservationRepository = reservationRepository;
+        this.tenantSessionService = tenantSessionService;
     }
 
     /**
@@ -100,59 +120,144 @@ public class TenantSynchronizer {
         administratorsUserGroup.setName("Administrators");
         administratorsUserGroup.setParent(userGroupRepository.findRootGroup(newTenant));
         administratorsUserGroup.setTenant(newTenant);
+        List<Permission> permissionList = new ArrayList<>();
+        Permission adminPermission = new Permission();
+        adminPermission.setTenant(newTenant);
+        adminPermission.setDescriptor(Permission.Descriptor.GENERAL_FULL_PERMISSIONS);
+        adminPermission = permissionRepository.save(adminPermission);
+        permissionList.add(adminPermission);
+        administratorsUserGroup.setPermissions(permissionList);
         administratorsUserGroup = userGroupRepository.save(administratorsUserGroup);
+
+
 
         UserGroup teachersUserGroup = new UserGroup();
         teachersUserGroup.setName("Teachers");
         teachersUserGroup.setParent(administratorsUserGroup);
         teachersUserGroup.setTenant(newTenant);
+        List<Permission> permissionList2 = new ArrayList<>();
+        Permission teacherPermission = new Permission();
+        teacherPermission.setTenant(newTenant);
+        teacherPermission.setDescriptor(Permission.Descriptor.GENERAL_FULL_PERMISSIONS);
+        teacherPermission = permissionRepository.save(teacherPermission);
+        permissionList2.add(teacherPermission);
+        teachersUserGroup.setPermissions(permissionList2);
         teachersUserGroup = userGroupRepository.save(teachersUserGroup);
 
         //Add Users
+        User user = new User();
+        User user2 = new User();
         try {
-            User user = new User();
+
             user.setEmailAddress("test@test.com");
             user.setFirstName("John");
             user.setLastName("Doe");
             user.setHashedPassword(PasswordStorage.createHash("test"));
-            user.getUserGroups().add(administratorsUserGroup);
+            user.getUserGroups().add(teachersUserGroup);
             user.setTenant(newTenant);
             user = userRepository.save(user);
+
+            user2.setEmailAddress("test@test.com");
+            user2.setFirstName("Toby");
+            user2.setLastName("Smith");
+            user2.setHashedPassword(PasswordStorage.createHash("test"));
+            user2.getUserGroups().add(administratorsUserGroup);
+            user2.setTenant(newTenant);
+            user2 = userRepository.save(user2);
+
+
         } catch (PasswordStorage.CannotPerformOperationException e) {
             logService.logException(getClass(), e, "Could not hash demo user's password");
         }
 
+
         //Add Resource Categories
         ResourceCategory resourceCategory= new ResourceCategory();
-        resourceCategory.setName("Laptop Carts");
+        resourceCategory.setName("Teacher Laptops");
         resourceCategory.setTenant(newTenant);
-        List<Tag> tags = new ArrayList<>();
+        resourceCategory = resourceCategoryRepository.save(resourceCategory);
+
+        //Add Tags
+        List<Tag> firstCartList = new ArrayList<>();
+        List<Tag> secondCartList = new ArrayList<>();
+
         Tag adobeTag = new Tag();
         adobeTag.setName("adobe");
         adobeTag.setTenant(newTenant);
+        adobeTag.setResourceCategory(resourceCategory);
         adobeTag = tagRepository.save(adobeTag);
-        tags.add(adobeTag);
+        firstCartList.add(adobeTag);
+
+
         Tag officeTag = new Tag();
         officeTag.setName("office");
-        tags.add(officeTag);
+        officeTag.setTenant(newTenant);
+        officeTag.setResourceCategory(resourceCategory);
+        officeTag = tagRepository.save(officeTag);
+        firstCartList.add(officeTag);
+        secondCartList.add(officeTag);
+
         Tag chromebookTag = new Tag();
         chromebookTag.setName("chromebook");
-        tags.add(chromebookTag);
-        resourceCategory.setTags(tags);
+        chromebookTag.setTenant(newTenant);
+        chromebookTag.setResourceCategory(resourceCategory);
+        chromebookTag = tagRepository.save(chromebookTag);
+        firstCartList.add(chromebookTag);
+
+        List<Tag> availableTags = new ArrayList();
+        availableTags.add(adobeTag);
+        availableTags.add(officeTag);
+        availableTags.add(chromebookTag);
+        resourceCategory.setTags(availableTags);
         resourceCategory = resourceCategoryRepository.save(resourceCategory);
+
+
 
         //Add resources
         Resource cart1 = new Resource();
         cart1.setName("Cart 1");
         cart1.setResourceCategory(resourceCategory);
         cart1.setTenant(newTenant);
-        resourceRepository.save(cart1);
+        cart1.setTags(firstCartList);
+        List<Resource> resourceList = new ArrayList<>();
+        resourceList.add(cart1);
+        teachersUserGroup.setResources(resourceList);
+        cart1 = resourceRepository.save(cart1);
 
         Resource cart2 = new Resource();
         cart2.setName("Cart 2");
         cart2.setResourceCategory(resourceCategory);
         cart2.setTenant(newTenant);
-        resourceRepository.save(cart2);
+        cart2.setTags(secondCartList);
+        List<Resource> resourceList2 = new ArrayList<>();
+        resourceList2.add(cart1);
+        administratorsUserGroup.setResources(resourceList2);
+        cart2 = resourceRepository.save(cart2);
+
+
+        Reservation reservation = new Reservation();
+        reservation.setTenant(newTenant);
+        reservation.setResource(cart1);
+        reservation.setTitle("Sage Testing");
+        reservation.setUser(user);
+        ZoneId currentTenantTimezone = tenantManagementService.getZoneId(newTenant);
+
+        ZonedDateTime start = ZonedDateTime.now(currentTenantTimezone);
+        ZonedDateTime end = start.plusDays(2);
+
+        reservation.setStartTime(start.withZoneSameInstant(currentTenantTimezone));
+        reservation.setEndTime(end.withZoneSameInstant(currentTenantTimezone));
+        reservation = reservationRepository.save(reservation);
+
+        //Set reservation decision
+        ReservationDecision reservationDecision = new ReservationDecision();
+        reservationDecision.setReservation(reservation);
+        reservationDecision.setUserGroup(administratorsUserGroup);
+        reservationDecision.setTenant(newTenant);
+        reservationDecision.setApproved(true);
+        reservationDecision.setUser(user2);
+        reservationDecision = reservationDecisionRepository.save(reservationDecision);
+
         tenantManagementService.refresh();
     }
 
