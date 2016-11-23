@@ -20,6 +20,7 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.List;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
@@ -30,7 +31,6 @@ public class Reservation extends MultiTenantEntity implements Serializable {
         REJECTED,
         CANCELLED
     }
-
     private static final long serialVersionUID = 1L;
 
     @Id
@@ -46,10 +46,12 @@ public class Reservation extends MultiTenantEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     private Status status = Status.PENDING;
 
+    @Column(name="\"start\"")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
     private LocalDateTime start;
 
+    @Column(name="\"end\"")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
     private LocalDateTime end;

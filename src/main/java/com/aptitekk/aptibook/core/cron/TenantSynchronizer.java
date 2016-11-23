@@ -6,8 +6,9 @@
 
 package com.aptitekk.aptibook.core.cron;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
+import com.aptitekk.aptibook.core.crypto.PasswordStorage;
+import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.WooCommerceRestFetcher;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.LineItem;
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.MetaItem;
@@ -15,16 +16,23 @@ import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Stat
 import com.aptitekk.aptibook.core.domain.rest.woocommerce.api.subscriptions.Subscription;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.StartupService;
+import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.threeten.extra.Days;
 
-import java.time.ZonedDateTime;
+import java.text.SimpleDateFormat;
+import java.time.*;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -43,18 +51,19 @@ public class TenantSynchronizer {
     private final LogService logService;
 
     @Autowired
-    public TenantSynchronizer(TenantRepository tenantRepository, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService, TenantIntegrityService tenantIntegrityService) {
+    public TenantSynchronizer(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, TenantManagementService tenantManagementService, WooCommerceRestFetcher wooCommerceRestFetcher, LogService logService ) {
         this.tenantRepository = tenantRepository;
         this.tenantManagementService = tenantManagementService;
+        this.tenantIntegrityService = tenantIntegrityService;
         this.wooCommerceRestFetcher = wooCommerceRestFetcher;
         this.logService = logService;
-        this.tenantIntegrityService = tenantIntegrityService;
+
     }
 
-    @Scheduled(cron = "* * * * *") //Every minute
+    @Scheduled(cron = "0 * * * * *") //Every minute
     @Async
     public void synchronizeTenants() {
-        logService.logDebug(getClass(), "Synchronizing Tenants...");
+        logService.logInfo(getClass(), "Synchronizing Tenants...");
 
         if (!StartupService.isStarted()) {
             logService.logInfo(getClass(), "Skipping run since AptiBook is not started.");
@@ -136,6 +145,10 @@ public class TenantSynchronizer {
 
             for (Tenant tenant : tenantRepository.findAll()) {
                 if (subscriptionIdsEncountered.contains(tenant.getSubscriptionId()))
+                    continue;
+
+                //The demo tenant should not be set inactive.
+                if (tenant.getSlug().equals("demo"))
                     continue;
 
                 changeTenantActive(tenant, false);
