@@ -11,15 +11,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
+import java.time.ZoneId;
 
 @Service
 public class TenantSessionService {
 
     private final HttpServletRequest request;
 
+    //private final TenantManagementService tenantManagementService;
+
     @Autowired
-    public TenantSessionService(HttpServletRequest request) {
+    public TenantSessionService(HttpServletRequest request /*TenantManagementService tenantManagementService*/) {
         this.request = request;
+       // this.tenantManagementService = tenantManagementService;
     }
 
     public Tenant getTenant() {
@@ -34,5 +38,13 @@ public class TenantSessionService {
         }
         return null;
     }
+
+    /*public ZoneId getCurrentTenantZoneId() {
+        Tenant tenant = getTenant();
+        if (tenant != null) {
+            return tenantManagementService.getZoneId(tenant);
+        }
+        return ZoneId.systemDefault();
+    }*/
 
 }

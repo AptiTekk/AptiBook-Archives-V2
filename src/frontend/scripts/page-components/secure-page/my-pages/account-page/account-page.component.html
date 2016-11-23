@@ -127,6 +127,7 @@
                             assigned.</p>
                     </div>
                     <div *ngIf="!user.admin">
+                        <p>The groups that you are assigned to are highlighted.</p>
                         <tree [userGroup]="rootUserGroup" [selectable]="false" [dragAndDrop]="false"
                               [higlightedUserGroupIds]="user.userGroups"></tree>
                     </div>

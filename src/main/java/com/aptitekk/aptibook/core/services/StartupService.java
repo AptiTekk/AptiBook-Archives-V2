@@ -50,6 +50,7 @@ public class StartupService implements Serializable {
         started.set(true);
 
         tenantSynchronizer.synchronizeTenants();
+        tenantSynchronizer.rebuildDemoTenant();
     }
 
     public static boolean isStarted() {
