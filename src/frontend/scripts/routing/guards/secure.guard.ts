@@ -1,5 +1,5 @@
-import {AuthService} from "../../services/auth.service";
-import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate} from "@angular/router";
+import {AuthService} from "../../services/singleton/auth.service";
+import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate, UrlSegment} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {isNullOrUndefined} from "util";
@@ -12,12 +12,18 @@ export class SecureGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         return Observable.create(listener => {
-            this.authService.getUser().subscribe(
+            this.authService.getUser().take(1).subscribe(
                 user => {
                     if (!isNullOrUndefined(user)) {
                         listener.next(true);
                     } else {
-                        this.router.navigateByUrl("/");
+                        let urlSegments: UrlSegment[] = route.url;
+                        for (let segment of urlSegments) {
+                            if (segment.toString() === "secure") {
+                                this.router.navigateByUrl("/");
+                                break;
+                            }
+                        }
                         listener.next(false);
                     }
                 });

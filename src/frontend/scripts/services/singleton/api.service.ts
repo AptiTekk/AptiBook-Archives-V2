@@ -14,6 +14,10 @@ export class APIService {
     constructor(private http: Http) {
     }
 
+    public getApiUrlFromEndpoint(endpoint: string): string {
+        return this.apiUrl + APIService.removeTrailingSlash(endpoint);
+    }
+
     private static checkForErrors(response: Response): any {
         if (response.status >= 200 && response.status < 300) {
             if (response.text().length > 0)
@@ -50,6 +54,20 @@ export class APIService {
     public post(path: string, data: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.post(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
+            .map(APIService.checkForErrors)
+            .catch(e => Observable.throw(e));
+    }
+
+    public put(path: string, data: any): Observable<any> {
+        let options = new RequestOptions({headers: this.headers});
+        return this.http.put(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
+            .map(APIService.checkForErrors)
+            .catch(e => Observable.throw(e));
+    }
+
+    public patch(path: string, data: any): Observable<any> {
+        let options = new RequestOptions({headers: this.headers});
+        return this.http.patch(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
             .map(APIService.checkForErrors)
             .catch(e => Observable.throw(e));
     }

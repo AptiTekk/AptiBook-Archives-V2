@@ -1,0 +1,40 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Left Sidebar Section -->
+        <div class="col-xs-12 col-md-4 col-lg-3">
+
+            <!-- Upcoming Reservations -->
+            <div class="upcoming-reservations-section"
+                 [@sidebarDisplayStatus]="makingNewReservation ? 'hidden' : 'visible'">
+                <upcoming-reservations-panel></upcoming-reservations-panel>
+                <button class="btn btn-primary btn-block" (click)="onNewReservationStart()">
+                    <i class="fa fa-plus"></i>
+                    New Reservation
+                </button>
+            </div>
+
+            <!-- New Reservation -->
+            <div class="new-reservation-section" style="opacity: 0"
+                 [@sidebarDisplayStatus]="makingNewReservation ? 'visible' : 'hidden'">
+                <new-reservation-panel (cancelled)="onCancelNewReservation()"></new-reservation-panel>
+            </div>
+        </div>
+
+        <!-- Right Calendar Section -->
+        <div class="hidden-xs hidden-sm col-md-8 col-lg-9">
+            <div class="calendar-container" style="height: calc(100vh - 50px - 50px - 40px);">
+                <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
+                          [hiddenStatuses]="['rejected', 'cancelled']"
+                          [title]="'Public Calendar'"
+                          (eventSelected)="onCalendarEventClicked($event)"></calendar>
+            </div>
+        </div>
+    </div>
+</div>

@@ -13,11 +13,6 @@
     border-top-right-radius: 0;
 }
 
-.navbar .collapse {
-    padding-left: 0;
-    padding-right: 0;
-}
-
 .navbar-toggle .icon-bar {
     background-color: #6D6E71;
 }
@@ -60,6 +55,12 @@
 }
 
 @media (min-width: 768px) {
+
+    .navbar .collapse {
+        padding-left: 0;
+        padding-right: 0;
+    }
+
     .navbar-right .dropdown-menu {
         left: 0;
         right: auto;
@@ -99,7 +100,6 @@
     .nav-notifications {
         float: right;
         width: 80px;
-        padding-top: 2px;
         background-color: rgba(0, 0, 0, 0.1);
     }
 

@@ -4,6 +4,50 @@
  * Proprietary and confidential.
  */
 
-#app {
+.app a {
+    color: #4272b7;
+}
 
+/* Button Styling */
+
+.app .btn-primary,
+.app .pagination > .active > a,
+.app .pagination > .active > span,
+.app .pagination > .active > a:hover,
+.app .pagination > .active > span:hover,
+.app .pagination > .active > a:focus,
+.app .pagination > .active > span:focus,
+.app .btn-primary.disabled:hover,
+.app .btn-primary[disabled]:hover,
+.app fieldset[disabled] .btn-primary:hover,
+.app .btn-primary.disabled:focus,
+.app .btn-primary[disabled]:focus,
+.app fieldset[disabled] .btn-primary:focus,
+.app .btn-primary.disabled.focus,
+.app .btn-primary[disabled].focus,
+.app fieldset[disabled] .btn-primary.focus {
+    background-color: #4272b7;
+    border-color: #39629C;
+}
+
+.app .btn-primary:hover {
+    background-color: #39629C;
+    border-color: #39629C;
+}
+
+app button.btn:focus {
+    outline: none;
+}
+
+/* Switch Styling */
+
+.app .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
+.app .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
+    background: #4272b7;
+}
+
+.app .ui-state-highlight,
+.app .ui-widget-content .ui-state-highlight,
+.app .ui-widget-header .ui-state-highlight {
+    background-color: #4272b7;
 }

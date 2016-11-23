@@ -1,3 +1,4 @@
+<!DOCTYPE html>
 <!--
   ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
   ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
@@ -74,10 +75,8 @@
             position: fixed;
             top: 0;
             left: 0;
-            background-image: url('splashscreen/background.jpg');
-            background-position: bottom center;
+            background: url('splashscreen/background.jpg') no-repeat bottom center;
             background-size: cover;
-            background-repeat: no-repeat;
 
             z-index: 10000;
 
@@ -109,6 +108,14 @@
             background-size: 15% !important;
 
             animation: fadein 1s;
+        }
+
+        @media (max-width: 767px) {
+
+            #loading-foreground {
+                background-size: 50% !important;
+            }
+
         }
 
         @keyframes fadein {

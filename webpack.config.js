@@ -7,6 +7,8 @@
 var path = require('path');
 var webpack = require('webpack');
 
+var PROD = (process.env.NODE_ENV === 'production');
+
 var config = {
     cache: true,
     devtool: 'source-map',
@@ -37,11 +39,11 @@ var config = {
             },
             {
                 test: /\.component\.html$/,
-                loader: "to-string!html"
+                loader: "to-string!html?-minimize"
             },
             {
                 test: /\.html$/,
-                loader: "html",
+                loader: "html?-minimize",
                 exclude: [/\.component\.html$/]
             },
             {
@@ -77,8 +79,12 @@ var config = {
     ],
 
     resolve: {
-        extensions: ['', '.ts', '.js', '.json'],
-        modulesDirectories: ['node_modules']
+        extensions: ['', '.ts', '.js', '.json', '.jsx'],
+        modulesDirectories: ['node_modules'],
+        alias: {
+            // Force all modules to use the same jquery version.
+            'jquery': path.join(__dirname, 'node_modules/jquery/src/jquery')
+        }
     },
 
     node: {

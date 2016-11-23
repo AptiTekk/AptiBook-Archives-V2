@@ -6,8 +6,10 @@
 
 package com.aptitekk.aptibook.rest.controllers.root;
 
+import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
@@ -24,13 +26,15 @@ import java.io.IOException;
 public class OAuthCallbackController {
 
     private final TenantRepository tenantRepository;
+    private final PropertiesRepository propertiesRepository;
     private final GoogleOAuthService googleOAuthService;
     private final AuthService authService;
     private final LogService logService;
 
     @Autowired
-    public OAuthCallbackController(TenantRepository tenantRepository, GoogleOAuthService googleOAuthService, AuthService authService, LogService logService) {
+    public OAuthCallbackController(TenantRepository tenantRepository, PropertiesRepository propertiesRepository, GoogleOAuthService googleOAuthService, AuthService authService, LogService logService) {
         this.tenantRepository = tenantRepository;
+        this.propertiesRepository = propertiesRepository;
         this.googleOAuthService = googleOAuthService;
         this.authService = authService;
         this.logService = logService;
@@ -49,27 +53,44 @@ public class OAuthCallbackController {
                 String tenantSlug = stateSplit[1];
                 Tenant tenant = tenantRepository.findTenantBySlug(tenantSlug);
 
-                //Check for code and set the appropriate user if the code exists.
-                if (code != null && !code.isEmpty()) {
-                    if (tenant != null) {
-                        User user = googleOAuthService.getUserFromCode(tenant, code);
-                        if (user != null) {
-                            authService.setUserOfTenant(user, tenant, httpServletResponse);
+                //Make sure that google sign in is actually enabled
+                Property googleSignInProperty = propertiesRepository.findPropertyByKey(Property.Key.GOOGLE_SIGN_IN_ENABLED, tenant);
+                if (googleSignInProperty != null && Boolean.parseBoolean(googleSignInProperty.getPropertyValue())) {
+
+                    //Check for code and set the appropriate user if the code exists.
+                    if (code != null && !code.isEmpty()) {
+                        if (tenant != null) {
+                            User user = googleOAuthService.getUserFromCode(tenant, code);
+                            if (user != null) {
+                                authService.setUserOfTenant(user, tenant, httpServletResponse);
+                            }
                         }
                     }
-                }
-
-                //Redirect to Tenant index
-                try {
-                    httpServletResponse.sendRedirect("/" + tenantSlug + (error != null ? "?googleError=" + error : ""));
+                    //Google error
+                    redirectToTenantWithError(httpServletResponse, tenantSlug, error);
                     return;
-                } catch (IOException e) {
-                    logService.logException(getClass(), e, "Could not redirect to tenant root");
+                } else {
+                    //Tried to use google but it wasn't enabled.
+                    redirectToTenantWithError(httpServletResponse, tenantSlug, "inactive");
+                    return;
                 }
             }
         }
 
-        //If all else fails, redirect to index of app.
+        //When all else fails...
+        redirectToWebRoot(httpServletResponse);
+    }
+
+    private void redirectToTenantWithError(HttpServletResponse httpServletResponse, String tenantSlug, String error) {
+        try {
+            httpServletResponse.sendRedirect("/" + tenantSlug + (error != null ? "?googleError=" + error : ""));
+        } catch (IOException e) {
+            logService.logException(getClass(), e, "Could not redirect to tenant root");
+            redirectToWebRoot(httpServletResponse);
+        }
+    }
+
+    private void redirectToWebRoot(HttpServletResponse httpServletResponse) {
         try {
             httpServletResponse.sendRedirect("/");
         } catch (IOException e) {

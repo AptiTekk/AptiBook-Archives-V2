@@ -10,8 +10,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
 
-    <include file="changeSets/1__Initial_Schema.xml" relativeToChangelogFile="true"/>
-    <include file="changeSets/2__Add_Tenant_Tiers.xml" relativeToChangelogFile="true"/>
-    <include file="changeSets/3__Add_Tenant_Admin_Email.xml" relativeToChangelogFile="true"/>
+    <includeAll path="changeSets" relativeToChangelogFile="true"
+                resourceFilter="com.aptitekk.aptibook.core.domain.databaseConfigurations.LiquibaseResourceFilter"/>
 
 </databaseChangeLog>
