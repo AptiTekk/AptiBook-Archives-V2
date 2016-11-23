@@ -71,7 +71,7 @@ public class DemoTenant {
     }
 
 
-    @Scheduled(cron = "* * * * *")
+    @Scheduled(cron = "0 0 0 1/1 * ? *")
     @Async
     /**
      * Deletes and re-builds the demo Tenant every 24 hours.
