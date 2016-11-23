@@ -31,7 +31,6 @@ public class Reservation extends MultiTenantEntity implements Serializable {
         REJECTED,
         CANCELLED
     }
-
     private static final long serialVersionUID = 1L;
 
     @Id
