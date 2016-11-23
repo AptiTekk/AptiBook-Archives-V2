@@ -18,7 +18,8 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -75,7 +76,7 @@ public class DemoTenant {
     @Scheduled(cron = "0 0 0 * * *")
     @Async
     public void rebuildDemoTenant() {
-        logService.logInfo(getClass(), "Rebuilding Demo Tenant...");
+        logService.logDebug(getClass(), "Rebuilding Demo Tenant...");
 
         //Find and delete old demo tenant
         Tenant tenant = tenantRepository.findTenantBySlug("demo");
@@ -211,25 +212,25 @@ public class DemoTenant {
         cart2 = resourceRepository.save(cart2);
 
         //Add reservation
-        Reservation reservation = new Reservation();
-        reservation.setTenant(newTenant);
-        reservation.setResource(cart1);
-        reservation.setTitle("Sage Testing");
-        reservation.setUser(user);
-        LocalDateTime start = LocalDateTime.now();
-        LocalDateTime end = start.plusDays(3).plusHours(2).plusMinutes(15);
-        reservation.setStart(start);
-        reservation.setEnd(end);
-        reservation = reservationRepository.save(reservation);
+        Reservation reservation = createReservation(
+                newTenant,
+                user,
+                "Sage Testing",
+                Reservation.Status.APPROVED,
+                cart1,
+                5, 6,
+                13, 30,
+                16, 45);
 
-        Reservation reservation1 = new Reservation();
-        reservation1.setTenant(newTenant);
-        reservation1.setResource(cart2);
-        reservation1.setTitle("Sage Testing");
-        reservation1.setUser(user1);
-        reservation1.setStart(start.plusHours(8).plusMinutes(15));
-        reservation1.setEnd(end.minusDays(1).plusHours(3).plusMinutes(18));
-        reservation1 = reservationRepository.save(reservation1);
+        Reservation reservation2 = createReservation(
+                newTenant,
+                user,
+                "Essay Research",
+                Reservation.Status.PENDING,
+                cart2,
+                10, 10,
+                12, 0,
+                15, 30);
 
         //Set reservation decision
         ReservationDecision reservationDecision = new ReservationDecision();
@@ -251,5 +252,34 @@ public class DemoTenant {
         tenantManagementService.refresh();
     }
 
+    private Reservation createReservation(Tenant tenant,
+                                          User user,
+                                          String title, Reservation.Status status,
+                                          Resource resource,
+                                          int startDay, int endDay,
+                                          int startHour, int startMinute,
+                                          int endHour, int endMinute) {
+        Reservation reservation = new Reservation();
+        reservation.setTenant(tenant);
+        reservation.setUser(user);
+        reservation.setTitle(title);
+        reservation.setStatus(status);
+        reservation.setResource(resource);
+        ZonedDateTime start = ZonedDateTime.now(ZoneId.of("America/Denver"))
+                .withDayOfMonth(startDay)
+                .withHour(startHour)
+                .withMinute(startMinute)
+                .withSecond(0)
+                .withZoneSameInstant(ZoneId.systemDefault());
+        ZonedDateTime end = ZonedDateTime.now(ZoneId.of("America/Denver"))
+                .withDayOfMonth(endDay)
+                .withHour(endHour)
+                .withMinute(endMinute)
+                .withSecond(0)
+                .withZoneSameInstant(ZoneId.systemDefault());
+        reservation.setStart(start.toLocalDateTime());
+        reservation.setEnd(end.toLocalDateTime());
+        return reservationRepository.save(reservation);
+    }
 
 }

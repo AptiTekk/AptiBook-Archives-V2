@@ -11,6 +11,7 @@ import {
 } from "../page-components";
 import {FrontPageGuard, SecureGuard} from "./guards";
 import {UpcomingReservationsPanelComponent} from "../page-components/secure-page/dashboard-page/upcoming-reservations-panel/upcoming-reservations-panel.component";
+import {ReservationsPageComponent} from "../page-components/secure-page/my-pages/reservations-page/reservations-page.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -43,6 +44,10 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             {
                 path: 'my/notifications',
                 component: NotificationsPageComponent
+            },
+            {
+                path: 'my/reservations',
+                component: ReservationsPageComponent
             },
             {
                 path: '**',
