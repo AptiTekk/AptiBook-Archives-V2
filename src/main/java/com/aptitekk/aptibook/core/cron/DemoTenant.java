@@ -97,112 +97,121 @@ public class DemoTenant {
         tenantIntegrityService.initializeNewTenant(demoTenant);
 
         //Add User Groups
-        UserGroup administratorsUserGroup = new UserGroup();
-        administratorsUserGroup.setName("Administrators");
-        administratorsUserGroup.setParent(userGroupRepository.findRootGroup(demoTenant));
-        administratorsUserGroup.setTenant(demoTenant);
-        List<Permission> permissionList = new ArrayList<>();
-        Permission adminPermission = new Permission();
-        adminPermission.setTenant(demoTenant);
-        adminPermission.setDescriptor(Permission.Descriptor.GENERAL_FULL_PERMISSIONS);
-        adminPermission = permissionRepository.save(adminPermission);
-        permissionList.add(adminPermission);
-        administratorsUserGroup.setPermissions(permissionList);
-        administratorsUserGroup = userGroupRepository.save(administratorsUserGroup);
+        UserGroup administratorsUserGroup = createUserGroup(
+                "Administrators",
+                userGroupRepository.findRootGroup(demoTenant),
+                null
+        );
 
+        UserGroup teachersUserGroup = createUserGroup(
+                "Teachers",
+                administratorsUserGroup,
+                null
+        );
 
-        UserGroup teachersUserGroup = new UserGroup();
-        teachersUserGroup.setName("Teachers");
-        teachersUserGroup.setParent(administratorsUserGroup);
-        teachersUserGroup.setTenant(demoTenant);
-        List<Permission> permissionList2 = new ArrayList<>();
-        Permission teacherPermission = new Permission();
-        teacherPermission.setTenant(demoTenant);
-        teacherPermission.setDescriptor(Permission.Descriptor.GENERAL_FULL_PERMISSIONS);
-        teacherPermission = permissionRepository.save(teacherPermission);
-        permissionList2.add(teacherPermission);
-        teachersUserGroup.setPermissions(permissionList2);
-        teachersUserGroup = userGroupRepository.save(teachersUserGroup);
+        UserGroup librariansUserGroup = createUserGroup(
+                "Librarians",
+                administratorsUserGroup,
+                null
+        );
 
         //Add Users
+        User administrator = createUser(
+                "admin@aptitekk.com",
+                "Jill",
+                "Administrator",
+                "demo",
+                administratorsUserGroup);
+
         User teacher = createUser(
                 "teacher@aptitekk.com",
                 "John",
                 "Teacher",
-                "test",
+                "demo",
                 teachersUserGroup);
 
-        User administrator = createUser(
-                "administrator@aptitekk.com",
-                "Jill",
-                "Administrator",
-                "test",
-                administratorsUserGroup);
+        User librarian = createUser(
+                "librarian@aptitekk.com",
+                "Julia",
+                "Librarian",
+                "demo",
+                librariansUserGroup
+        );
 
         //Add Resource Categories
-        ResourceCategory resourceCategory = new ResourceCategory();
-        resourceCategory.setName("Teacher Laptops");
-        resourceCategory.setTenant(demoTenant);
-        resourceCategory = resourceCategoryRepository.save(resourceCategory);
+        ResourceCategory rooms = resourceCategoryRepository.findByName("Rooms", demoTenant);
+        ResourceCategory equipment = createResourceCategory("Equipment");
 
         //Add Tags
-        List<Tag> firstCartList = new ArrayList<>();
-        List<Tag> secondCartList = new ArrayList<>();
+        List<Tag> cart1Tags = new ArrayList<>();
+        List<Tag> cart2Tags = new ArrayList<>();
 
         Tag adobeTag = new Tag();
         adobeTag.setName("adobe");
         adobeTag.setTenant(demoTenant);
-        adobeTag.setResourceCategory(resourceCategory);
+        adobeTag.setResourceCategory(equipment);
         adobeTag = tagRepository.save(adobeTag);
-        firstCartList.add(adobeTag);
-
+        cart1Tags.add(adobeTag);
 
         Tag officeTag = new Tag();
         officeTag.setName("office");
         officeTag.setTenant(demoTenant);
-        officeTag.setResourceCategory(resourceCategory);
+        officeTag.setResourceCategory(equipment);
         officeTag = tagRepository.save(officeTag);
-        firstCartList.add(officeTag);
-        secondCartList.add(officeTag);
+        cart1Tags.add(officeTag);
+        cart2Tags.add(officeTag);
 
         Tag chromebookTag = new Tag();
         chromebookTag.setName("chromebook");
         chromebookTag.setTenant(demoTenant);
-        chromebookTag.setResourceCategory(resourceCategory);
+        chromebookTag.setResourceCategory(equipment);
         chromebookTag = tagRepository.save(chromebookTag);
-        firstCartList.add(chromebookTag);
+        cart1Tags.add(chromebookTag);
 
         List<Tag> availableTags = new ArrayList<>();
         availableTags.add(adobeTag);
         availableTags.add(officeTag);
         availableTags.add(chromebookTag);
-        resourceCategory.setTags(availableTags);
-        resourceCategory = resourceCategoryRepository.save(resourceCategory);
-
+        equipment.setTags(availableTags);
+        equipment = resourceCategoryRepository.save(equipment);
 
         //Add resources
-        Resource cart1 = new Resource();
-        cart1.setName("Cart 1");
-        cart1.setResourceCategory(resourceCategory);
-        cart1.setTenant(demoTenant);
-        cart1.setTags(firstCartList);
-        List<Resource> resourceList = new ArrayList<>();
-        resourceList.add(cart1);
-        teachersUserGroup.setResources(resourceList);
-        cart1 = resourceRepository.save(cart1);
+        Resource library = createResource(
+                "Library",
+                rooms,
+                librariansUserGroup,
+                true,
+                null
+        );
 
-        Resource cart2 = new Resource();
-        cart2.setName("Cart 2");
-        cart2.setResourceCategory(resourceCategory);
-        cart2.setTenant(demoTenant);
-        cart2.setTags(secondCartList);
-        List<Resource> resourceList2 = new ArrayList<>();
-        resourceList2.add(cart1);
-        administratorsUserGroup.setResources(resourceList2);
-        cart2 = resourceRepository.save(cart2);
+        Resource cart1 = createResource(
+                "Cart 1",
+                equipment,
+                administratorsUserGroup,
+                true,
+                cart1Tags
+        );
 
-        //Add reservation
-        Reservation reservation = createReservation(
+        Resource cart2 = createResource(
+                "Cart 2",
+                equipment,
+                administratorsUserGroup,
+                true,
+                cart2Tags
+        );
+
+        //Add reservations
+        Reservation libraryReservation = createReservation(
+                teacher,
+                "Book Fair",
+                Reservation.Status.APPROVED,
+                library,
+                21, 25,
+                8, 30,
+                15, 0
+        );
+
+        Reservation cart1Reservation = createReservation(
                 teacher,
                 "Sage Testing",
                 Reservation.Status.APPROVED,
@@ -211,7 +220,7 @@ public class DemoTenant {
                 13, 30,
                 16, 45);
 
-        Reservation reservation2 = createReservation(
+        Reservation cart2Reservation = createReservation(
                 teacher,
                 "Essay Research",
                 Reservation.Status.PENDING,
@@ -220,35 +229,66 @@ public class DemoTenant {
                 12, 0,
                 15, 30);
 
-        //Set reservation decision
-        ReservationDecision reservationDecision = new ReservationDecision();
-        reservationDecision.setReservation(reservation);
-        reservationDecision.setUserGroup(administratorsUserGroup);
-        reservationDecision.setTenant(demoTenant);
-        reservationDecision.setApproved(true);
-        reservationDecision.setUser(teacher);
-        reservationDecision = reservationDecisionRepository.save(reservationDecision);
+        //Add reservation decisions
+        createReservationDecision(
+                libraryReservation,
+                librariansUserGroup,
+                librarian,
+                false
+        );
+        createReservationDecision(
+                libraryReservation,
+                administratorsUserGroup,
+                administrator,
+                true
+        );
 
-        ReservationDecision reservationDecision1 = new ReservationDecision();
-        reservationDecision1.setReservation(reservation);
-        reservationDecision1.setUserGroup(administratorsUserGroup);
-        reservationDecision1.setTenant(demoTenant);
-        reservationDecision1.setApproved(false);
-        reservationDecision1.setUser(teacher);
-        reservationDecision1 = reservationDecisionRepository.save(reservationDecision1);
+        createReservationDecision(
+                cart1Reservation,
+                administratorsUserGroup,
+                administrator,
+                true
+        );
+
+        createReservationDecision(
+                cart2Reservation,
+                administratorsUserGroup,
+                administrator,
+                true
+        );
 
         tenantManagementService.refresh();
     }
 
     /**
-     * Creates a user.
+     * Creates a User Group
+     *
+     * @param name        The name of the User Group
+     * @param parent      The User Group's parent
+     * @param permissions A list of permissions for the User Group
+     * @return A new, saved User Group.
+     */
+    private UserGroup createUserGroup(String name,
+                                      UserGroup parent,
+                                      List<Permission> permissions) {
+        UserGroup userGroup = new UserGroup();
+        userGroup.setTenant(demoTenant);
+        userGroup.setName(name);
+        userGroup.setParent(parent);
+        userGroup.setPermissions(permissions);
+
+        return userGroupRepository.save(userGroup);
+    }
+
+    /**
+     * Creates a User.
      *
      * @param emailAddress The user's email address.
      * @param firstName    The user's first name.
      * @param lastName     The user's last name.
      * @param password     The user's password (not hashed)
      * @param userGroups   Any user groups the user should be assigned to.
-     * @return A new, saved user.
+     * @return A new, saved User.
      */
     private User createUser(String emailAddress,
                             String firstName,
@@ -260,6 +300,8 @@ public class DemoTenant {
         user.setEmailAddress(emailAddress);
         user.setFirstName(firstName);
         user.setLastName(lastName);
+        user.setVerified(true);
+        user.setUserState(User.State.APPROVED);
         try {
             user.setHashedPassword(PasswordStorage.createHash(password));
         } catch (PasswordStorage.CannotPerformOperationException e) {
@@ -270,7 +312,46 @@ public class DemoTenant {
     }
 
     /**
-     * Creates a reservation.
+     * Creates a Resource Category.
+     *
+     * @param name The name of the category.
+     * @return A new, saved Resource Category.
+     */
+    private ResourceCategory createResourceCategory(String name) {
+        ResourceCategory resourceCategory = new ResourceCategory();
+        resourceCategory.setTenant(demoTenant);
+        resourceCategory.setName(name);
+
+        return resourceCategoryRepository.save(resourceCategory);
+    }
+
+    /**
+     * Creates a Resource.
+     *
+     * @param name             The name of the resource
+     * @param resourceCategory The category of the resource.
+     * @param requiresApproval Whether or not approval is required of the resource's reservations.
+     * @param tags             A list of tags assigned to the resource.
+     * @return A new, saved Resource.
+     */
+    private Resource createResource(String name,
+                                    ResourceCategory resourceCategory,
+                                    UserGroup ownerGroup,
+                                    boolean requiresApproval,
+                                    List<Tag> tags) {
+        Resource resource = new Resource();
+        resource.setTenant(demoTenant);
+        resource.setName(name);
+        resource.setResourceCategory(resourceCategory);
+        resource.setOwner(ownerGroup);
+        resource.setNeedsApproval(requiresApproval);
+        resource.setTags(tags);
+
+        return resourceRepository.save(resource);
+    }
+
+    /**
+     * Creates a Reservation.
      *
      * @param user        The user who "reserved" the resource
      * @param title       The title of the reservation
@@ -282,7 +363,7 @@ public class DemoTenant {
      * @param startMinute The minute of the hour the reservation starts at.
      * @param endHour     The hour of the day (24 hr) that the reservation ends at.
      * @param endMinute   The minute of the hour that the reservation ends at.
-     * @return A new, saved reservation.
+     * @return A new, saved Reservation.
      */
     private Reservation createReservation(User user,
                                           String title, Reservation.Status status,
@@ -311,6 +392,28 @@ public class DemoTenant {
         reservation.setStart(start.toLocalDateTime());
         reservation.setEnd(end.toLocalDateTime());
         return reservationRepository.save(reservation);
+    }
+
+    /**
+     * Creates a Reservation Decision
+     *
+     * @param reservation The reservation being decided upon.
+     * @param userGroup   The user group who made the decision.
+     * @param user        The user who made the decision on behalf of the group.
+     * @param approved    If the decision was an approval or rejection.
+     * @return A new, saved Reservation Decision.
+     */
+    private ReservationDecision createReservationDecision(Reservation reservation,
+                                                          UserGroup userGroup,
+                                                          User user,
+                                                          boolean approved) {
+        ReservationDecision reservationDecision = new ReservationDecision();
+        reservationDecision.setTenant(demoTenant);
+        reservationDecision.setReservation(reservation);
+        reservationDecision.setUserGroup(userGroup);
+        reservationDecision.setUser(user);
+        reservationDecision.setApproved(approved);
+        return reservationDecisionRepository.save(reservationDecision);
     }
 
 }
