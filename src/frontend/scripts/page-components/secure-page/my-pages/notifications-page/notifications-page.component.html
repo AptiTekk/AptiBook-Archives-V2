@@ -5,9 +5,9 @@
   -->
 
 Notifications pages
-    <div *ngIf="unreadNotifications != undefined && unreadNotifications.length > 0">
-        in here
-        <panel *ngFor="let notification of unreadNotifications">
+    <div *ngIf="unreadNotification != undefined && unreadNotification.length > 0">
+
+        <panel *ngFor="let notification of unreadNotification">
             <panel-body>
                 <h4> {{notification.subject}}</h4>
             </panel-body>
