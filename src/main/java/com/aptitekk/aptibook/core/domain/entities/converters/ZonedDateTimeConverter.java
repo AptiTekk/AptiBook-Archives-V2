@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.core.domain.entities.converters;
 
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
+import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.Date;
 
@@ -25,6 +26,6 @@ public class ZonedDateTimeConverter implements AttributeConverter<ZonedDateTime,
     public ZonedDateTime convertToEntityAttribute(Date date) {
         if(date == null)
             return null;
-        return ZonedDateTime.from(date.toInstant());
+        return ZonedDateTime.ofInstant(date.toInstant(),ZoneId.systemDefault());
     }
 }

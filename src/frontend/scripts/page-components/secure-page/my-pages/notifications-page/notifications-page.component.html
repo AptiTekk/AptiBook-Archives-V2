@@ -4,4 +4,29 @@
   ~ Proprietary and confidential.
   -->
 
-My Notifications
+Notifications pages
+    <div *ngIf="unreadNotifications != undefined && unreadNotifications.length > 0">
+        in here
+        <panel *ngFor="let notification of unreadNotifications">
+            <panel-body>
+                <h4> {{notification.subject}}</h4>
+            </panel-body>
+        </panel>
+    </div>
+<!--
+
+        <div *ngIf="reservations != undefined && reservations.length > 0">
+            <panel *ngFor="let reservation of reservations | slice:0:3">
+                <panel-body>
+                    <h4 style="margin: 5px 0;">{{reservation.resource.name}}</h4>
+                    <span class="label label-{{getStatusLabelClassSuffix(reservation)}} pull-right"
+                          style="margin-top: -30px;">{{getStatusLabelText(reservation)}}</span>
+                    <div style="font-weight: bold">{{reservation.title}}</div>
+                    <span class="label label-default">Start</span>
+                    {{reservation.start | date:'EEEE, MMM dd, yyyy, h:mm a'}}
+                    <br/>
+                    <span class="label label-default">End</span>
+                    {{reservation.end | date:'EEEE, MMM dd, yyyy, h:mm a'}}
+                </panel-body>
+            </panel>
+        </div>-->

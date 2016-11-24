@@ -44,13 +44,16 @@ public class NotificationRepository extends MultiTenantEntityRepositoryAbstract<
                     .setParameter("user", user)
                     .getResultList();
 
+            System.out.print("result size: " + result.size());
+
             Comparator<Notification> comparator = Comparator.comparing(Notification::getRead);
             comparator = comparator.reversed();
             comparator = comparator.thenComparing(Notification::getCreation);
             comparator = comparator.reversed();
             Stream<Notification> notificationStream = result.stream().sorted(comparator);
 
-            return notificationStream.collect(Collectors.toList());
+            //return notificationStream.collect(Collectors.toList());
+            return result;
         } catch (PersistenceException e) {
             return null;
         }
