@@ -1,4 +1,4 @@
-export interface User {
+export class User {
     id: number;
 
     emailAddress: string;
@@ -10,11 +10,11 @@ export interface User {
     phoneNumber: string;
     location: string;
 
-    notifications: number[];
+    notifications: number[] = [];
     notificationTypeSettings;
 
     permissions;
-    userGroups: number[];
+    userGroups: number[] = [];
     admin: boolean;
 
     /**

@@ -7,8 +7,8 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.postgresql.util.Base64;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,7 +56,7 @@ public class AuthController extends APIControllerAbstract {
 
                             if (user != null) {
                                 authService.setCurrentUser(user, response);
-                                return ok(user);
+                                return ok(modelMapper.map(user, UserDTO.class));
                             }
 
                             return unauthorized("The Email Address or Password supplied was incorrect.");
@@ -74,7 +74,7 @@ public class AuthController extends APIControllerAbstract {
         } else {
             User currentUser = authService.getCurrentUser();
             if (currentUser != null) {
-                return ok(currentUser);
+                return ok(modelMapper.map(currentUser, UserDTO.class));
             }
 
             return badRequest("Authorization header was empty.");

@@ -2,7 +2,8 @@ import {Component, Input, Directive, ViewChild, ElementRef, Output, EventEmitter
 
 @Component({
     selector: 'modal',
-    templateUrl: 'modal.component.html'
+    templateUrl: 'modal.component.html',
+    styleUrls: ['modal.component.css']
 })
 export class ModalComponent {
     @ViewChild("modalRoot")
@@ -22,7 +23,7 @@ export class ModalComponent {
     @Output()
     public onDangerSubmit: EventEmitter<any> = new EventEmitter();
 
-    private _isOpen: boolean = false;
+    private isOpen: boolean = false;
     private backdropElement: HTMLDivElement;
 
     constructor() {
@@ -37,28 +38,23 @@ export class ModalComponent {
     }
 
     openModal() {
-        if (this._isOpen)
+        if (this.isOpen)
             return;
 
-        this._isOpen = true;
+        this.isOpen = true;
         document.body.appendChild(this.backdropElement);
         window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
         document.body.classList.add("modal-open");
     }
 
     closeModal() {
-        if (!this._isOpen)
+        if (!this.isOpen)
             return;
 
-        this._isOpen = false;
+        this.isOpen = false;
         document.body.removeChild(this.backdropElement);
         document.body.classList.remove("modal-open");
     }
-
-    get isOpen(): boolean {
-        return this._isOpen;
-    }
-
 
 }
 

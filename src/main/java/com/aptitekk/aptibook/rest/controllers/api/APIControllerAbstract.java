@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,11 +17,17 @@ import org.springframework.http.ResponseEntity;
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public abstract class APIControllerAbstract {
 
+    ModelMapper modelMapper = new ModelMapper();
+
     @Autowired
     AuthService authService;
 
     @Autowired
     LogService logService;
+
+    APIControllerAbstract() {
+        modelMapper.getConfiguration().setFieldMatchingEnabled(true);
+    }
 
     ResponseEntity<?> ok(Object entity) {
         return ResponseEntity.ok(entity);

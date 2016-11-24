@@ -1,0 +1,12 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<modal #modal [title]="'Reservation Details'" [cancelButtonLabel]="'Close'">
+    <modal-body *ngIf="reservation">
+        <h4>{{reservation.title}}</h4>
+        <p>You are viewing a reservation of {{reservation.resource.name}} for {{reservation.user}}.</p>
+    </modal-body>
+</modal>
