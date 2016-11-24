@@ -6,6 +6,8 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import java.util.List;
 
 public class UserDTO {
@@ -25,9 +27,11 @@ public class UserDTO {
     public List<UserGroupDTO.WithOnlyName> userGroups;
 
     public static class WithNewPassword extends UserDTO {
-
         public String newPassword;
+    }
 
+    @JsonIgnoreProperties({"userGroups"})
+    public static class WithoutUserGroups extends UserDTO {
     }
 
 }
