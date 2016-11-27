@@ -1,10 +1,11 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {Observable, Notification} from "rxjs";
+import {Observable, Notification, ObjectUnsubscribedError} from "rxjs";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import {UnreadNotification} from "../../models/notification.model";
 import * as moment from 'moment';
+import {isUndefined} from "util";
 
 @Injectable()
 export class NotificationService {
@@ -13,16 +14,34 @@ export class NotificationService {
     }
 
     public getNotifications(user: User): Observable<UnreadNotification[]>{
-        console.log("method called");
         return Observable.create(listener =>{
             if(user == undefined)
                 listener.next(undefined);
             else
-                console.log("calling GET")
                 this.apiService.get("notifications/user/" + user.id).subscribe(
                     response => listener.next(<UnreadNotification[]> response),
                     err => listener.next(undefined)
                 )
         });
     }
+
+    public markAllRead(user: User): Observable<UnreadNotification[]>{
+        console.log("Got to markAll() in notification service");
+        return Observable.create(listener =>{
+            if(user == undefined) {
+                listener.next(undefined);
+                console.log("error");
+            }
+            else{
+                console.log("got to else")
+                this.apiService.patch("notifications/read/user/" + user.id, true).subscribe(
+                    response => listener.next(<UnreadNotification[]> response),
+                    err => listener.next(undefined)
+                );
+                console.log("finished");
+            }
+        });
+
+    }
+
 }

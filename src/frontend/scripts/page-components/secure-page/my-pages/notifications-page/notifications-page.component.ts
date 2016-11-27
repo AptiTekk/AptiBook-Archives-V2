@@ -23,8 +23,13 @@ export class NotificationsPageComponent {
     constructor(authService: AuthService, notificationService: NotificationService){
         authService.getUser().subscribe(user => {
             if (user != undefined) {
-                notificationService.getNotifications(user).subscribe(unreadNotification => this.unreadNotification = unreadNotification);
-                console.log("Got here ");
+                notificationService.getNotifications(user).subscribe(unreadNotification => {
+                        if (unreadNotification != undefined) {
+                            this.unreadNotification = unreadNotification;
+                                notificationService.markAllRead(user);
+                        }
+                    }
+                );
             }else{
                 console.log("User is undefined");
             }

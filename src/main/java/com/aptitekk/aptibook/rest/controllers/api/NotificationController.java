@@ -30,7 +30,7 @@ public class NotificationController extends APIControllerAbstract {
     private final NotificationRepository notificationRepository;
 
     @Autowired
-    NotificationController( NotificationRepository notificationRepository){
+    NotificationController(NotificationRepository notificationRepository) {
         this.notificationRepository = notificationRepository;
     }
 
@@ -38,26 +38,15 @@ public class NotificationController extends APIControllerAbstract {
     @RequestMapping(value = "/notifications/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserNotifications(@PathVariable Long id) {
         if (id == null) {
-            System.out.println("Id is null");
             return badRequest("Missing ID");
         }
         if (authService.isUserSignedIn()) {
-            System.out.println("Id not null");
             User user = authService.getCurrentUser();
             if (user.isAdmin() || user.getId().equals(id)) {
                 try {
-                    System.out.println("almost there");
                     List<Notification> list = notificationRepository.getAllForUser(user);
-                    if(list != null){
-                        System.out.println("List size: " + list.size());
-
-                    }else{
-                        System.out.println("It is null");
-                    }
                     return ok(notificationRepository.getAllForUser(user));
-                  //  return ok(reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, user, null));
                 } catch (Exception e) {
-                    System.out.println("catch hit");
                     return badRequest("Could not parse start or end time.");
                 }
             }
@@ -66,4 +55,24 @@ public class NotificationController extends APIControllerAbstract {
         return unauthorized();
     }
 
+    @RequestMapping(value = "/notifications/read/user/{id}", method = RequestMethod.PATCH)
+    public ResponseEntity<?> markAllNotificationsRead(@PathVariable Long id, @PathVariable boolean status) {
+        if (id == null && !status) {
+            return badRequest("Missing ID or Status is false");
+        }
+        if (authService.isUserSignedIn()) {
+            User user = authService.getCurrentUser();
+            if (user.isAdmin() || user.getId().equals(id)) {
+                try {
+                    System.out.println("almost there");
+                    notificationRepository.markAllAsReadForUser(user);
+                    return getUserNotifications(id);
+                } catch (Exception e) {
+                    return badRequest();
+                }
+            }
+            return noPermission();
+        }
+        return unauthorized();
+    }
 }

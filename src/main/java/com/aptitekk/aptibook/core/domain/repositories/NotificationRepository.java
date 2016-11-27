@@ -25,6 +25,7 @@ import java.util.stream.Stream;
 public class NotificationRepository extends MultiTenantEntityRepositoryAbstract<Notification>{
 
     public void markAllAsReadForUser(User user) {
+        System.out.println("Got to markAllRead");
         try {
             entityManager
                     .createQuery("UPDATE Notification n SET n.notif_read = true WHERE n.user = ?1")
@@ -43,8 +44,6 @@ public class NotificationRepository extends MultiTenantEntityRepositoryAbstract<
                     .createQuery("SELECT n FROM Notification n WHERE n.user = :user", Notification.class)
                     .setParameter("user", user)
                     .getResultList();
-
-            System.out.print("result size: " + result.size());
 
             Comparator<Notification> comparator = Comparator.comparing(Notification::getRead);
             comparator = comparator.reversed();
