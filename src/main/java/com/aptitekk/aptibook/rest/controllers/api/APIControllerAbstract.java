@@ -6,6 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
+import com.aptitekk.aptibook.ApplicationContextProvider;
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;

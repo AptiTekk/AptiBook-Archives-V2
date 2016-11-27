@@ -52,7 +52,7 @@ public class WebFilter implements Filter {
                 boolean cameFromTenant = httpServletRequest.getAttribute("tenant") != null;
 
                 //Resources
-                if (pathSplit[1].matches("packed|splashscreen|favicons|favicon.ico")) {
+                if (pathSplit[1].matches("packed|static|favicon.ico")) {
                     filterChain.doFilter(servletRequest, servletResponse);
                     return;
                 }
