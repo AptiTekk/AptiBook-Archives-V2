@@ -49,7 +49,7 @@ public class NotificationService {
     public void sendNotification(Notification.Type type, String subject, String body, User user) {
         Notification notification = new Notification(user, subject, body);
         notification = notificationRepository.save(notification);
-        if (!user.isAdmin() && (type == null || user.getNotificationTypeSettings().get(type)))
+        if (!user.isAdmin() && (type == null || user.notificationTypeSettings.get(type)))
             emailService.sendEmailNotification(notification);
     }
 

@@ -79,7 +79,7 @@ public class TenantIntegrityService {
 
                 if (springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
                     String password = PasswordGenerator.generateRandomPassword(10);
-                    adminUser.setHashedPassword(PasswordStorage.createHash(password));
+                    adminUser.hashedPassword = PasswordStorage.createHash(password);
                     emailService.sendEmailNotification(tenant.getAdminEmail(), "AptiBook Registration", "<p>Thank you for registering with AptiBook! We are very excited to hear about how you and your team uses AptiBook.</p>"
                             + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>admin</b> on the navigation bar and visiting <b>My Account</b>.<br>"
                             + "https://aptibook.aptitekk.com/" + tenant.getSlug() + "</p>"
@@ -89,10 +89,10 @@ public class TenantIntegrityService {
                             + "</center>"
                             + "<p>Please let us know of any way we can be of assistance, and be sure to check out our knowledge base at https://support.aptitekk.com/. Enjoy!</p>");
                 } else {
-                    adminUser.setHashedPassword(PasswordStorage.createHash("admin"));
+                    adminUser.hashedPassword = PasswordStorage.createHash("admin");
                 }
-                adminUser.setVerified(true);
-                adminUser.setUserState(User.State.APPROVED);
+                adminUser.verified = true;
+                adminUser.userState = User.State.APPROVED;
                 adminUser.setTenant(tenant);
 
                 try {
@@ -112,9 +112,9 @@ public class TenantIntegrityService {
         if (adminUser != null) {
             UserGroup rootGroup = userGroupRepository.findRootGroup(tenant);
             if (rootGroup != null) {
-                if (!adminUser.getUserGroups().contains(rootGroup)) {
+                if (!adminUser.userGroups.contains(rootGroup)) {
                     try {
-                        adminUser.getUserGroups().add(rootGroup);
+                        adminUser.userGroups.add(rootGroup);
                         userRepository.save(adminUser);
                     } catch (Exception e) {
                         e.printStackTrace();

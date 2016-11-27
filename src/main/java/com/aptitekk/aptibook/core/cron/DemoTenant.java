@@ -298,16 +298,16 @@ public class DemoTenant {
         User user = new User();
         user.setTenant(demoTenant);
         user.setEmailAddress(emailAddress);
-        user.setFirstName(firstName);
-        user.setLastName(lastName);
-        user.setVerified(true);
-        user.setUserState(User.State.APPROVED);
+        user.firstName = firstName;
+        user.lastName = lastName;
+        user.verified = true;
+        user.userState = User.State.APPROVED;
         try {
-            user.setHashedPassword(PasswordStorage.createHash(password));
+            user.hashedPassword = PasswordStorage.createHash(password);
         } catch (PasswordStorage.CannotPerformOperationException e) {
             logService.logException(getClass(), e, "Could not save demo user's password");
         }
-        user.getUserGroups().addAll(Arrays.asList(userGroups));
+        user.userGroups.addAll(Arrays.asList(userGroups));
         return userRepository.save(user);
     }
 

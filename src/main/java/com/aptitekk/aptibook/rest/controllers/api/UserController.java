@@ -79,7 +79,7 @@ public class UserController extends APIControllerAbstract {
                     else if (userDTO.firstName.length() > 30)
                         return badRequest("The First Name must be 30 characters or less.");
                     else
-                        currentUser.setFirstName(userDTO.firstName);
+                        currentUser.firstName = userDTO.firstName;
 
                 if (userDTO.lastName != null)
                     if (!userDTO.lastName.matches("[^<>;=]*"))
@@ -87,7 +87,7 @@ public class UserController extends APIControllerAbstract {
                     else if (userDTO.lastName.length() > 30)
                         return badRequest("The Last Name must be 30 characters or less.");
                     else
-                        currentUser.setLastName(userDTO.lastName);
+                        currentUser.lastName = userDTO.lastName;
 
                 if (userDTO.phoneNumber != null)
                     if (!userDTO.phoneNumber.matches("[^<>;=]*"))
@@ -95,7 +95,7 @@ public class UserController extends APIControllerAbstract {
                     else if (userDTO.phoneNumber.length() > 30)
                         return badRequest("The Phone Number must be 30 characters or less.");
                     else
-                        currentUser.setPhoneNumber(userDTO.phoneNumber);
+                        currentUser.phoneNumber = userDTO.phoneNumber;
 
                 if (userDTO.location != null)
                     if (!userDTO.location.matches("[^<>;=]*"))
@@ -103,14 +103,14 @@ public class UserController extends APIControllerAbstract {
                     else if (userDTO.location.length() > 250)
                         return badRequest("The Location must be 250 characters or less.");
                     else
-                        currentUser.setLocation(userDTO.location);
+                        currentUser.location = userDTO.location;
 
                 if (userDTO.newPassword != null)
                     if (userDTO.newPassword.length() > 30)
                         return badRequest("The Password must be 30 characters or less.");
                     else
                         try {
-                            currentUser.setHashedPassword(PasswordStorage.createHash(userDTO.newPassword));
+                            currentUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
                         } catch (PasswordStorage.CannotPerformOperationException e) {
                             logService.logException(getClass(), e, "Could not hash password from PATCH.");
                             return serverError("Could not save new password.");
@@ -118,7 +118,7 @@ public class UserController extends APIControllerAbstract {
 
                 userRepository.save(currentUser);
 
-                return ok(currentUser);
+                return ok(modelMapper.map(currentUser, UserDTO.class));
             }
 
             return noPermission();
