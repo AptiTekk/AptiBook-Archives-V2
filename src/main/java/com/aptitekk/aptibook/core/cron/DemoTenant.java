@@ -341,11 +341,11 @@ public class DemoTenant {
                                     List<Tag> tags) {
         Resource resource = new Resource();
         resource.setTenant(demoTenant);
-        resource.setName(name);
-        resource.setResourceCategory(resourceCategory);
-        resource.setOwner(ownerGroup);
-        resource.setNeedsApproval(requiresApproval);
-        resource.setTags(tags);
+        resource.name = name;
+        resource.resourceCategory = resourceCategory;
+        resource.owner = ownerGroup;
+        resource.needsApproval = requiresApproval;
+        resource.tags = tags;
 
         return resourceRepository.save(resource);
     }

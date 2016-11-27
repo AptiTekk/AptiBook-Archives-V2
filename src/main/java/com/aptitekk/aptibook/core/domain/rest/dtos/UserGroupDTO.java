@@ -18,19 +18,32 @@ public class UserGroupDTO {
 
     public UserGroupDTO parent;
 
-    public List<UserGroupDTO> children;
+    public List<UserDTO.WithoutUserGroups> users;
 
-    public List<UserDTO> users;
-
-    @JsonIgnoreProperties(value = {"users"})
+    @JsonIgnoreProperties({"users"})
     public static class WithoutUsers extends UserGroupDTO {
+        public List<UserGroupDTO.WithoutUsers> children;
     }
 
-    @JsonIgnoreProperties(value = {"parent", "children"})
+    @JsonIgnoreProperties({"parent"})
+    public static class WithoutParent extends UserGroupDTO {
+        public List<UserGroupDTO.WithoutParent> children;
+    }
+
+    @JsonIgnoreProperties({"parent", "users"})
+    public static class WithoutParentOrUsers extends UserGroupDTO {
+        public List<UserGroupDTO.WithoutParentOrUsers> children;
+    }
+
+    @JsonIgnoreProperties({"children"})
+    public static class WithoutChildren extends UserGroupDTO {
+    }
+
+    @JsonIgnoreProperties({"parent", "children"})
     public static class WithoutParentOrChildren extends UserGroupDTO {
     }
 
-    @JsonIgnoreProperties(value = {"parent", "children", "users"})
+    @JsonIgnoreProperties({"parent", "children", "users"})
     public static class WithOnlyName extends UserGroupDTO {
     }
 

@@ -58,8 +58,7 @@ export class AlertComponent {
     }
 
     display(message?: string, autoClose: boolean = true) {
-        if (message != undefined)
-        {
+        if (message != undefined) {
             this.message = message;
             if (autoClose) {
                 this.displayed = false;
@@ -69,6 +68,10 @@ export class AlertComponent {
                 this.displayed = true;
             }
         }
+    }
+
+    isDisplayed(): boolean {
+        return this.displayed || this.timerRunning;
     }
 
 }

@@ -51,7 +51,7 @@ public class ReservationService {
      */
     public boolean isResourceAvailableForReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime) {
         //Iterate over all reservations of the resource and check for intersections
-        for (Reservation reservation : resource.getReservations()) {
+        for (Reservation reservation : resource.reservations) {
             //Ignore rejected reservations.
             if (reservation.getStatus() == Reservation.Status.REJECTED)
                 continue;

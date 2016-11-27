@@ -17,10 +17,10 @@ export class TreeNodeComponent {
     private nodeOverDropPoint: boolean = false;
 
     shouldHighlight(): boolean {
-        if (this.tree.higlightedUserGroupIds == undefined)
+        if (this.tree.higlightedUserGroups == undefined)
             return false;
 
-        return this.tree.higlightedUserGroupIds.includes(this.userGroup.id);
+        return this.tree.higlightedUserGroups.map(value => value.id).includes(this.userGroup.id);
     }
 
     onNodeClick() {

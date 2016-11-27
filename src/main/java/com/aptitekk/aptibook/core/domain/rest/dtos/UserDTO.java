@@ -26,6 +26,10 @@ public class UserDTO {
 
     public List<UserGroupDTO.WithOnlyName> userGroups;
 
+    public String getFullName() {
+        return firstName != null ? firstName + " " + lastName : emailAddress;
+    }
+
     public static class WithNewPassword extends UserDTO {
         public String newPassword;
     }

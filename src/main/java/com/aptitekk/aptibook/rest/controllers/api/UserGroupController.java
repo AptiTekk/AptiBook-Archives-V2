@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -27,7 +28,7 @@ public class UserGroupController extends APIControllerAbstract {
     public ResponseEntity<?> getUserGroups() {
 
         if (authService.isUserSignedIn()) {
-            return ok(userGroupRepository.findRootGroup());
+            return ok(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.WithoutParentOrUsers.class));
         }
 
         return noPermission();

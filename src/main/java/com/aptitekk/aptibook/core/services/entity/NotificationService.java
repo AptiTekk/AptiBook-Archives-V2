@@ -69,28 +69,28 @@ public class NotificationService {
         if (reservation == null)
             return;
 
-        if (reservation.getResource().getNeedsApproval()) {
+        if (reservation.getResource().needsApproval) {
             sendNotification(Notification.Type.TYPE_RESERVATION_REQUESTED,
                     "New Reservation Request",
                     "A new Reservation for <b>"
-                            + reservation.getResource().getName()
+                            + reservation.getResource().name
                             + "</b> has been requested by "
                             + "<b>"
                             + reservation.getUser().getFullName()
                             + "</b>"
                             + ".",
-                    userGroupService.getHierarchyUp(reservation.getResource().getOwner()));
+                    userGroupService.getHierarchyUp(reservation.getResource().owner));
         } else {
             sendNotification(Notification.Type.TYPE_RESERVATION_REQUESTED,
                     "New Reservation Approved",
                     "A new Reservation for <b>"
-                            + reservation.getResource().getName()
+                            + reservation.getResource().name
                             + "</b> has been automatically <i>approved</i> for "
                             + "<b>"
                             + reservation.getUser().getFullName()
                             + "</b>"
                             + ".",
-                    userGroupService.getHierarchyUp(reservation.getResource().getOwner()));
+                    userGroupService.getHierarchyUp(reservation.getResource().owner));
         }
     }
 
@@ -101,7 +101,7 @@ public class NotificationService {
         if (reservation.getStatus() == Reservation.Status.APPROVED) {
             sendNotification(Notification.Type.TYPE_RESERVATION_APPROVED,
                     "Reservation Approved",
-                    "Your Reservation for <b>" + reservation.getResource().getName()
+                    "Your Reservation for <b>" + reservation.getResource().name
                             + "</b> from <b>"
                             + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> to <b>"
@@ -111,7 +111,7 @@ public class NotificationService {
         } else if (reservation.getStatus() == Reservation.Status.REJECTED) {
             sendNotification(Notification.Type.TYPE_RESERVATION_REJECTED,
                     "Reservation Rejected",
-                    "Your Reservation for <b>" + reservation.getResource().getName()
+                    "Your Reservation for <b>" + reservation.getResource().name
                             + "</b> from <b>"
                             + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> to <b>"
@@ -127,7 +127,7 @@ public class NotificationService {
 
         sendNotification(Notification.Type.TYPE_RESERVATION_CANCELLED_USER_GROUPS, "Reservation Cancelled",
                 "The reservation of <b>"
-                        + reservation.getResource().getName()
+                        + reservation.getResource().name
                         + "</b> for <b>"
                         + reservation.getTitle()
                         + "</b>, which was requested by <b>"
@@ -137,12 +137,12 @@ public class NotificationService {
                         + "</b> to <b>"
                         + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b>, has been Cancelled.",
-                userGroupService.getHierarchyUp(reservation.getResource().getOwner())
+                userGroupService.getHierarchyUp(reservation.getResource().owner)
         );
 
         sendNotification(Notification.Type.TYPE_RESERVATION_CANCELLED_USER, "Reservation Cancelled",
                 "Your reservation of <b>"
-                        + reservation.getResource().getName()
+                        + reservation.getResource().name
                         + "</b> for <b>"
                         + reservation.getTitle()
                         + "</b> from <b>"

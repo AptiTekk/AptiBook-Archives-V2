@@ -24,7 +24,7 @@ export class TreeComponent {
     userGroup: UserGroup;
 
     @Input()
-    higlightedUserGroupIds: number[];
+    higlightedUserGroups: UserGroup[];
 
     selectedNode: TreeNodeComponent;
 
