@@ -1,4 +1,7 @@
 import {Resource} from "./resource.model";
+import {User} from "./user.model";
+import moment = require("moment");
+import Moment = moment.Moment;
 export interface Reservation {
     id: number;
 
@@ -7,11 +10,11 @@ export interface Reservation {
     title: string;
     status: string;
 
-    start: string;
-    end: string;
+    start: Moment;
+    end: Moment;
 
     resource: Resource;
-    user: number;
+    user: User;
     decisions: number[];
     fieldEntries: number[];
 

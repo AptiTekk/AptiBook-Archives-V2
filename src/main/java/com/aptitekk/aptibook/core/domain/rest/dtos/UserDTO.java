@@ -28,6 +28,8 @@ public class UserDTO {
 
     public String fullName;
 
+    public boolean admin;
+
     public static class WithNewPassword extends UserDTO {
         public String newPassword;
     }
