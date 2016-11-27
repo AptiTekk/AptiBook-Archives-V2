@@ -28,13 +28,13 @@ export class NotificationService {
     public markAllRead(user: User): Observable<UnreadNotification[]>{
         console.log("Got to markAll() in notification service");
         return Observable.create(listener =>{
+            console.log("errors");
             if(user == undefined) {
-                listener.next(undefined);
                 console.log("error");
+                listener.next(undefined);
             }
             else{
-                console.log("got to else")
-                this.apiService.patch("notifications/read/user/" + user.id, true).subscribe(
+                this.apiService.patch("markall/user/" + user.id, true).subscribe(
                     response => listener.next(<UnreadNotification[]> response),
                     err => listener.next(undefined)
                 );

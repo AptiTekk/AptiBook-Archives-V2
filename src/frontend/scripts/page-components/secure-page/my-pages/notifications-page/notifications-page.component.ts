@@ -24,14 +24,14 @@ export class NotificationsPageComponent {
         authService.getUser().subscribe(user => {
             if (user != undefined) {
                 notificationService.getNotifications(user).subscribe(unreadNotification => {
-                        if (unreadNotification != undefined) {
                             this.unreadNotification = unreadNotification;
-                                notificationService.markAllRead(user);
-                        }
+                            console.log("here");
+                             notificationService.markAllRead(user).subscribe(response => response);
                     }
                 );
+
             }else{
-                console.log("User is undefined");
+                console.log("User is undefined asdfasdf");
             }
         });
     }

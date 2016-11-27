@@ -55,9 +55,10 @@ public class NotificationController extends APIControllerAbstract {
         return unauthorized();
     }
 
-    @RequestMapping(value = "/notifications/read/user/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> markAllNotificationsRead(@PathVariable Long id, @PathVariable boolean status) {
-        if (id == null && !status) {
+    @RequestMapping(value = "/markall/user/{id}", method = RequestMethod.PATCH)
+    public ResponseEntity<?> markAllNotificationsRead(@PathVariable Long id) {
+        System.out.println("Getting to patch method");
+        if (id == null) {
             return badRequest("Missing ID or Status is false");
         }
         if (authService.isUserSignedIn()) {
