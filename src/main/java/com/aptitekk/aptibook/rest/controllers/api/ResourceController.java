@@ -8,7 +8,11 @@ package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceDTO;
+import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
+import org.apache.commons.lang3.time.DateUtils;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
@@ -17,9 +21,15 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.text.ParseException;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
+import java.util.List;
 
 @APIController
 public class ResourceController extends APIControllerAbstract {
@@ -27,11 +37,13 @@ public class ResourceController extends APIControllerAbstract {
     private static final String RESOURCE_NO_IMAGE_PATH = "/static/resource-no-image.jpg";
 
     private final ResourceRepository resourceRepository;
+    private final ReservationService reservationService;
     private final ResourceLoader resourceLoader;
 
     @Autowired
-    public ResourceController(ResourceRepository resourceRepository, ResourceLoader resourceLoader) {
+    public ResourceController(ResourceRepository resourceRepository, ReservationService reservationService, ResourceLoader resourceLoader) {
         this.resourceRepository = resourceRepository;
+        this.reservationService = reservationService;
         this.resourceLoader = resourceLoader;
     }
 
@@ -59,6 +71,26 @@ public class ResourceController extends APIControllerAbstract {
         }
 
         return null;
+    }
+
+    @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
+    public ResponseEntity<?> getAvailableResources(@RequestParam(value = "start") String start, @RequestParam(value = "end") String end) {
+        if (authService.isUserSignedIn()) {
+            try {
+                Date startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
+                Date endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
+                LocalDateTime startLocalDateTime = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+                LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
+
+                List<Resource> availableResources = reservationService.findAvailableResources(startLocalDateTime, endLocalDateTime);
+                return ok(modelMapper.map(availableResources, new TypeToken<List<ResourceDTO>>() {
+                }.getType()));
+            } catch (ParseException e) {
+                return badRequest("Could not parse start or end times.");
+            }
+        }
+
+        return noPermission();
     }
 
 }

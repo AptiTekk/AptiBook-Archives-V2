@@ -23,6 +23,8 @@ import java.util.List;
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public abstract class APIControllerAbstract {
 
+    final String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
+
     ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
