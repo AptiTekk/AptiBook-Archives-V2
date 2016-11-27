@@ -1,5 +1,6 @@
 import {Component, Output, EventEmitter} from "@angular/core";
 import * as moment from "moment";
+import {ResourceService} from "../../../../services/singleton/resource.service";
 import Moment = moment.Moment;
 
 @Component({
@@ -15,6 +16,10 @@ export class NewReservationPanelComponent {
     startDate: Moment = moment();
     endDate: Moment = moment();
 
+    constructor(private resourceService: ResourceService) {
+
+    }
+
     get isEndBeforeStart() {
         return this.endDate.isBefore(this.startDate);
     }
@@ -24,7 +29,7 @@ export class NewReservationPanelComponent {
     }
 
     onSearch() {
-
+        this.resourceService.fetchAvailableResources(this.startDate, this.endDate);
     }
 
 }
