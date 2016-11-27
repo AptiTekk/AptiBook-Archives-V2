@@ -11,16 +11,20 @@
  */
 package com.aptitekk.aptibook.core.domain.entities;
 
+import com.aptitekk.aptibook.core.domain.entities.serializers.LocalDateTimeSerializer;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
+import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
@@ -78,7 +82,9 @@ public class Notification extends MultiTenantEntity implements Serializable {
 
     private String body;
 
-    private ZonedDateTime creation = ZonedDateTime.now();
+    @JsonSerialize(using = LocalDateTimeSerializer.class)
+    @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
+    private LocalDateTime creation = LocalDateTime.now();
 
     private Boolean notif_read = false;
 
@@ -124,7 +130,7 @@ public class Notification extends MultiTenantEntity implements Serializable {
         this.body = body;
     }
 
-    public ZonedDateTime getCreation() {
+    public LocalDateTime getCreation() {
         return creation;
     }
 
