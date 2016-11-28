@@ -1,0 +1,27 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+#search-settings label {
+    margin-right: 10px;
+}
+
+#search-settings date-time-picker {
+    display: inline-block;
+    margin-right: 10px;
+}
+
+#search-settings date-time-picker .form-control {
+    min-width: 250px;
+}
+
+.resource-panel-image {
+    float: left;
+    padding-right: 20px;
+}
+
+.resource-panel-title {
+    margin-top: 0;
+}

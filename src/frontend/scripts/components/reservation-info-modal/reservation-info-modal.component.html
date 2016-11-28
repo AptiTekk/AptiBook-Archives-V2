@@ -7,7 +7,10 @@
 <modal #modal [title]="'Reservation Details'" [cancelButtonLabel]="'Close'">
     <modal-body *ngIf="reservation">
         <h4>{{reservation.title}}</h4>
-        <p>You are viewing a reservation of {{reservation.resource.name}} for {{reservation.user.fullName}}.</p>
+        <p>You are viewing a reservation of
+            <span style="font-weight: bold">{{reservation.resource.name}}</span>
+            for
+            <span style="font-weight: bold">{{reservation.user.fullName}}</span>.</p>
         <p>This reservation...</p>
         <ul>
             <li>
