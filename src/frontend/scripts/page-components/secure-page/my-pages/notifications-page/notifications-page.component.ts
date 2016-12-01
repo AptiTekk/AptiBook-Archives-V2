@@ -4,6 +4,8 @@ import {AuthService} from "../../../../services/singleton/auth.service";
 import {NotificationService} from "../../../../services/singleton/notification.service";
 import * as moment from "moment";
 import Moment = moment.Moment;
+import * as Rx from 'rxjs/Rx';
+import {ReplaySubject} from "rxjs";
 @Component({
     selector: 'my-notifications-page',
     templateUrl: 'notifications-page.component.html'

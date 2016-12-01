@@ -2,6 +2,9 @@ import {Component, Input} from "@angular/core";
 import {User} from "../../models/user.model";
 import {AuthService} from "../../services/singleton/auth.service";
 import {Router} from "@angular/router";
+import * as Rx from 'rxjs/Rx';
+import {NotificationService} from "../../services/singleton/notification.service";
+import {UnreadNotification} from "../../models/notification.model";
 
 @Component({
     selector: 'app-header',
@@ -12,6 +15,11 @@ export class HeaderComponent {
 
     @Input()
     nonInteractive: boolean;
+
+
+    user: User;
+    unreadNotifications: UnreadNotification[];
+
 
     //TODO: Add route urls
     reservationManagementLinks: [{icon: string, label: string}] = [
@@ -31,11 +39,43 @@ export class HeaderComponent {
         {icon: 'cog', label: 'Properties', indented: false}
     ];
 
-    user: User;
-
-    constructor(private router: Router, private authService: AuthService) {
-        authService.getUser().subscribe(user => this.user = user);
+    getUnreadNotifications():number{
+        console.log("call getter");
+        if(this.unreadNotifications != undefined && this.unreadNotifications != null) {
+            if(this.unreadNotifications.length > 0 ) {
+                return this.unreadNotifications.length;
+            }
+        }else{
+            return 0;
+        }
     }
+
+
+    constructor(private router: Router, private authService: AuthService, private  notificationService: NotificationService) {
+        authService.getUser().subscribe(user =>{
+        if(user == undefined){
+            console.log("undefined");
+
+        }else {
+            console.log("not undefined");
+            this.user = user;
+            this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
+                if (unreadNotifications == undefined) {
+                    console.log("unread undefined");
+                } else {
+                    this.unreadNotifications = unreadNotifications;
+                    console.log("should work, size: " + this.unreadNotifications.length);
+                }
+            });
+        }
+    });
+        //notificationService.getNotifications(this.user).subscribe(unreadNotification => this.unreadNotification = unreadNotification);
+    }
+
+/*    getUnreadNotificationsCount(): number{
+        return this.unreadNotifications.length;
+    }
+    */
 
     onSignOut() {
         this.authService.signOut().subscribe(
