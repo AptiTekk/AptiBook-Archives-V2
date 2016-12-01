@@ -3,4 +3,5 @@ export interface UnreadNotification{
     subject: string
     body: string
     creation: string
+    read: boolean
 }

@@ -44,7 +44,7 @@ public class NotificationController extends APIControllerAbstract {
             User user = authService.getCurrentUser();
             if (user.isAdmin() || user.getId().equals(id)) {
                 try {
-                    List<Notification> list = notificationRepository.getAllForUser(user);
+                    //List<Notification> list = notificationRepository.getAllForUser(user);
                     return ok(notificationRepository.getAllForUser(user));
                 } catch (Exception e) {
                     return badRequest("Could not parse start or end time.");

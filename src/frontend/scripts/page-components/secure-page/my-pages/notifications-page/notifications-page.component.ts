@@ -28,12 +28,12 @@ export class NotificationsPageComponent {
                 notificationService.getNotifications(user).subscribe(unreadNotification => {
                             this.unreadNotification = unreadNotification;
                             console.log("here");
-                             notificationService.markAllRead(user).subscribe(response => response);
+                             notificationService.markAllRead(user).subscribe( unreadNotification => notificationService.reloadNotifications());
                     }
                 );
 
             }else{
-                console.log("User is undefined asdfasdf");
+                console.log("User is undefined");
             }
         });
     }

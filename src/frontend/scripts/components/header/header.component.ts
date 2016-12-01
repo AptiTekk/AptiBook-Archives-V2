@@ -5,6 +5,7 @@ import {Router} from "@angular/router";
 import * as Rx from 'rxjs/Rx';
 import {NotificationService} from "../../services/singleton/notification.service";
 import {UnreadNotification} from "../../models/notification.model";
+import {Notification} from "rxjs";
 
 @Component({
     selector: 'app-header',
@@ -19,7 +20,7 @@ export class HeaderComponent {
 
     user: User;
     unreadNotifications: UnreadNotification[];
-
+    count: number;
 
     //TODO: Add route urls
     reservationManagementLinks: [{icon: string, label: string}] = [
@@ -39,11 +40,16 @@ export class HeaderComponent {
         {icon: 'cog', label: 'Properties', indented: false}
     ];
 
-    getUnreadNotifications():number{
-        console.log("call getter");
+    getUnreadNotificationsNumber():number{
         if(this.unreadNotifications != undefined && this.unreadNotifications != null) {
             if(this.unreadNotifications.length > 0 ) {
-                return this.unreadNotifications.length;
+                this.count = 0;
+                this.unreadNotifications.forEach(n => {
+                   if(n.read != true){
+                       this.count++
+                   }
+                });
+                return this.count;
             }
         }else{
             return 0;
@@ -57,7 +63,6 @@ export class HeaderComponent {
             console.log("undefined");
 
         }else {
-            console.log("not undefined");
             this.user = user;
             this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
                 if (unreadNotifications == undefined) {
@@ -69,13 +74,7 @@ export class HeaderComponent {
             });
         }
     });
-        //notificationService.getNotifications(this.user).subscribe(unreadNotification => this.unreadNotification = unreadNotification);
     }
-
-/*    getUnreadNotificationsCount(): number{
-        return this.unreadNotifications.length;
-    }
-    */
 
     onSignOut() {
         this.authService.signOut().subscribe(

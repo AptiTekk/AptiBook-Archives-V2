@@ -19,11 +19,10 @@ export class NotificationService {
         this.authService.getUser().subscribe(user =>{
             if(user != undefined){
                 this.user = user;
-                this.reloadNotifications();
                 console.log("reloaded notifications");
             }else{console.log("soon");}
         });
-
+        this.reloadNotifications();
     }
 
     getUnreadNotifications():ReplaySubject<UnreadNotification[]>{
@@ -51,6 +50,7 @@ export class NotificationService {
                 err => listener.next(undefined)
             )
         }});
+
     }
 
     public markAllRead(user: User): Observable<UnreadNotification[]>{
@@ -60,16 +60,15 @@ export class NotificationService {
             if(user == undefined) {
                 console.log("error");
                 listener.next(undefined);
+
             }
             else{
                 this.apiService.patch("markall/user/" + user.id, true).subscribe(
                     response => listener.next(<UnreadNotification[]> response),
                     err => listener.next(undefined)
                 );
-                console.log("finished");
             }
         });
-
     }
 
 }
