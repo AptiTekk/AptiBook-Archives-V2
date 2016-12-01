@@ -18,7 +18,7 @@ export class NotificationsPageComponent {
         let ts = moment(unreadNotification.creation);
         return moment(ts).fromNow();
     }
-
+//commit
 
     constructor(authService: AuthService, notificationService: NotificationService){
         authService.getUser().subscribe(user => {
