@@ -4,17 +4,55 @@
   ~ Proprietary and confidential.
   -->
 
+<style type="text/css">
+    .read-notification {
+        opacity: 0.4;
+    }
 
-    <div *ngIf="unreadNotification != undefined && unreadNotification.length > 0">
+    .notification {
+        height: 100%;
+        padding-top: 15px;
+    }
 
-        <panel *ngFor="let notification of unreadNotification">
-            <panel-body>
-              <strong>{{notification.subject}}</strong>
-            <br/>
-                {{notification.body}}
-                <br/>
-               <i style="color:#808080">{{getTimeAgo(notification)}}</i>
-            </panel-body>
-        </panel>
+    hr {
+        margin-top: 15px;
+        margin-bottom: 0;
+    }
+
+    .read-notification:hover {
+        opacity: 1;
+    }
+</style>
+<div *ngIf="unreadNotification != undefined && unreadNotification.length > 0">
+
+    <div *ngFor="let notification of unreadNotification">
+
+        <div *ngIf="notification.read != true" class="notification">
+            unread
+            <panel>
+                <panel-body>
+                    <strong>{{notification.subject}}</strong>
+                    <br/>
+                    {{notification.body}}
+                    <br/>
+                    <i style="color:#808080">{{getTimeAgo(notification)}}</i>
+                </panel-body>
+            </panel>
+        </div>
+
+
+        <div *ngIf="notification.read == true" class="read-notification" >
+            read
+            <panel>
+                <panel-body>
+                    <strong>{{notification.subject}}</strong>
+                    <br/>
+                    {{notification.body}}
+                    <br/>
+                    <i style="color:#808080">{{getTimeAgo(notification)}}</i>
+                </panel-body>
+            </panel>
+        </div>
     </div>
+</div>
 
