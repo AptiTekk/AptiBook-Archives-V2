@@ -206,7 +206,7 @@ public class DemoTenant {
                 "Book Fair",
                 Reservation.Status.APPROVED,
                 library,
-                21, 25,
+                28, 30,
                 8, 30,
                 15, 0
         );
