@@ -8,8 +8,9 @@ package com.aptitekk.aptibook.core.services.entity;
 
 import com.aptitekk.aptibook.core.domain.entities.Reservation;
 import com.aptitekk.aptibook.core.domain.entities.Resource;
-import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
+import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -18,21 +19,27 @@ import java.util.List;
 @EntityService
 public class ReservationService {
 
+    private final ResourceRepository resourceRepository;
+
+    @Autowired
+    public ReservationService(ResourceRepository resourceRepository) {
+        this.resourceRepository = resourceRepository;
+    }
+
     /**
      * Finds and returns a list of resources that are available for reservation at the given times from the given ResourceCategory.
      *
-     * @param resourceCategory The ResourceCategory that a reservation is desired to be made from
-     * @param startTime        The reservation start time
-     * @param endTime          The reservation end time
+     * @param startTime The reservation start time
+     * @param endTime   The reservation end time
      * @return A list of available resources during the selected times.
      */
-    public List<Resource> findAvailableResources(ResourceCategory resourceCategory, LocalDateTime startTime, LocalDateTime endTime) {
+    public List<Resource> findAvailableResources(LocalDateTime startTime, LocalDateTime endTime) {
         //This list contains all the resources for the given ResourceCategory.
-        List<Resource> resourcesOfType = resourceCategory.getResources();
+        List<Resource> resources = resourceRepository.findAll();
         //This list is what will be returned, it will contain all of the resources that are available for reservation.
         List<Resource> availableResources = new ArrayList<>();
 
-        for (Resource resource : resourcesOfType) {
+        for (Resource resource : resources) {
             //Check for intersections of previous reservations.
             if (isResourceAvailableForReservation(resource, startTime, endTime)) {
                 availableResources.add(resource);
@@ -51,7 +58,7 @@ public class ReservationService {
      */
     public boolean isResourceAvailableForReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime) {
         //Iterate over all reservations of the resource and check for intersections
-        for (Reservation reservation : resource.getReservations()) {
+        for (Reservation reservation : resource.reservations) {
             //Ignore rejected reservations.
             if (reservation.getStatus() == Reservation.Status.REJECTED)
                 continue;

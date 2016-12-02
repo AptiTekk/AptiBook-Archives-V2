@@ -6,10 +6,13 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
+import com.aptitekk.aptibook.core.domain.entities.Reservation;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.lang3.time.DateUtils;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -21,11 +24,10 @@ import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
+import java.util.List;
 
 @APIController
 public class ReservationController extends APIControllerAbstract {
-
-    private final String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
 
     private final ReservationRepository reservationRepository;
 
@@ -42,8 +44,10 @@ public class ReservationController extends APIControllerAbstract {
                 Date endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
                 LocalDateTime startLocalDateTime = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
                 LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
+                List<Reservation> reservations = reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, null, null);
 
-                return ok(reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, null, null));
+                return ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
+                }.getType()));
             } catch (ParseException e) {
                 return badRequest("Could not parse start or end time.");
             }

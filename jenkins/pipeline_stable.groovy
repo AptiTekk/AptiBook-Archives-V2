@@ -10,6 +10,8 @@ node {
     def liveUrl = "https://aptibook.aptitekk.com/"
     def pingUrl = "https://aptibook.aptitekk.com/ping"
     def mvnHome = tool "Maven"
+    def nodeJsHome = tool "NodeJS"
+    env.PATH = "${mvnHome}/bin:${nodeJsHome}/bin:${env.PATH}"
 
     try {
         stage "Checkout"
@@ -17,10 +19,10 @@ node {
         checkoutFromGit()
 
         stage "Test"
-        runTests(mvnHome)
+        runTests()
         slackSend color: "good", message: "[Job ${env.BUILD_NUMBER}] All tests for the ${env.JOB_NAME} Pipeline have passed. Ready to deploy to Production."
 
-        changeVersion(mvnHome, env.BUILD_NUMBER)
+        changeVersion(env.BUILD_NUMBER)
 
         stage "Deploy Approval"
         if (!getDeploymentApproval(jenkinsUrl)) {
@@ -31,7 +33,7 @@ node {
 
         stage "Deploy to Production"
         slackSend color: "#4272b7", message: "[Job ${env.BUILD_NUMBER}] Deploying AptiBook to Heroku..."
-        deployToProduction(mvnHome, herokuAppName, liveUrl, pingUrl)
+        deployToProduction(herokuAppName, liveUrl, pingUrl)
 
     } catch (err) {
         slackSend color: "danger", message: "[Job ${env.BUILD_NUMBER}] An Error occurred during the ${env.JOB_NAME} Pipeline."
@@ -41,12 +43,12 @@ node {
 
 def checkoutFromGit() {
     def branch = "stable"
-    def url = "ssh://git@util.aptitekk.com:2005/ab/aptibook.git"
+    def url = "ssh://git@util.aptitekk.com:2005/ab/aptibook-angular.git"
     def credentialsId = "542239bb-3d63-40bc-9cfa-e5ed56a1fc5b"
 
     checkout([$class                           : "GitSCM",
               branches                         : [[name: "*/${branch}"]],
-              browser                          : [$class: 'BitbucketWeb', repoUrl: 'https://dev.aptitekk.com/git/projects/AB/repos/aptibook/browse'],
+              browser                          : [$class: 'BitbucketWeb', repoUrl: 'https://dev.aptitekk.com/git/projects/AB/repos/aptibook-angular/browse'],
               doGenerateSubmoduleConfigurations: false,
               extensions                       : [],
               submoduleCfg                     : [],
@@ -54,24 +56,25 @@ def checkoutFromGit() {
     ])
 }
 
-def runTests(mvnHome) {
-    sh "${mvnHome}/bin/mvn clean install -P test -U"
+def runTests() {
+    sh "npm run build"
+    sh "mvn clean install -U"
 }
 
-def changeVersion(mvnHome, buildNumber) {
-    sh mvnHome + '/bin/mvn versions:set -DnewVersion="`date +%Y.%m.%d`_' + buildNumber + '"'
-    sh mvnHome + '/bin/mvn versions:commit'
+def changeVersion(buildNumber) {
+    sh 'mvn versions:set -DnewVersion="`date +%Y.%m.%d`_' + buildNumber + '"'
+    sh 'mvn versions:commit'
     sh "git commit -a -m 'Jenkins Automatic Version Change'"
 }
 
-def deployToProduction(mvnHome, herokuAppName, liveUrl, pingUrl) {
-    sh "${mvnHome}/bin/mvn clean install -U"
+def deployToProduction(herokuAppName, liveUrl, pingUrl) {
+    sh "mvn clean install -U"
     sh "heroku maintenance:on --app ${herokuAppName}"
     sh "heroku git:remote --app ${herokuAppName}"
     sh "git push heroku HEAD:master -f"
     sleep 60
 
-    sh mvnHome + '/bin/mvn help:evaluate -Dexpression=project.version|grep -Ev \'(^\\[|Download\\w+:)\' > currentVersion'
+    sh 'mvn help:evaluate -Dexpression=project.version|grep -Ev \'(^\\[|Download\\w+:)\' > currentVersion'
     def version = readFile "currentVersion"
 
     slackSend color: "good", message: "[Job ${env.BUILD_NUMBER}] ${herokuAppName} version ${version} has been deployed."

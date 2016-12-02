@@ -10,7 +10,7 @@ import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.domain.rest.entityViewModels.UserViewModel;
+import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,60 +57,60 @@ public class UserController extends APIControllerAbstract {
 
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> deleteUser(@PathVariable long id, @RequestBody UserViewModel userViewModel) {
-        if (userViewModel != null) {
+    public ResponseEntity<?> patchUser(@PathVariable long id, @RequestBody UserDTO.WithNewPassword userDTO) {
+        if (userDTO != null) {
             User currentUser = userRepository.findInCurrentTenant(id);
             if (currentUser != null &&
                     (currentUser.equals(authService.getCurrentUser()) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))) {
 
-                User otherUser = userRepository.findByEmailAddress(userViewModel.getEmailAddress());
+                User otherUser = userRepository.findByEmailAddress(userDTO.emailAddress);
                 if (otherUser != null && !otherUser.getId().equals(id))
                     return badRequest("The Email Address is already in use.");
 
-                if (userViewModel.getEmailAddress() != null)
-                    if (!currentUser.isAdmin() && !EmailValidator.getInstance().isValid(userViewModel.getEmailAddress()))
+                if (userDTO.emailAddress != null)
+                    if (!currentUser.isAdmin() && !EmailValidator.getInstance().isValid(userDTO.emailAddress))
                         return badRequest("The Email Address is invalid.");
                     else
-                        currentUser.setEmailAddress(userViewModel.getEmailAddress());
+                        currentUser.setEmailAddress(userDTO.emailAddress);
 
-                if (userViewModel.getFirstName() != null)
-                    if (!userViewModel.getFirstName().matches("[^<>;=]*"))
+                if (userDTO.firstName != null)
+                    if (!userDTO.firstName.matches("[^<>;=]*"))
                         return badRequest("The First Name cannot contain these characters: < > ; =");
-                    else if (userViewModel.getFirstName().length() > 30)
+                    else if (userDTO.firstName.length() > 30)
                         return badRequest("The First Name must be 30 characters or less.");
                     else
-                        currentUser.setFirstName(userViewModel.getFirstName());
+                        currentUser.firstName = userDTO.firstName;
 
-                if (userViewModel.getLastName() != null)
-                    if (!userViewModel.getLastName().matches("[^<>;=]*"))
+                if (userDTO.lastName != null)
+                    if (!userDTO.lastName.matches("[^<>;=]*"))
                         return badRequest("The Last Name cannot contain these characters: < > ; =");
-                    else if (userViewModel.getLastName().length() > 30)
+                    else if (userDTO.lastName.length() > 30)
                         return badRequest("The Last Name must be 30 characters or less.");
                     else
-                        currentUser.setLastName(userViewModel.getLastName());
+                        currentUser.lastName = userDTO.lastName;
 
-                if (userViewModel.getPhoneNumber() != null)
-                    if (!userViewModel.getPhoneNumber().matches("[^<>;=]*"))
+                if (userDTO.phoneNumber != null)
+                    if (!userDTO.phoneNumber.matches("[^<>;=]*"))
                         return badRequest("The Phone Number cannot contain these characters: < > ; =");
-                    else if (userViewModel.getFirstName().length() > 30)
+                    else if (userDTO.phoneNumber.length() > 30)
                         return badRequest("The Phone Number must be 30 characters or less.");
                     else
-                        currentUser.setPhoneNumber(userViewModel.getPhoneNumber());
+                        currentUser.phoneNumber = userDTO.phoneNumber;
 
-                if (userViewModel.getLocation() != null)
-                    if (!userViewModel.getLocation().matches("[^<>;=]*"))
+                if (userDTO.location != null)
+                    if (!userDTO.location.matches("[^<>;=]*"))
                         return badRequest("The Location cannot contain these characters: < > ; =");
-                    else if (userViewModel.getFirstName().length() > 250)
+                    else if (userDTO.location.length() > 250)
                         return badRequest("The Location must be 250 characters or less.");
                     else
-                        currentUser.setLocation(userViewModel.getLocation());
+                        currentUser.location = userDTO.location;
 
-                if (userViewModel.getNewPassword() != null)
-                    if (userViewModel.getNewPassword().length() > 30)
+                if (userDTO.newPassword != null)
+                    if (userDTO.newPassword.length() > 30)
                         return badRequest("The Password must be 30 characters or less.");
                     else
                         try {
-                            currentUser.setHashedPassword(PasswordStorage.createHash(userViewModel.getNewPassword()));
+                            currentUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
                         } catch (PasswordStorage.CannotPerformOperationException e) {
                             logService.logException(getClass(), e, "Could not hash password from PATCH.");
                             return serverError("Could not save new password.");
@@ -118,7 +118,7 @@ public class UserController extends APIControllerAbstract {
 
                 userRepository.save(currentUser);
 
-                return ok(currentUser);
+                return ok(modelMapper.map(currentUser, UserDTO.class));
             }
 
             return noPermission();

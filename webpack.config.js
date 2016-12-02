@@ -7,8 +7,6 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var PROD = (process.env.NODE_ENV === 'production');
-
 var config = {
     cache: true,
     devtool: 'source-map',

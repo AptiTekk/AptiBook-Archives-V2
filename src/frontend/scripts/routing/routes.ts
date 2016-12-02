@@ -10,7 +10,9 @@ import {
     NotificationsPageComponent
 } from "../page-components";
 import {FrontPageGuard, SecureGuard} from "./guards";
-import {UpcomingReservationsPanelComponent} from "../page-components/secure-page/dashboard-page/upcoming-reservations-panel/upcoming-reservations-panel.component";
+import {ReservationsPageComponent} from "../page-components/secure-page/my-pages/reservations-page/reservations-page.component";
+import {ResultsPageComponent} from "../page-components/secure-page/results-page/results-page.component";
+import {SearchGuard} from "./guards/search.guard";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -37,12 +39,21 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 component: DashboardPageComponent
             },
             {
+                path: 'search-results',
+                component: ResultsPageComponent,
+                canActivate: [SearchGuard]
+            },
+            {
                 path: 'my/account',
                 component: AccountPageComponent
             },
             {
                 path: 'my/notifications',
                 component: NotificationsPageComponent
+            },
+            {
+                path: 'my/reservations',
+                component: ReservationsPageComponent
             },
             {
                 path: '**',

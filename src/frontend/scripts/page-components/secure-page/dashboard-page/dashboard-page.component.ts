@@ -1,6 +1,7 @@
-import {Component, trigger, state, style, transition, animate} from "@angular/core";
+import {Component, trigger, state, style, transition, animate, ViewChild} from "@angular/core";
 import {Reservation} from "../../../models/reservation.model";
 import {APIService} from "../../../services/singleton/api.service";
+import {ReservationInfoModalComponent} from "../../../components/reservation-info-modal/reservation-info-modal.component";
 
 @Component({
     selector: 'dashboard-page',
@@ -15,13 +16,16 @@ import {APIService} from "../../../services/singleton/api.service";
 })
 export class DashboardPageComponent {
 
+    @ViewChild('reservationInfoModal')
+    reservationInfoModal: ReservationInfoModalComponent;
+
     makingNewReservation: boolean = false;
 
     constructor(protected apiService: APIService) {
     }
 
     onCalendarEventClicked(event: Reservation) {
-        //TODO: Modal window
+        this.reservationInfoModal.display(event);
     }
 
     onNewReservationStart() {

@@ -8,7 +8,6 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
@@ -24,100 +23,34 @@ public class Resource extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    private File image;
+    public File image;
 
-    private String name;
+    public String name;
 
-    private Boolean needsApproval = false;
+    public Boolean needsApproval = false;
 
     @OneToMany(mappedBy = "resource", cascade = CascadeType.REMOVE)
     @OrderBy("dateCreated desc")
-    private List<Reservation> reservations = new ArrayList<>();
+    public List<Reservation> reservations = new ArrayList<>();
 
-    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
-    private ResourceCategory resourceCategory;
+    public ResourceCategory resourceCategory;
 
-    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
-    private UserGroup owner;
+    public UserGroup owner;
 
     @ManyToMany
     @OrderBy("name")
-    private List<Tag> tags = new ArrayList<>();
+    public List<Tag> tags = new ArrayList<>();
 
     public Resource() {
     }
 
     public Resource(String name) {
         this.name = name;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public Boolean getNeedsApproval() {
-        return this.needsApproval;
-    }
-
-    public void setNeedsApproval(Boolean needsApproval) {
-        this.needsApproval = needsApproval;
-    }
-
-    public List<Reservation> getReservations() {
-        return this.reservations;
-    }
-
-    public void setReservations(List<Reservation> reservations) {
-        this.reservations = reservations;
-    }
-
-    public ResourceCategory getResourceCategory() {
-        return resourceCategory;
-    }
-
-    public void setResourceCategory(ResourceCategory type) {
-        this.resourceCategory = type;
-    }
-
-    public UserGroup getOwner() {
-        return owner;
-    }
-
-    public void setOwner(UserGroup owner) {
-        this.owner = owner;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
-
-    public File getImage() {
-        return image;
-    }
-
-    public void setImage(File image) {
-        this.image = image;
     }
 
     @Override
@@ -130,13 +63,13 @@ public class Resource extends MultiTenantEntity implements Serializable {
 
         Resource other = (Resource) o;
 
-        return EqualsHelper.areEquals(getName(), other.getName())
-                && EqualsHelper.areEquals(getNeedsApproval(), other.getNeedsApproval());
+        return EqualsHelper.areEquals(name, other.name)
+                && EqualsHelper.areEquals(needsApproval, other.needsApproval);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getName(), getNeedsApproval());
+        return EqualsHelper.calculateHashCode(name, needsApproval);
     }
 
 }
