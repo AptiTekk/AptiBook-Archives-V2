@@ -25,7 +25,6 @@ import java.util.stream.Stream;
 public class NotificationRepository extends MultiTenantEntityRepositoryAbstract<Notification>{
 
     public void markAllAsReadForUser(User user) {
-        System.out.println("Got to markAllRead");
         try {
             entityManager
                     .createQuery("UPDATE Notification n SET n.notif_read = true WHERE n.user = ?1")
@@ -51,8 +50,7 @@ public class NotificationRepository extends MultiTenantEntityRepositoryAbstract<
             comparator = comparator.reversed();
             Stream<Notification> notificationStream = result.stream().sorted(comparator);
 
-            //return notificationStream.collect(Collectors.toList());
-            return result;
+            return notificationStream.collect(Collectors.toList());
         } catch (PersistenceException e) {
             return null;
         }

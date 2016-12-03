@@ -11,13 +11,10 @@
  */
 package com.aptitekk.aptibook.core.domain.entities;
 
-import com.aptitekk.aptibook.core.domain.entities.serializers.LocalDateTimeSerializer;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -25,7 +22,6 @@ import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -82,11 +78,9 @@ public class Notification extends MultiTenantEntity implements Serializable {
 
     private String body;
 
-    @JsonSerialize(using = LocalDateTimeSerializer.class)
-    @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
     private LocalDateTime creation = LocalDateTime.now();
 
-    private Boolean notif_read = false;
+    private boolean notif_read = false;
 
     public Notification() {
         super();
@@ -134,11 +128,11 @@ public class Notification extends MultiTenantEntity implements Serializable {
         return creation;
     }
 
-    public Boolean getRead() {
+    public boolean getRead() {
         return notif_read;
     }
 
-    public void setRead(Boolean notif_read) {
+    public void setRead(boolean notif_read) {
         this.notif_read = notif_read;
     }
 

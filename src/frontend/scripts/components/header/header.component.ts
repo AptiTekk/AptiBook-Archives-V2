@@ -1,12 +1,9 @@
-import {Component, Input, Pipe} from "@angular/core";
+import {Component, Input} from "@angular/core";
 import {User} from "../../models/user.model";
 import {AuthService} from "../../services/singleton/auth.service";
 import {Router} from "@angular/router";
-import * as Rx from 'rxjs/Rx';
 import {NotificationService} from "../../services/singleton/notification.service";
-import {UnreadNotification} from "../../models/notification.model";
-import {Notification} from "rxjs";
-import {variable} from "@angular/compiler/src/output/output_ast";
+import {Notification} from "../../models/notification.model";
 
 @Component({
     selector: 'app-header',
@@ -21,7 +18,7 @@ export class HeaderComponent {
     nonInteractive: boolean;
 
     user: User;
-    unreadNotifications: UnreadNotification[] = [];
+    unreadNotifications: Notification[] = [];
 
     //TODO: Add route urls
     reservationManagementLinks: [{icon: string, label: string}] = [

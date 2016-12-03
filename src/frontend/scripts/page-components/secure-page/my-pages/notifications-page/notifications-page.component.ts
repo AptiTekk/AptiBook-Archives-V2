@@ -1,11 +1,9 @@
 import {Component} from "@angular/core";
-import {UnreadNotification} from "../../../../models/notification.model";
+import {Notification} from "../../../../models/notification.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {NotificationService} from "../../../../services/singleton/notification.service";
 import * as moment from "moment";
 import Moment = moment.Moment;
-import * as Rx from 'rxjs/Rx';
-import {ReplaySubject} from "rxjs";
 @Component({
     selector: 'my-notifications-page',
     templateUrl: 'notifications-page.component.html'
@@ -13,25 +11,20 @@ import {ReplaySubject} from "rxjs";
 })
 export class NotificationsPageComponent {
 
-    markedRead: boolean = false;
-
-    notifications: UnreadNotification[] = [];
-    unreadNotifications: UnreadNotification[] = [];
+    notifications: Notification[] = [];
+    unreadNotifications: Notification[] = [];
 
     //noinspection JSMethodCanBeStatic
-    getTimeAgo(unreadNotification: UnreadNotification) {
-        if(unreadNotification != undefined && unreadNotification != null)
-        return moment(unreadNotification.creation).fromNow();
+    getTimeAgo(unreadNotification: Notification) {
+        if (unreadNotification != undefined && unreadNotification != null)
+            return moment(unreadNotification.creation).fromNow();
     }
 
     constructor(authService: AuthService, notificationService: NotificationService) {
         notificationService.reloadNotifications();
         notificationService.getNotifications().take(1).subscribe(notifications => {
                 this.notifications = notifications;
-                if (!this.markedRead) {
-                    notificationService.markAllRead();
-                    this.markedRead = true;
-                }
+                notificationService.markAllRead();
             }
         );
         notificationService.getUnreadNotifications().take(1).subscribe(unreadNotifications => {
@@ -41,7 +34,7 @@ export class NotificationsPageComponent {
     }
 
     //noinspection JSMethodCanBeStatic
-    getNotificationSubject(unreadNotification: UnreadNotification) {
+    getNotificationSubject(unreadNotification: Notification) {
         return unreadNotification.subject;
     }
 

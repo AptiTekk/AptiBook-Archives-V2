@@ -1,6 +1,6 @@
 import Moment = moment.Moment;
 import moment = require("moment");
-export interface UnreadNotification{
+export interface Notification {
     id: number;
     subject: string
     body: string

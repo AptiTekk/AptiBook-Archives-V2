@@ -13,6 +13,7 @@ import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.validator.routines.EmailValidator;
+import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -37,7 +38,8 @@ public class UserController extends APIControllerAbstract {
         if (authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
             List<User> users = userRepository.findAll();
 
-            return ok(users);
+            return ok(modelMapper.map(users, new TypeToken<List<UserDTO>>() {
+            }.getType()));
         }
 
         return noPermission();
@@ -49,7 +51,7 @@ public class UserController extends APIControllerAbstract {
 
         if (user != null &&
                 (user.equals(authService.getCurrentUser()) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))) {
-            return ok(user);
+            return ok(modelMapper.map(user, UserDTO.class));
         }
 
         return noPermission();
