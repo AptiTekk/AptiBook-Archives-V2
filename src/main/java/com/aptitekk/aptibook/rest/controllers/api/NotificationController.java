@@ -34,7 +34,6 @@ public class NotificationController extends APIControllerAbstract {
         this.notificationRepository = notificationRepository;
     }
 
-
     @RequestMapping(value = "/notifications/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserNotifications(@PathVariable Long id) {
         if (id == null) {
@@ -55,7 +54,7 @@ public class NotificationController extends APIControllerAbstract {
         return unauthorized();
     }
 
-    @RequestMapping(value = "/markall/user/{id}", method = RequestMethod.PATCH)
+    @RequestMapping(value = "/notifications/user/{id}/markRead", method = RequestMethod.PATCH)
     public ResponseEntity<?> markAllNotificationsRead(@PathVariable Long id) {
         System.out.println("Getting to patch method");
         if (id == null) {

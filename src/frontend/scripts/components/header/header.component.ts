@@ -20,17 +20,8 @@ export class HeaderComponent {
     @Input()
     nonInteractive: boolean;
 
-
     user: User;
-    unreadNotifications: UnreadNotification[];
-
-    getUnreadNotifications():UnreadNotification[]{
-        if(this.unreadNotifications != undefined) {
-            return this.unreadNotifications.filter(n => n.read != true);
-        }
-    }
-
-
+    unreadNotifications: UnreadNotification[] = [];
 
     //TODO: Add route urls
     reservationManagementLinks: [{icon: string, label: string}] = [
@@ -50,24 +41,15 @@ export class HeaderComponent {
         {icon: 'cog', label: 'Properties', indented: false}
     ];
 
-
     constructor(private router: Router, private authService: AuthService, private  notificationService: NotificationService) {
-        authService.getUser().subscribe(user =>{
-        if(user == undefined){
-            console.log("undefined");
-
-        }else {
-            this.user = user;
-            this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
-                if (unreadNotifications == undefined) {
-                    console.log("unread undefined");
-                } else {
+        authService.getUser().subscribe(user => {
+            if (user != undefined) {
+                this.user = user;
+                this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
                     this.unreadNotifications = unreadNotifications;
-                    console.log("should work, size: " + this.unreadNotifications.length);
-                }
-            });
-        }
-    });
+                });
+            }
+        });
     }
 
     onSignOut() {

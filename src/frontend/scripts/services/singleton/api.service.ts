@@ -65,7 +65,7 @@ export class APIService {
             .catch(e => Observable.throw(e));
     }
 
-    public patch(path: string, data: any): Observable<any> {
+    public patch(path: string, data?: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.patch(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
             .map(APIService.checkForErrors)

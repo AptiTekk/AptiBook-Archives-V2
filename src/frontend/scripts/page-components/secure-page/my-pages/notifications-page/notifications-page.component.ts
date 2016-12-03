@@ -13,35 +13,37 @@ import {ReplaySubject} from "rxjs";
 })
 export class NotificationsPageComponent {
 
-    unreadNotification: UnreadNotification[];
+    markedRead: boolean = false;
+
+    notifications: UnreadNotification[] = [];
+    unreadNotifications: UnreadNotification[] = [];
 
     //noinspection JSMethodCanBeStatic
-    getTimeAgo(unreadNotification: UnreadNotification){
-        let ts = moment(unreadNotification.creation);
-        return moment(ts).fromNow();
+    getTimeAgo(unreadNotification: UnreadNotification) {
+        if(unreadNotification != undefined && unreadNotification != null)
+        return moment(unreadNotification.creation).fromNow();
     }
-//commit
 
-    constructor(authService: AuthService, notificationService: NotificationService){
-        authService.getUser().subscribe(user => {
-            if (user != undefined) {
-                notificationService.getNotifications(user).subscribe(unreadNotification => {
-                            this.unreadNotification = unreadNotification;
-                            console.log("here");
-                             notificationService.markAllRead(user).subscribe( unreadNotification => notificationService.reloadNotifications());
-                    }
-                );
-
-            }else{
-                console.log("User is undefined");
+    constructor(authService: AuthService, notificationService: NotificationService) {
+        notificationService.reloadNotifications();
+        notificationService.getNotifications().take(1).subscribe(notifications => {
+                this.notifications = notifications;
+                if (!this.markedRead) {
+                    notificationService.markAllRead();
+                    this.markedRead = true;
+                }
             }
-        });
+        );
+        notificationService.getUnreadNotifications().take(1).subscribe(unreadNotifications => {
+                this.unreadNotifications = unreadNotifications;
+            }
+        );
     }
+
     //noinspection JSMethodCanBeStatic
-    getNotificationSubject(unreadNotification: UnreadNotification){
+    getNotificationSubject(unreadNotification: UnreadNotification) {
         return unreadNotification.subject;
     }
-
 
 
 }

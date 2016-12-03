@@ -23,35 +23,28 @@
         opacity: 1;
     }
 </style>
-<div *ngIf="unreadNotification != undefined && unreadNotification.length > 0">
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a [routerLink]="['', 'secure']">Home</a></li>
+        <li class="active">Notifications</li>
+    </ol>
+    <div *ngIf="unreadNotifications.length > 0">
+        <h4>{{unreadNotifications.length}} Unread {{unreadNotifications.length == 1 ? 'Notification' : 'Notifications'}}</h4>
+    </div>
+    <div *ngIf="unreadNotifications.length == 0">
+        <h4>No Unread Notifications</h4>
+    </div>
 
-    <div *ngFor="let notification of unreadNotification">
+    <h5 class="text-muted">Previously Read Notifications will be deleted after 3 days</h5>
 
-        <div *ngIf="notification.read != true" class="notification">
-            unread
-            <panel>
-                <panel-body>
-                    <strong>{{notification.subject}}</strong>
-                    <br/>
-                    {{notification.body}}
-                    <br/>
-                    <i style="color:#808080">{{getTimeAgo(notification)}}</i>
-                </panel-body>
-            </panel>
-        </div>
-
-
-        <div *ngIf="notification.read == true" class="read-notification" >
-            read
-            <panel>
-                <panel-body>
-                    <strong>{{notification.subject}}</strong>
-                    <br/>
-                    {{notification.body}}
-                    <br/>
-                    <i style="color:#808080">{{getTimeAgo(notification)}}</i>
-                </panel-body>
-            </panel>
+    <div *ngIf="notifications.length > 0">
+        <div *ngFor="let notification of notifications" [ngClass]="{'read-notification': notification.read}">
+            <hr>
+            <strong>{{notification.subject}}</strong>
+            <br/>
+            {{notification.body}}
+            <br/>
+            <i style="color:#808080">{{getTimeAgo(notification)}}</i>
         </div>
     </div>
 </div>

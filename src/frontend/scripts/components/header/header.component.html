@@ -94,9 +94,7 @@
                     <li class="nav-notifications">
                         <a href="#" [routerLink]="['', 'secure', 'my', 'notifications']">
                             <span><i class="fa fa-bell"></i></span>
-                            <div *ngIf="getUnreadNotifications() != undefined">
-                            <span class="notifications-badge badge" *ngIf="getUnreadNotifications().length > 0" >{{getUnreadNotifications().length}}</span>
-                            </div>
+                            <span class="notifications-badge badge" *ngIf="unreadNotifications.length > 0" >{{unreadNotifications.length}}</span>
                         </a>
                     </li>
                 </ul>

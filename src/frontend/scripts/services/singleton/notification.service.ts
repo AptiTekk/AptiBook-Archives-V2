@@ -12,63 +12,61 @@ import {AuthService} from "./auth.service";
 export class NotificationService {
 
     private user: User;
+    private notifications: ReplaySubject<UnreadNotification[]> = new ReplaySubject<UnreadNotification[]>(1);
     private unreadNotifications: ReplaySubject<UnreadNotification[]> = new ReplaySubject<UnreadNotification[]>(1);
-
+    private readNotifications: ReplaySubject<UnreadNotification[]> = new ReplaySubject<UnreadNotification[]>(1);
 
     constructor(private apiService: APIService, private authService: AuthService) {
-        this.authService.getUser().subscribe(user =>{
-            if(user != undefined){
+        this.authService.getUser().subscribe(user => {
+            if (user != undefined) {
                 this.user = user;
-                console.log("reloaded notifications");
-            }else{console.log("soon");}
+                this.reloadNotifications();
+            }
         });
-        this.reloadNotifications();
     }
 
-    getUnreadNotifications():ReplaySubject<UnreadNotification[]>{
+    getNotifications(): ReplaySubject<UnreadNotification[]> {
+        return this.notifications;
+    }
+
+    getUnreadNotifications(): ReplaySubject<UnreadNotification[]> {
         return this.unreadNotifications;
     }
 
+    getReadNotifications(): ReplaySubject<UnreadNotification[]> {
+        return this.readNotifications;
+    }
 
     reloadNotifications(): void {
         this.apiService.get("notifications/user/" + this.user.id).subscribe(
-            response => this.unreadNotifications.next(<UnreadNotification[]> response),
-            err => this.unreadNotifications.next(undefined)
+            response => {
+                let notifications = <UnreadNotification[]> response;
+                this.notifications.next(notifications);
+                this.unreadNotifications.next(notifications.filter(n => !n.read));
+                this.readNotifications.next(notifications.filter(n => n.read));
+            },
+            err => {
+                this.notifications.next([]);
+                this.unreadNotifications.next([]);
+                this.readNotifications.next([]);
+            }
         )
     }
 
-
-    public getNotifications(user: User): Observable<UnreadNotification[]> {
-        console.log("method called");
-        return Observable.create(listener => {
-            if (user == undefined) {
-                listener.next(undefined);
+    public markAllRead(): void {
+        this.apiService.patch("notifications/user/" + this.user.id + "/markRead").subscribe(
+            response => {
+                let notifications = <UnreadNotification[]> response;
+                this.notifications.next(notifications);
+                this.unreadNotifications.next(notifications.filter(n => !n.read));
+                this.readNotifications.next(notifications.filter(n => n.read));
+            },
+            err => {
+                this.notifications.next([]);
+                this.unreadNotifications.next([]);
+                this.readNotifications.next([]);
             }
-            else{
-            this.apiService.get("notifications/user/" + user.id).subscribe(
-                response => listener.next(<UnreadNotification[]> response),
-                err => listener.next(undefined)
-            )
-        }});
-
-    }
-
-    public markAllRead(user: User): Observable<UnreadNotification[]>{
-        console.log("Got to markAll() in notification service");
-        return Observable.create(listener =>{
-            console.log("errors");
-            if(user == undefined) {
-                console.log("error");
-                listener.next(undefined);
-
-            }
-            else{
-                this.apiService.patch("markall/user/" + user.id, true).subscribe(
-                    response => listener.next(<UnreadNotification[]> response),
-                    err => listener.next(undefined)
-                );
-            }
-        });
+        );
     }
 
 }
