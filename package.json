@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "prebuild": "npm install",
-    "build": "webpack -p"
+    "webpack-postbuild": "webpack -p && mvn clean install"
   },
   "license": "UNLICENSED",
   "dependencies": {

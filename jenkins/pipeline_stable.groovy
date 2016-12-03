@@ -57,8 +57,8 @@ def checkoutFromGit() {
 }
 
 def runTests() {
-    sh "npm run build"
-    sh "mvn clean install -U"
+    sh "npm i"
+    sh "npm run-script webpack-postbuild"
 }
 
 def changeVersion(buildNumber) {
