@@ -1,3 +1,4 @@
+import {UserGroup} from "./user-group.model";
 export interface User {
     id: number;
 
@@ -14,7 +15,7 @@ export interface User {
     notificationTypeSettings;
 
     permissions;
-    userGroups: number[];
+    userGroups: UserGroup[];
     admin: boolean;
 
     /**

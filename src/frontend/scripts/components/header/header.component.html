@@ -26,7 +26,7 @@
                 <ul class="nav navbar-nav navbar-right" *ngIf="user != undefined">
 
                     <!-- Reservation Management Dropdown -->
-                    <li class="dropdown" *ngIf="user.admin || user.userGroups.length > 0">
+                    <li class="dropdown" *ngIf="user.admin || (user.userGroups && user.userGroups.length > 0)">
                         <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                             <span><i class="fa fa-calendar-check-o"></i></span>
                             Reservation Management
@@ -69,7 +69,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#">
+                                <a href="#" [routerLink]="['', 'secure', 'my', 'reservations']">
                                     <span><i class="fa fa-calendar"></i></span>
                                     My Reservations
                                 </a>

@@ -9,8 +9,8 @@
      tabindex="-1"
      role="dialog"
      (keydown.esc)="closeOnEscape ? closeModal() : 0"
-     [ngClass]="{'fade': _isOpen, 'in': _isOpen }"
-     [ngStyle]="{ 'display': _isOpen ? 'block' : 'none' }"
+     [ngClass]="{'in': isOpen}"
+     [ngStyle]="{'display': 'block'}"
      (click)="closeOnOutsideClick ? closeModal() : 0">
     <div class="modal-dialog"
          role="document"

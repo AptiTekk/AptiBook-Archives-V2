@@ -1,5 +1,7 @@
 import {Component, Output, EventEmitter} from "@angular/core";
 import * as moment from "moment";
+import {Router} from "@angular/router";
+import {SearchService} from "../../../../services/singleton/search.service";
 import Moment = moment.Moment;
 
 @Component({
@@ -15,6 +17,10 @@ export class NewReservationPanelComponent {
     startDate: Moment = moment();
     endDate: Moment = moment();
 
+    constructor(private searchService: SearchService, private router: Router) {
+        searchService.clearResults();
+    }
+
     get isEndBeforeStart() {
         return this.endDate.isBefore(this.startDate);
     }
@@ -24,7 +30,8 @@ export class NewReservationPanelComponent {
     }
 
     onSearch() {
-
+        this.searchService.searchForResources(this.startDate, this.endDate);
+        this.router.navigateByUrl("/secure/search-results");
     }
 
 }

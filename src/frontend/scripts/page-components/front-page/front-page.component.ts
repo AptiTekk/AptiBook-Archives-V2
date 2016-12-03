@@ -12,7 +12,7 @@ export class FrontPageComponent {
 
     private tenantSlug: string;
 
-    constructor(tenantService: TenantService, oAuthService: OAuthService) {
+    constructor(tenantService: TenantService) {
         tenantService.getTenant().subscribe(response => this.tenantSlug = response.slug);
     }
 

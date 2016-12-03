@@ -110,7 +110,7 @@
 
                 <div class="btn-toolbar">
                     <button class="btn btn-primary"
-                            disabled="{{successMessage != undefined || alertMessage != undefined || !doPasswordsMatch() ? 'disabled' : null}}">
+                            disabled="{{personalInfoAlert.isDisplayed() || passwordsInfoAlert.isDisplayed()  || errorAlert.isDisplayed()  || !doPasswordsMatch() ? 'disabled' : null}}">
                         Save Changes
                     </button>
                 </div>
@@ -129,7 +129,7 @@
                     <div *ngIf="!user.admin">
                         <p>The groups that you are assigned to are highlighted.</p>
                         <tree [userGroup]="rootUserGroup" [selectable]="false" [dragAndDrop]="false"
-                              [higlightedUserGroupIds]="user.userGroups"></tree>
+                              [higlightedUserGroups]="user.userGroups"></tree>
                     </div>
                 </div>
             </div>

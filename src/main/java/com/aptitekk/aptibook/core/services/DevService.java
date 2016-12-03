@@ -42,7 +42,7 @@ public class DevService {
 
     private void startWebpackWatcher() {
         try {
-            devServerMonitor = new ProcessMonitor("Webpack Watcher", "node_modules/.bin/webpack.cmd", "--watch") {
+            devServerMonitor = new ProcessMonitor("Webpack Watcher", "node_modules/.bin/webpack.cmd", "--watch", "--watchOptions.poll=300") {
                 boolean keepPrinting;
 
                 @Override

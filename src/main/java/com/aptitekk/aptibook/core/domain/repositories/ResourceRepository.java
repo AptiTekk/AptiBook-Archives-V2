@@ -62,7 +62,7 @@ public class ResourceRepository extends MultiTenantEntityRepositoryAbstract<Reso
 
         @Override
         public int compare(Resource o1, Resource o2) {
-            return o1.getName().compareTo(o2.getName());
+            return o1.name.compareTo(o2.name);
         }
     }
 

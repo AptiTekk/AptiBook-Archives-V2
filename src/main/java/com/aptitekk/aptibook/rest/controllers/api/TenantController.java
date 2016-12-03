@@ -6,12 +6,10 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
-import com.aptitekk.aptibook.core.domain.rest.entityViewModels.TenantViewModel;
+import com.aptitekk.aptibook.core.domain.rest.dtos.TenantDTO;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -34,11 +32,8 @@ public class TenantController extends APIControllerAbstract {
         Object tenantAttribute = request.getAttribute("tenant");
         if (tenantAttribute != null && tenantAttribute instanceof Tenant) {
             Tenant tenant = (Tenant) tenantAttribute;
-            TenantViewModel tenantViewModel = new ModelMapper().map(tenant, TenantViewModel.class);
-            Property timeZoneProperty = propertiesRepository.findPropertyByKey(Property.Key.DATE_TIME_TIMEZONE);
-            if (timeZoneProperty != null && timeZoneProperty.getPropertyValue() != null)
-                tenantViewModel.setTimezone(timeZoneProperty.getPropertyValue());
-            return ok(tenantViewModel);
+            TenantDTO tenantDTO = modelMapper.map(tenant, TenantDTO.class);
+            return ok(tenantDTO);
         }
         return badRequest("Tenant is Inactive");
     }

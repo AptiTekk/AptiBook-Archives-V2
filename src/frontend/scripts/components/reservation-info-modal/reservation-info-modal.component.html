@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<modal #modal [title]="'Reservation Details'" [cancelButtonLabel]="'Close'">
+    <modal-body *ngIf="reservation">
+        <h4>{{reservation.title}}</h4>
+        <p>You are viewing a reservation of
+            <span style="font-weight: bold">{{reservation.resource.name}}</span>
+            for
+            <span style="font-weight: bold">{{reservation.user.fullName}}</span>.</p>
+        <p>This reservation...</p>
+        <ul>
+            <li>
+                Starts on
+                <span style="font-weight: bold">{{reservation.start.format('dddd, MMMM Do, YYYY')}}</span>
+                at
+                <span style="font-weight: bold">{{reservation.start.format('h:mm A')}}.</span>
+            </li>
+            <li>
+                Ends on
+                <span style="font-weight: bold">{{reservation.end.format('dddd, MMMM Do, YYYY')}}</span>
+                at
+                <span style="font-weight: bold">{{reservation.end.format('h:mm A')}}.</span>
+            </li>
+            <li>
+                Will last about <span style="font-weight: bold">{{humanizeDifference()}}.</span>
+            </li>
+        </ul>
+    </modal-body>
+</modal>

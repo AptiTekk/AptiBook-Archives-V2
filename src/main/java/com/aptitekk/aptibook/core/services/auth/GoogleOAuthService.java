@@ -78,12 +78,12 @@ public class GoogleOAuthService {
 
                     //Create user
                     user = new User();
-                    user.setEmailAddress(googleUserInfo.getEmailAddress());
-                    user.setFirstName(googleUserInfo.getFirstName());
-                    user.setLastName(googleUserInfo.getLastName());
                     user.setTenant(tenant);
-                    user.setVerified(true);
-                    user.setUserState(User.State.APPROVED);
+                    user.setEmailAddress(googleUserInfo.getEmailAddress());
+                    user.firstName = googleUserInfo.getFirstName();
+                    user.lastName = googleUserInfo.getLastName();
+                    user.verified = true;
+                    user.userState = User.State.APPROVED;
                     user = userRepository.save(user);
                 }
 
