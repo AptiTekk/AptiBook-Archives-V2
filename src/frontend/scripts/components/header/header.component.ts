@@ -2,16 +2,23 @@ import {Component, Input} from "@angular/core";
 import {User} from "../../models/user.model";
 import {AuthService} from "../../services/singleton/auth.service";
 import {Router} from "@angular/router";
+import {NotificationService} from "../../services/singleton/notification.service";
+import {Notification} from "../../models/notification.model";
 
 @Component({
     selector: 'app-header',
     templateUrl: 'header.component.html',
     styleUrls: ['header.component.css']
 })
+
+
 export class HeaderComponent {
 
     @Input()
     nonInteractive: boolean;
+
+    user: User;
+    unreadNotifications: Notification[] = [];
 
     //TODO: Add route urls
     reservationManagementLinks: [{icon: string, label: string}] = [
@@ -31,10 +38,15 @@ export class HeaderComponent {
         {icon: 'cog', label: 'Properties', indented: false}
     ];
 
-    user: User;
-
-    constructor(private router: Router, private authService: AuthService) {
-        authService.getUser().subscribe(user => this.user = user);
+    constructor(private router: Router, private authService: AuthService, private  notificationService: NotificationService) {
+        authService.getUser().subscribe(user => {
+            if (user != undefined) {
+                this.user = user;
+                this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
+                    this.unreadNotifications = unreadNotifications;
+                });
+            }
+        });
     }
 
     onSignOut() {

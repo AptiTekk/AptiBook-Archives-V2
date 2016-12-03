@@ -21,7 +21,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.ManyToOne;
 import java.io.Serializable;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 
 @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
@@ -78,9 +78,9 @@ public class Notification extends MultiTenantEntity implements Serializable {
 
     private String body;
 
-    private ZonedDateTime creation = ZonedDateTime.now();
+    private LocalDateTime creation = LocalDateTime.now();
 
-    private Boolean notif_read = false;
+    private boolean notif_read = false;
 
     public Notification() {
         super();
@@ -124,15 +124,15 @@ public class Notification extends MultiTenantEntity implements Serializable {
         this.body = body;
     }
 
-    public ZonedDateTime getCreation() {
+    public LocalDateTime getCreation() {
         return creation;
     }
 
-    public Boolean getRead() {
+    public boolean getRead() {
         return notif_read;
     }
 
-    public void setRead(Boolean notif_read) {
+    public void setRead(boolean notif_read) {
         this.notif_read = notif_read;
     }
 
