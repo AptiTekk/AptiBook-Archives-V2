@@ -53,10 +53,25 @@ public class DemoTenant {
 
     private final TenantIntegrityService tenantIntegrityService;
 
+    private final NotificationRepository notificationRepository;
+
     private final LogService logService;
 
     @Autowired
-    public DemoTenant(TenantRepository tenantRepository, TenantManagementService tenantManagementService, UserGroupService userGroupService, UserGroupRepository userGroupRepository, UserRepository userRepository, ResourceCategoryRepository resourceCategoryRepository, ResourceRepository resourceRepository, TagRepository tagRepository, PermissionRepository permissionRepository, ReservationDecisionRepository reservationDecisionRepository, ReservationRepository reservationRepository, TenantIntegrityService tenantIntegrityService, LogService logService) {
+    public DemoTenant(TenantRepository tenantRepository,
+                      TenantManagementService tenantManagementService,
+                      UserGroupService userGroupService,
+                      UserGroupRepository userGroupRepository,
+                      UserRepository userRepository,
+                      ResourceCategoryRepository resourceCategoryRepository,
+                      ResourceRepository resourceRepository,
+                      TagRepository tagRepository,
+                      PermissionRepository permissionRepository,
+                      ReservationDecisionRepository reservationDecisionRepository,
+                      ReservationRepository reservationRepository,
+                      TenantIntegrityService tenantIntegrityService,
+                      NotificationRepository notificationRepository,
+                      LogService logService) {
         this.tenantRepository = tenantRepository;
         this.tenantManagementService = tenantManagementService;
         this.userGroupService = userGroupService;
@@ -69,6 +84,7 @@ public class DemoTenant {
         this.reservationDecisionRepository = reservationDecisionRepository;
         this.reservationRepository = reservationRepository;
         this.tenantIntegrityService = tenantIntegrityService;
+        this.notificationRepository = notificationRepository;
         this.logService = logService;
     }
 
@@ -256,6 +272,14 @@ public class DemoTenant {
                 administrator,
                 true
         );
+
+        //Add Notifications
+        Notification notification = new Notification(teacher, "Test Notification", "Lorem ipsum");
+        notification.setTenant(demoTenant);
+        notification.setRead(false);
+        //TODO: Make method in user repository to get admin user, set admin to get notifications.
+        notification = notificationRepository.save(notification);
+
 
         tenantManagementService.refresh();
     }

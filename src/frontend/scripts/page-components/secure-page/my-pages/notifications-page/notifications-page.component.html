@@ -4,4 +4,48 @@
   ~ Proprietary and confidential.
   -->
 
-My Notifications
+<style type="text/css">
+    .read-notification {
+        opacity: 0.4;
+    }
+
+    .notification {
+        height: 100%;
+        padding-top: 15px;
+    }
+
+    hr {
+        margin-top: 15px;
+        margin-bottom: 0;
+    }
+
+    .read-notification:hover {
+        opacity: 1;
+    }
+</style>
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a [routerLink]="['', 'secure']">Home</a></li>
+        <li class="active">Notifications</li>
+    </ol>
+    <div *ngIf="unreadNotifications.length > 0">
+        <h4>{{unreadNotifications.length}} Unread {{unreadNotifications.length == 1 ? 'Notification' : 'Notifications'}}</h4>
+    </div>
+    <div *ngIf="unreadNotifications.length == 0">
+        <h4>No Unread Notifications</h4>
+    </div>
+
+    <h5 class="text-muted">Previously Read Notifications will be deleted after 3 days</h5>
+
+    <div *ngIf="notifications.length > 0">
+        <div *ngFor="let notification of notifications" [ngClass]="{'read-notification': notification.read}">
+            <hr>
+            <strong>{{notification.subject}}</strong>
+            <br/>
+            {{notification.body}}
+            <br/>
+            <i style="color:#808080">{{getTimeAgo(notification)}}</i>
+        </div>
+    </div>
+</div>
+

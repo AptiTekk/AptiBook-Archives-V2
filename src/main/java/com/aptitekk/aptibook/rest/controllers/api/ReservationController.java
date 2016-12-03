@@ -75,7 +75,8 @@ public class ReservationController extends APIControllerAbstract {
                     LocalDateTime startLocalDateTime = startDate != null ? LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()) : null;
                     LocalDateTime endLocalDateTime = endDate != null ? LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()) : null;
 
-                    return ok(reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, user, null));
+                    return ok(modelMapper.map(reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, user, null), new TypeToken<List<ReservationDTO>>() {
+                    }.getType()));
                 } catch (ParseException e) {
                     return badRequest("Could not parse start or end time.");
                 }

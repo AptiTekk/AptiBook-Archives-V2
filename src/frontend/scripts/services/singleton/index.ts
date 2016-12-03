@@ -7,3 +7,4 @@ export * from "./search.service";
 export * from "./tenant.service";
 export * from "./user.service";
 export * from "./usergroup.service";
+export * from "./notification.service";

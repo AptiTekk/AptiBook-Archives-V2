@@ -37,6 +37,12 @@ public class ReservationDTO {
 
     public UserDTO.WithoutUserGroups user;
 
+    public boolean approved;
+
+    public boolean rejected;
+
+    public boolean pending;
+
     /*public List<ReservationDecision> decisions;
 
     public List<ReservationFieldEntry> fieldEntries;*/
