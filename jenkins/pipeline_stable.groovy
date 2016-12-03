@@ -58,7 +58,7 @@ def checkoutFromGit() {
 
 def runTests() {
     sh "npm i"
-    sh "npm run-script webpack-postbuild"
+    sh "npm run-script heroku-postbuild"
 }
 
 def changeVersion(buildNumber) {
