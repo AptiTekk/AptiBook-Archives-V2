@@ -1,1 +1,1 @@
-web: java -Dswarm.http.port=$PORT -jar target/aptibook.jar
+web: java -jar target/aptibook.jar
