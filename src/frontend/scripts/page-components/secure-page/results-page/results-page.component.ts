@@ -6,6 +6,8 @@ import {AlertComponent} from "../../../components/alert/alert.component";
 import {Router} from "@angular/router";
 import Moment = moment.Moment;
 import moment = require("moment");
+import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
+import {ResourceCategory} from "../../../models/resource-category.model";
 
 @Component({
     selector: 'results-page',
@@ -19,11 +21,12 @@ export class ResultsPageComponent {
     resultsUpdatedAlert: AlertComponent;
 
     availableResources: Resource[];
+    resourceCategories: ResourceCategory[];
 
     start: Moment;
     end: Moment;
 
-    constructor(private searchService: SearchService, protected apiService: APIService, router: Router) {
+    constructor(private searchService: SearchService, protected apiService: APIService, router: Router, private resourceCategoryService: ResourceCategoryService) {
         searchService.getSearchResults().subscribe(resources => {
             /*if (resources == undefined)
                 router.navigateByUrl("/secure/");
@@ -32,6 +35,7 @@ export class ResultsPageComponent {
         });
         searchService.getStartTime().subscribe(start => this.start = start);
         searchService.getEndTime().subscribe(end => this.end = end);
+        resourceCategoryService.getResourceCategory().take(1).subscribe(resourceCategory => this.resourceCategories);
     }
 
     onSearch() {

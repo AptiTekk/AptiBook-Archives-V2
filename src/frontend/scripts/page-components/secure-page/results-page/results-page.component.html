@@ -32,6 +32,15 @@
     <div class="row">
         <div class="col-xs-12 col-md-3">
             <panel [type]="'primary'" [title]="'Filters'">
+                <panel-body>
+                    <p>hi</p>
+                    <div *ngIf="resourceCategories != undefined">
+                        <p>made it here</p>
+                        <div *ngFor="let category of resourceCategories">
+                            {{category.title}}
+                        </div>
+                    </div>
+                </panel-body>
             </panel>
         </div>
         <div class="col-xs-12 col-md-9">
