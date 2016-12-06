@@ -29,6 +29,7 @@ export class ResourceCategoryService{
     }
 
     getResourceCategory(){
+        console.log("called getter");
         return this.resourceCategory;
     }
 

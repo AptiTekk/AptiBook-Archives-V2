@@ -4,7 +4,7 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="container">
+<div class="container" xmlns="http://www.w3.org/1999/html">
 
     <div id="search-settings" class="row">
         <div class="col-xs-12 col-sm-5 col-md-4">
@@ -33,18 +33,22 @@
         <div class="col-xs-12 col-md-3">
             <panel [type]="'primary'" [title]="'Filters'">
                 <panel-body>
-                    <p>hi</p>
-                    <div *ngIf="resourceCategories != undefined">
-                        <p>made it here</p>
-                        <div *ngFor="let category of resourceCategories">
-                            {{category.title}}
+                        <div *ngFor="let category of resourceCategoryFilters">
+                            {{category.name}}
+                            <ui-switch [(ngModel)]="category.on"></ui-switch>
+                    </div>
+                    <p>-----</p>
+                    <div *ngFor="let category of resourceCategoryFilters">
+                        <div *ngIf="category.on == true">
+                            On: {{category.name}}
                         </div>
                     </div>
+
                 </panel-body>
             </panel>
         </div>
         <div class="col-xs-12 col-md-9">
-            <div class="col-xs-12 col-md-6" *ngFor="let resource of availableResources">
+            <div class="col-xs-12 col-md-6" *ngFor="let resource of availableResources | myfilter:resourceCategoryFilters">
                 <panel [type]="'primary'">
                     <panel-body>
                         <img [src]="apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image')"
