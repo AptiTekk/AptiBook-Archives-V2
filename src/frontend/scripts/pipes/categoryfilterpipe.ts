@@ -16,15 +16,15 @@ export class CategoryFilterPipe implements PipeTransform {
 
     transform(resources: any[], args: any[]): any {
         // filter items array, items which match and return true will be kept, false will be filtered out
-        resources.filter(resource => {
+        resources = resources.filter(resource => {
             args.forEach(c => {
                 if(resource.resourceCategory.name == c.name && c.on == true) {
-                    console.log("got here");
-                    return true;
+                    console.log("got here man");
+                    return false;
                 }
                 else {
                     console.log("nope");
-                    return false;
+                    return true;
                 }
             });
 
