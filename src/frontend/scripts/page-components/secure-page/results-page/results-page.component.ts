@@ -22,13 +22,6 @@ export class ResultsPageComponent  {
     @ViewChild("resultsUpdatedAlert")
     resultsUpdatedAlert: AlertComponent;
 
-    onChange(event, id){
-        if(event.target.value===true){
-            this.resourceCategoryFilters.find(id)
-        }
-
-    }
-
     resource: Resource;
     availableResources: Resource[];
     resourceCategoryFilters: ResourceCategoryFilter[] = [];
