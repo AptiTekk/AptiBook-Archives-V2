@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
 import {ReplaySubject} from "rxjs";
-import {UserService} from "./user.service";
 import {User} from "../../models/user.model";
 import {AuthService} from "./auth.service";
 import {APIService} from "./api.service";
@@ -13,13 +12,6 @@ export class ResourceCategoryService{
 
 
     constructor(private authService: AuthService, private apiService: APIService){
-               /*  authService.getUser().subscribe(user => {
-                     if(user != undefined){
-                         this.user = user;
-                         this.getResourceCategories();
-                     }
-                 });
-*/
                this.getResourceCategories();
     }
     getResourceCategories(){
@@ -29,7 +21,6 @@ export class ResourceCategoryService{
     }
 
     getResourceCategory(){
-        console.log("called getter");
         return this.resourceCategory;
     }
 

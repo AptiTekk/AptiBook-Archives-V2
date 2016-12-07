@@ -7,9 +7,7 @@ import {Router} from "@angular/router";
 import Moment = moment.Moment;
 import moment = require("moment");
 import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
-import {ResourceCategory} from "../../../models/resource-category.model";
 import {ResourceCategoryFilter} from "../../../models/resource-category-filter.model";
-import { Pipe, PipeTransform } from '@angular/core';
 
 
 @Component({
@@ -26,7 +24,6 @@ export class ResultsPageComponent  {
 
     onChange(event, id){
         if(event.target.value===true){
-            console.log("its true");
             this.resourceCategoryFilters.find(id)
         }
 
@@ -34,7 +31,6 @@ export class ResultsPageComponent  {
 
     resource: Resource;
     availableResources: Resource[];
-   // resourceCategories: ResourceCategory[] = [];
     resourceCategoryFilters: ResourceCategoryFilter[] = [];
 
     start: Moment;
@@ -50,12 +46,9 @@ export class ResultsPageComponent  {
         searchService.getStartTime().subscribe(start => this.start = start);
         searchService.getEndTime().subscribe(end => this.end = end);
         this.resourceCategoryService.getResourceCategory().take(1).subscribe(resourceCategory => {
-            let categoryFilters = <ResourceCategoryFilter[]>resourceCategory;
-            this.resourceCategoryFilters = categoryFilters;
-       // console.log(this.resourceCategories.length);
+            this.resourceCategoryFilters =  <ResourceCategoryFilter[]>resourceCategory;
         });
     }
-
 
     onSearch() {
         this.searchService.searchForResources(this.start, this.end);

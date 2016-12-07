@@ -6,5 +6,5 @@
 
 import {ResourceCategory} from "./resource-category.model";
 export interface ResourceCategoryFilter extends ResourceCategory{
-    on: boolean;
+    enabled: boolean;
 }
