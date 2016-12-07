@@ -13,9 +13,38 @@ import {Resource} from "../models/resource.model";
 })
 export class CategoryFilterPipe implements PipeTransform {
 
-
     transform(resources: any[], args: any[]): any {
-        // filter items array, items which match and return true will be kept, false will be filtered out
+        let filteredResources: Resource[] = [];
+        for(let arg of args){
+            resources.forEach(resource =>{
+                if(resource.resourceCategory.name === arg.name && arg.on == true){
+                    filteredResources.push(resource);
+                }
+            })
+        }
+        if(filteredResources != undefined) {
+            console.log("Size: " + filteredResources.length);
+        }
+        return filteredResources;
+       /* let filteredResources: Resource[] =[];
+        for(let arg of args){
+            resources = resources.filter(resource => {
+                if(resource.resourceCategory.name === arg.name && arg.on){
+                    console.log("is true");
+                    filteredResources.push(resource);
+                    return false;
+                }else{
+                    console.log("is false");
+                    return true;
+                }
+            })
+        }
+        if(filteredResources != null) {
+            console.log("size: " + filteredResources.length);
+        }
+        return filteredResources;
+    }*/
+/*        // filter items array, items which match and return true will be kept, false will be filtered out
         resources = resources.filter(resource => {
             args.forEach(c => {
                 if(resource.resourceCategory.name == c.name && c.on == true) {
@@ -30,13 +59,13 @@ export class CategoryFilterPipe implements PipeTransform {
 
 console.log("size: " + resources.length);
 return resources;
-            /*this.resource = resource;
+            /!*this.resource = resource;
              args.forEach(c =>
              {if(c.name == this.resource.name && c.on == true){
              return true;
              }else{return false;}}
              );
-             }*/
+             }*!/
         });
-    }
+    }*/
 }

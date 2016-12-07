@@ -3,6 +3,12 @@
   ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
   ~ Proprietary and confidential.
   -->
+<style>
+    .switch.checked {
+        /* frame when enabled */
+        color: blue;
+    }
+</style>
 
 <div class="container" xmlns="http://www.w3.org/1999/html">
 
@@ -35,7 +41,7 @@
                 <panel-body>
                         <div *ngFor="let category of resourceCategoryFilters">
                             {{category.name}}
-                            <ui-switch [(ngModel)]="category.on"></ui-switch>
+                            <ui-switch [(ngModel)]="category.on" class="checked"></ui-switch>
                     </div>
                     <p>-----</p>
                     <div *ngFor="let category of resourceCategoryFilters">
