@@ -32,10 +32,22 @@
     <div class="row">
         <div class="col-xs-12 col-md-3">
             <panel [type]="'primary'" [title]="'Filters'">
+                <panel-body>
+                    <h4>Categories</h4>
+                    <div *ngFor="let category of resourceCategories">
+                        <div class="row" style="margin-bottom: 10px;">
+                            <div class="col-xs-12">
+                                <toggle-switch [(ngModel)]="category.enabled" style="margin-right: 10px"></toggle-switch>
+                                <label>{{category.name}}</label>
+                            </div>
+                        </div>
+                    </div>
+                </panel-body>
             </panel>
         </div>
         <div class="col-xs-12 col-md-9">
-            <div class="col-xs-12 col-md-6" *ngFor="let resource of availableResources">
+            <div class="col-xs-12 col-md-6"
+                 *ngFor="let resource of availableResources | resourceCategoryFilter:resourceCategories">
                 <panel [type]="'primary'">
                     <panel-body>
                         <img [src]="apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image')"

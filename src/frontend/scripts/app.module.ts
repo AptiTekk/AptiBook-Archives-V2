@@ -8,6 +8,7 @@ import * as pageComponents from "./page-components";
 import * as singletons from "./services/singleton";
 import {routes} from "./routing/routes";
 import * as guards from "./routing/guards";
+import * as pipes from "./pipes";
 //import * as vendors from "./vendors";
 
 const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
@@ -26,7 +27,8 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
     ],
     declarations: [
         ...mapImports(components),
-        ...mapImports(pageComponents)
+        ...mapImports(pageComponents),
+        ...mapImports(pipes)
     ],
     bootstrap: [AppComponent]
 })

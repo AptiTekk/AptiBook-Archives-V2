@@ -7,4 +7,5 @@ export * from './loader/loader.component';
 export * from './modal/modal.component';
 export * from './panel/panel.component';
 export * from './reservation-info-modal/reservation-info-modal.component';
+export * from './toggle-switch/toggle-switch.component';
 export * from './tree';
