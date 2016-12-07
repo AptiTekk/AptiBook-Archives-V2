@@ -12,7 +12,7 @@
 
     <!-- Creates the initial database schema. -->
     <changeSet id="1" author="MitchTalmadge">
-        <sqlFile path="liquibase/changeSets/sql/1.sql"/>
+        <sqlFile path="db/changelog/changeSets/sql/1.sql"/>
     </changeSet>
 
 </databaseChangeLog>
