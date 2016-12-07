@@ -9,7 +9,6 @@ import {ResourceCategory} from "../../../models/resource-category.model";
 import Moment = moment.Moment;
 import moment = require("moment");
 
-
 @Component({
     selector: 'results-page',
     templateUrl: 'results-page.component.html',

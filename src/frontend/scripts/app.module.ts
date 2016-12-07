@@ -8,7 +8,6 @@ import * as pageComponents from "./page-components";
 import * as singletons from "./services/singleton";
 import {routes} from "./routing/routes";
 import * as guards from "./routing/guards";
-import { UiSwitchModule } from 'angular2-ui-switch'
 import * as pipes from "./pipes";
 //import * as vendors from "./vendors";
 
@@ -19,7 +18,6 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
         BrowserModule,
         FormsModule,
         HttpModule,
-        UiSwitchModule,
         routes,
         //...mapImports(vendors)
     ],
