@@ -9,7 +9,7 @@ import * as singletons from "./services/singleton";
 import {routes} from "./routing/routes";
 import * as guards from "./routing/guards";
 import { UiSwitchModule } from 'angular2-ui-switch'
-import {CategoryFilterPipe} from "./pipes/categoryfilterpipe";
+import * as pipes from "./pipes";
 //import * as vendors from "./vendors";
 
 const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
@@ -30,7 +30,7 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
     declarations: [
         ...mapImports(components),
         ...mapImports(pageComponents),
-        CategoryFilterPipe
+        ...mapImports(pipes)
     ],
     bootstrap: [AppComponent]
 })

@@ -43,7 +43,7 @@
             </panel>
         </div>
         <div class="col-xs-12 col-md-9">
-            <div class="col-xs-12 col-md-6" *ngFor="let resource of availableResources | categoryFilter:resourceCategoryFilters">
+            <div class="col-xs-12 col-md-6" *ngFor="let resource of availableResources | resourceCategoryFilter : resourceCategoryFilters">
                 <panel [type]="'primary'">
                     <panel-body>
                         <img [src]="apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image')"

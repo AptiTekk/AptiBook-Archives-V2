@@ -3,15 +3,14 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-
-
 import {Pipe, PipeTransform} from "@angular/core";
 import {Resource} from "../models/resource.model";
+
 @Pipe({
-    name: 'categoryFilter',
+    name: 'resourceCategoryFilter',
     pure: false
 })
-export class CategoryFilterPipe implements PipeTransform {
+export class ResourceCategoryFilterPipe implements PipeTransform {
 
     transform(resources: any[], resourceCategories: any[]): any {
         let filteredResources: Resource[] = [];
@@ -24,11 +23,12 @@ export class CategoryFilterPipe implements PipeTransform {
                 }
             })
         }
-        //If any filters are enabled, return filtered list. If not return original list
-        if(count > 0){
+
+        //If any filters are enabled, return filtered list. If not return empty list
+        if (count > 0) {
             return filteredResources;
-        }else{
-            return resources;
+        } else {
+            return [];
         }
     }
 }
