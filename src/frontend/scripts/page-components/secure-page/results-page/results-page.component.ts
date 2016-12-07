@@ -16,7 +16,7 @@ import {ResourceCategoryFilter} from "../../../models/resource-category-filter.m
     styleUrls: ['results-page.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ResultsPageComponent  {
+export class ResultsPageComponent{
 
 
     @ViewChild("resultsUpdatedAlert")

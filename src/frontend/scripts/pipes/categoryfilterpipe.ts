@@ -24,7 +24,7 @@ export class CategoryFilterPipe implements PipeTransform {
                 }
             })
         }
-        //if any filters are enabled, return filtered list. If not return original list
+        //If any filters are enabled, return filtered list. If not return original list
         if(count > 0){
             return filteredResources;
         }else{
