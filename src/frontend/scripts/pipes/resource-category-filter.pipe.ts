@@ -14,21 +14,15 @@ export class ResourceCategoryFilterPipe implements PipeTransform {
 
     transform(resources: any[], resourceCategories: any[]): any {
         let filteredResources: Resource[] = [];
-        let count: number = 0;
+
         for (let category of resourceCategories) {
             resources.forEach(resource => {
                 if (resource.resourceCategory.name === category.name && category.enabled) {
                     filteredResources.push(resource);
-                    count++
                 }
             })
         }
 
-        //If any filters are enabled, return filtered list. If not return empty list
-        if (count > 0) {
-            return filteredResources;
-        } else {
-            return [];
-        }
+        return filteredResources;
     }
 }

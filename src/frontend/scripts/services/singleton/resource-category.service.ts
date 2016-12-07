@@ -6,22 +6,21 @@ import {APIService} from "./api.service";
 import {ResourceCategory} from "../../models/resource-category.model";
 
 @Injectable()
-export class ResourceCategoryService{
-    private resourceCategory: ReplaySubject<ResourceCategory[]> = new ReplaySubject<ResourceCategory[]>(1);
-    private user: User;
+export class ResourceCategoryService {
+    private resourceCategories: ReplaySubject<ResourceCategory[]> = new ReplaySubject<ResourceCategory[]>(1);
 
-
-    constructor(private authService: AuthService, private apiService: APIService){
-               this.getResourceCategories();
+    constructor(private authService: AuthService, private apiService: APIService) {
+        this.fetchResourceCategories();
     }
-    getResourceCategories(){
+
+    fetchResourceCategories() {
         this.apiService.get("/resourceCategories").subscribe(
-            response => this.resourceCategory.next(<ResourceCategory[]>response),
-            err => this.resourceCategory.next(undefined));
+            response => this.resourceCategories.next(<ResourceCategory[]>response),
+            err => this.resourceCategories.next(undefined));
     }
 
-    getResourceCategory(){
-        return this.resourceCategory;
+    getResourceCategories() {
+        return this.resourceCategories;
     }
 
 }

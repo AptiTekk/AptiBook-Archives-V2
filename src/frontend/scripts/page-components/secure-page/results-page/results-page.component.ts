@@ -4,10 +4,10 @@ import {APIService} from "../../../services/singleton/api.service";
 import {SearchService} from "../../../services/singleton/search.service";
 import {AlertComponent} from "../../../components/alert/alert.component";
 import {Router} from "@angular/router";
+import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
+import {ResourceCategory} from "../../../models/resource-category.model";
 import Moment = moment.Moment;
 import moment = require("moment");
-import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
-import {ResourceCategoryFilter} from "../../../models/resource-category-filter.model";
 
 
 @Component({
@@ -16,7 +16,7 @@ import {ResourceCategoryFilter} from "../../../models/resource-category-filter.m
     styleUrls: ['results-page.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class ResultsPageComponent{
+export class ResultsPageComponent {
 
 
     @ViewChild("resultsUpdatedAlert")
@@ -24,22 +24,23 @@ export class ResultsPageComponent{
 
     resource: Resource;
     availableResources: Resource[];
-    resourceCategoryFilters: ResourceCategoryFilter[] = [];
+    resourceCategories: ResourceCategory[] = [];
 
     start: Moment;
     end: Moment;
 
     constructor(private searchService: SearchService, protected apiService: APIService, router: Router, private resourceCategoryService: ResourceCategoryService) {
         searchService.getSearchResults().subscribe(resources => {
-            /*if (resources == undefined)
-                router.navigateByUrl("/secure/");
-            else*/
-                this.availableResources = resources;
+            this.availableResources = resources;
         });
         searchService.getStartTime().subscribe(start => this.start = start);
         searchService.getEndTime().subscribe(end => this.end = end);
-        this.resourceCategoryService.getResourceCategory().take(1).subscribe(resourceCategory => {
-            this.resourceCategoryFilters =  <ResourceCategoryFilter[]>resourceCategory;
+
+        this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategory => {
+            this.resourceCategories = resourceCategory.map(category => {
+                category['enabled'] = true;
+                return category;
+            });
         });
     }
 
