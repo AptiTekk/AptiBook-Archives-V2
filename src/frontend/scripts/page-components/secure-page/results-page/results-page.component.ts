@@ -18,7 +18,6 @@ import moment = require("moment");
 })
 export class ResultsPageComponent {
 
-
     @ViewChild("resultsUpdatedAlert")
     resultsUpdatedAlert: AlertComponent;
 

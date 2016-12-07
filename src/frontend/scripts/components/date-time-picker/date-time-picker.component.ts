@@ -70,7 +70,7 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
         }
     }
 
-    private static removeSeconds(date) {
+    private static removeSeconds(date): Moment {
         if (!date)
             return undefined;
 
@@ -114,7 +114,7 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
             $(this.container.nativeElement).data("DateTimePicker").date(DateTimePickerComponent.removeSeconds(date));
     }
 
-    propagateChange = (_: any) => {
+    propagateChange = (value: Moment) => {
     };
 
     writeValue(obj: any): void {

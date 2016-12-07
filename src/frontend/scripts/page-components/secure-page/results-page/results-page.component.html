@@ -36,7 +36,7 @@
                     <div *ngFor="let category of resourceCategories">
                             <span>
                                 <label>{{category.name}}:</label>
-                                <ui-switch color="#4272b7" [(ngModel)]="category.enabled"></ui-switch>
+                                <toggle-switch [(ngModel)]="category.enabled"></toggle-switch>
                             </span>
                     </div>
                 </panel-body>
