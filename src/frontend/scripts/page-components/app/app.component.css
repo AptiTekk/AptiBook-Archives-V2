@@ -51,3 +51,16 @@ app button.btn:focus {
 .app .ui-widget-header .ui-state-highlight {
     background-color: #4272b7;
 }
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 16px;
+    background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border: 2px solid #f1f1f1;
+    border-radius: 8px;
+}
