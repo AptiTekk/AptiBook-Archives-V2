@@ -31,7 +31,7 @@ export class NewReservationPanelComponent {
 
     onSearch() {
         this.searchService.searchForResources(this.startDate, this.endDate);
-        this.router.navigateByUrl("/secure/results-container/search-results");
+        this.router.navigateByUrl("/secure/search-results");
     }
 
 }

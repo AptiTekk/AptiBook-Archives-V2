@@ -41,17 +41,18 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 component: DashboardPageComponent
             },
             {
-                path:'results-container',
+                path:'search-results',
                 component: ResultsContainerComponent,
+                canActivate: [SearchGuard],
                 children: [
-                    {
-                        path: 'search-results',
-                        component: SearchResultsPageComponent,
-                        canActivate: [SearchGuard],
-                    },
+
                     {
                         path: 'reservation-details',
                         component: ReservationDetailsComponent
+                    },
+                    {
+                        path: '**',
+                        component: SearchResultsPageComponent,
                     }
                 ]
             },

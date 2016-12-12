@@ -11,7 +11,7 @@ import {APIService} from "../../../../services/singleton/api.service";
 import {ResourceCategoryService} from "../../../../services/singleton/resource-category.service";
 
 @Component({
-    selector: 'results-page',
+    selector: 'search-results-page',
     templateUrl: 'search-results-page.component.html',
     styleUrls: ['search-results-page.component.css'],
     encapsulation: ViewEncapsulation.None
@@ -51,7 +51,7 @@ export class SearchResultsPageComponent {
     }
 
     reserve(){
-        this.router.navigateByUrl("/secure/results-container/reservation-details");
+        this.router.navigateByUrl("/secure/search-results/reservation-details");
     }
 
 }
