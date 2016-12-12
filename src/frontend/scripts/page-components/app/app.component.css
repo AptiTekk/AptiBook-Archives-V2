@@ -35,8 +35,31 @@
     border-color: #39629C;
 }
 
-app button.btn:focus {
+app .btn:focus {
     outline: none;
+}
+
+app .btn.btn-large {
+    font-size: 30px;
+}
+
+/* Select Box Styling */
+
+select.big-select {
+    display: block;
+    font-size: 20px;
+    width: 100%;
+    border-radius: 4px;
+    padding: 0 12px;
+    margin-bottom: 10px;
+}
+
+select.big-select:disabled {
+    background-color: #eee;
+}
+
+select.form-control {
+    height: 34px !important;
 }
 
 /* Switch Styling */
@@ -63,4 +86,14 @@ app button.btn:focus {
     background-color: #bbb;
     border: 2px solid #f1f1f1;
     border-radius: 8px;
+}
+
+/* Calendars */
+
+.calendar-container-full {
+    height: calc(100vh - 50px - 50px - 40px);
+}
+
+.calendar-container-breadcrumb {
+    height: calc(100vh - 50px - 50px - 40px - 56px);
 }

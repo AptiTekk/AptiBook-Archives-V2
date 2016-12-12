@@ -29,11 +29,11 @@
 
         <!-- Right Calendar Section -->
         <div class="hidden-xs hidden-sm col-md-8 col-lg-9">
-            <div class="calendar-container" style="height: calc(100vh - 50px - 50px - 40px);">
+            <div class="calendar-container-full">
                 <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
                           [hiddenStatuses]="['rejected', 'cancelled']"
                           [title]="'Public Calendar'"
-                          (eventSelected)="onCalendarEventClicked($event)"></calendar>
+                          (eventSelected)="reservationInfoModal.display($event)"></calendar>
             </div>
         </div>
     </div>

@@ -4,4 +4,23 @@
   ~ Proprietary and confidential.
   -->
 
-My Reservations
+<div class="container-fluid">
+    <ol class="breadcrumb">
+        <li><a [routerLink]="['', 'secure']">Home</a></li>
+        <li class="active">My Reservations</li>
+    </ol>
+    <div class="row">
+        <div class="col-xs-12 col-md-4 col-lg-3">
+            <h3>Your Reservations</h3>
+            <hr />
+        </div>
+        <div class="hidden-xs hidden-sm col-md-8 col-lg-9">
+            <div class="calendar-container-breadcrumb">
+                <calendar [eventFeedUrl]="user ? apiService.getApiUrlFromEndpoint('reservations/user/'+user.id) : undefined"
+                          [title]="'Your Calendar'"
+                          (eventSelected)="reservationInfoModal.display($event)"></calendar>
+            </div>
+        </div>
+    </div>
+</div>
+<reservation-info-modal #reservationInfoModal></reservation-info-modal>

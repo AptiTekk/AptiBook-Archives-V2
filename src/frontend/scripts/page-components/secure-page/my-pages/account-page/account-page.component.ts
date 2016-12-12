@@ -2,7 +2,6 @@ import {Component, ViewChild} from "@angular/core";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
 import {UserService} from "../../../../services/singleton/user.service";
-import {isNullOrUndefined} from "util";
 import {UserGroup} from "../../../../models/user-group.model";
 import {UserGroupService} from "../../../../services/singleton/usergroup.service";
 import {AlertComponent} from "../../../../components/alert/alert.component";
@@ -33,25 +32,30 @@ export class AccountPageComponent {
     }
 
     doPasswordsMatch(): boolean {
+        if (!this.user.newPassword)
+            if (!this.user.confirmPassword)
+                return true;
+
         return this.user.newPassword === this.user.confirmPassword;
     }
 
-    onAccountDetailsSubmit() {
-        if (!isNullOrUndefined(this.user.newPassword) && this.user.newPassword.length == 0)
-            this.user.newPassword = undefined;
-
-        this.userService.patchUser(this.user).take(1).subscribe((value: boolean) => {
+    onPersonalInformationSubmit(changingPassword: boolean = false) {
+        this.userService.patchUser(this.user, changingPassword).take(1).subscribe((value: boolean) => {
             if (value) {
                 this.authService.reloadUser();
-                this.personalInfoAlert.display("Personal Information updated successfully.");
-                if (!isNullOrUndefined(this.user.newPassword)) {
+                if (!changingPassword)
+                    this.personalInfoAlert.display("Personal Information updated successfully.");
+                else
                     this.passwordsInfoAlert.display("Password updated successfully.");
-                }
             }
             else {
                 this.errorAlert.display("Unfortunately, we could not update your Account Settings.");
             }
         })
+    }
+
+    onChangePasswordSubmit() {
+        this.onPersonalInformationSubmit(true);
     }
 
 }
