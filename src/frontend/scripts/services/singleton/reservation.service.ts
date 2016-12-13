@@ -23,4 +23,15 @@ export class ReservationService {
         });
     }
 
+    public makeReservation(reservation: Reservation): Observable<Reservation[]> {
+        return Observable.create(listener => {
+                let body = JSON.stringify(reservation);
+                this.apiService.post("/makeReservation", body).subscribe(
+                    response => listener.next(<Reservation>response),
+                    err => listener.next(undefined)
+                );
+
+        });
+    }
+
 }

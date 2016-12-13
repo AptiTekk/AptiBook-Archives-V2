@@ -15,10 +15,7 @@ import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
 import java.time.LocalDateTime;
@@ -35,6 +32,24 @@ public class ReservationController extends APIControllerAbstract {
     public ReservationController(ReservationRepository reservationRepository) {
         this.reservationRepository = reservationRepository;
     }
+
+    @RequestMapping(value = "/makeReservation", method = RequestMethod.POST)
+    public ResponseEntity<?> makeReservation(@RequestBody Reservation reservation) {
+
+        if (authService.isUserSignedIn()) {
+            try {
+                reservation = reservationRepository.save(reservation);
+                System.out.println("Title: " + reservation.getTitle());
+                return ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
+                }.getType()));
+            }catch (Exception e){
+                return badRequest();
+            }
+        }
+        return unauthorized();
+    }
+
+
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
     public ResponseEntity<?> getReservationsBetweenDates(@RequestParam("start") String start, @RequestParam("end") String end) {

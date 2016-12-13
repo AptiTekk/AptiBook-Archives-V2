@@ -9,6 +9,7 @@ import {ResourceCategory} from "../../../../models/resource-category.model";
 import {SearchService} from "../../../../services/singleton/search.service";
 import {APIService} from "../../../../services/singleton/api.service";
 import {ResourceCategoryService} from "../../../../services/singleton/resource-category.service";
+import {ReservationDetailsService} from "../../../../services/singleton/reservation-details.service";
 
 @Component({
     selector: 'search-results-page',
@@ -25,12 +26,14 @@ export class SearchResultsPageComponent {
     resource: Resource;
     availableResources: Resource[];
     resourceCategories: ResourceCategory[] = [];
+    //private reservationDetailsService: ReservationDetailsService;
 
     start: Moment;
     end: Moment;
 
-    constructor(private searchService: SearchService, protected apiService: APIService, router: Router, private resourceCategoryService: ResourceCategoryService) {
+    constructor(private searchService: SearchService, protected apiService: APIService, router: Router, private resourceCategoryService: ResourceCategoryService, private reservationDetailsService: ReservationDetailsService) {
         this.router = router;
+        //this.reservationDetailsService = reservationDetailsService;
         searchService.getSearchResults().subscribe(resources => {
             this.availableResources = resources;
         });
@@ -50,7 +53,8 @@ export class SearchResultsPageComponent {
         this.searchService.getSearchResults().take(1).subscribe(resources => this.resultsUpdatedAlert.display());
     }
 
-    reserve(){
+    reserve(resource: Resource){
+        this.reservationDetailsService.setResource(resource);
         this.router.navigateByUrl("/secure/search-results/reservation-details");
     }
 

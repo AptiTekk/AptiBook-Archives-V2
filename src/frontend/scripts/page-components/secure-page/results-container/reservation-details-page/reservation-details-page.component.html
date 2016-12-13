@@ -4,4 +4,41 @@
   ~ Proprietary and confidential.
   -->
 
-reservation details page
+
+<div class="container">
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-4">
+            <h4>Requesting reservation for {{resource.name}}</h4>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-4">
+            <div class="form-group">
+                <label for="title">Title:</label>
+                <input type="text" class="form-control" id="title" [(ngModel)]="title" required>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-4">
+            <div class="form-group">
+                <label for="start">Start Time:</label>
+                <input  type="text" readonly="readonly" class="form-control" id="start" value="{{start}}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-4">
+            <div class="form-group">
+                <label for="end">End Time:</label>
+                <input  type="text" readonly="readonly" class="form-control" id="end" value="{{end}}">
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-xs-12 col-sm-5 col-md-4">
+            <button type="submit" (click)="reserve()" class="btn btn-primary">Reserve This</button>
+        </div>
+    </div>
+</div>
