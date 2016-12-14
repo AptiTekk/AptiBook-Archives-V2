@@ -15,6 +15,7 @@ import {SearchResultsPageComponent} from "../page-components/secure-page/results
 import {SearchGuard} from "./guards/search.guard";
 import {ReservationDetailsComponent} from "../page-components/secure-page/results-container/reservation-details-page/reservation-details-page.component";
 import {ResultsContainerComponent} from "../page-components/secure-page/results-container/results-container-page.component";
+import {SuccessPageComponent} from "../page-components/secure-page/results-container/success-page/success-page.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -41,14 +42,18 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 component: DashboardPageComponent
             },
             {
-                path:'search-results',
+                path: 'search-results',
                 component: ResultsContainerComponent,
                 canActivate: [SearchGuard],
                 children: [
 
                     {
                         path: 'reservation-details',
-                        component: ReservationDetailsComponent
+                        component: ReservationDetailsComponent,
+                    },
+                    {
+                        path: 'success',
+                        component: SuccessPageComponent
                     },
                     {
                         path: '**',

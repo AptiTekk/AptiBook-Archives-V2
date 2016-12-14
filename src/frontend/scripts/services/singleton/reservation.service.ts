@@ -1,12 +1,15 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {Observable} from "rxjs";
+import {Observable, ReplaySubject} from "rxjs";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import * as moment from 'moment';
 
 @Injectable()
 export class ReservationService {
+
+    private lastReservationMade: ReplaySubject<Reservation> = new ReplaySubject<Reservation>(1);
+
 
     constructor(private apiService: APIService) {
     }
@@ -27,11 +30,19 @@ export class ReservationService {
         return Observable.create(listener => {
                 let body = JSON.stringify(reservation);
                 this.apiService.post("/makeReservation", body).subscribe(
-                    response => listener.next(<Reservation>response),
+                    response => {
+                        let reservation: Reservation = <Reservation>response;
+                        listener.next(reservation);
+                        this.lastReservationMade.next(reservation)
+                    },
                     err => listener.next(undefined)
                 );
 
         });
+    }
+
+    getLastReservationMade():ReplaySubject<Reservation>{
+        return this.lastReservationMade;
     }
 
 }

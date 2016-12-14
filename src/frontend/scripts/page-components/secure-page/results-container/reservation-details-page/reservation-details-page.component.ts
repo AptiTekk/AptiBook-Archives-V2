@@ -10,6 +10,7 @@ import {UserService} from "../../../../services/singleton/user.service";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {Reservation} from "../../../../models/reservation.model";
 import {ReservationService} from "../../../../services/singleton/reservation.service";
+import {Router} from "@angular/router";
 @Component({
     selector: 'reservation-details-page',
     templateUrl: 'reservation-details-page.component.html'
@@ -39,7 +40,7 @@ export class ReservationDetailsComponent{
     user: User;
    // private reservationDetailsService: ReservationDetailsService;
 
-    constructor(private reservationDetailsService: ReservationDetailsService, private searchService: SearchService, private authService: AuthService, private reservationService: ReservationService){
+    constructor(private reservationDetailsService: ReservationDetailsService, private searchService: SearchService, private authService: AuthService, private reservationService: ReservationService, private router: Router){
         authService.getUser().subscribe(user =>{
             if(user != undefined) {
                 this.user = user;
@@ -48,8 +49,10 @@ export class ReservationDetailsComponent{
         this.resource = reservationDetailsService.getResource();
         searchService.getStartTime().subscribe(start => this.start = start);
         searchService.getEndTime().subscribe(end => this.end = end);
-
     }
+
+
+
     reserve(){
         // TODO: make new reservation from service, add reservation fields
         this.reservation.user = this.user;
@@ -60,6 +63,7 @@ export class ReservationDetailsComponent{
         this.reservation.resource = this.resource;
         this.reservationService.makeReservation(this.reservation).subscribe(reservation => {
             if(reservation != null && reservation != undefined){
+                this.router.navigateByUrl("/secure/search-results/success");
                 console.log("it works");
                 //redirect
             }
