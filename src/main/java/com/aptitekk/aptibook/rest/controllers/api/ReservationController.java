@@ -9,7 +9,10 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.entities.Reservation;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
+import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
+import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
+import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
@@ -26,18 +29,37 @@ import java.util.List;
 @APIController
 public class ReservationController extends APIControllerAbstract {
 
+    private final TenantSessionService tenantSessionService;
     private final ReservationRepository reservationRepository;
+    private final ResourceRepository resourceRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository) {
+    public ReservationController(ReservationRepository reservationRepository, TenantSessionService tenantSessionService, UserRepository userRepository, ResourceRepository resourceRepository) {
         this.reservationRepository = reservationRepository;
+        this.resourceRepository = resourceRepository;
+        this.userRepository = userRepository;
+        this.tenantSessionService = tenantSessionService;
     }
 
     @RequestMapping(value = "/makeReservation", method = RequestMethod.POST)
-    public ResponseEntity<?> makeReservation(@RequestBody Reservation reservation) {
+    public ResponseEntity<?> makeReservation(@RequestBody ReservationDTO reservationDTO) {
 
         if (authService.isUserSignedIn()) {
             try {
+                Reservation reservation = new Reservation();
+                reservation.setTenant(tenantSessionService.getTenant());
+                reservation.setUser(userRepository.find(reservationDTO.user.id));
+                reservation.setTitle(reservationDTO.title);
+                reservation.setResource(resourceRepository.find(reservationDTO.resource.id));
+                reservation.setStart(reservationDTO.start);
+                reservation.setEnd(reservationDTO.end);
+                if(reservationDTO.resource.needsApproval){
+                    reservation.setStatus(Reservation.Status.PENDING);
+                }else{
+                    reservation.setStatus(Reservation.Status.APPROVED);
+                }
+
                 reservation = reservationRepository.save(reservation);
                 System.out.println("Title: " + reservation.getTitle());
                 return ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {

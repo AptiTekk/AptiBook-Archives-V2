@@ -16,7 +16,22 @@ import {ReservationService} from "../../../../services/singleton/reservation.ser
 })
 export class ReservationDetailsComponent{
 
-    reservation: Reservation;
+    reservation: Reservation = {
+        id: null,
+        dateCreated: null,
+        title: null,
+        status: null,
+        start: null,
+        end: null,
+        resource: null,
+        user: null,
+        decisions: null,
+        fieldEntries: null,
+        pending: null,
+        approved: null,
+        rejected: null,
+        cancelled: null
+    };
     resource: Resource;
     title: string;
     start: Moment;
@@ -39,8 +54,9 @@ export class ReservationDetailsComponent{
         // TODO: make new reservation from service, add reservation fields
         this.reservation.user = this.user;
         this.reservation.title = this.title;
-        this.reservation.start = this.start;
-        this.reservation.end = this.end;
+        this.reservation.start = this.start.clone().utc();
+        this.reservation.end = this.end.clone().utc();
+        console.log("start: " + this.start);
         this.reservation.resource = this.resource;
         this.reservationService.makeReservation(this.reservation).subscribe(reservation => {
             if(reservation != null && reservation != undefined){
