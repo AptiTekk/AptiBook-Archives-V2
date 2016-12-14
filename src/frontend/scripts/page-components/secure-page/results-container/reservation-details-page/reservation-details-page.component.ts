@@ -54,8 +54,8 @@ export class ReservationDetailsComponent{
         // TODO: make new reservation from service, add reservation fields
         this.reservation.user = this.user;
         this.reservation.title = this.title;
-        this.reservation.start = this.start.clone().utc();
-        this.reservation.end = this.end.clone().utc();
+        this.reservation.start = this.start;
+        this.reservation.end = this.end;
         console.log("start: " + this.start);
         this.reservation.resource = this.resource;
         this.reservationService.makeReservation(this.reservation).subscribe(reservation => {
