@@ -19,3 +19,10 @@
 .panel.panel-primary .panel-heading a:after {
     color: white;
 }
+
+/* Scrollbar */
+
+.panel ::-webkit-scrollbar {
+    width: 16px;
+    background-color: transparent;
+}

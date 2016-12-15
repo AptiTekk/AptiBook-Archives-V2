@@ -7,17 +7,38 @@
 <div class="container-fluid">
     <div class="row">
 
-        <!-- Left Sidebar Section -->
-        <div class="col-xs-12 col-md-4 col-lg-3">
+        <!-- Center Calendar Section -->
+        <div class="hidden-xs hidden-sm col-md-9 col-lg-push-3 col-lg-7">
+            <div class="full-height">
+                <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
+                          [hiddenStatuses]="['rejected', 'cancelled']"
+                          (eventSelected)="reservationInfoModal.display($event)"></calendar>
+            </div>
+        </div>
+
+        <!-- Right Toolbar / Filter Section -->
+        <div class="hidden-xs hidden-sm col-md-3 col-lg-push-3 col-lg-2">
+            <panel [type]="'primary'" [title]="'Calendar Filters'">
+                <panel-body>
+                    <toggle-switch style="margin-right: 10px;"></toggle-switch>
+                    <label>Only My Reservations</label>
+                </panel-body>
+            </panel>
+        </div>
+
+        <!-- Left Sidebar Section (Will be pulled to the left on large screens) -->
+        <div class="col-xs-12 col-md-12 col-lg-pull-9 col-lg-3">
 
             <!-- Upcoming Reservations -->
             <div class="upcoming-reservations-section"
                  [@sidebarDisplayStatus]="makingNewReservation ? 'hidden' : 'visible'">
-                <upcoming-reservations-panel></upcoming-reservations-panel>
-                <button class="btn btn-primary btn-block" (click)="onNewReservationStart()">
-                    <i class="fa fa-plus"></i>
-                    New Reservation
-                </button>
+                <div style="height: calc(100vh - 195px)">
+                    <upcoming-reservations-panel></upcoming-reservations-panel>
+                    <button class="btn btn-primary btn-block" (click)="onNewReservationStart()">
+                        <i class="fa fa-plus"></i>
+                        New Reservation
+                    </button>
+                </div>
             </div>
 
             <!-- New Reservation -->
@@ -27,15 +48,6 @@
             </div>
         </div>
 
-        <!-- Right Calendar Section -->
-        <div class="hidden-xs hidden-sm col-md-8 col-lg-9">
-            <div class="calendar-container-full">
-                <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
-                          [hiddenStatuses]="['rejected', 'cancelled']"
-                          [title]="'Public Calendar'"
-                          (eventSelected)="reservationInfoModal.display($event)"></calendar>
-            </div>
-        </div>
     </div>
 </div>
 <reservation-info-modal #reservationInfoModal></reservation-info-modal>

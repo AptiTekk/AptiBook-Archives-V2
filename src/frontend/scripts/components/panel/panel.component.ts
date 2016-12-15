@@ -16,6 +16,12 @@ export class PanelComponent implements AfterViewInit {
     @Input()
     title: string;
 
+    @Input()
+    panelClass: string;
+
+    @Input()
+    panelBodyClass: string;
+
     ngAfterViewInit(): void {
         if(this.footer.nativeElement.children.length == 0)
             this.footer.nativeElement.classList.add('hidden');

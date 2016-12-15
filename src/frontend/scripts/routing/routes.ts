@@ -10,7 +10,6 @@ import {
     NotificationsPageComponent
 } from "../page-components";
 import {FrontPageGuard, SecureGuard} from "./guards";
-import {ReservationsPageComponent} from "../page-components/secure-page/my-pages/reservations-page/reservations-page.component";
 import {ResultsPageComponent} from "../page-components/secure-page/results-page/results-page.component";
 import {SearchGuard} from "./guards/search.guard";
 
@@ -50,10 +49,6 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             {
                 path: 'my/notifications',
                 component: NotificationsPageComponent
-            },
-            {
-                path: 'my/reservations',
-                component: ReservationsPageComponent
             },
             {
                 path: '**',
