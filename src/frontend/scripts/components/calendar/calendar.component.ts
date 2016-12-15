@@ -43,6 +43,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
     private calendarBuilt: boolean = false;
 
     constructor() {
+        //Re-render and re-size calendar when window size is changed
         window.onresize = (event) => {
             if (this.calendarBuilt) {
                 $(this.calendarContainer.nativeElement).fullCalendar('render');

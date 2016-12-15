@@ -19,15 +19,15 @@
         <ul>
             <li>
                 Starts on
-                <span style="font-weight: bold">{{reservation.start.format('dddd, MMMM Do, YYYY')}}</span>
+                <span style="font-weight: bold">{{reservationStartMoment.format('dddd, MMMM Do, YYYY')}}</span>
                 at
-                <span style="font-weight: bold">{{reservation.start.format('h:mm A')}}.</span>
+                <span style="font-weight: bold">{{reservationStartMoment.format('h:mm A')}}.</span>
             </li>
             <li>
                 Ends on
-                <span style="font-weight: bold">{{reservation.end.format('dddd, MMMM Do, YYYY')}}</span>
+                <span style="font-weight: bold">{{reservationEndMoment.format('dddd, MMMM Do, YYYY')}}</span>
                 at
-                <span style="font-weight: bold">{{reservation.end.format('h:mm A')}}.</span>
+                <span style="font-weight: bold">{{reservationEndMoment.format('h:mm A')}}.</span>
             </li>
             <!--<li>
                 Will last about <span style="font-weight: bold">{{humanizeDifference()}}.</span>

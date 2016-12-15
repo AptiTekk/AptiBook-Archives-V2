@@ -10,8 +10,8 @@ export interface Reservation {
     title: string;
     status: string;
 
-    start: Moment;
-    end: Moment;
+    start: string;
+    end: string;
 
     resource: Resource;
     user: User;

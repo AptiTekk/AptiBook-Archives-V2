@@ -10,7 +10,7 @@ import {ReservationInfoModalComponent} from "../../../components/reservation-inf
         trigger('sidebarDisplayStatus', [
             state('visible', style({opacity: 1})),
             state('hidden', style({overflow: 'hidden', opacity: 0, 'height': '0', 'pointer-events': 'none'})),
-            transition('* => *', animate('200ms'))
+            transition('* => *', animate('300ms'))
         ])
     ]
 })
