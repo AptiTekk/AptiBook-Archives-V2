@@ -30,11 +30,13 @@
                 <div class="form-group">
                     <label for="title">Title:*</label>
                     <input type="text" class="form-control" id="title" [(ngModel)]="title"
-                           pattern="[^<>;=]*"
                            name="titleField"
                            placeholder="What is this reservation for?"
                            required
-                           maxlength="100">
+                           maxlength="100"
+                           pattern="[^<>;=]*"
+                           oninvalid="setCustomValidity('These characters are not allowed: < > ; =')"
+                           onchange="try{setCustomValidity('')}catch(e){}">
                 </div>
             </div>
         </div>
