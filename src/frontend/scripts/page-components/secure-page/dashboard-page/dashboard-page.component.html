@@ -13,6 +13,7 @@
                 <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
                           [hiddenStatuses]="['rejected', 'cancelled']"
                           [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
+                          [filterByResourceCategories]="enabledResourceCategories"
                           (eventSelected)="reservationInfoModal.display($event)"></calendar>
             </div>
         </div>
@@ -21,8 +22,19 @@
         <div class="hidden-xs hidden-sm col-md-3 col-lg-push-3 col-lg-2">
             <panel [type]="'primary'" [title]="'Calendar Filters'">
                 <panel-body>
-                    <toggle-switch [(ngModel)]="filterOnlyUsersEvents" style="margin-right: 10px;"></toggle-switch>
-                    <label>Only My Reservations</label>
+                    <div class="form-group">
+                        <toggle-switch [(ngModel)]="filterOnlyUsersEvents"
+                                       style="margin-right: 10px"></toggle-switch>
+                        <label>Only My Reservations</label>
+                    </div>
+                    <h4>Category Filters</h4>
+                    <hr/>
+                    <div class="form-group" *ngFor="let resourceCategory of resourceCategories">
+                        <toggle-switch [(ngModel)]="resourceCategory.enabled"
+                                       (onToggle)="updateEnabledResourceCategories()"
+                                       style="margin-right: 10px"></toggle-switch>
+                        <label>{{resourceCategory.name}}</label>
+                    </div>
                 </panel-body>
             </panel>
         </div>

@@ -89,7 +89,7 @@ select.form-control {
     background-clip: content-box;
 }
 
-/* Full Height Helpers */
+/* Spacing Helpers */
 
 .full-height {
     height: calc(100vh - 50px - 50px - 40px);
@@ -97,4 +97,9 @@ select.form-control {
 
 .full-height-breadcrumb {
     height: calc(100vh - 50px - 50px - 40px - 56px);
+}
+
+.no-padding {
+    padding: 0 !important;
+    margin: 0 !important;
 }

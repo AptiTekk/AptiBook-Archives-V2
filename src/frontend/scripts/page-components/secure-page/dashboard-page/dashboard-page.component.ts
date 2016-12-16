@@ -4,6 +4,8 @@ import {APIService} from "../../../services/singleton/api.service";
 import {ReservationInfoModalComponent} from "../../../components/reservation-info-modal/reservation-info-modal.component";
 import {AuthService} from "../../../services/singleton/auth.service";
 import {User} from "../../../models/user.model";
+import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
+import {ResourceCategory} from "../../../models/resource-category.model";
 
 @Component({
     selector: 'dashboard-page',
@@ -25,10 +27,20 @@ export class DashboardPageComponent {
 
     currentUser: User;
 
+    resourceCategories: ResourceCategory[];
+    enabledResourceCategories: ResourceCategory[];
+
     filterOnlyUsersEvents: boolean = false;
 
-    constructor(protected apiService: APIService, authService: AuthService) {
+    constructor(protected apiService: APIService, authService: AuthService, private resourceCategoryService: ResourceCategoryService) {
         authService.getUser().subscribe(user => this.currentUser = user);
+
+        this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategory => {
+            this.resourceCategories = resourceCategory.map(category => {
+                category['enabled'] = true;
+                return category;
+            });
+        });
     }
 
     onCalendarEventClicked(event: Reservation) {
@@ -41,6 +53,10 @@ export class DashboardPageComponent {
 
     onCancelNewReservation() {
         this.makingNewReservation = false;
+    }
+
+    updateEnabledResourceCategories() {
+        this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
     }
 
 }

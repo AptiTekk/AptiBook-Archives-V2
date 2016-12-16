@@ -11,6 +11,7 @@ import {
 } from "@angular/core";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
+import {ResourceCategory} from "../../models/resource-category.model";
 declare const $: any;
 
 @Component({
@@ -38,6 +39,9 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
 
     @Input()
     filterByUsers: User[];
+
+    @Input()
+    filterByResourceCategories: ResourceCategory[];
 
     @Input()
     title: string;
@@ -80,6 +84,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                     case 'title':
                     case 'hiddenStatuses':
                     case 'filterByUsers':
+                    case 'filterByResourceCategories':
                         this.refreshCalendar(true);
                         break;
                 }
@@ -114,11 +119,18 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                         return false;
 
                     // Remove events not matching filtered users
-                    if (this.filterByUsers && this.filterByUsers.filter(e => e.id === event.user.id).length == 0)
+                    if (this.filterByUsers && this.filterByUsers.filter(user => user.id === event.user.id).length == 0)
                         return false;
 
+                    // Remove events not matching filtered resource categories
+                    if (this.filterByResourceCategories && this.filterByResourceCategories.filter(category => category.id === event.resource.resourceCategory.id).length == 0)
+                        return false;
+
+
                     // If all is well, add the status to the class list.
-                    element[0].classList.add(event.status.toLowerCase());
+                    let domElement: HTMLLinkElement = element[0];
+
+                    domElement.classList.add(event.status.toLowerCase());
                 }
             },
             eventClick: (calEvent, jsEvent, view) => {

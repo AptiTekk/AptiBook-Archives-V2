@@ -1,4 +1,4 @@
-import {Component, Input, forwardRef} from "@angular/core";
+import {Component, Input, forwardRef, Output, EventEmitter} from "@angular/core";
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 
 @Component({
@@ -20,11 +20,15 @@ export class ToggleSwitchComponent implements ControlValueAccessor {
     @Input()
     offText: string = "Off";
 
+    @Output()
+    onToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+
     on: boolean = false;
 
     toggle() {
         this.on = !this.on;
         this.propagateChange(this.on);
+        this.onToggle.next(this.on);
     }
 
     writeValue(obj: any): void {
