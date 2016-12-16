@@ -10,8 +10,11 @@ import {
     NotificationsPageComponent
 } from "../page-components";
 import {FrontPageGuard, SecureGuard} from "./guards";
-import {ResultsPageComponent} from "../page-components/secure-page/results-page/results-page.component";
+import {SearchResultsPageComponent} from "../page-components/secure-page/results-container/search-results-page/search-results-page.component";
 import {SearchGuard} from "./guards/search.guard";
+import {ReservationDetailsComponent} from "../page-components/secure-page/results-container/reservation-details-page/reservation-details-page.component";
+import {ResultsContainerComponent} from "../page-components/secure-page/results-container/results-container-page.component";
+import {SuccessPageComponent} from "../page-components/secure-page/results-container/success-page/success-page.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -39,8 +42,22 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'search-results',
-                component: ResultsPageComponent,
-                canActivate: [SearchGuard]
+                component: ResultsContainerComponent,
+                canActivate: [SearchGuard],
+                children: [
+                    {
+                        path: 'reservation-details',
+                        component: ReservationDetailsComponent,
+                    },
+                    {
+                        path: 'success',
+                        component: SuccessPageComponent
+                    },
+                    {
+                        path: '**',
+                        component: SearchResultsPageComponent,
+                    }
+                ]
             },
             {
                 path: 'my/account',

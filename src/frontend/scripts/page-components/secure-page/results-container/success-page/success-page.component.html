@@ -1,0 +1,25 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+
+<div class="container">
+        <panel [type]="'primary'" [title]="'Reservation Requested'">
+            <panel-body>
+                <h4>Success!</h4>
+                <div *ngIf="reservation.pending">
+                    <p>Your reservation for <i>{{reservation.title}}</i> has been requested.</p>
+                </div>
+                <div *ngIf="reservation.approved">
+                    <p>Your reservation for <i>{{reservation.title}}</i> has been approved.</p>
+                </div>
+            </panel-body>
+            <panel-footer>
+                <button class="btn btn-default" [routerLink]="['', 'secure', 'dashboard']">
+                    Home
+                </button>
+            </panel-footer>
+        </panel>
+</div>
