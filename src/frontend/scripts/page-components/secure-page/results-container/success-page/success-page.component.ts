@@ -10,11 +10,11 @@ export class SuccessPageComponent {
 
     reservation: Reservation;
 
-        constructor(reservationService: ReservationService){
-            reservationService.getLastReservationMade().subscribe(reservation => {
-                if(reservation != undefined && reservation != null){
-                    this.reservation = reservation;
-                }
-            });
-        }
+    constructor(reservationService: ReservationService) {
+        reservationService.getLastReservationMade().subscribe(reservation => {
+            if (reservation != undefined && reservation != null) {
+                this.reservation = reservation;
+            }
+        });
+    }
 }

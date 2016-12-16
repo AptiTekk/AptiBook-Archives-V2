@@ -54,23 +54,20 @@ public class ReservationController extends APIControllerAbstract {
                 reservation.setResource(resourceRepository.find(reservationDTO.resource.id));
                 reservation.setStart(reservationDTO.start);
                 reservation.setEnd(reservationDTO.end);
-                if(reservationDTO.resource.needsApproval){
+                if (reservationDTO.resource.needsApproval) {
                     reservation.setStatus(Reservation.Status.PENDING);
-                }else{
+                } else {
                     reservation.setStatus(Reservation.Status.APPROVED);
                 }
-
                 reservation = reservationRepository.save(reservation);
-                System.out.println("Title: " + reservation.getTitle());
                 return ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
                 }.getType()));
-            }catch (Exception e){
+            } catch (Exception e) {
                 return badRequest();
             }
         }
         return unauthorized();
     }
-
 
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)

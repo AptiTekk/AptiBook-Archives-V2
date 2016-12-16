@@ -1,5 +1,4 @@
-
-import {Component, ViewEncapsulation} from "@angular/core";
+import {Component} from "@angular/core";
 import {Resource} from "../../../../models/resource.model";
 import {ReservationDetailsService} from "../../../../services/singleton/reservation-details.service";
 import Moment = moment.Moment;
@@ -15,7 +14,7 @@ import {Router} from "@angular/router";
     selector: 'reservation-details-page',
     templateUrl: 'reservation-details-page.component.html'
 })
-export class ReservationDetailsComponent{
+export class ReservationDetailsComponent {
 
     reservation: Reservation = {
         id: null,
@@ -38,11 +37,11 @@ export class ReservationDetailsComponent{
     start: Moment;
     end: Moment;
     user: User;
-   // private reservationDetailsService: ReservationDetailsService;
 
-    constructor(private reservationDetailsService: ReservationDetailsService, private searchService: SearchService, private authService: AuthService, private reservationService: ReservationService, private router: Router){
-        authService.getUser().subscribe(user =>{
-            if(user != undefined) {
+
+    constructor(private reservationDetailsService: ReservationDetailsService, private searchService: SearchService, private authService: AuthService, private reservationService: ReservationService, private router: Router) {
+        authService.getUser().subscribe(user => {
+            if (user != undefined) {
                 this.user = user;
             }
         });
@@ -51,21 +50,15 @@ export class ReservationDetailsComponent{
         searchService.getEndTime().subscribe(end => this.end = end);
     }
 
-
-
-    reserve(){
-        // TODO: make new reservation from service, add reservation fields
+    reserve() {
         this.reservation.user = this.user;
         this.reservation.title = this.title;
         this.reservation.start = this.start;
         this.reservation.end = this.end;
-        console.log("start: " + this.start);
         this.reservation.resource = this.resource;
         this.reservationService.makeReservation(this.reservation).subscribe(reservation => {
-            if(reservation != null && reservation != undefined){
+            if (reservation != null && reservation != undefined) {
                 this.router.navigateByUrl("/secure/search-results/success");
-                console.log("it works");
-                //redirect
             }
         })
     }

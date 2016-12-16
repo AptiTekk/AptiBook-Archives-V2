@@ -1,4 +1,3 @@
-
 import Moment = moment.Moment;
 import moment = require("moment");
 import {Component, ViewEncapsulation, ViewChild} from "@angular/core";
@@ -26,14 +25,12 @@ export class SearchResultsPageComponent {
     resource: Resource;
     availableResources: Resource[];
     resourceCategories: ResourceCategory[] = [];
-    //private reservationDetailsService: ReservationDetailsService;
 
     start: Moment;
     end: Moment;
 
     constructor(private searchService: SearchService, protected apiService: APIService, router: Router, private resourceCategoryService: ResourceCategoryService, private reservationDetailsService: ReservationDetailsService) {
         this.router = router;
-        //this.reservationDetailsService = reservationDetailsService;
         searchService.getSearchResults().subscribe(resources => {
             this.availableResources = resources;
         });
@@ -53,7 +50,7 @@ export class SearchResultsPageComponent {
         this.searchService.getSearchResults().take(1).subscribe(resources => this.resultsUpdatedAlert.display());
     }
 
-    reserve(resource: Resource){
+    reserve(resource: Resource) {
         this.reservationDetailsService.setResource(resource);
         this.router.navigateByUrl("/secure/search-results/reservation-details");
     }
