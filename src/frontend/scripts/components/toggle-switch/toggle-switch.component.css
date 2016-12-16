@@ -13,8 +13,6 @@
 .switch {
     position: relative;
     overflow: hidden;
-    width: 58px;
-    height: 34px;
 }
 
 .switch input[type="checkbox"] {

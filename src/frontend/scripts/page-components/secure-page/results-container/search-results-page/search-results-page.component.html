@@ -6,6 +6,10 @@
 
 <div class="container">
 
+    <ol class="breadcrumb">
+        <li><a [routerLink]="['', 'secure']">Home</a></li>
+        <li class="active">Search by Time</li>
+    </ol>
     <div id="search-settings" class="row">
         <div class="col-xs-12 col-sm-5 col-md-4">
             <label for="startTimePicker">Start Time: </label>
@@ -37,7 +41,8 @@
                     <div *ngFor="let category of resourceCategories">
                         <div class="row" style="margin-bottom: 10px;">
                             <div class="col-xs-12">
-                                <toggle-switch [(ngModel)]="category.enabled" style="margin-right: 10px"></toggle-switch>
+                                <toggle-switch [(ngModel)]="category.enabled"
+                                               style="margin-right: 10px"></toggle-switch>
                                 <label>{{category.name}}</label>
                             </div>
                         </div>
@@ -57,7 +62,7 @@
                         Category: <span style="font-weight: bold">{{resource.resourceCategory.name}}</span>
                     </panel-body>
                     <panel-footer>
-                        <button class="btn btn-primary">Reserve This</button>
+                        <button class="btn btn-primary" (click)="reserve(resource)">Reserve This</button>
                     </panel-footer>
                 </panel>
             </div>

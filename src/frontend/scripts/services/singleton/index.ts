@@ -9,3 +9,4 @@ export * from "./user.service";
 export * from "./usergroup.service";
 export * from "./notification.service";
 export * from "./resource-category.service"
+export * from "./reservation-details.service"
