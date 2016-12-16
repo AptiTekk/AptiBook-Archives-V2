@@ -10,7 +10,7 @@ import moment = require("moment");
 })
 export class AppComponent {
     constructor(){
-        moment.locale('en', {
+        moment.updateLocale('en', {
             calendar : {
                 lastDay : '[Yesterday at] LT',
                 sameDay : '[Today at] LT',
