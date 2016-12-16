@@ -12,6 +12,7 @@
             <div class="full-height">
                 <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
                           [hiddenStatuses]="['rejected', 'cancelled']"
+                          [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
                           (eventSelected)="reservationInfoModal.display($event)"></calendar>
             </div>
         </div>
@@ -20,7 +21,7 @@
         <div class="hidden-xs hidden-sm col-md-3 col-lg-push-3 col-lg-2">
             <panel [type]="'primary'" [title]="'Calendar Filters'">
                 <panel-body>
-                    <toggle-switch style="margin-right: 10px;"></toggle-switch>
+                    <toggle-switch [(ngModel)]="filterOnlyUsersEvents" style="margin-right: 10px;"></toggle-switch>
                     <label>Only My Reservations</label>
                 </panel-body>
             </panel>

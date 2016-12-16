@@ -2,6 +2,8 @@ import {Component, trigger, state, style, transition, animate, ViewChild} from "
 import {Reservation} from "../../../models/reservation.model";
 import {APIService} from "../../../services/singleton/api.service";
 import {ReservationInfoModalComponent} from "../../../components/reservation-info-modal/reservation-info-modal.component";
+import {AuthService} from "../../../services/singleton/auth.service";
+import {User} from "../../../models/user.model";
 
 @Component({
     selector: 'dashboard-page',
@@ -21,7 +23,12 @@ export class DashboardPageComponent {
 
     makingNewReservation: boolean = false;
 
-    constructor(protected apiService: APIService) {
+    currentUser: User;
+
+    filterOnlyUsersEvents: boolean = false;
+
+    constructor(protected apiService: APIService, authService: AuthService) {
+        authService.getUser().subscribe(user => this.currentUser = user);
     }
 
     onCalendarEventClicked(event: Reservation) {
