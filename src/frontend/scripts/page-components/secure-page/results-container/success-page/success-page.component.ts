@@ -11,10 +11,6 @@ export class SuccessPageComponent {
     reservation: Reservation;
 
     constructor(reservationService: ReservationService) {
-        reservationService.getLastReservationMade().subscribe(reservation => {
-            if (reservation != undefined && reservation != null) {
-                this.reservation = reservation;
-            }
-        });
+        reservationService.getLastReservationMade().subscribe(reservation => this.reservation = reservation);
     }
 }

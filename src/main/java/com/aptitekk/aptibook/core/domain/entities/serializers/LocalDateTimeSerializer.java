@@ -6,7 +6,6 @@
 
 package com.aptitekk.aptibook.core.domain.entities.serializers;
 
-import com.aptitekk.aptibook.core.domain.entities.Reservation;
 import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.core.JsonParser;
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -20,13 +19,11 @@ import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Date;
-import java.util.List;
 
 public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
-    final static String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
+    final static String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss.SSSX", "yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
 
     @Override
     public void serialize(LocalDateTime localDateTime, JsonGenerator jsonGenerator, SerializerProvider serializerProvider) throws IOException, JsonProcessingException {
@@ -38,20 +35,13 @@ public class LocalDateTimeSerializer extends JsonSerializer<LocalDateTime> {
         @Override
         public LocalDateTime deserialize(JsonParser jsonParser, DeserializationContext deserializationContext) throws IOException, JsonProcessingException {
 
-        /*    Date date = null;
             try {
-                date = DateUtils.parseDate(jsonParser.getText(), ACCEPTED_TIME_FORMATS);
+                Date date = DateUtils.parseDate(jsonParser.getText(), ACCEPTED_TIME_FORMATS);
+                return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());
             } catch (ParseException e) {
                 e.printStackTrace();
+                return null;
             }
-
-            return LocalDateTime.ofInstant(date.toInstant(), ZoneId.systemDefault());*/
-
-
-            //ISO 8601
-            String date = jsonParser.getText();
-            ZonedDateTime zonedDateTime = ZonedDateTime.parse(date);
-            return zonedDateTime.toLocalDateTime();
         }
 
     }

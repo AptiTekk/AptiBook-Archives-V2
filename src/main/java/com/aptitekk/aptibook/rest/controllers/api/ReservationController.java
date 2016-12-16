@@ -6,12 +6,15 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
+import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Reservation;
+import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
+import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.lang3.time.DateUtils;
@@ -29,46 +32,20 @@ import java.util.List;
 @APIController
 public class ReservationController extends APIControllerAbstract {
 
-    private final TenantSessionService tenantSessionService;
     private final ReservationRepository reservationRepository;
+    private final TenantSessionService tenantSessionService;
     private final ResourceRepository resourceRepository;
     private final UserRepository userRepository;
+    private final ReservationService reservationService;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository, TenantSessionService tenantSessionService, UserRepository userRepository, ResourceRepository resourceRepository) {
+    public ReservationController(ReservationRepository reservationRepository, TenantSessionService tenantSessionService, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService) {
         this.reservationRepository = reservationRepository;
+        this.tenantSessionService = tenantSessionService;
         this.resourceRepository = resourceRepository;
         this.userRepository = userRepository;
-        this.tenantSessionService = tenantSessionService;
+        this.reservationService = reservationService;
     }
-
-    @RequestMapping(value = "/makeReservation", method = RequestMethod.POST)
-    public ResponseEntity<?> makeReservation(@RequestBody ReservationDTO reservationDTO) {
-
-        if (authService.isUserSignedIn()) {
-            try {
-                Reservation reservation = new Reservation();
-                reservation.setTenant(tenantSessionService.getTenant());
-                reservation.setUser(userRepository.find(reservationDTO.user.id));
-                reservation.setTitle(reservationDTO.title);
-                reservation.setResource(resourceRepository.find(reservationDTO.resource.id));
-                reservation.setStart(reservationDTO.start);
-                reservation.setEnd(reservationDTO.end);
-                if (reservationDTO.resource.needsApproval) {
-                    reservation.setStatus(Reservation.Status.PENDING);
-                } else {
-                    reservation.setStatus(Reservation.Status.APPROVED);
-                }
-                reservation = reservationRepository.save(reservation);
-                return ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
-                }.getType()));
-            } catch (Exception e) {
-                return badRequest();
-            }
-        }
-        return unauthorized();
-    }
-
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
     public ResponseEntity<?> getReservationsBetweenDates(@RequestParam("start") String start, @RequestParam("end") String end) {
@@ -114,6 +91,57 @@ public class ReservationController extends APIControllerAbstract {
                 } catch (ParseException e) {
                     return badRequest("Could not parse start or end time.");
                 }
+            }
+            return noPermission();
+        }
+        return unauthorized();
+    }
+
+    @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.POST)
+    public ResponseEntity<?> makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
+        if (authService.isUserSignedIn()) {
+            if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
+                Reservation reservation = new Reservation();
+                reservation.setTenant(tenantSessionService.getTenant());
+                reservation.setUser(userRepository.findInCurrentTenant(id));
+
+                if (reservationDTO.title != null)
+                    if (!reservationDTO.title.matches("[^<>;=]*"))
+                        return badRequest("The Title cannot contain these characters: < > ; =");
+                    else if (reservationDTO.title.length() > 100)
+                        return badRequest("The Title must be 100 characters or less.");
+                    else
+                        reservation.setTitle(reservationDTO.title);
+
+                Long resourceId = reservationDTO.resource.id;
+                Resource resource = resourceRepository.findInCurrentTenant(resourceId);
+
+                if (resource == null)
+                    return badRequest("No Resource supplied");
+
+                if (reservationDTO.start == null || reservationDTO.end == null)
+                    return badRequest("No Start or End times supplied.");
+
+                if (reservationDTO.start.isAfter(reservationDTO.end))
+                    return badRequest("Start time is after End time.");
+
+                boolean available = reservationService.isResourceAvailableForReservation(resource, reservationDTO.start, reservationDTO.end);
+                if (!available)
+                    return badRequest("Resource is not available at specified times.");
+
+                reservation.setResource(resource);
+                reservation.setStart(reservationDTO.start);
+                reservation.setEnd(reservationDTO.end);
+
+                if (resource.needsApproval) {
+                    reservation.setStatus(Reservation.Status.PENDING);
+                } else {
+                    reservation.setStatus(Reservation.Status.APPROVED);
+                }
+
+                reservation = reservationRepository.save(reservation);
+                return ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
+                }.getType()));
             }
             return noPermission();
         }

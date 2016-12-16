@@ -3,13 +3,12 @@ import {APIService} from "./api.service";
 import {Observable, ReplaySubject} from "rxjs";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
-import * as moment from 'moment';
+import * as moment from "moment";
 
 @Injectable()
 export class ReservationService {
 
     private lastReservationMade: ReplaySubject<Reservation> = new ReplaySubject<Reservation>(1);
-
 
     constructor(private apiService: APIService) {
     }
@@ -26,22 +25,22 @@ export class ReservationService {
         });
     }
 
-    public makeReservation(reservation: Reservation): Observable<Reservation[]> {
+    public makeReservation(reservation: Reservation): Observable<Reservation> {
         return Observable.create(listener => {
-                let body = JSON.stringify(reservation);
-                this.apiService.post("/makeReservation", body).subscribe(
-                    response => {
-                        let reservation: Reservation = <Reservation>response;
-                        listener.next(reservation);
-                        this.lastReservationMade.next(reservation)
-                    },
-                    err => listener.next(undefined)
-                );
+            let body = JSON.stringify(reservation);
+            this.apiService.post("reservations/user/" + reservation.user.id, body).subscribe(
+                response => {
+                    let reservation: Reservation = <Reservation>response;
+                    listener.next(reservation);
+                    this.lastReservationMade.next(reservation)
+                },
+                err => listener.next(undefined)
+            );
 
         });
     }
 
-    getLastReservationMade():ReplaySubject<Reservation>{
+    getLastReservationMade(): ReplaySubject<Reservation> {
         return this.lastReservationMade;
     }
 

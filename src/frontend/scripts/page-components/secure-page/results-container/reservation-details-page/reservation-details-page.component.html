@@ -17,17 +17,24 @@
             <h4>Requesting Reservation for {{resource.name}}</h4>
         </div>
     </div>
+
+    <ul class="nav nav-tabs">
+        <li class="active"><a [routerLink]="['','secure','search-results','reservation-details']">Details</a></li>
+    </ul>
+
+    <br/>
+
     <form (ngSubmit)="reserve()">
-        <ul class="nav nav-tabs">
-            <li class="active"><a [routerLink]="['','secure','search-results','reservation-details']">Details</a></li>
-        </ul>
         <div class="row">
             <div class="col-xs-12 col-md-6">
                 <div class="form-group">
                     <label for="title">Title:*</label>
                     <input type="text" class="form-control" id="title" [(ngModel)]="title"
-                           pattern="^[a-zA-Z0-9_.-]*$"
-                           name="titleField" placeholder="What is this reservation for?" required>
+                           pattern="[^<>;=]*"
+                           name="titleField"
+                           placeholder="What is this reservation for?"
+                           required
+                           maxlength="100">
                 </div>
             </div>
         </div>
@@ -53,10 +60,9 @@
         <hr>
         <div class="row">
             <div class="col-xs-12 col-md-6">
-                <button type="submit" class="btn btn-success">Reserve This</button>
-                <button [routerLink]="['', 'secure']" class="btn btn-default">Cancel</button>
+                <button type="submit" class="btn btn-primary">Submit Reservation</button>
+                <button [routerLink]="['', 'secure', 'search-results']" class="btn btn-default">Cancel</button>
             </div>
         </div>
     </form>
-
 </div>

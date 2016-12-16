@@ -46,7 +46,6 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 component: ResultsContainerComponent,
                 canActivate: [SearchGuard],
                 children: [
-
                     {
                         path: 'reservation-details',
                         component: ReservationDetailsComponent,
