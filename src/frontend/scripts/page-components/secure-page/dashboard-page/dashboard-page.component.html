@@ -55,7 +55,7 @@
             </div>
 
             <!-- New Reservation -->
-            <div class="new-reservation-section" style="opacity: 0"
+            <div class="new-reservation-section" style="opacity: 0; height: 0; overflow: hidden; pointer-events: none;"
                  [@sidebarDisplayStatus]="makingNewReservation ? 'visible' : 'hidden'">
                 <new-reservation-panel (cancelled)="onCancelNewReservation()"></new-reservation-panel>
             </div>

@@ -1,0 +1,24 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div class="form-group" *ngIf="group && controlName"
+     [class.has-error]="group && controlName ? (group.controls[controlName].touched || group.controls[controlName].dirty) && group.controls[controlName].invalid : false">
+    <label *ngIf="label" class="control-label" [attr.for]="controlName">{{label}}</label>
+    <div [class.input-group]="faIconName">
+        <div class="input-group-addon" *ngIf="faIconName">
+            <i class="fa fa-{{faIconName}}"></i>
+        </div>
+        <!--suppress HtmlFormInputWithoutLabel -->
+        <input [formControl]="group.controls[controlName]"
+               [id]="controlName"
+               [type]="inputType ? inputType : 'text'"
+               class="form-control"
+               [autofocus]="autoFocus">
+    </div>
+    <alert [severity]="'danger'"
+           [displayed]="errorMessages && (group.controls[controlName].touched || group.controls[controlName].dirty) && group.controls[controlName].invalid"
+           [message]="getErrorMessage()"></alert>
+</div>

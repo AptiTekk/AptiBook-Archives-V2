@@ -5,6 +5,6 @@
   -->
 
 <div class="alert alert-{{severity}}"
-     [@visibilityChanged]="isDisplayed()">
-    {{displayed || timerRunning ? message : undefined}}
+     [@alertDisplayed]="isDisplayed()">
+    {{isDisplayed() ? message : undefined}}
 </div>

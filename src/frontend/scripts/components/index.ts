@@ -2,6 +2,7 @@ export * from './alert/alert.component';
 export * from './calendar/calendar.component';
 export * from './date-time-picker/date-time-picker.component';
 export * from './footer';
+export * from './form-group/form-group.component';
 export * from './header/header.component';
 export * from './loader/loader.component';
 export * from './modal/modal.component';

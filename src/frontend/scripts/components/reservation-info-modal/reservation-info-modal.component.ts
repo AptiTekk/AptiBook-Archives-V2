@@ -22,7 +22,7 @@ export class ReservationInfoModalComponent {
     public display(reservation: Reservation) {
         this.reservation = reservation;
         this.reservationStartMoment = moment(reservation.start);
-        this.reservationEndMoment = moment(reservation.end);
+        this.reservationEndMoment = moment(reservation.end ? reservation.end : reservation.start);
         this.modal.openModal();
     }
 

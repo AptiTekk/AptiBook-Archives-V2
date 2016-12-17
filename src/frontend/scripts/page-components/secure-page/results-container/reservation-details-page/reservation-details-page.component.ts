@@ -7,6 +7,8 @@ import {AuthService} from "../../../../services/singleton/auth.service";
 import {Reservation} from "../../../../models/reservation.model";
 import {ReservationService} from "../../../../services/singleton/reservation.service";
 import {Router} from "@angular/router";
+import {APIService} from "../../../../services/singleton/api.service";
+import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import Moment = moment.Moment;
 import moment = require("moment");
 @Component({
@@ -31,14 +33,26 @@ export class ReservationDetailsComponent {
         rejected: null,
         cancelled: null
     };
+
     resource: Resource;
-    title: string;
     start: Moment;
     end: Moment;
     user: User;
 
+    formGroup: FormGroup;
 
-    constructor(private reservationDetailsService: ReservationDetailsService, private searchService: SearchService, private authService: AuthService, private reservationService: ReservationService, private router: Router) {
+    constructor(protected apiService: APIService,
+                private formBuilder: FormBuilder,
+                private reservationDetailsService: ReservationDetailsService,
+                private searchService: SearchService,
+                private authService: AuthService,
+                private reservationService: ReservationService,
+                private router: Router) {
+
+        this.formGroup = formBuilder.group({
+            title: [null, Validators.compose([Validators.required, Validators.maxLength(100), Validators.pattern("[^<>;=]*")])]
+        });
+
         authService.getUser().subscribe(user => {
             if (user != undefined) {
                 this.user = user;
@@ -51,9 +65,9 @@ export class ReservationDetailsComponent {
 
     reserve() {
         this.reservation.user = this.user;
-        this.reservation.title = this.title;
-        this.reservation.start = this.start;
-        this.reservation.end = this.end;
+        this.reservation.title = this.formGroup.controls['title'].value;
+        this.reservation.start = this.start.toISOString();
+        this.reservation.end = this.end.toISOString();
         this.reservation.resource = this.resource;
 
         this.reservationService.makeReservation(this.reservation).subscribe(reservation => {

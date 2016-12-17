@@ -5,7 +5,7 @@ import {Subscription, Observable} from "rxjs";
     selector: 'alert',
     templateUrl: 'alert.component.html',
     animations: [
-        trigger('visibilityChanged', [
+        trigger('alertDisplayed', [
             state('true', style({opacity: 1})),
             state('false', style({opacity: 0, margin: 0, padding: '0 15px'})),
             transition('1 => 0', animate('200ms')),
@@ -58,11 +58,11 @@ export class AlertComponent {
     }
 
     display(message?: string, autoClose: boolean = true) {
-        if (message != undefined) {
+        if (message) {
             this.message = message;
         }
 
-        if (this.message != undefined) {
+        if (this.message) {
             if (autoClose) {
                 this.displayed = false;
                 this.stopTimer();
@@ -74,6 +74,9 @@ export class AlertComponent {
     }
 
     isDisplayed(): boolean {
+        if (!this.message)
+            return false;
+
         return this.displayed || this.timerRunning;
     }
 
