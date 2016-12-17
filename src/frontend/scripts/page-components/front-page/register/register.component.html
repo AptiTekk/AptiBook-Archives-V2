@@ -4,55 +4,69 @@
   ~ Proprietary and confidential.
   -->
 
-<form id="registerForm" (submit)="onSubmit()">
+<form id="registerForm" [formGroup]="formGroup" (submit)="onSubmit()">
     <div class="alert alert-danger" #alert *ngIf="alertMessage">{{alertMessage}}</div>
-    <div class="form-group">
-        <label for="emailAddressInput">Email Address:</label>
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="fa fa-at"></i>
-            </span>
-            <input name="emailAddress" id="emailAddressInput" type="text" class="form-control"
-                   [(ngModel)]="emailAddress"
-                   required/>
-        </div>
-    </div>
 
-    <div class="form-group">
-        <label for="firstNameInput">First Name:</label>
-        <input name="firstNameInput" id="firstNameInput" type="text" class="form-control" [(ngModel)]="firstName"
-               required="required"/>
-    </div>
+    <form-group [label]="'Email Address'"
+                [group]="formGroup"
+                [controlName]="'emailAddress'"
+                [faIconName]="'at'"
+                [autoFocus]="true"
+                [errorMessages]="
+                    {
+                    required: 'This is required.',
+                    pattern: 'These characters are not allowed:  < > ; =',
+                    maxlength: 'This must be 100 characters or less.'
+                    }">
+    </form-group>
 
-    <div class="form-group">
-        <label for="lastNameInput">Last Name:</label>
-        <input name="lastNameInput" id="lastNameInput" type="text" class="form-control" [(ngModel)]="lastName"
-               required="required"/>
-    </div>
+    <form-group [label]="'First Name'"
+                [group]="formGroup"
+                [controlName]="'firstName'"
+                [errorMessages]="
+                    {
+                    pattern: 'These characters are not allowed:  < > ; =',
+                    maxlength: 'This must be 30 characters or less.'
+                    }">
+    </form-group>
 
-    <div class="form-group">
-        <label for="passwordInput">Password:</label>
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="fa fa-asterisk"></i>
-            </span>
-            <input name="password" id="passwordInput" type="password" class="form-control" [(ngModel)]="password" required/>
-        </div>
-    </div>
+    <form-group [label]="'Last Name'"
+                [group]="formGroup"
+                [controlName]="'lastName'"
+                [errorMessages]="
+                    {
+                    pattern: 'These characters are not allowed:  < > ; =',
+                    maxlength: 'This must be 30 characters or less.'
+                    }">
+    </form-group>
 
-    <div class="form-group">
-        <label for="confirmPasswordInput">Confirm Password:</label>
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="fa fa-asterisk"></i>
-            </span>
-            <input name="confirmPasswordInput" id="confirmPasswordInput" type="password" class="form-control"
-                   [(ngModel)]="confirmPassword" required/>
-        </div>
-    </div>
+    <form-group [label]="'Password'"
+                [group]="formGroup"
+                [controlName]="'password'"
+                [faIconName]="'asterisk'"
+                [inputType]="'password'"
+                [errorMessages]="
+                    {
+                    required: 'This is required.',
+                    maxlength: 'This must be 50 characters or less.'
+                    }">
+    </form-group>
+
+    <form-group [label]="'Confirm Password'"
+                [group]="formGroup"
+                [controlName]="'confirmPassword'"
+                [faIconName]="'asterisk'"
+                [inputType]="'password'"
+                [errorMessages]="
+                    {
+                    required: 'This is required.',
+                    maxlength: 'This must be 50 characters or less.'
+                    }">
+    </form-group>
 
     <button class="btn btn-primary btn-large btn-block"
-            [disabled]="!emailAddress || !firstName || !lastName || !password || !confirmPassword">Register
+            [disabled]="formGroup.invalid">
+        Register
     </button>
 
     <hr/>
