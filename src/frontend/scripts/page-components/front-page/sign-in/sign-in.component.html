@@ -4,32 +4,25 @@
   ~ Proprietary and confidential.
   -->
 
-<form id="loginForm" (submit)="onSubmit()">
+<form id="loginForm" [formGroup]="signInFormGroup" (submit)="onSubmit()">
     <alert #loginAlert [severity]="'danger'"></alert>
 
-    <div class="form-group">
-        <label for="emailAddressInput">Email Address:</label>
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="fa fa-at"></i>
-            </span>
-            <input name="emailAddress" id="emailAddressInput" type="text" class="form-control"
-                   [(ngModel)]="emailAddress" autofocus/>
-        </div>
-    </div>
+    <form-group [label]="'Email Address'"
+                [group]="signInFormGroup"
+                [controlName]="'emailAddress'"
+                [faIconName]="'at'"
+                [autoFocus]="true">
+    </form-group>
+
+    <form-group [label]="'Password'"
+                [group]="signInFormGroup"
+                [controlName]="'password'"
+                [faIconName]="'asterisk'"
+                [inputType]="'password'">
+    </form-group>
 
     <div class="form-group">
-        <label for="passwordInput">Password:</label>
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="fa fa-asterisk"></i>
-            </span>
-            <input name="password" id="passwordInput" type="password" class="form-control" [(ngModel)]="password"/>
-        </div>
-    </div>
-
-    <div class="form-group">
-        <button class="btn btn-primary btn-large btn-block" [disabled]="!emailAddress || !password">Sign In</button>
+        <button class="btn btn-primary btn-large btn-block" [disabled]="signInFormGroup.invalid">Sign In</button>
     </div>
 </form>
 

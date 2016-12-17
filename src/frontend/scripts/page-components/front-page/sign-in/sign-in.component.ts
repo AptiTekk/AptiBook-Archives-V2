@@ -4,6 +4,7 @@ import {LoaderComponent} from "../../../components/loader/loader.component";
 import {OAuthService} from "../../../services/stateful/oauth.service";
 import {AuthService} from "../../../services/singleton/auth.service";
 import {AlertComponent} from "../../../components/alert/alert.component";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'sign-in',
@@ -17,11 +18,17 @@ export class SignInComponent implements AfterViewInit {
     @ViewChild('loginAlert')
     loginAlert: AlertComponent;
 
-    emailAddress: string;
-    password: string;
+    signInFormGroup: FormGroup;
+
     googleSignInUrl: string;
 
-    constructor(private router: Router, private activeRoute: ActivatedRoute, private oAuthService: OAuthService, private authService: AuthService) {
+    constructor(formBuilder: FormBuilder, private router: Router, private activeRoute: ActivatedRoute, private oAuthService: OAuthService, private authService: AuthService) {
+
+        this.signInFormGroup = formBuilder.group({
+            emailAddress: [null, Validators.required],
+            password: [null, Validators.required]
+        });
+
         //Get the Google Sign In URL
         this.oAuthService.getGoogleOAuthUrl().subscribe(url => this.googleSignInUrl = url);
     }
@@ -44,7 +51,7 @@ export class SignInComponent implements AfterViewInit {
 
     onSubmit() {
         this.loader.setDisplayed(true);
-        this.authService.signIn(this.emailAddress, this.password).subscribe(
+        this.authService.signIn(this.signInFormGroup.controls['emailAddress'].value, this.signInFormGroup.controls['password'].value).subscribe(
             (successful: boolean) => {
                 if (successful)
                     this.router.navigateByUrl("/secure");
