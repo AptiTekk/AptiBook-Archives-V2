@@ -2,6 +2,7 @@ import {Component, ViewChild} from "@angular/core";
 import {Reservation} from "../../models/reservation.model";
 import {ModalComponent} from "../modal/modal.component";
 import moment = require("moment");
+import Moment = moment.Moment;
 
 @Component({
     selector: 'reservation-info-modal',
@@ -15,13 +16,18 @@ export class ReservationInfoModalComponent {
 
     reservation: Reservation;
 
+    reservationStartMoment: Moment;
+    reservationEndMoment: Moment;
+
     public display(reservation: Reservation) {
         this.reservation = reservation;
+        this.reservationStartMoment = moment(reservation.start);
+        this.reservationEndMoment = moment(reservation.end);
         this.modal.openModal();
     }
 
     humanizeDifference(): string {
-        return moment.duration(this.reservation.end.diff(this.reservation.start)).humanize();
+        return moment.duration(this.reservationEndMoment.diff(this.reservationStartMoment)).humanize();
     }
 
 }

@@ -56,6 +56,10 @@ export class ModalComponent {
         document.body.classList.remove("modal-open");
     }
 
+    isModalOpen(): boolean {
+        return this.isOpen;
+    }
+
 }
 
 @Directive({

@@ -1,7 +1,6 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {Observable, ReplaySubject} from "rxjs";
-import {isNullOrUndefined} from "util";
 import {UserGroup} from "../../models/user-group.model";
 
 @Injectable()
@@ -15,7 +14,7 @@ export class UserGroupService {
 
     public patchUserGroup(userGroup: UserGroup): Observable<boolean> {
         return Observable.create(listener => {
-            if (isNullOrUndefined(userGroup))
+            if (!userGroup)
                 listener.next(false);
             else {
                 this.apiService.patch("usersGroups/" + userGroup.id, userGroup).subscribe(

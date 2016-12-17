@@ -6,6 +6,10 @@
 
 <modal #modal [title]="'Reservation Details'" [cancelButtonLabel]="'Close'">
     <modal-body *ngIf="reservation">
+        <alert [displayed]="reservation.pending && modal.isModalOpen()" [severity]="'warning'"
+               [message]="'This reservation is pending approval, and is subject to changes.'"></alert>
+        <alert [displayed]="reservation.cancelled && modal.isModalOpen()" [severity]="'danger'"
+               [message]="'This reservation has been cancelled.'"></alert>
         <h4>{{reservation.title}}</h4>
         <p>You are viewing a reservation of
             <span style="font-weight: bold">{{reservation.resource.name}}</span>
@@ -15,19 +19,19 @@
         <ul>
             <li>
                 Starts on
-                <span style="font-weight: bold">{{reservation.start.format('dddd, MMMM Do, YYYY')}}</span>
+                <span style="font-weight: bold">{{reservationStartMoment.format('dddd, MMMM Do, YYYY')}}</span>
                 at
-                <span style="font-weight: bold">{{reservation.start.format('h:mm A')}}.</span>
+                <span style="font-weight: bold">{{reservationStartMoment.format('h:mm A')}}.</span>
             </li>
             <li>
                 Ends on
-                <span style="font-weight: bold">{{reservation.end.format('dddd, MMMM Do, YYYY')}}</span>
+                <span style="font-weight: bold">{{reservationEndMoment.format('dddd, MMMM Do, YYYY')}}</span>
                 at
-                <span style="font-weight: bold">{{reservation.end.format('h:mm A')}}.</span>
+                <span style="font-weight: bold">{{reservationEndMoment.format('h:mm A')}}.</span>
             </li>
-            <li>
+            <!--<li>
                 Will last about <span style="font-weight: bold">{{humanizeDifference()}}.</span>
-            </li>
+            </li>-->
         </ul>
     </modal-body>
 </modal>

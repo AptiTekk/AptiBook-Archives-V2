@@ -35,8 +35,31 @@
     border-color: #39629C;
 }
 
-app button.btn:focus {
+app .btn:focus {
     outline: none;
+}
+
+app .btn.btn-large {
+    font-size: 30px;
+}
+
+/* Select Box Styling */
+
+select.big-select {
+    display: block;
+    font-size: 20px;
+    width: 100%;
+    border-radius: 4px;
+    padding: 0 12px;
+    margin-bottom: 10px;
+}
+
+select.big-select:disabled {
+    background-color: #eee;
+}
+
+select.form-control {
+    height: 34px !important;
 }
 
 /* Switch Styling */
@@ -50,4 +73,33 @@ app button.btn:focus {
 .app .ui-widget-content .ui-state-highlight,
 .app .ui-widget-header .ui-state-highlight {
     background-color: #4272b7;
+}
+
+/* Scrollbar */
+
+::-webkit-scrollbar {
+    width: 16px;
+    background-color: #f1f1f1;
+}
+
+::-webkit-scrollbar-thumb {
+    background-color: #bbb;
+    border: 4px solid transparent;
+    border-radius: 8px;
+    background-clip: content-box;
+}
+
+/* Spacing Helpers */
+
+.full-height {
+    height: calc(100vh - 50px - 50px - 40px);
+}
+
+.full-height-breadcrumb {
+    height: calc(100vh - 50px - 50px - 40px - 56px);
+}
+
+.no-padding {
+    padding: 0 !important;
+    margin: 0 !important;
 }

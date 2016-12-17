@@ -6,8 +6,8 @@ import {Subscription, Observable} from "rxjs";
     templateUrl: 'alert.component.html',
     animations: [
         trigger('visibilityChanged', [
-            state('true', style({opacity: 1, transform: 'translateY(0%)'})),
-            state('false', style({opacity: 0, transform: 'translateY(-100%)', margin: 0, padding: '0 15px'})),
+            state('true', style({opacity: 1})),
+            state('false', style({opacity: 0, margin: 0, padding: '0 15px'})),
             transition('1 => 0', animate('200ms')),
             transition('0 => 1', animate('200ms'))
         ])

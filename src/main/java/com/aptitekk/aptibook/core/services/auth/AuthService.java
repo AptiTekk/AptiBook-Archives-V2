@@ -85,7 +85,7 @@ public class AuthService {
      * @return True if the user is signed in, false otherwise.
      */
     public boolean isUserSignedIn() {
-        return cookieService.getDataFromEncryptedCookie(COOKIE_NAME, request) != null;
+        return getCurrentUser() != null;
     }
 
     /**

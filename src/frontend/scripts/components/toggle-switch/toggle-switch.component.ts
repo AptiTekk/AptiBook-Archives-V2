@@ -1,4 +1,4 @@
-import {Component, Input, forwardRef, AfterViewInit} from "@angular/core";
+import {Component, Input, forwardRef, Output, EventEmitter, AfterViewInit} from "@angular/core";
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 
 @Component({
@@ -20,7 +20,10 @@ export class ToggleSwitchComponent implements AfterViewInit, ControlValueAccesso
     @Input()
     offText: string = "Off";
 
-    switchWidth: string = '0px';
+    switchWidth: number = 0;
+
+    @Output()
+    onToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
     on: boolean = false;
 
@@ -34,12 +37,13 @@ export class ToggleSwitchComponent implements AfterViewInit, ControlValueAccesso
         if (this.offText.length > maxLabelLength)
             maxLabelLength = this.offText.length;
 
-        this.switchWidth = (maxLabelLength * 13) + 'px';
+        this.switchWidth = (maxLabelLength * 13);
     }
 
     toggle() {
         this.on = !this.on;
         this.propagateChange(this.on);
+        this.onToggle.next(this.on);
     }
 
     writeValue(obj: any): void {

@@ -5,31 +5,31 @@
   -->
 
 <style type="text/css">
+    .notification {
+        padding-top: 15px;
+    }
+
     .read-notification {
         opacity: 0.4;
     }
 
-    .notification {
-        height: 100%;
-        padding-top: 15px;
+    .read-notification:hover {
+        opacity: 1;
     }
 
     hr {
         margin-top: 15px;
         margin-bottom: 0;
     }
-
-    .read-notification:hover {
-        opacity: 1;
-    }
 </style>
 <div class="container">
     <ol class="breadcrumb">
         <li><a [routerLink]="['', 'secure']">Home</a></li>
-        <li class="active">Notifications</li>
+        <li class="active">My Notifications</li>
     </ol>
     <div *ngIf="unreadNotifications.length > 0">
-        <h4>{{unreadNotifications.length}} Unread {{unreadNotifications.length == 1 ? 'Notification' : 'Notifications'}}</h4>
+        <h4>{{unreadNotifications.length}} Unread {{unreadNotifications.length == 1 ? 'Notification' :
+            'Notifications'}}</h4>
     </div>
     <div *ngIf="unreadNotifications.length == 0">
         <h4>No Unread Notifications</h4>
@@ -37,14 +37,17 @@
 
     <h5 class="text-muted">Previously Read Notifications will be deleted after 3 days</h5>
 
+    <hr/>
+
     <div *ngIf="notifications.length > 0">
-        <div *ngFor="let notification of notifications" [ngClass]="{'read-notification': notification.read}">
-            <hr>
-            <strong>{{notification.subject}}</strong>
+        <div *ngFor="let notification of notifications" class="notification"
+             [ngClass]="{'read-notification': notification.read}">
+            <span style="font-weight: bold">{{notification.subject}}</span>
             <br/>
             {{notification.body}}
             <br/>
             <i style="color:#808080">{{getTimeAgo(notification)}}</i>
+            <hr/>
         </div>
     </div>
 </div>

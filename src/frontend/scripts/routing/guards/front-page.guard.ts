@@ -2,7 +2,6 @@ import {AuthService} from "../../services/singleton/auth.service";
 import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
-import {isNullOrUndefined} from "util";
 
 @Injectable()
 export class FrontPageGuard implements CanActivate {
@@ -14,7 +13,7 @@ export class FrontPageGuard implements CanActivate {
         return Observable.create(listener => {
             this.authService.getUser().take(1).subscribe(
                 user => {
-                    if (!isNullOrUndefined(user)) {
+                    if (user) {
                         this.router.navigateByUrl("/secure/dashboard");
                         listener.next(false);
                     } else {

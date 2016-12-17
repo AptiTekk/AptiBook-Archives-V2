@@ -69,12 +69,6 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li>
-                                <a href="#" [routerLink]="['', 'secure', 'my', 'reservations']">
-                                    <span><i class="fa fa-calendar"></i></span>
-                                    My Reservations
-                                </a>
-                            </li>
-                            <li>
                                 <a href="#" [routerLink]="['', 'secure', 'my', 'account']">
                                     <span><i class="fa fa-pencil"></i></span>
                                     My Account
@@ -94,7 +88,7 @@
                     <li class="nav-notifications">
                         <a href="#" [routerLink]="['', 'secure', 'my', 'notifications']">
                             <span><i class="fa fa-bell"></i></span>
-                            <span class="notifications-badge badge" *ngIf="unreadNotifications.length > 0" >{{unreadNotifications.length}}</span>
+                            <span class="notifications-badge badge" *ngIf="unreadNotifications.length > 0">{{unreadNotifications.length}}</span>
                         </a>
                     </li>
                 </ul>

@@ -7,7 +7,8 @@
 .navbar {
     background-color: #fff !important;
     box-shadow: #aaa 0 -5px 20px 1px;
-    font-family: "Droid Sans", sans-serif;
+    font-family: "Roboto", sans-serif;
+    font-size: 16px;
     border: none;
     border-top-left-radius: 0;
     border-top-right-radius: 0;
@@ -25,20 +26,21 @@
     height: 40px;
 }
 
-.navbar-nav > li > .dropdown-menu {
+.dropdown-menu {
     min-width: 100%;
+    font-size: 16px;
     border: none;
 }
 
-.navbar-nav > li > .dropdown-menu > li > a {
+.dropdown-menu > li > a {
     padding: 3px 15px !important;
 }
 
-.navbar-nav > li > .dropdown-menu > li > a > span {
+.dropdown-menu > li > a > span {
     margin-right: 5px;
 }
 
-.navbar-nav > li > .dropdown-menu .fa {
+.dropdown-menu .fa {
     width: 16px;
 }
 
@@ -94,7 +96,7 @@
 
     .badge.notifications-badge {
         background-color: transparent;
-        left: 48px;
+        left: 50px;
     }
 
     .nav-notifications {
