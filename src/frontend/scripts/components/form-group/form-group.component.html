@@ -15,7 +15,8 @@
         <input [formControl]="group.controls[controlName]"
                [id]="controlName"
                [type]="inputType ? inputType : 'text'"
-               class="form-control">
+               class="form-control"
+               [autofocus]="autoFocus">
     </div>
     <alert [severity]="'danger'"
            [displayed]="errorMessages && (group.controls[controlName].touched || group.controls[controlName].dirty) && group.controls[controlName].invalid"

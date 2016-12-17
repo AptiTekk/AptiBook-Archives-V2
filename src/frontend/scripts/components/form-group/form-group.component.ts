@@ -42,6 +42,9 @@ export class FormGroupComponent {
     @Input()
     inputType: string;
 
+    @Input()
+    autoFocus: boolean = false;
+
     /**
      * Font Awesome Icon Name
      */
