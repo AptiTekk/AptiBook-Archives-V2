@@ -33,70 +33,50 @@
 
                         <div class="row">
                             <div class="col-xs-12 col-md-6">
-                                <div class="form-group"
-                                     [class.has-error]="(personalInformation.controls['firstName'].touched || personalInformation.controls['firstName'].dirty) && personalInformation.controls['firstName'].invalid">
-                                    <label for="firstNameField" class="control-label">First Name:</label>
-                                    <input formControlName="firstName"
-                                           id="firstNameField"
-                                           class="form-control">
-                                    <alert [severity]="'danger'"
-                                           [displayed]="(personalInformation.controls['firstName'].touched || personalInformation.controls['firstName'].dirty) && personalInformation.controls['firstName'].invalid"
-                                           [message]="
-                                           personalInformation.controls['firstName'].hasError('maxlength') ? 'This must be 30 characters or less.'
-                                           : 'These characters are not allowed:  < > ; ='"></alert>
-                                </div>
+                                <form-group [group]="personalInformation"
+                                            [controlName]="'firstName'"
+                                            [label]="'First Name'"
+                                            [errorMessages]="
+                                                {
+                                                pattern: 'These characters are not allowed:  < > ; =',
+                                                maxlength: 'This must be 30 characters or less.'
+                                                }">
+                                </form-group>
                             </div>
                             <div class="col-xs-12 col-md-6">
-                                <div class="form-group"
-                                     [class.has-error]="(personalInformation.controls['lastName'].touched || personalInformation.controls['lastName'].dirty) && personalInformation.controls['lastName'].invalid">
-                                    <label for="lastNameField">Last Name:</label>
-                                    <input formControlName="lastName"
-                                           id="lastNameField"
-                                           class="form-control">
-                                    <alert [severity]="'danger'"
-                                           [displayed]="(personalInformation.controls['lastName'].touched || personalInformation.controls['lastName'].dirty) && personalInformation.controls['lastName'].invalid"
-                                           [message]="
-                                           personalInformation.controls['lastName'].hasError('maxlength') ? 'This must be 30 characters or less.'
-                                           : 'These characters are not allowed:  < > ; ='"></alert>
-                                </div>
+                                <form-group [group]="personalInformation"
+                                            [controlName]="'lastName'"
+                                            [label]="'Last Name'"
+                                            [errorMessages]="
+                                                {
+                                                pattern: 'These characters are not allowed:  < > ; =',
+                                                maxlength: 'This must be 30 characters or less.'
+                                                }">
+                                </form-group>
                             </div>
                         </div>
 
-                        <div class="form-group"
-                             [class.has-error]="(personalInformation.controls['phoneNumber'].touched || personalInformation.controls['phoneNumber'].dirty) && personalInformation.controls['phoneNumber'].invalid">
-                            <label for="phoneNumberField" class="control-label">Phone Number:</label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-phone"></i>
-                                </div>
-                                <input formControlName="phoneNumber"
-                                       id="phoneNumberField"
-                                       class="form-control">
-                            </div>
-                            <alert [severity]="'danger'"
-                                   [displayed]="(personalInformation.controls['phoneNumber'].touched || personalInformation.controls['phoneNumber'].dirty) && personalInformation.controls['phoneNumber'].invalid"
-                                   [message]="
-                                           personalInformation.controls['phoneNumber'].hasError('maxlength') ? 'This must be 30 characters or less.'
-                                           : 'These characters are not allowed:  < > ; ='"></alert>
-                        </div>
+                        <form-group [group]="personalInformation"
+                                    [controlName]="'phoneNumber'"
+                                    [label]="'Phone Number'"
+                                    [faIconName]="'phone'"
+                                    [errorMessages]="
+                                            {
+                                            pattern: 'These characters are not allowed:  < > ; =',
+                                            maxlength: 'This must be 30 characters or less.'
+                                            }">
+                        </form-group>
 
-                        <div class="form-group"
-                             [class.has-error]="(personalInformation.controls['location'].touched || personalInformation.controls['location'].dirty) && personalInformation.controls['location'].invalid">
-                            <label for="locationField">Location:</label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-map-marker"></i>
-                                </div>
-                                <input formControlName="location"
-                                       id="locationField"
-                                       class="form-control">
-                            </div>
-                            <alert [severity]="'danger'"
-                                   [displayed]="(personalInformation.controls['location'].touched || personalInformation.controls['location'].dirty) && personalInformation.controls['location'].invalid"
-                                   [message]="
-                                           personalInformation.controls['location'].hasError('maxlength') ? 'This must be 250 characters or less.'
-                                           : 'These characters are not allowed:  < > ; ='"></alert>
-                        </div>
+                        <form-group [group]="personalInformation"
+                                    [controlName]="'location'"
+                                    [label]="'Location'"
+                                    [faIconName]="'map-marker'"
+                                    [errorMessages]="
+                                            {
+                                            pattern: 'These characters are not allowed:  < > ; =',
+                                            maxlength: 'This must be 250 characters or less.'
+                                            }">
+                        </form-group>
                     </panel-body>
                     <panel-footer>
                         <button class="btn btn-primary"

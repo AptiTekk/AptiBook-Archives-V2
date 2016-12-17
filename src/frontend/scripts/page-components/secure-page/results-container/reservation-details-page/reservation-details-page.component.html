@@ -31,19 +31,17 @@
             <form (ngSubmit)="reserve()" [formGroup]="formGroup">
                 <panel [type]="'primary'" [title]="'Reservation Details'">
                     <panel-body>
-                        <div class="form-group"
-                             [class.has-error]="formGroup.controls['title'].touched && formGroup.controls['title'].invalid">
-                            <label for="title" class="control-label">Title: *</label>
-                            <input formControlName="title"
-                                   type="text" class="form-control" id="title"
-                                   placeholder="What is this reservation for?">
-                            <alert [severity]="'danger'"
-                                   [displayed]="(formGroup.controls['title'].dirty || formGroup.controls['title'].touched) && formGroup.controls['title'].invalid"
-                                   [message]="
-                                   formGroup.controls['title'].hasError('required') ? 'This is required.'
-                                   : formGroup.controls['title'].hasError('maxlength') ? 'This must be 100 characters or less.'
-                                   : 'These characters are not allowed: < > ; ='"></alert>
-                        </div>
+                        <form-group
+                                [group]="formGroup"
+                                [controlName]="'title'"
+                                [label]="'Title *'"
+                                [errorMessages]="
+                                    {
+                                    required: 'This is required.',
+                                    pattern: 'These characters are not allowed: < > ; =',
+                                    maxlength: 'This must be 100 characters or less.'
+                                    }">
+                        </form-group>
                         <div class="form-group">
                             <label for="start">Start Time:</label>
                             <input type="text" readonly="readonly" class="form-control" id="start"
@@ -56,8 +54,8 @@
                         </div>
                     </panel-body>
                     <panel-footer>
-                        <button type="submit" class="btn btn-primary" [disabled]="formGroup.invalid">Submit
-                            Reservation
+                        <button type="submit" class="btn btn-primary" [disabled]="formGroup.invalid">
+                            Submit Reservation
                         </button>
                         <button [routerLink]="['', 'secure', 'search-results']" class="btn btn-default">Cancel</button>
                     </panel-footer>
