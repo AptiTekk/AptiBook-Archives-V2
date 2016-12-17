@@ -6,7 +6,6 @@
 
 var path = require('path');
 var webpack = require('webpack');
-var OnlyIfChangedPlugin = require('only-if-changed-webpack-plugin');
 
 var opts = {
     rootDir: process.cwd(),
