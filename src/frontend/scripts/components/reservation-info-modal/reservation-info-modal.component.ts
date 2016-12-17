@@ -1,6 +1,7 @@
 import {Component, ViewChild} from "@angular/core";
 import {Reservation} from "../../models/reservation.model";
 import {ModalComponent} from "../modal/modal.component";
+import {APIService} from "../../services/singleton/api.service";
 import moment = require("moment");
 import Moment = moment.Moment;
 
@@ -18,6 +19,9 @@ export class ReservationInfoModalComponent {
 
     reservationStartMoment: Moment;
     reservationEndMoment: Moment;
+
+    constructor(protected apiService: APIService) {
+    }
 
     public display(reservation: Reservation) {
         this.reservation = reservation;
