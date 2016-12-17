@@ -1,7 +1,7 @@
 import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {AppComponent} from "./page-components/app/app.component";
-import {FormsModule} from "@angular/forms";
+import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import * as components from "./components";
 import * as pageComponents from "./page-components";
@@ -17,6 +17,7 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
     imports: [
         BrowserModule,
         FormsModule,
+        ReactiveFormsModule,
         HttpModule,
         routes,
         //...mapImports(vendors)

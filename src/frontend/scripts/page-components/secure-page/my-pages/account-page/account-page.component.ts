@@ -5,6 +5,7 @@ import {UserService} from "../../../../services/singleton/user.service";
 import {UserGroup} from "../../../../models/user-group.model";
 import {UserGroupService} from "../../../../services/singleton/usergroup.service";
 import {AlertComponent} from "../../../../components/alert/alert.component";
+import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 
 @Component({
     selector: 'my-account-page',
@@ -23,23 +24,34 @@ export class AccountPageComponent {
 
     user: User;
 
+    personalInformation: FormGroup;
+
     rootUserGroup: UserGroup;
 
-    constructor(private authService: AuthService, private userService: UserService, private userGroupService: UserGroupService) {
+    constructor(private authService: AuthService,
+                private formBuilder: FormBuilder,
+                private userService: UserService,
+                private userGroupService: UserGroupService) {
         authService.reloadUser();
-        authService.getUser().subscribe(user => this.user = user);
+        authService.getUser().take(1).subscribe(user => {
+            this.user = user;
+
+            this.personalInformation = formBuilder.group({
+                firstName: [this.user.firstName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+                lastName: [this.user.lastName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+                phoneNumber: [this.user.phoneNumber, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+                location: [this.user.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])]
+            });
+        });
         userGroupService.getRootUserGroup().subscribe(userGroup => this.rootUserGroup = userGroup);
     }
 
-    doPasswordsMatch(): boolean {
-        if (!this.user.newPassword)
-            if (!this.user.confirmPassword)
-                return true;
-
-        return this.user.newPassword === this.user.confirmPassword;
-    }
-
     onPersonalInformationSubmit(changingPassword: boolean = false) {
+        this.user.firstName = this.personalInformation.controls['firstName'].value;
+        this.user.lastName = this.personalInformation.controls['lastName'].value;
+        this.user.phoneNumber = this.personalInformation.controls['phoneNumber'].value;
+        this.user.location = this.personalInformation.controls['location'].value;
+
         this.userService.patchUser(this.user, changingPassword).take(1).subscribe((value: boolean) => {
             if (value) {
                 this.authService.reloadUser();
@@ -56,6 +68,14 @@ export class AccountPageComponent {
 
     onChangePasswordSubmit() {
         this.onPersonalInformationSubmit(true);
+    }
+
+    doPasswordsMatch(): boolean {
+        if (!this.user.newPassword)
+            if (!this.user.confirmPassword)
+                return true;
+
+        return this.user.newPassword === this.user.confirmPassword;
     }
 
 }
