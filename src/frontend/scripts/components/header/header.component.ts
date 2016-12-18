@@ -29,13 +29,13 @@ export class HeaderComponent {
     ];
 
     //TODO: Add route urls and permissions
-    configurationLinks: [{icon: string, label: string, indented: boolean}] = [
-        {icon: 'folder-open', label: 'Resource Categories', indented: false},
-        {icon: 'tags', label: 'Resources', indented: true},
-        {icon: 'sitemap', label: 'User Groups', indented: false},
-        {icon: 'user', label: 'Users', indented: true},
-        {icon: 'unlock', label: 'Permissions', indented: false},
-        {icon: 'cog', label: 'Properties', indented: false}
+    configurationLinks: [{label: string, path: string, icon: string, indented: boolean}] = [
+        {label: 'Resource Categories', path: 'resourceCategories', icon: 'folder-open', indented: false},
+        {label: 'Resources', path: 'resources', icon: 'tags', indented: true},
+        {label: 'User Groups', path: 'userGroups', icon: 'sitemap', indented: false},
+        {label: 'Users', path: 'users', icon: 'user', indented: true},
+        {label: 'Permissions', path: 'permissions', icon: 'unlock', indented: false},
+        {label: 'Properties', path: 'properties', icon: 'cog', indented: false}
     ];
 
     constructor(private router: Router, private authService: AuthService, private  notificationService: NotificationService) {
