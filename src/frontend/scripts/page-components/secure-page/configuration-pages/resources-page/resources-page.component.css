@@ -22,3 +22,12 @@
     background-color: #4272b7;
     color: white;
 }
+
+.resource-panel-image {
+    float: left;
+    padding-right: 20px;
+}
+
+.resource-panel-title {
+    margin-top: 0;
+}

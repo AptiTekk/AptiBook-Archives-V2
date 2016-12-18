@@ -2,6 +2,7 @@ import {Component} from "@angular/core";
 import {ResourceCategoryService} from "../../../../services/singleton/resource-category.service";
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import {ActivatedRoute} from "@angular/router";
+import {APIService} from "../../../../services/singleton/api.service";
 
 @Component({
     selector: 'resources-page',
@@ -13,7 +14,10 @@ export class ResourcesPageComponent {
     currentResourceCategory: ResourceCategory;
     resourceCategories: ResourceCategory[];
 
-    constructor(route: ActivatedRoute, resourceCategoryService: ResourceCategoryService) {
+    constructor(route: ActivatedRoute,
+                protected apiService: APIService,
+                resourceCategoryService: ResourceCategoryService) {
+        
         resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategories => {
             this.resourceCategories = resourceCategories;
 

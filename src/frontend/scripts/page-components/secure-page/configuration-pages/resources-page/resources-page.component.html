@@ -16,8 +16,20 @@
                 </li>
             </ul>
         </div>
-        <div class="col-xs-12 col-md-9">
-            {{currentResourceCategory ? ''+currentResourceCategory.name : 'No Category Selected'}}
+        <div class="col-xs-12 col-md-9" *ngIf="currentResourceCategory">
+            <div class="col-xs-12 col-md-6"
+                 *ngFor="let resource of currentResourceCategory.resources">
+                <panel [type]="'primary'">
+                    <panel-body>
+                        <img [src]="apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image')"
+                             height="150px" class="resource-panel-image"/>
+                        <h3 class="resource-panel-title">{{resource.name}}</h3>
+                    </panel-body>
+                    <panel-footer>
+                        <button class="btn btn-default" (click)="false">Edit</button>
+                    </panel-footer>
+                </panel>
+            </div>
         </div>
     </div>
 </div>
