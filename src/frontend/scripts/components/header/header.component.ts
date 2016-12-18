@@ -30,8 +30,7 @@ export class HeaderComponent {
 
     //TODO: Add route urls and permissions
     configurationLinks: [{label: string, path: string, icon: string, indented: boolean}] = [
-        {label: 'Resource Categories', path: 'resourceCategories', icon: 'folder-open', indented: false},
-        {label: 'Resources', path: 'resources', icon: 'tags', indented: true},
+        {label: 'Resources', path: 'resources', icon: 'tags', indented: false},
         {label: 'User Groups', path: 'userGroups', icon: 'sitemap', indented: false},
         {label: 'Users', path: 'users', icon: 'user', indented: true},
         {label: 'Permissions', path: 'permissions', icon: 'unlock', indented: false},

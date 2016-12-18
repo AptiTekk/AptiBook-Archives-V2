@@ -1,7 +1,7 @@
 import {Component} from "@angular/core";
 import {ResourceCategoryService} from "../../../../services/singleton/resource-category.service";
 import {ResourceCategory} from "../../../../models/resource-category.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {APIService} from "../../../../services/singleton/api.service";
 
 @Component({
@@ -14,11 +14,12 @@ export class ResourcesPageComponent {
     currentResourceCategory: ResourceCategory;
     resourceCategories: ResourceCategory[];
 
-    constructor(route: ActivatedRoute,
+    constructor(private router: Router,
+                route: ActivatedRoute,
                 protected apiService: APIService,
-                resourceCategoryService: ResourceCategoryService) {
-        
-        resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategories => {
+                private resourceCategoryService: ResourceCategoryService) {
+
+        resourceCategoryService.getResourceCategories().subscribe(resourceCategories => {
             this.resourceCategories = resourceCategories;
 
             route.params.subscribe(params => {
@@ -34,6 +35,37 @@ export class ResourcesPageComponent {
                 this.currentResourceCategory = this.resourceCategories[0];
             });
         });
+    }
+
+    onNewCategory(newCategory: {name: string}) {
+        this.resourceCategoryService.addNewResourceCategory(newCategory.name).subscribe(
+            category => {
+                this.resourceCategoryService.fetchResourceCategories();
+                if (category) {
+                    this.router.navigate(['', 'secure', 'configuration', 'resources', category.name.toLowerCase()]);
+                }
+            }
+        );
+    }
+
+    onEditCategory(category: ResourceCategory) {
+        this.resourceCategoryService.patchResourceCategory(category).subscribe(
+            category => {
+                this.resourceCategoryService.fetchResourceCategories();
+                if (category) {
+                    this.router.navigate(['', 'secure', 'configuration', 'resources', category.name.toLowerCase()]);
+                }
+            }
+        )
+    }
+
+    onDeleteCategory() {
+        this.resourceCategoryService.deleteResourceCategory(this.currentResourceCategory).subscribe(
+            response => {
+                this.resourceCategoryService.fetchResourceCategories();
+                this.router.navigate(['', 'secure', 'configuration', 'resources']);
+            }
+        )
     }
 
 }

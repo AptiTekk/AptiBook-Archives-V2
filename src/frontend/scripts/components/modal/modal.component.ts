@@ -16,6 +16,7 @@ export class ModalComponent {
 
     @Input() cancelButtonLabel: string;
     @Input() submitButtonLabel: string;
+    @Input() submitButtonDisabled: boolean = false;
     @Input() dangerSubmitButtonLabel: string;
 
     @Output()

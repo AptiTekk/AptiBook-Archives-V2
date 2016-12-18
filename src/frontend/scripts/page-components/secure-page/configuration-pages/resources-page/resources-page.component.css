@@ -5,21 +5,22 @@
 
 #resource-categories-list > li {
     height: 50px;
-    background-color: #f1f1f1;
     width: 100%;
     padding: 10px;
     font-size: 22px;
     border-radius: 5px;
     margin-bottom: 10px;
     cursor: pointer;
+    border: 1px dashed #666;
 }
 
 #resource-categories-list > li:hover {
-    background-color: #dddddd;
+    background-color: #f1f1f1;
 }
 
 #resource-categories-list > li.selected {
     background-color: #4272b7;
+    border: none;
     color: white;
 }
 

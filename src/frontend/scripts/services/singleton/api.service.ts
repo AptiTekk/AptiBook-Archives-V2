@@ -72,7 +72,7 @@ export class APIService {
             .catch(e => Observable.throw(e));
     }
 
-    public remove(path: string): Observable<any> {
+    public del(path: string): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.delete(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
             .map(APIService.checkForErrors)

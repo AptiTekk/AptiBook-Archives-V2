@@ -42,6 +42,12 @@ export class FormGroupComponent {
     @Input()
     inputType: string;
 
+    /**
+     * Placeholder text for the input
+     */
+    @Input()
+    placeholder: string;
+
     @Input()
     autoFocus: boolean = false;
 

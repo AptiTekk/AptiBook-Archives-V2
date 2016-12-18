@@ -5,6 +5,12 @@
   -->
 
 <div class="container-fluid">
+    <ol class="breadcrumb">
+        <li><a [routerLink]="['', 'secure']">Home</a></li>
+        <li class="active">Configuration</li>
+        <li class="active">Resources</li>
+    </ol>
+
     <div class="row">
         <!-- Resource Categories Selection Sidebar -->
         <div class="col-xs-12 col-md-3">
@@ -15,6 +21,18 @@
                     {{resourceCategory.name}}
                 </li>
             </ul>
+            <hr/>
+            <div class="btn-toolbar">
+                <button class="btn btn-primary"
+                        (click)="newCategoryModal.open()">
+                    Add New Category
+                </button>
+                <button class="btn btn-default"
+                        (click)="editCategoryModal.open(currentResourceCategory)"
+                        *ngIf="currentResourceCategory">
+                    Edit This Category
+                </button>
+            </div>
         </div>
         <div class="col-xs-12 col-md-9" *ngIf="currentResourceCategory">
             <div class="col-xs-12 col-md-6"
@@ -24,12 +42,23 @@
                         <img [src]="apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image')"
                              height="150px" class="resource-panel-image"/>
                         <h3 class="resource-panel-title">{{resource.name}}</h3>
+                        <hr/>
                     </panel-body>
                     <panel-footer>
                         <button class="btn btn-default" (click)="false">Edit</button>
+                        <button class="btn btn-danger pull-right" (click)="false">Delete</button>
                     </panel-footer>
                 </panel>
             </div>
         </div>
     </div>
 </div>
+
+<new-category-modal #newCategoryModal
+                    (submitted)="onNewCategory($event)">
+</new-category-modal>
+
+<edit-category-modal #editCategoryModal
+                     (submitted)="onEditCategory($event)"
+                     (deleted)="onDeleteCategory()">
+</edit-category-modal>
