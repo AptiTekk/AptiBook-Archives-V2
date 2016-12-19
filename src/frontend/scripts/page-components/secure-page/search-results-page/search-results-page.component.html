@@ -51,7 +51,7 @@
             </panel>
         </div>
         <div class="col-xs-12 col-md-9">
-            <h3 *ngIf="!availableResources || availableResources.length == 0">
+            <h3 *ngIf="(availableResources | resourceCategoryFilter:resourceCategories).length == 0">
                 There are no available resources! Try adjusting your reservation date or filters.</h3>
             <div class="row">
                 <div class="col-xs-12 col-md-6"
