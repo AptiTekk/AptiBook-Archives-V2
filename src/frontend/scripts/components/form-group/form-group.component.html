@@ -4,22 +4,43 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="form-group" *ngIf="group && controlName"
+<div class="form-group"
      [class.has-error]="group && controlName ? (group.controls[controlName].touched || group.controls[controlName].dirty) && group.controls[controlName].invalid : false">
-    <label *ngIf="label" class="control-label" [attr.for]="controlName">{{label}}</label>
+
+    <!--Label (if enabled) -->
+    <label *ngIf="label" class="control-label" [attr.for]="uuid">{{label}}</label>
     <div [class.input-group]="faIconName">
+
+        <!-- Font Awesome Icon (if enabled) -->
         <div class="input-group-addon" *ngIf="faIconName">
             <i class="fa fa-{{faIconName}}"></i>
         </div>
+
+        <!-- Input Field -->
         <!--suppress HtmlFormInputWithoutLabel -->
-        <input [formControl]="group.controls[controlName]"
-               [id]="controlName"
+        <input *ngIf="group && controlName"
+               [formControl]="group.controls[controlName]"
+               [id]="uuid"
                [type]="inputType ? inputType : 'text'"
                class="form-control"
                [autofocus]="autoFocus"
-               [placeholder]="placeholder ? placeholder : ''">
+               [placeholder]="placeholder ? placeholder : ''"
+               [readonly]="readOnly">
+
+        <!--suppress HtmlFormInputWithoutLabel -->
+        <input *ngIf="!group || !controlName"
+               [id]="uuid"
+               [type]="inputType ? inputType : 'text'"
+               class="form-control"
+               [autofocus]="autoFocus"
+               [placeholder]="placeholder ? placeholder : ''"
+               [readonly]="readOnly"
+               [value]="value">
     </div>
-    <alert [severity]="'danger'"
-           [displayed]="errorMessages && (group.controls[controlName].touched || group.controls[controlName].dirty) && group.controls[controlName].invalid"
+
+    <!-- Error Message Alert (if enabled) -->
+    <alert *ngIf="errorMessages && group && controlName"
+           [severity]="'danger'"
+           [displayed]="(group.controls[controlName].touched || group.controls[controlName].dirty) && group.controls[controlName].invalid"
            [message]="getErrorMessage()"></alert>
 </div>

@@ -78,13 +78,14 @@
                             <!-- Resource Name -->
                             <h3 class="resource-panel-title">{{resource.name}}</h3>
                             <hr/>
-                            <span style="font-weight: bold">Reservation Approval Required:</span>
-                            <br/>
-                            {{resource.needsApproval ? 'Yes' : 'No'}}
-                            <br/>
-                            <span style="font-weight: bold">Owning User Group: </span>
-                            <br/>
-                            {{resource.owner.name}}
+                            <form-group [faIconName]="resource.needsApproval ? 'check-square-o' : 'square-o'"
+                                        [readOnly]="true"
+                                        [value]="resource.needsApproval ? 'Requires Approval' : 'No Approval Required'">
+                            </form-group>
+                            <form-group [faIconName]="'sitemap'"
+                                        [readOnly]="true"
+                                        [value]="'Owned by ' + resource.owner.name">
+                            </form-group>
                         </panel-body>
                         <panel-footer>
 
