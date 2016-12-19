@@ -46,7 +46,10 @@
                     </panel-body>
                     <panel-footer>
                         <button class="btn btn-default" (click)="false">Edit</button>
-                        <button class="btn btn-danger pull-right" (click)="false">Delete</button>
+                        <button class="btn btn-danger pull-right"
+                                (click)="resourceForDeletion = resource;resourceDeleteModal.open()">
+                            Delete
+                        </button>
                     </panel-footer>
                 </panel>
             </div>
@@ -62,3 +65,9 @@
                      (submitted)="onEditCategory($event)"
                      (deleted)="onDeleteCategory()">
 </edit-category-modal>
+
+<deletion-confirmation-modal #resourceDeleteModal
+                             [message]="resourceForDeletion ? 'Are you sure you want to delete the \'' + resourceForDeletion.name + '\' Resource?' : ''"
+                             [warning]="'This will delete all associated Reservations as well!'"
+                             (confirm)="onDeleteResource()">
+</deletion-confirmation-modal>

@@ -21,4 +21,13 @@ export class ResourceService {
         });
     }
 
+    deleteResource(resource: Resource): Observable<boolean> {
+        return Observable.create(listener => {
+            this.apiService.del("/resources/" + resource.id).subscribe(
+                response => listener.next(true),
+                err => listener.next(false)
+            )
+        });
+    }
+
 }

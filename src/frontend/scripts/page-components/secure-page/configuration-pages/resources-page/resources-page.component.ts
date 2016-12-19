@@ -3,6 +3,8 @@ import {ResourceCategoryService} from "../../../../services/singleton/resource-c
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {APIService} from "../../../../services/singleton/api.service";
+import {Resource} from "../../../../models/resource.model";
+import {ResourceService} from "../../../../services/singleton/resource.service";
 
 @Component({
     selector: 'resources-page',
@@ -14,10 +16,13 @@ export class ResourcesPageComponent {
     currentResourceCategory: ResourceCategory;
     resourceCategories: ResourceCategory[];
 
+    resourceForDeletion: Resource;
+
     constructor(private router: Router,
                 route: ActivatedRoute,
                 protected apiService: APIService,
-                private resourceCategoryService: ResourceCategoryService) {
+                private resourceCategoryService: ResourceCategoryService,
+                private resourceService: ResourceService) {
 
         resourceCategoryService.getResourceCategories().subscribe(resourceCategories => {
             this.resourceCategories = resourceCategories;
@@ -64,6 +69,17 @@ export class ResourcesPageComponent {
             response => {
                 this.resourceCategoryService.fetchResourceCategories();
                 this.router.navigate(['', 'secure', 'configuration', 'resources']);
+            }
+        )
+    }
+
+    onDeleteResource() {
+        if(!this.resourceForDeletion)
+            return;
+
+        this.resourceService.deleteResource(this.resourceForDeletion).subscribe(
+            response => {
+                this.resourceCategoryService.fetchResourceCategories();
             }
         )
     }

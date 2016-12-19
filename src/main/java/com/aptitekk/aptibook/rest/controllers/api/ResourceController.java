@@ -6,10 +6,14 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
+import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Resource;
+import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
+import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
@@ -37,12 +41,14 @@ public class ResourceController extends APIControllerAbstract {
     private static final String RESOURCE_NO_IMAGE_PATH = "/static/resource-no-image.jpg";
 
     private final ResourceRepository resourceRepository;
+    private final UserGroupService userGroupService;
     private final ReservationService reservationService;
     private final ResourceLoader resourceLoader;
 
     @Autowired
-    public ResourceController(ResourceRepository resourceRepository, ReservationService reservationService, ResourceLoader resourceLoader) {
+    public ResourceController(ResourceRepository resourceRepository, UserGroupService userGroupService, ReservationService reservationService, ResourceLoader resourceLoader) {
         this.resourceRepository = resourceRepository;
+        this.userGroupService = userGroupService;
         this.reservationService = reservationService;
         this.resourceLoader = resourceLoader;
     }
@@ -89,8 +95,43 @@ public class ResourceController extends APIControllerAbstract {
                 return badRequest("Could not parse start or end times.");
             }
         }
+        return unauthorized();
+    }
 
-        return noPermission();
+    @RequestMapping(value = "/resources/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteResource(@PathVariable Long id) {
+        if (authService.isUserSignedIn()) {
+            User currentUser = authService.getCurrentUser();
+            Resource resource = resourceRepository.findInCurrentTenant(id);
+
+            //Check Permissions
+            if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL)) {
+                boolean ownsResource = false;
+                boolean hierarchyOwnsResource = false;
+                List<UserGroup> currentUserGroups = currentUser.userGroups;
+                for (UserGroup userGroup : currentUserGroups) {
+                    if (resource.owner.equals(userGroup))
+                        ownsResource = true;
+
+                    List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
+                    for (UserGroup hierarchyGroup : hierarchyDown) {
+                        if (resource.owner.equals(hierarchyGroup)) {
+                            hierarchyOwnsResource = true;
+                            break;
+                        }
+                    }
+                }
+
+                if (!(authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_OWN) && ownsResource)
+                        && !(authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY) && hierarchyOwnsResource))
+                    return noPermission();
+            }
+
+            //Permissions are okay. Delete Resource.
+            resourceRepository.delete(resource);
+            return noContent();
+        }
+        return unauthorized();
     }
 
 }
