@@ -1,0 +1,27 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<modal #modal [title]="'New Resource'"
+       [cancelButtonLabel]="'Cancel'"
+       [submitButtonLabel]="'Add Resource'"
+       [submitButtonDisabled]="formGroup.invalid"
+       (onSubmit)="onSubmitted()"
+       *ngIf="formGroup">
+    <modal-body>
+        <form [formGroup]="formGroup">
+            <form-group [label]="'Name'"
+                        [group]="formGroup"
+                        [controlName]="'name'"
+                        [errorMessages]="
+                    {
+                    required: 'This is required.',
+                    pattern: 'These characters are not allowed:  < > ; =',
+                    maxlength: 'This must be 30 characters or less.'
+                    }">
+            </form-group>
+        </form>
+    </modal-body>
+</modal>

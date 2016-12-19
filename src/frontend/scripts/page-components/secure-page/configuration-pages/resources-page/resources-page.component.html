@@ -54,7 +54,7 @@
 
                         <!-- Add Button -->
                         <button class="btn btn-primary"
-                                (click)="newCategoryModal.open()">
+                                (click)="newResourceModal.open()">
                             Add New Resource
                         </button>
                     </div>
@@ -65,7 +65,7 @@
 
             <!-- Resource Cards -->
             <div class="row">
-                <div class="col-xs-12 col-md-6"
+                <div class="col-xs-12 col-md-6 col-lg-4"
                      *ngFor="let resource of currentResourceCategory.resources">
 
                     <!-- Resource Card -->
@@ -78,6 +78,13 @@
                             <!-- Resource Name -->
                             <h3 class="resource-panel-title">{{resource.name}}</h3>
                             <hr/>
+                            <span style="font-weight: bold">Reservation Approval Required:</span>
+                            <br/>
+                            {{resource.needsApproval ? 'Yes' : 'No'}}
+                            <br/>
+                            <span style="font-weight: bold">Owning User Group: </span>
+                            <br/>
+                            {{resource.owner.name}}
                         </panel-body>
                         <panel-footer>
 
@@ -105,6 +112,10 @@
                      (submitted)="onEditCategory($event)"
                      (deleted)="onDeleteCategory()">
 </edit-category-modal>
+
+<new-resource-modal #newResourceModal
+                    (submitted)="onNewResource($event)">
+</new-resource-modal>
 
 <deletion-confirmation-modal #resourceDeleteModal
                              [message]="resourceForDeletion ? 'Are you sure you want to delete the \'' + resourceForDeletion.name + '\' Resource?' : ''"
