@@ -21,11 +21,11 @@ export class HeaderComponent {
     unreadNotifications: Notification[] = [];
 
     //TODO: Add route urls
-    reservationManagementLinks: [{icon: string, label: string}] = [
-        {icon: 'hourglass-half', label: 'Pending'},
-        {icon: 'calendar-check-o', label: 'Approved'},
-        {icon: 'calendar-times-o', label: 'Rejected'},
-        {icon: 'calendar', label: 'Calendar'}
+    reservationManagementLinks: [{icon: string, label: string, path: string}] = [
+        {icon: 'hourglass-half', label: 'Pending', path: 'pending'},
+        {icon: 'calendar-check-o', label: 'Approved', path: 'approved'},
+        {icon: 'calendar-times-o', label: 'Rejected', path: 'rejected'},
+        {icon: 'calendar', label: 'Calendar', path: 'calendar'}
     ];
 
     //TODO: Add route urls and permissions

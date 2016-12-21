@@ -12,6 +12,7 @@ import {
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import {ResourceCategory} from "../../models/resource-category.model";
+import {UserGroup} from "../../models/user-group.model";
 declare const $: any;
 
 @Component({
@@ -39,6 +40,9 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
 
     @Input()
     filterByUsers: User[];
+
+    @Input()
+    filterByUserGroupOwners: UserGroup[];
 
     @Input()
     filterByResourceCategories: ResourceCategory[];
@@ -85,6 +89,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                     case 'hiddenStatuses':
                     case 'filterByUsers':
                     case 'filterByResourceCategories':
+                    case 'filterByUserGroupOwners':
                         this.refreshCalendar(true);
                         break;
                 }
@@ -126,12 +131,18 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                     if (this.filterByResourceCategories && this.filterByResourceCategories.filter(category => category.id === event.resource.resourceCategory.id).length == 0)
                         return false;
 
+                    // Remove events whose resources do not match the filtered user group owners
+                   // if(event.resource.owner)
 
                     // If all is well, add the status to the class list.
                     let domElement: HTMLLinkElement = element[0];
 
                     domElement.classList.add(event.status.toLowerCase());
+
+                    return true;
                 }
+
+                return false;
             },
             eventClick: (calEvent, jsEvent, view) => {
                 if (this.allowSelection)

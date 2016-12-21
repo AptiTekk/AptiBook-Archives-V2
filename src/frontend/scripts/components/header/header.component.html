@@ -34,7 +34,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li *ngFor="let link of reservationManagementLinks">
-                                <a href="#">
+                                <a href="#" [routerLink]="['', 'secure', 'management', link.path]">
                                     <span><i class="fa fa-{{link.icon}}"></i></span>
                                     {{link.label}}
                                 </a>

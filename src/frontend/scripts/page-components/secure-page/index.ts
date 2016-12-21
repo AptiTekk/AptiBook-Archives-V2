@@ -4,4 +4,8 @@ export * from './results-container/search-results-page/search-results-page.compo
 export * from './results-container/reservation-details-page/reservation-details-page.component';
 export * from './results-container/success-page/success-page.component';
 export * from './results-container/results-container-page.component';
+export * from './management/calendar-page/calendar-page.component';
+export * from './management/pending-page/pending-page.component';
+export * from './management/approved-page/approved-page.component';
+export * from './management/rejected-page/rejected-page.component';
 export * from './secure-page.component';
