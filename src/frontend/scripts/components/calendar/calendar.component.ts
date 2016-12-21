@@ -130,6 +130,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                     // Remove events not matching filtered resource categories
                     if (this.filterByResourceCategories && this.filterByResourceCategories.filter(category => category.id === event.resource.resourceCategory.id).length == 0)
                         return false;
+                    //test commit
 
                     // Remove events whose resources do not match the filtered user group owners
                    // if(event.resource.owner)
