@@ -132,6 +132,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                         return false;
                     //test commit
 
+                    //test commmit2
                     // Remove events whose resources do not match the filtered user group owners
                    // if(event.resource.owner)
 
