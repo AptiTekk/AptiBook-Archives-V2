@@ -4,13 +4,15 @@
   ~ Proprietary and confidential.
   -->
 
-Calendar Page
 <div class="hidden-xs hidden-sm col-md-9 col-lg-push-3 col-lg-7">
     <div class="full-height">
         <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
                   [hiddenStatuses]="['rejected', 'cancelled']"
                   [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
                   [filterByResourceCategories]="enabledResourceCategories"
+                  [filterByUserGroupOwners]="userGroupFilter"
                   (eventSelected)="reservationInfoModal.display($event)"></calendar>
     </div>
 </div>
+
+<reservation-info-modal #reservationInfoModal></reservation-info-modal>
