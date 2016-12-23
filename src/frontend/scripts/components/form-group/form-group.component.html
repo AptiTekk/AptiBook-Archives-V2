@@ -5,7 +5,7 @@
   -->
 
 <div class="form-group"
-     [class.has-error]="group && controlName ? (group.controls[controlName].touched || group.controls[controlName].dirty) && group.controls[controlName].invalid : false">
+     [class.has-error]="control ? (control.touched || control.dirty) && control.invalid : false">
 
     <!--Label (if enabled) -->
     <label *ngIf="label" class="control-label" [attr.for]="uuid">{{label}}</label>
@@ -18,29 +18,28 @@
 
         <!-- Input Field -->
         <!--suppress HtmlFormInputWithoutLabel -->
-        <input *ngIf="group && controlName"
-               [formControl]="group.controls[controlName]"
+        <input *ngIf="!control"
                [id]="uuid"
+               [(ngModel)]="value"
                [type]="inputType ? inputType : 'text'"
                class="form-control"
                [autofocus]="autoFocus"
                [placeholder]="placeholder ? placeholder : ''"
                [readonly]="readOnly">
 
-        <!--suppress HtmlFormInputWithoutLabel -->
-        <input *ngIf="!group || !controlName"
+        <input *ngIf="control"
                [id]="uuid"
+               [formControl]="control"
                [type]="inputType ? inputType : 'text'"
                class="form-control"
                [autofocus]="autoFocus"
                [placeholder]="placeholder ? placeholder : ''"
-               [readonly]="readOnly"
-               [value]="value">
+               [readonly]="readOnly">
     </div>
 
     <!-- Error Message Alert (if enabled) -->
-    <alert *ngIf="errorMessages && group && controlName"
+    <alert *ngIf="errorMessages && control"
            [severity]="'danger'"
-           [displayed]="(group.controls[controlName].touched || group.controls[controlName].dirty) && group.controls[controlName].invalid"
+           [displayed]="(control.touched || control.dirty) && control.invalid"
            [message]="getErrorMessage()"></alert>
 </div>

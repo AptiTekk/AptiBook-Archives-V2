@@ -31,18 +31,16 @@
             <form (ngSubmit)="reserve()" [formGroup]="formGroup">
                 <panel [type]="'primary'" [title]="'Reservation Details'">
                     <panel-body>
-                        <form-group
-                                [group]="formGroup"
-                                [controlName]="'title'"
-                                [label]="'Title *'"
-                                [autoFocus]="true"
-                                [placeholder]="'What is this reservation for?'"
-                                [errorMessages]="
-                                    {
-                                    required: 'This is required.',
-                                    pattern: 'These characters are not allowed: < > ; =',
-                                    maxlength: 'This must be 100 characters or less.'
-                                    }">
+                        <form-group [control]="formGroup.controls['title']"
+                                    [label]="'Title *'"
+                                    [autoFocus]="true"
+                                    [placeholder]="'What is this reservation for?'"
+                                    [errorMessages]="
+                                        {
+                                        required: 'This is required.',
+                                        pattern: 'These characters are not allowed: < > ; =',
+                                        maxlength: 'This must be 100 characters or less.'
+                                        }">
                         </form-group>
                         <div class="form-group">
                             <label for="start">Start Time:</label>

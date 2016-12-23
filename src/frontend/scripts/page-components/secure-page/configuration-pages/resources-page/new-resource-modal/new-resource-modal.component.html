@@ -32,15 +32,14 @@
                             class="fa fa-trash text-danger"></i></span>
                 </div>
                 <div class="col-xs-12 col-sm-8 col-md-9">
-                    <form-group [label]="'Name'"
-                                [group]="formGroup"
-                                [controlName]="'name'"
+                    <form-group [control]="formGroup.controls['name']"
+                                [label]="'Name'"
                                 [errorMessages]="
-                            {
-                            required: 'This is required.',
-                            pattern: 'These characters are not allowed:  < > ; =',
-                            maxlength: 'This must be 30 characters or less.'
-                            }">
+                                    {
+                                    required: 'This is required.',
+                                    pattern: 'These characters are not allowed:  < > ; =',
+                                    maxlength: 'This must be 30 characters or less.'
+                                    }">
                     </form-group>
                     <div class="form-group">
                         <toggle-switch [onText]="'Yes'" [offText]="'No'" style="margin-right: 10px"

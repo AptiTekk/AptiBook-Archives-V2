@@ -3,8 +3,8 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, Input} from "@angular/core";
-import {FormGroup} from "@angular/forms";
+import {Component, Input, OnChanges, SimpleChanges} from "@angular/core";
+import {FormControl} from "@angular/forms";
 import {UUIDGenerator} from "../../utils/UUIDGenerator";
 
 @Component({
@@ -14,14 +14,9 @@ import {UUIDGenerator} from "../../utils/UUIDGenerator";
 export class FormGroupComponent {
 
     /**
-     * The FormGroup (Reactive Forms)
+     * The control
      */
-    @Input() group: FormGroup;
-
-    /**
-     * The Name of the Control in the FormGroup
-     */
-    @Input() controlName: string;
+    @Input() control: FormControl;
 
     /**
      * Object containing the Error Messages to be shown when input is invalid.
@@ -59,10 +54,9 @@ export class FormGroupComponent {
 
     uuid: string = UUIDGenerator.generateUUID();
 
-    getErrorMessage(): string {
-
-        if (this.errorMessages && this.group && this.controlName) {
-            let errors: {[key: string]: any} = this.group.controls[this.controlName].errors;
+    protected getErrorMessage(): string {
+        if (this.errorMessages && this.control) {
+            let errors: {[key: string]: any} = this.control.errors;
             if (errors) {
                 for (let errorName in this.errorMessages) {
                     if (this.errorMessages.hasOwnProperty(errorName)) {
@@ -75,5 +69,4 @@ export class FormGroupComponent {
 
         return undefined;
     }
-
 }
