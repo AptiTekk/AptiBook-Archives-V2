@@ -35,17 +35,13 @@ export class NewResourceModalComponent {
     @ViewChild('imageUploadInput')
     imageUploadInput: ElementRef;
 
-    constructor(formBuilder: FormBuilder,
+    constructor(protected formBuilder: FormBuilder,
                 protected userGroupService: UserGroupService) {
 
         userGroupService.getRootUserGroup().subscribe(rootGroup => {
             this.rootGroup = rootGroup;
 
-            this.formGroup = formBuilder.group({
-                name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
-                needsApproval: [true],
-                owner: [this.rootGroup.children[0]]
-            });
+            this.resetFormGroup();
         });
 
         this.fileUploader = new FileUploader({
@@ -60,9 +56,17 @@ export class NewResourceModalComponent {
     }
 
     public open() {
-        this.formGroup.reset();
+        this.resetFormGroup();
         this.removeImage();
         this.modal.openModal();
+    }
+
+    private resetFormGroup() {
+        this.formGroup = this.formBuilder.group({
+            name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+            needsApproval: true,
+            owner: [this.rootGroup.children[0]]
+        });
     }
 
     private updateImagePreview(fileItem: FileItem) {
@@ -89,6 +93,8 @@ export class NewResourceModalComponent {
             needsApproval: this.formGroup.controls['needsApproval'].value,
             owner: this.formGroup.controls['owner'].value
         };
+
+        console.log(newResource);
         this.submitted.next(newResource);
         this.modal.closeModal();
     }

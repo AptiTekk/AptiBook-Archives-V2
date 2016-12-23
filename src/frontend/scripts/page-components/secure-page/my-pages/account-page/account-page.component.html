@@ -145,8 +145,9 @@
                             </div>
                             <div *ngIf="!user.admin">
                                 <p style="font-weight: bold">Your assigned groups are highlighted.</p>
-                                <tree [userGroup]="rootUserGroup" [selectable]="false" [dragAndDrop]="false"
-                                      [higlightedUserGroups]="user.userGroups"></tree>
+                                <tree [selectable]="false"
+                                      [highlightedUserGroups]="user.userGroups">
+                                </tree>
                             </div>
                         </panel-body>
                     </panel>

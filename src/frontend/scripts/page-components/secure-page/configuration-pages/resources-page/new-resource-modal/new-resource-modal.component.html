@@ -13,7 +13,7 @@
     <modal-body>
         <form [formGroup]="formGroup">
             <div class="row">
-                <div class="col-xs-12 col-sm-4 col-md-3">
+                <div class="col-xs-6 col-sm-4 col-md-3">
                     <div ng2FileDrop
                          class="image-preview"
                          (click)="openImageFileChooser()"
@@ -42,6 +42,16 @@
                             maxlength: 'This must be 30 characters or less.'
                             }">
                     </form-group>
+                    <div class="form-group">
+                        <toggle-switch [onText]="'Yes'" [offText]="'No'" style="margin-right: 10px"
+                                       formControlName="needsApproval">
+                        </toggle-switch>
+                        <label>Reservations Require Approval</label>
+                    </div>
+                    <div class="form-group">
+                        <tree [selectable]="true" formControlName="owner">
+                        </tree>
+                    </div>
                 </div>
             </div>
         </form>
