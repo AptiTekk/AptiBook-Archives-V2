@@ -13,10 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.HttpClientErrorException;
-import org.springframework.web.client.ResourceAccessException;
-import org.springframework.web.client.RestTemplate;
-import org.springframework.web.client.UnknownHttpStatusCodeException;
+import org.springframework.web.client.*;
 import org.springframework.web.util.UriComponents;
 import org.springframework.web.util.UriComponentsBuilder;
 
@@ -54,6 +51,8 @@ public class WooCommerceRestFetcher {
             return restTemplate.getForObject(uriComponents.toUri(), clazz);
         } catch (HttpClientErrorException e) {
             logService.logException(getClass(), e, "Unable to fetch from WooCommerce");
+        } catch (HttpServerErrorException e) {
+            logService.logError(getClass(), "Could not fetch from AptiTekk: " + e.getMessage());
         } catch (ResourceAccessException | UnknownHttpStatusCodeException e) {
             logService.logError(getClass(), "Could not connect to AptiTekk: " + e.getMessage());
         }

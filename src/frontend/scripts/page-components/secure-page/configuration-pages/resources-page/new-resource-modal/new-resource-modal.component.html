@@ -12,16 +12,38 @@
        *ngIf="formGroup">
     <modal-body>
         <form [formGroup]="formGroup">
-            <form-group [label]="'Name'"
-                        [group]="formGroup"
-                        [controlName]="'name'"
-                        [errorMessages]="
-                    {
-                    required: 'This is required.',
-                    pattern: 'These characters are not allowed:  < > ; =',
-                    maxlength: 'This must be 30 characters or less.'
-                    }">
-            </form-group>
+            <div class="row">
+                <div class="col-xs-12 col-sm-4 col-md-3">
+                    <div ng2FileDrop
+                         class="image-preview"
+                         (click)="openImageFileChooser()"
+                         [ngClass]="{'file-over-image': fileOverImage}"
+                         (fileOver)="fileOverImage = $event"
+                         [uploader]="fileUploader"
+                         [style.background-image]="'url(' + (imagePreviewSrc ? imagePreviewSrc : '/static/resource-no-image.jpg') + ')'">
+                        <i class="fa fa-folder-open text-primary image-preview-open-icon"></i>
+                    </div>
+                    <input ng2FileSelect
+                           #imageUploadInput
+                           [uploader]="fileUploader"
+                           type="file"
+                           style="display: none"/>
+                    <span (click)="removeImage()" class="image-preview-trash" *ngIf="fileUploader?.queue[0]"><i
+                            class="fa fa-trash text-danger"></i></span>
+                </div>
+                <div class="col-xs-12 col-sm-8 col-md-9">
+                    <form-group [label]="'Name'"
+                                [group]="formGroup"
+                                [controlName]="'name'"
+                                [errorMessages]="
+                            {
+                            required: 'This is required.',
+                            pattern: 'These characters are not allowed:  < > ; =',
+                            maxlength: 'This must be 30 characters or less.'
+                            }">
+                    </form-group>
+                </div>
+            </div>
         </form>
     </modal-body>
 </modal>
