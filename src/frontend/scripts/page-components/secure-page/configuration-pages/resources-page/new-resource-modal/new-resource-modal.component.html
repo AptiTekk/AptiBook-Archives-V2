@@ -14,26 +14,12 @@
         <form [formGroup]="formGroup">
             <div class="row">
                 <div class="col-xs-6 col-sm-4 col-md-3">
-                    <div ng2FileDrop
-                         class="image-preview"
-                         (click)="openImageFileChooser()"
-                         [ngClass]="{'file-over-image': fileOverImage}"
-                         (fileOver)="fileOverImage = $event"
-                         [uploader]="fileUploader"
-                         [style.background-image]="'url(' + (imagePreviewSrc ? imagePreviewSrc : '/static/resource-no-image.jpg') + ')'">
-                        <i class="fa fa-folder-open text-primary image-preview-open-icon"></i>
-                    </div>
-                    <input ng2FileSelect
-                           #imageUploadInput
-                           [uploader]="fileUploader"
-                           type="file"
-                           style="display: none"/>
-                    <span (click)="removeImage()" class="image-preview-trash" *ngIf="fileUploader?.queue[0]"><i
-                            class="fa fa-trash text-danger"></i></span>
+                    <image-uploader #imageUploader></image-uploader>
                 </div>
                 <div class="col-xs-12 col-sm-8 col-md-9">
                     <form-group [control]="formGroup.controls['name']"
                                 [label]="'Name'"
+                                [placeholder]="'Must be unique'"
                                 [errorMessages]="
                                     {
                                     required: 'This is required.',
@@ -42,12 +28,14 @@
                                     }">
                     </form-group>
                     <div class="form-group">
+                        <label>Do Reservations Require Approval?</label>
+                        <br/>
                         <toggle-switch [onText]="'Yes'" [offText]="'No'" style="margin-right: 10px"
                                        formControlName="needsApproval">
                         </toggle-switch>
-                        <label>Reservations Require Approval</label>
                     </div>
                     <div class="form-group">
+                        <label>Which User Group owns this Resource?</label>
                         <tree [selectable]="true" formControlName="owner">
                         </tree>
                     </div>

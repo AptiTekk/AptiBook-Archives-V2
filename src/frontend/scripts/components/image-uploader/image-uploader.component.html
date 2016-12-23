@@ -1,0 +1,23 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div ng2FileDrop
+     class="image-preview"
+     (click)="openImageFileChooser()"
+     [ngClass]="{'file-over-image': fileOverImage}"
+     (fileOver)="fileOverImage = $event"
+     [uploader]="fileUploader"
+     [style.background-image]="'url(' + (imagePreviewSrc ? imagePreviewSrc : '/static/resource-no-image.jpg') + ')'">
+    <i class="fa fa-folder-open text-primary image-preview-open-icon"></i>
+</div>
+<input ng2FileSelect
+       #imageUploadInput
+       [uploader]="fileUploader"
+       type="file"
+       style="display: none"/>
+<span (click)="clearImage()" class="image-preview-trash" *ngIf="fileUploader?.queue[0]">
+    <i class="fa fa-trash text-danger"></i>
+</span>

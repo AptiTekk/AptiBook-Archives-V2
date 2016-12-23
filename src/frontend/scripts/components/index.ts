@@ -5,6 +5,7 @@ export * from './deletion-confirmation-modal/deletion-confirmation-modal.compone
 export * from './footer';
 export * from './form-group/form-group.component';
 export * from './header/header.component';
+export * from './image-uploader/image-uploader.component';
 export * from './loader/loader.component';
 export * from './modal/modal.component';
 export * from './panel/panel.component';
