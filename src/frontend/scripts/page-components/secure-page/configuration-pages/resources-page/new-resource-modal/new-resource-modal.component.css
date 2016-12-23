@@ -27,10 +27,14 @@
 
 .image-preview-open-icon {
     position: absolute;
-    top: calc(50% - 16px);
-    left: calc(50% - 16px);
+    top: calc(50% - 21px);
+    left: calc(50% - 21px);
     font-size: 32px;
     pointer-events: none;
+    background-color: white;
+    padding: 5px;
+    border-radius: 4px;
+    box-shadow: 0 0 10px 0 #000;
     opacity: 0;
     transition: opacity 0.1s ease-in-out;
 }
@@ -51,6 +55,8 @@
     padding: 0 5px;
     position: absolute;
     cursor: pointer;
+    border-radius: 2px;
+    box-shadow: 0 0 10px 0 #000;
 }
 
 .image-preview-trash:hover {
