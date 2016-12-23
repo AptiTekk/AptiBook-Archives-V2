@@ -5,7 +5,6 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {APIService} from "../../../../services/singleton/api.service";
 import {Resource} from "../../../../models/resource.model";
 import {ResourceService} from "../../../../services/singleton/resource.service";
-import {UserGroup} from "../../../../models/user-group.model";
 
 @Component({
     selector: 'resources-page',
@@ -74,8 +73,8 @@ export class ResourcesPageComponent {
         )
     }
 
-    onNewResource(newResource: {name: string, needsApproval: boolean, owner: UserGroup}) {
-        
+    onNewResource() {
+        this.resourceCategoryService.fetchResourceCategories();
     }
 
     onDeleteResource() {

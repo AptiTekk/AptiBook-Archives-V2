@@ -9,6 +9,9 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
 import {UserGroup} from "../../../../../models/user-group.model";
 import {ImageUploaderComponent} from "../../../../../components/image-uploader/image-uploader.component";
+import {ResourceService} from "../../../../../services/singleton/resource.service";
+import {ResourceCategory} from "../../../../../models/resource-category.model";
+import {APIService} from "../../../../../services/singleton/api.service";
 declare const $: any;
 
 @Component({
@@ -21,16 +24,20 @@ export class NewResourceModalComponent {
     @ViewChild('modal')
     modal: ModalComponent;
 
-    @ViewChild('imageUploader') imageUploader: ImageUploaderComponent;
+    formGroup: FormGroup;
+
+    resourceCategory: ResourceCategory;
 
     rootGroup: UserGroup;
 
-    @Output() submitted: EventEmitter<{name: string}> = new EventEmitter<{name: string}>();
+    @ViewChild('imageUploader') imageUploader: ImageUploaderComponent;
 
-    formGroup: FormGroup;
+    @Output() submitted: EventEmitter<void> = new EventEmitter<void>();
 
     constructor(protected formBuilder: FormBuilder,
-                protected userGroupService: UserGroupService) {
+                protected userGroupService: UserGroupService,
+                protected resourceService: ResourceService,
+                protected apiService: APIService) {
 
         userGroupService.getRootUserGroup().subscribe(rootGroup => {
             this.rootGroup = rootGroup;
@@ -39,7 +46,8 @@ export class NewResourceModalComponent {
         });
     }
 
-    public open() {
+    public open(resourceCategory: ResourceCategory) {
+        this.resourceCategory = resourceCategory;
         this.resetFormGroup();
         this.imageUploader.clearImage();
         this.modal.openModal();
@@ -54,15 +62,20 @@ export class NewResourceModalComponent {
     }
 
     onSubmitted() {
-        let newResource = {
-            name: this.formGroup.controls['name'].value,
-            needsApproval: this.formGroup.controls['needsApproval'].value,
-            owner: this.formGroup.controls['owner'].value
-        };
-
-        console.log(newResource);
-        this.submitted.next(newResource);
-        this.modal.closeModal();
+        this.resourceService.addNewResource(
+            this.resourceCategory,
+            this.formGroup.controls['name'].value,
+            this.formGroup.controls['needsApproval'].value,
+            this.formGroup.controls['owner'].value
+        ).subscribe(
+            response => {
+                if (response) {
+                    this.submitted.next();
+                    this.imageUploader.upload(this.apiService.getApiUrlFromEndpoint("/resources/" + response.id + "/image"));
+                    this.modal.closeModal();
+                }
+            }
+        );
     }
 
 }

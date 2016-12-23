@@ -61,10 +61,24 @@ public class ResourceCategoryController extends APIControllerAbstract {
 
                 resourceCategory.setName(resourceCategoryDTO.name);
                 resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
-                return ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.class));
+                return created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/resourceCategories/" + resourceCategory.getId());
             }
             return noPermission();
         }
+        return unauthorized();
+    }
+
+    @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getResourceCategory(@PathVariable Long id) {
+        if (authService.isUserSignedIn()) {
+            ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
+
+            if (resourceCategory == null)
+                return noPermission();
+
+            return ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.class));
+        }
+
         return unauthorized();
     }
 
@@ -73,6 +87,9 @@ public class ResourceCategoryController extends APIControllerAbstract {
         if (authService.isUserSignedIn()) {
             if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCE_CATEGORIES_MODIFY_ALL)) {
                 ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
+
+                if (resourceCategory == null)
+                    return noPermission();
 
                 if (resourceCategoryDTO == null)
                     return badRequest("Resource Category not supplied.");

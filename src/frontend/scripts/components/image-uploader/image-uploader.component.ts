@@ -16,15 +16,21 @@ export class ImageUploaderComponent {
     protected fileUploader: FileUploader;
 
     constructor() {
-        this.fileUploader = new FileUploader({
-            allowedMimeType: ["image/jpeg", "image/pjpeg", "image/png"]
-        });
+        this.fileUploader = new FileUploader({});
+        this.setOptions(null);
 
         this.fileUploader.onAfterAddingFile = (fileItem: FileItem) => {
             this.fileUploader.clearQueue();
             this.fileUploader.queue[0] = fileItem;
             this.updateImagePreview(this.fileUploader.queue[0]);
         }
+    }
+
+    private setOptions(url: string) {
+        this.fileUploader.setOptions({
+            allowedMimeType: ["image/jpeg", "image/pjpeg", "image/png"],
+            url: url
+        })
     }
 
     private updateImagePreview(fileItem: FileItem) {
@@ -38,6 +44,14 @@ export class ImageUploaderComponent {
 
     protected openImageFileChooser() {
         $(this.imageUploadInput.nativeElement).trigger('click');
+    }
+
+    public upload(url: string) {
+        if (this.fileUploader.queue.length == 1) {
+            this.setOptions(url);
+            this.fileUploader.uploadAll();
+            this.setOptions(null);
+        }
     }
 
     public clearImage() {

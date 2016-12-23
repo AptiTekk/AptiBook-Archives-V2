@@ -22,10 +22,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.*;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -94,6 +91,22 @@ public class ResourceController extends APIControllerAbstract {
             } catch (ParseException e) {
                 return badRequest("Could not parse start or end times.");
             }
+        }
+        return unauthorized();
+    }
+
+    @RequestMapping(value = "/resources", method = RequestMethod.POST)
+    public ResponseEntity<?> addResource(@RequestBody ResourceDTO resourceDTO) {
+        if (authService.isUserSignedIn()) {
+            User currentUser = authService.getCurrentUser();
+
+            if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL)) {
+
+
+
+            }
+
+            return noPermission();
         }
         return unauthorized();
     }
