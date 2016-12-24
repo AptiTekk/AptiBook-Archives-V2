@@ -7,13 +7,16 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.repositories.FileRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
+import com.aptitekk.aptibook.core.util.ImageHelper;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
+import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,11 +27,14 @@ import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import javax.imageio.ImageIO;
+import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.InputStream;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
@@ -36,9 +42,11 @@ import java.util.List;
 public class ResourceController extends APIControllerAbstract {
 
     private static final String RESOURCE_NO_IMAGE_PATH = "/static/resource-no-image.jpg";
+    private static final List<String> ACCEPTED_IMAGE_TYPES = Arrays.asList("image/jpeg", "image/pjpeg", "image/png");
 
     private final ResourceRepository resourceRepository;
     private final ResourceCategoryRepository resourceCategoryRepository;
+    private final FileRepository fileRepository;
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
     private final ReservationService reservationService;
@@ -47,12 +55,14 @@ public class ResourceController extends APIControllerAbstract {
     @Autowired
     public ResourceController(ResourceRepository resourceRepository,
                               ResourceCategoryRepository resourceCategoryRepository,
+                              FileRepository fileRepository,
                               UserGroupRepository userGroupRepository,
                               UserGroupService userGroupService,
                               ReservationService reservationService,
                               ResourceLoader resourceLoader) {
         this.resourceRepository = resourceRepository;
         this.resourceCategoryRepository = resourceCategoryRepository;
+        this.fileRepository = fileRepository;
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.reservationService = reservationService;
@@ -97,10 +107,42 @@ public class ResourceController extends APIControllerAbstract {
 
         if (multipartFile == null)
             return badRequest("No image supplied.");
+        else if (multipartFile.getSize() > 5000000)
+            return badRequest("Image cannot be larger than 5MB.");
+        else if (!ACCEPTED_IMAGE_TYPES.contains(multipartFile.getContentType()))
+            return badRequest("Image type not supported.");
+        else {
+            try {
+                // Read the image
+                BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
 
-        multipartFile.getName();
+                // Remove alpha
+                bufferedImage = ImageHelper.removeAlpha(bufferedImage);
 
-        return getImage(id);
+                //Make sure the image is at max 1024px wide or tall.
+                bufferedImage = ImageHelper.scaleDownImageToBounds(bufferedImage, 1024);
+
+                //Crop the image to a square
+                bufferedImage = ImageHelper.cropToSquare(bufferedImage, Positions.CENTER);
+
+                byte[] parsedImage = ImageHelper.parseImageAsJPEG(bufferedImage);
+
+                File imageFile = new File();
+                imageFile.setData(parsedImage);
+                imageFile = fileRepository.save(imageFile);
+
+                if (imageFile == null)
+                    return serverError("Could not save image.");
+
+                resource.image = imageFile;
+                resource = resourceRepository.save(resource);
+
+                //Return the image.
+                return ok(resource.image.getData());
+            } catch (IOException e) {
+                return badRequest("Could not read image. It may be corrupt.");
+            }
+        }
     }
 
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)

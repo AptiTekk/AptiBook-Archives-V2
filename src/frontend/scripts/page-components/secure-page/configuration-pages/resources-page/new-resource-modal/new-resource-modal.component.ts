@@ -68,9 +68,9 @@ export class NewResourceModalComponent {
             this.formGroup.controls['needsApproval'].value,
             this.formGroup.controls['owner'].value
         ).subscribe(
-            response => {
-                if (response) {
-                    this.imageUploader.upload(this.apiService.getApiUrlFromEndpoint("/resources/" + response.id + "/image")).subscribe(
+            resource => {
+                if (resource) {
+                    this.imageUploader.upload(this.apiService.getApiUrlFromEndpoint("/resources/" + resource.id + "/image")).subscribe(
                         success => {
                             if (success) {
                                 this.modal.closeModal();
