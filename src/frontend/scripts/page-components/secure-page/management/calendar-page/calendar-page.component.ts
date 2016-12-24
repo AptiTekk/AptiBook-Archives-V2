@@ -19,30 +19,17 @@ import {AuthService} from "../../../../services/singleton/auth.service";
     templateUrl: 'calendar-page.component.html'
 })
 export class CalendarPageComponent{
-    userGroupFilter: UserGroup[];
-
     @ViewChild('reservationInfoModal')
     reservationInfoModal: ReservationInfoModalComponent;
 
-    makingNewReservation: boolean = false;
-
+    userGroupOwnerFilter: UserGroup[];
     currentUser: User;
-
     resourceCategories: ResourceCategory[];
     enabledResourceCategories: ResourceCategory[];
-
     filterOnlyUsersEvents: boolean = false;
 
     onCalendarEventClicked(event: Reservation) {
         this.reservationInfoModal.display(event);
-    }
-
-    onNewReservationStart() {
-        this.makingNewReservation = true;
-    }
-
-    onCancelNewReservation() {
-        this.makingNewReservation = false;
     }
 
 
@@ -53,11 +40,9 @@ export class CalendarPageComponent{
     constructor(private userGroupService: UserGroupService, private apiService: APIService, private resourceCategoryService: ResourceCategoryService, private authService: AuthService) {
         authService.getUser().subscribe(user => this.currentUser = user);
         userGroupService.getUserGroupHierarchyDownFilter();
-        userGroupService.getUserGroupHierarchyDown().take(1).subscribe(response => {
-            this.userGroupFilter = response;
-            console.log("Response size: " + this.userGroupFilter.length);
-            console.log("Name: " + this.userGroupFilter[0].name)
-        });
+        userGroupService.getUserGroupHierarchyDown().take(1).subscribe(response =>
+            this.userGroupOwnerFilter = response
+        );
 
         this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategory => {
             this.resourceCategories = resourceCategory.map(category => {

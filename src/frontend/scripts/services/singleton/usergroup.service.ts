@@ -16,20 +16,16 @@ export class UserGroupService {
 
     }
 
-
     public getUserGroupHierarchyDown(): ReplaySubject<UserGroup[]> {
         return this.userGroupHierarchyDown;
     }
 
     public getUserGroupHierarchyDownFilter() {
-
         this.authService.getUser().subscribe(user => this.user = user);
-        if (this.user) {
             this.apiService.get("/userGroups/hierarchyDown/" + this.user.id).subscribe(
-                response => {
-                    this.userGroupHierarchyDown.next(response);
-                }, err => this.userGroupHierarchyDown.next([]));
-        }
+                response =>
+                    this.userGroupHierarchyDown.next(response),
+                     err => this.userGroupHierarchyDown.next([]))
     }
 
 

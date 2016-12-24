@@ -3,14 +3,27 @@
   ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
   ~ Proprietary and confidential.
   -->
+<div class="container">
 
+
+    <div class="hidden-xs hidden-s col-md-3 col-lg-2">
+        <div class="sidenav">
+
+        </div>
+    </div>
+
+<ol class="breadcrumb">
+    <li><a [routerLink]="['', 'secure']">Home</a></li>
+    <li class="active">Reservation Management</li>
+    <li class="active">Calendar</li>
+</ol>
 <div class="hidden-xs hidden-sm col-md-9 col-lg-push-3 col-lg-7">
     <div class="full-height">
         <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
                   [hiddenStatuses]="['rejected', 'cancelled']"
                   [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
                   [filterByResourceCategories]="enabledResourceCategories"
-                  [filterByUserGroupOwners]="userGroupFilter"
+                  [filterByUserGroupOwners]="userGroupOwnerFilter"
                   (eventSelected)="reservationInfoModal.display($event)"></calendar>
     </div>
 </div>
@@ -30,5 +43,5 @@
         </panel-body>
     </panel>
 </div>
-
 <reservation-info-modal #reservationInfoModal></reservation-info-modal>
+</div>

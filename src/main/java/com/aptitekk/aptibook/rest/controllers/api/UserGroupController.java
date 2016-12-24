@@ -60,7 +60,6 @@ public class UserGroupController extends APIControllerAbstract {
                 }
                 return ok(modelMapper.map(userGroupList, new TypeToken<List<UserGroupDTO>>() {
                 }.getType()));
-
             }
         }
         return noPermission();
