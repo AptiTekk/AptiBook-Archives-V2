@@ -45,6 +45,8 @@ export class CalendarPageComponent{
         this.makingNewReservation = false;
     }
 
+    //why
+
     updateEnabledResourceCategories() {
         this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
     }
