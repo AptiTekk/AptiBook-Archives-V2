@@ -119,14 +119,16 @@ public class ResourceController extends APIControllerAbstract {
                 // Remove alpha
                 bufferedImage = ImageHelper.removeAlpha(bufferedImage);
 
-                //Make sure the image is at max 1024px wide or tall.
+                // Make sure the image is at max 1024px wide or tall.
                 bufferedImage = ImageHelper.scaleDownImageToBounds(bufferedImage, 1024);
 
-                //Crop the image to a square
+                // Crop the image to a square
                 bufferedImage = ImageHelper.cropToSquare(bufferedImage, Positions.CENTER);
 
+                // Parse as a JPEG
                 byte[] parsedImage = ImageHelper.parseImageAsJPEG(bufferedImage);
 
+                // Save image to file entity.
                 File imageFile = new File();
                 imageFile.setData(parsedImage);
                 imageFile = fileRepository.save(imageFile);
@@ -134,10 +136,16 @@ public class ResourceController extends APIControllerAbstract {
                 if (imageFile == null)
                     return serverError("Could not save image.");
 
+                // Delete existing image
+                if (resource.image != null) {
+                    fileRepository.delete(resource.image);
+                }
+
+                // Set new image
                 resource.image = imageFile;
                 resource = resourceRepository.save(resource);
 
-                //Return the image.
+                // Return the image.
                 return ok(resource.image.getData());
             } catch (IOException e) {
                 return badRequest("Could not read image. It may be corrupt.");
