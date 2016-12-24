@@ -45,7 +45,6 @@ export class CalendarPageComponent{
         this.makingNewReservation = false;
     }
 
-    //why
 
     updateEnabledResourceCategories() {
         this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
@@ -54,9 +53,10 @@ export class CalendarPageComponent{
     constructor(private userGroupService: UserGroupService, private apiService: APIService, private resourceCategoryService: ResourceCategoryService, private authService: AuthService) {
         authService.getUser().subscribe(user => this.currentUser = user);
         userGroupService.getUserGroupHierarchyDownFilter();
-        userGroupService.getUserGroupHierarchyDown().subscribe(response => {
+        userGroupService.getUserGroupHierarchyDown().take(1).subscribe(response => {
             this.userGroupFilter = response;
             console.log("Response size: " + this.userGroupFilter.length);
+            console.log("Name: " + this.userGroupFilter[0].name)
         });
 
         this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategory => {

@@ -136,7 +136,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                     // Remove events whose resources do not match the filtered user group owners
                     //TODO: Get back end method from JSF version, check against event resource owner, implement in calendar page
                    // if(event.resource.owner)
-                    if(this.filterByUserGroupOwners && this.filterByUserGroupOwners.filter(owner=> owner.id === event.resource.owner.id))
+                    if(this.filterByUserGroupOwners && this.filterByUserGroupOwners.filter(owner=> owner.id === event.resource.owner.id).length == 0)
                         return false;
 
                     if (this.filterByUserGroupOwners)
