@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
+import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -32,6 +33,9 @@ public abstract class APIControllerAbstract {
     @Autowired
     LogService logService;
 
+    @Autowired
+    TenantSessionService tenantSessionService;
+
     APIControllerAbstract() {
         modelMapper.getConfiguration().setFieldMatchingEnabled(true);
     }
@@ -49,6 +53,10 @@ public abstract class APIControllerAbstract {
                 path = "/api" + (path.startsWith("/") ? "" : "/") + path;
         } else if (path.startsWith("api"))
             path = "/" + path;
+
+        //Add on the tenant url
+        if (tenantSessionService.getTenant() != null)
+            path = "/" + tenantSessionService.getTenant().getSlug() + path;
 
         String uriString = ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 
