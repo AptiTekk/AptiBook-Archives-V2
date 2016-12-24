@@ -6,11 +6,10 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
-import com.aptitekk.aptibook.core.domain.entities.Resource;
-import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
+import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
@@ -23,6 +22,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -38,13 +38,22 @@ public class ResourceController extends APIControllerAbstract {
     private static final String RESOURCE_NO_IMAGE_PATH = "/static/resource-no-image.jpg";
 
     private final ResourceRepository resourceRepository;
+    private final ResourceCategoryRepository resourceCategoryRepository;
+    private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
     private final ReservationService reservationService;
     private final ResourceLoader resourceLoader;
 
     @Autowired
-    public ResourceController(ResourceRepository resourceRepository, UserGroupService userGroupService, ReservationService reservationService, ResourceLoader resourceLoader) {
+    public ResourceController(ResourceRepository resourceRepository,
+                              ResourceCategoryRepository resourceCategoryRepository,
+                              UserGroupRepository userGroupRepository,
+                              UserGroupService userGroupService,
+                              ReservationService reservationService,
+                              ResourceLoader resourceLoader) {
         this.resourceRepository = resourceRepository;
+        this.resourceCategoryRepository = resourceCategoryRepository;
+        this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.reservationService = reservationService;
         this.resourceLoader = resourceLoader;
@@ -76,6 +85,24 @@ public class ResourceController extends APIControllerAbstract {
         return null;
     }
 
+    @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
+    public ResponseEntity<?> setImage(@PathVariable Long id, @RequestPart("file") MultipartFile multipartFile) {
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        Resource resource = resourceRepository.findInCurrentTenant(id);
+
+        if (!canUserEditResource(resource, authService.getCurrentUser()))
+            return noPermission();
+
+        if (multipartFile == null)
+            return badRequest("No image supplied.");
+
+        multipartFile.getName();
+
+        return getImage(id);
+    }
+
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
     public ResponseEntity<?> getAvailableResources(@RequestParam(value = "start") String start, @RequestParam(value = "end") String end) {
         if (authService.isUserSignedIn()) {
@@ -97,54 +124,89 @@ public class ResourceController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
     public ResponseEntity<?> addResource(@RequestBody ResourceDTO resourceDTO) {
-        if (authService.isUserSignedIn()) {
-            User currentUser = authService.getCurrentUser();
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+        else if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL))
+            return noPermission();
+        else {
+            Resource resource = new Resource();
 
-            if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL)) {
+            if (resourceDTO.name == null)
+                return badRequest("Name not supplied.");
+            else if (resourceDTO.name.length() > 30)
+                return badRequest("Name must be 30 characters or less.");
+            else if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
+                return badRequest("Name includes invalid characters.");
+            else
+                resource.name = resourceDTO.name;
 
-
-
+            if (resourceDTO.owner == null)
+                return badRequest("Owner not supplied.");
+            else {
+                UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
+                if (owner == null)
+                    return badRequest("Owner not found.");
+                else if (owner.isRoot())
+                    return badRequest("Owner cannot be root.");
+                else
+                    resource.owner = owner;
             }
 
-            return noPermission();
+            if (resourceDTO.resourceCategory == null)
+                return badRequest("Resource Category not supplied.");
+            else {
+                ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
+                if (resourceCategory == null)
+                    return badRequest("Category not found.");
+                else
+                    resource.resourceCategory = resourceCategory;
+            }
+
+            resource.needsApproval = resourceDTO.needsApproval;
+
+            resource = resourceRepository.save(resource);
+            return created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.id);
         }
-        return unauthorized();
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteResource(@PathVariable Long id) {
-        if (authService.isUserSignedIn()) {
-            User currentUser = authService.getCurrentUser();
-            Resource resource = resourceRepository.findInCurrentTenant(id);
+        if (!authService.isUserSignedIn())
+            return unauthorized();
 
-            //Check Permissions
-            if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL)) {
-                boolean ownsResource = false;
-                boolean hierarchyOwnsResource = false;
-                List<UserGroup> currentUserGroups = currentUser.userGroups;
-                for (UserGroup userGroup : currentUserGroups) {
-                    if (resource.owner.equals(userGroup))
-                        ownsResource = true;
+        Resource resource = resourceRepository.findInCurrentTenant(id);
 
-                    List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
-                    for (UserGroup hierarchyGroup : hierarchyDown) {
-                        if (resource.owner.equals(hierarchyGroup)) {
-                            hierarchyOwnsResource = true;
-                            break;
-                        }
+        if (!canUserEditResource(resource, authService.getCurrentUser()))
+            return noPermission();
+
+        resourceRepository.delete(resource);
+        return noContent();
+    }
+
+    private boolean canUserEditResource(Resource resource, User user) {
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL)) {
+            boolean ownsResource = false;
+            boolean hierarchyOwnsResource = false;
+            List<UserGroup> currentUserGroups = user.userGroups;
+            for (UserGroup userGroup : currentUserGroups) {
+                if (resource.owner.equals(userGroup))
+                    ownsResource = true;
+
+                List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
+                for (UserGroup hierarchyGroup : hierarchyDown) {
+                    if (resource.owner.equals(hierarchyGroup)) {
+                        hierarchyOwnsResource = true;
+                        break;
                     }
                 }
-
-                if (!(authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_OWN) && ownsResource)
-                        && !(authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY) && hierarchyOwnsResource))
-                    return noPermission();
             }
 
-            //Permissions are okay. Delete Resource.
-            resourceRepository.delete(resource);
-            return noContent();
+            if (!(authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_OWN) && ownsResource)
+                    && !(authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY) && hierarchyOwnsResource))
+                return false;
         }
-        return unauthorized();
+
+        return true;
     }
 
 }

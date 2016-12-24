@@ -70,9 +70,14 @@ export class NewResourceModalComponent {
         ).subscribe(
             response => {
                 if (response) {
-                    this.submitted.next();
-                    this.imageUploader.upload(this.apiService.getApiUrlFromEndpoint("/resources/" + response.id + "/image"));
-                    this.modal.closeModal();
+                    this.imageUploader.upload(this.apiService.getApiUrlFromEndpoint("/resources/" + response.id + "/image")).subscribe(
+                        success => {
+                            if (success) {
+                                this.modal.closeModal();
+                                this.submitted.next();
+                            }
+                        }
+                    );
                 }
             }
         );

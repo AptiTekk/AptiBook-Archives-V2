@@ -1,6 +1,7 @@
 import {Component, ViewChild, ElementRef} from "@angular/core";
 import {FileItem} from "ng2-file-upload/file-upload/file-item.class";
-import {FileUploader} from "ng2-file-upload";
+import {FileUploader, FileUploaderOptions} from "ng2-file-upload";
+import {Observable} from "rxjs";
 declare const $: any;
 
 @Component({
@@ -16,7 +17,7 @@ export class ImageUploaderComponent {
     protected fileUploader: FileUploader;
 
     constructor() {
-        this.fileUploader = new FileUploader({});
+        this.fileUploader = new FileUploader(<FileUploaderOptions>{});
         this.setOptions(null);
 
         this.fileUploader.onAfterAddingFile = (fileItem: FileItem) => {
@@ -27,10 +28,12 @@ export class ImageUploaderComponent {
     }
 
     private setOptions(url: string) {
-        this.fileUploader.setOptions({
-            allowedMimeType: ["image/jpeg", "image/pjpeg", "image/png"],
-            url: url
-        })
+        this.fileUploader.setOptions(<FileUploaderOptions>
+            {
+                allowedMimeType: ["image/jpeg", "image/pjpeg", "image/png"],
+                url: url,
+                method: 'PUT'
+            })
     }
 
     private updateImagePreview(fileItem: FileItem) {
@@ -46,12 +49,24 @@ export class ImageUploaderComponent {
         $(this.imageUploadInput.nativeElement).trigger('click');
     }
 
-    public upload(url: string) {
-        if (this.fileUploader.queue.length == 1) {
-            this.setOptions(url);
-            this.fileUploader.uploadAll();
-            this.setOptions(null);
-        }
+    public upload(url: string): Observable<boolean> {
+        return Observable.create(listener => {
+            if (this.fileUploader.queue.length > 0) {
+                //Set options with correct url
+                this.setOptions(url);
+
+                //Set up listeners
+                this.fileUploader.onSuccessItem = () => listener.next(true);
+                this.fileUploader.onErrorItem = () => listener.next(false);
+
+                //Upload the first image in the queue
+                this.fileUploader.uploadItem(this.fileUploader.queue[0]);
+
+                //Clear options
+                this.setOptions(null);
+            } else
+                listener.next(false);
+        });
     }
 
     public clearImage() {

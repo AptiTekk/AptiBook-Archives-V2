@@ -56,7 +56,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
                 if (resourceCategoryDTO.name.length() > 30)
                     return badRequest("The Name must be 30 characters or less.");
 
-                if (!resourceCategoryDTO.name.matches("[^<>;=]*"))
+                if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
                     return badRequest("The Name cannot contain these characters: < > ; =");
 
                 resourceCategory.setName(resourceCategoryDTO.name);
@@ -97,7 +97,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
                 if (resourceCategoryDTO.name != null) {
                     if (resourceCategoryDTO.name.length() > 30)
                         return badRequest("The Name must be 30 characters or less.");
-                    if (!resourceCategoryDTO.name.matches("[^<>;=]*"))
+                    if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
                         return badRequest("The Name cannot contain these characters: < > ; =");
                     resourceCategory.setName(resourceCategoryDTO.name);
                 }
