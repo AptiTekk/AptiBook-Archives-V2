@@ -6,6 +6,7 @@
 import {Component, ViewChild, Output, EventEmitter} from "@angular/core";
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {ResourceCategoryService} from "../../../../../services/singleton/resource-category.service";
 
 @Component({
     selector: 'new-category-modal',
@@ -20,7 +21,8 @@ export class NewCategoryModalComponent {
 
     formGroup: FormGroup;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: FormBuilder,
+                protected resourceCategoryService: ResourceCategoryService) {
         this.formGroup = formBuilder.group({
             name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
         });
@@ -32,9 +34,17 @@ export class NewCategoryModalComponent {
     }
 
     onCategorySubmitted() {
-        let newCategory = {name: this.formGroup.controls['name'].value};
-        this.submitted.next(newCategory);
-        this.modal.closeModal();
+        this.resourceCategoryService
+            .addNewResourceCategory(this.formGroup.controls['name'].value)
+            .subscribe(
+                resourceCategory => {
+                    this.resourceCategoryService.fetchResourceCategories();
+                    if (resourceCategory) {
+                        this.submitted.next(resourceCategory);
+                        this.modal.closeModal();
+                    }
+                }
+            );
     }
 
 }

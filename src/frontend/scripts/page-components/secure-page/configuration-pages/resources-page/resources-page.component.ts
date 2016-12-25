@@ -42,35 +42,17 @@ export class ResourcesPageComponent {
         });
     }
 
-    onNewCategory(newCategory: {name: string}) {
-        this.resourceCategoryService.addNewResourceCategory(newCategory.name).subscribe(
-            category => {
-                this.resourceCategoryService.fetchResourceCategories();
-                if (category) {
-                    this.router.navigate(['', 'secure', 'configuration', 'resources', category.name.toLowerCase()]);
-                }
-            }
-        );
+    onNewCategory(resourceCategory: ResourceCategory) {
+        this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
 
-    onEditCategory(category: ResourceCategory) {
-        this.resourceCategoryService.patchResourceCategory(category).subscribe(
-            category => {
-                this.resourceCategoryService.fetchResourceCategories();
-                if (category) {
-                    this.router.navigate(['', 'secure', 'configuration', 'resources', category.name.toLowerCase()]);
-                }
-            }
-        )
+    onEditCategory(resourceCategory: ResourceCategory) {
+        this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
 
     onDeleteCategory() {
-        this.resourceCategoryService.deleteResourceCategory(this.currentResourceCategory).subscribe(
-            response => {
-                this.resourceCategoryService.fetchResourceCategories();
-                this.router.navigate(['', 'secure', 'configuration', 'resources']);
-            }
-        )
+        this.resourceCategoryService.fetchResourceCategories();
+        this.router.navigate(['', 'secure', 'configuration', 'resources']);
     }
 
     onNewResource() {

@@ -7,6 +7,7 @@ import {Component, ViewChild, Output, EventEmitter} from "@angular/core";
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ResourceCategory} from "../../../../../models/resource-category.model";
+import {ResourceCategoryService} from "../../../../../services/singleton/resource-category.service";
 
 @Component({
     selector: 'edit-category-modal',
@@ -24,7 +25,8 @@ export class EditCategoryModalComponent {
 
     resourceCategory: ResourceCategory;
 
-    constructor(formBuilder: FormBuilder) {
+    constructor(formBuilder: FormBuilder,
+                protected resourceCategoryService: ResourceCategoryService) {
         this.formGroup = formBuilder.group({
             name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
         });
@@ -39,13 +41,25 @@ export class EditCategoryModalComponent {
 
     onCategorySubmitted() {
         this.resourceCategory.name = this.formGroup.controls['name'].value;
-        this.submitted.next(this.resourceCategory);
-        this.modal.closeModal();
+
+        this.resourceCategoryService.patchResourceCategory(this.resourceCategory).subscribe(
+            resourceCategory => {
+                this.resourceCategoryService.fetchResourceCategories();
+                if (resourceCategory) {
+                    this.submitted.emit(resourceCategory);
+                    this.modal.closeModal();
+                }
+            }
+        );
     }
 
     onDeleteCategory() {
-        this.deleted.emit();
-        this.modal.closeModal();
+        this.resourceCategoryService.deleteResourceCategory(this.resourceCategory).subscribe(
+            response => {
+                this.deleted.emit();
+                this.modal.closeModal();
+            }
+        );
     }
 
 }
