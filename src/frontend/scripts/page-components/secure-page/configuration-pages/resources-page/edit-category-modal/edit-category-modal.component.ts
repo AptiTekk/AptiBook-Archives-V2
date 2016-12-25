@@ -8,6 +8,7 @@ import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ResourceCategory} from "../../../../../models/resource-category.model";
 import {ResourceCategoryService} from "../../../../../services/singleton/resource-category.service";
+import {LoaderService} from "../../../../../services/singleton/loader.service";
 
 @Component({
     selector: 'edit-category-modal',
@@ -26,7 +27,8 @@ export class EditCategoryModalComponent {
     resourceCategory: ResourceCategory;
 
     constructor(formBuilder: FormBuilder,
-                protected resourceCategoryService: ResourceCategoryService) {
+                protected resourceCategoryService: ResourceCategoryService,
+                protected loaderService: LoaderService) {
         this.formGroup = formBuilder.group({
             name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
         });
@@ -40,24 +42,30 @@ export class EditCategoryModalComponent {
     }
 
     onCategorySubmitted() {
-        this.resourceCategory.name = this.formGroup.controls['name'].value;
+        this.loaderService.startLoading();
 
+        this.resourceCategory.name = this.formGroup.controls['name'].value;
         this.resourceCategoryService.patchResourceCategory(this.resourceCategory).subscribe(
             resourceCategory => {
-                this.resourceCategoryService.fetchResourceCategories();
                 if (resourceCategory) {
                     this.submitted.emit(resourceCategory);
                     this.modal.closeModal();
                 }
+
+                this.loaderService.stopLoading();
             }
         );
     }
 
     onDeleteCategory() {
+        this.loaderService.startLoading();
+
         this.resourceCategoryService.deleteResourceCategory(this.resourceCategory).subscribe(
             response => {
                 this.deleted.emit();
                 this.modal.closeModal();
+
+                this.loaderService.stopLoading();
             }
         );
     }

@@ -12,6 +12,7 @@ import {ImageUploaderComponent} from "../../../../../components/image-uploader/i
 import {ResourceService} from "../../../../../services/singleton/resource.service";
 import {ResourceCategory} from "../../../../../models/resource-category.model";
 import {APIService} from "../../../../../services/singleton/api.service";
+import {LoaderService} from "../../../../../services/singleton/loader.service";
 
 @Component({
     selector: 'new-resource-modal',
@@ -36,7 +37,8 @@ export class NewResourceModalComponent {
     constructor(protected formBuilder: FormBuilder,
                 protected userGroupService: UserGroupService,
                 protected resourceService: ResourceService,
-                protected apiService: APIService) {
+                protected apiService: APIService,
+                protected loaderService: LoaderService) {
         userGroupService.getRootUserGroup().subscribe(rootGroup => this.rootGroup = rootGroup);
         this.resetFormGroup();
     }
@@ -57,6 +59,7 @@ export class NewResourceModalComponent {
     }
 
     onSubmitted() {
+        this.loaderService.startLoading();
         this.resourceService.addNewResource(
             this.resourceCategory,
             this.formGroup.controls['name'].value,
@@ -71,6 +74,8 @@ export class NewResourceModalComponent {
                                 this.modal.closeModal();
                                 this.submitted.next();
                             }
+
+                            this.loaderService.stopLoading();
                         }
                     );
                 }

@@ -43,10 +43,12 @@ export class ResourcesPageComponent {
     }
 
     onNewCategory(resourceCategory: ResourceCategory) {
+        this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
 
     onEditCategory(resourceCategory: ResourceCategory) {
+        this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
 

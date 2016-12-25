@@ -11,6 +11,7 @@ import {ImageUploaderComponent} from "../../../../../components/image-uploader/i
 import {ResourceService} from "../../../../../services/singleton/resource.service";
 import {APIService} from "../../../../../services/singleton/api.service";
 import {Resource} from "../../../../../models/resource.model";
+import {LoaderService} from "../../../../../services/singleton/loader.service";
 
 @Component({
     selector: 'edit-resource-modal',
@@ -33,7 +34,8 @@ export class EditResourceModalComponent {
     constructor(protected formBuilder: FormBuilder,
                 protected userGroupService: UserGroupService,
                 protected resourceService: ResourceService,
-                protected apiService: APIService) {
+                protected apiService: APIService,
+                protected loaderService: LoaderService) {
         this.resetFormGroup();
     }
 
@@ -58,6 +60,8 @@ export class EditResourceModalComponent {
     }
 
     onSubmitted() {
+        this.loaderService.startLoading();
+
         this.resource.name = this.formGroup.controls['name'].value;
         this.resource.needsApproval = this.formGroup.controls['needsApproval'].value;
         this.resource.owner = this.formGroup.controls['owner'].value;
@@ -76,6 +80,8 @@ export class EditResourceModalComponent {
                                         this.close();
                                         this.submitted.next();
                                     }
+
+                                    this.loaderService.stopLoading();
                                 }
                             );
                         } else {
@@ -86,6 +92,7 @@ export class EditResourceModalComponent {
                                     response => {
                                         this.close();
                                         this.submitted.next();
+                                        this.loaderService.stopLoading();
                                     }
                                 );
                         }
