@@ -136,14 +136,16 @@ public class ResourceController extends APIControllerAbstract {
                 if (imageFile == null)
                     return serverError("Could not save image.");
 
-                // Delete existing image
-                if (resource.image != null) {
-                    fileRepository.delete(resource.image);
-                }
+                File oldImage = resource.image;
 
-                // Set new image
+                // Set and save new image
                 resource.image = imageFile;
                 resource = resourceRepository.save(resource);
+
+                // Delete old image
+                if (oldImage != null) {
+                    fileRepository.delete(oldImage);
+                }
 
                 // Return the image.
                 return ok(resource.image.getData());
@@ -212,10 +214,58 @@ public class ResourceController extends APIControllerAbstract {
                     resource.resourceCategory = resourceCategory;
             }
 
-            resource.needsApproval = resourceDTO.needsApproval;
+            resource.needsApproval = resourceDTO.needsApproval != null ? resourceDTO.needsApproval : false;
 
             resource = resourceRepository.save(resource);
             return created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.id);
+        }
+    }
+
+    @RequestMapping(value = "/resources/{id}", method = RequestMethod.PATCH)
+    public ResponseEntity<?> patchResource(@RequestBody ResourceDTO resourceDTO, @PathVariable Long id) {
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+        else {
+            Resource resource = resourceRepository.findInCurrentTenant(id);
+
+            if (resource == null)
+                return noPermission();
+
+            if (!canUserEditResource(resource, authService.getCurrentUser()))
+                return noPermission();
+
+            if (resourceDTO.name != null) {
+                if (resourceDTO.name.length() > 30)
+                    return badRequest("Name must be 30 characters or less.");
+                else if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
+                    return badRequest("Name includes invalid characters.");
+                else
+                    resource.name = resourceDTO.name;
+            }
+
+            if (resourceDTO.owner != null) {
+                UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
+                if (owner == null)
+                    return badRequest("Owner not found.");
+                else if (owner.isRoot())
+                    return badRequest("Owner cannot be root.");
+                else
+                    resource.owner = owner;
+            }
+
+            if (resourceDTO.resourceCategory != null) {
+                ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
+                if (resourceCategory == null)
+                    return badRequest("Category not found.");
+                else
+                    resource.resourceCategory = resourceCategory;
+            }
+
+            if (resourceDTO.needsApproval != null)
+                resource.needsApproval = resourceDTO.needsApproval;
+
+            resource = resourceRepository.save(resource);
+            return ok(modelMapper.map(resource, ResourceDTO.class));
         }
     }
 
@@ -234,29 +284,35 @@ public class ResourceController extends APIControllerAbstract {
     }
 
     private boolean canUserEditResource(Resource resource, User user) {
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL)) {
-            boolean ownsResource = false;
-            boolean hierarchyOwnsResource = false;
-            List<UserGroup> currentUserGroups = user.userGroups;
-            for (UserGroup userGroup : currentUserGroups) {
-                if (resource.owner.equals(userGroup))
-                    ownsResource = true;
+        // True if they can edit all resources
+        if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL))
+            return true;
 
-                List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
-                for (UserGroup hierarchyGroup : hierarchyDown) {
-                    if (resource.owner.equals(hierarchyGroup)) {
-                        hierarchyOwnsResource = true;
-                        break;
-                    }
-                }
-            }
+        // False if they have no other resource permissions
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_OWN)
+                && !authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY))
+            return false;
 
-            if (!(authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_OWN) && ownsResource)
-                    && !(authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY) && hierarchyOwnsResource))
-                return false;
+        // Check every group the user belongs to.
+        for (UserGroup userGroup : user.userGroups) {
+
+            // True if the User belongs to the User Group that owns the resource.
+            if (resource.owner.equals(userGroup))
+                return true;
+
+            // Check every group below the user's own if they have permission.
+            if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY))
+
+                for (UserGroup hierarchyGroup : userGroupService.getHierarchyDown(userGroup))
+
+                    // True if the User has hierarchy over the User Group that owns the resource.
+                    if (resource.owner.equals(hierarchyGroup))
+                        return true;
+
         }
 
-        return true;
+        // False otherwise.
+        return false;
     }
 
 }

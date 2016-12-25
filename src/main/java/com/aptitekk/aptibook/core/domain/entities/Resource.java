@@ -30,7 +30,7 @@ public class Resource extends MultiTenantEntity implements Serializable {
 
     public String name;
 
-    public Boolean needsApproval = false;
+    public boolean needsApproval = false;
 
     @OneToMany(mappedBy = "resource", cascade = CascadeType.REMOVE)
     @OrderBy("dateCreated desc")
