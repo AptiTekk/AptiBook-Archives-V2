@@ -70,14 +70,13 @@
                      *ngFor="let resource of currentResourceCategory.resources">
 
                     <!-- Resource Card -->
-                    <panel [type]="'primary'">
+                    <panel [type]="'primary'" class="resource-panel">
                         <panel-body>
                             <!-- Resource Image -->
-                            <img [src]="apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image')"
-                                 height="150px" class="resource-panel-image"/>
+                            <resource-image [resource]="resource"></resource-image>
 
                             <!-- Resource Name -->
-                            <h3 class="resource-panel-title">{{resource.name}}</h3>
+                            <h3>{{resource.name}}</h3>
                             <hr/>
                             <form-group [faIconName]="resource.needsApproval ? 'check-square-o' : 'square-o'"
                                         [readOnly]="true"

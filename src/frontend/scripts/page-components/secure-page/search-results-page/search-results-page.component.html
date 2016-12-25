@@ -56,11 +56,10 @@
             <div class="row">
                 <div class="col-xs-12 col-md-6"
                      *ngFor="let resource of availableResources | resourceCategoryFilter:resourceCategories">
-                    <panel [type]="'primary'">
+                    <panel [type]="'primary'" class="resource-result-panel">
                         <panel-body>
-                            <img [src]="apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image')"
-                                 height="150px" class="resource-panel-image"/>
-                            <h3 class="resource-panel-title">{{resource.name}}</h3>
+                            <resource-image [resource]="resource"></resource-image>
+                            <h3>{{resource.name}}</h3>
                             <hr/>
                             Category: <span style="font-weight: bold">{{resource.resourceCategory.name}}</span>
                         </panel-body>

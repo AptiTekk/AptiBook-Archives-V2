@@ -44,7 +44,7 @@
                 <button *ngIf="submitButtonLabel" type="button" class="btn btn-primary"
                         (click)="onSubmit.emit()" [disabled]="submitButtonDisabled">{{submitButtonLabel}}
                 </button>
-                <button *ngIf="cancelButtonLabel" type="button" class="btn btn-default" (click)="closeModal()">
+                <button *ngIf="cancelButtonLabel" type="button" class="btn btn-default" (click)="cancel()">
                     {{cancelButtonLabel}}
                 </button>
                 <button *ngIf="dangerSubmitButtonLabel" type="button" class="btn btn-danger pull-left"

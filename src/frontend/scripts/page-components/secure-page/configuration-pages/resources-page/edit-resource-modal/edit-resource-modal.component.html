@@ -9,13 +9,13 @@
        [submitButtonLabel]="'Save Resource'"
        [submitButtonDisabled]="formGroup.invalid"
        (onSubmit)="onSubmitted()"
-       *ngIf="formGroup">
+       (onCancel)="close()">
     <modal-body>
         <form [formGroup]="formGroup">
             <div class="row">
                 <div class="col-xs-6 col-sm-4 col-md-3">
                     <image-uploader #imageUploader
-                                    [defaultImageUrl]="apiService.getApiUrlFromEndpoint('/resources/' + resource?.id + '/image')">
+                                    [currentImageUrl]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image') : null">
                     </image-uploader>
                 </div>
                 <div class="col-xs-12 col-sm-8 col-md-9">

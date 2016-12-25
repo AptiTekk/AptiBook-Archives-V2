@@ -53,6 +53,10 @@ public class Resource extends MultiTenantEntity implements Serializable {
         this.name = name;
     }
 
+    public boolean getHasImage() {
+        return this.image != null;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

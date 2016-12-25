@@ -65,7 +65,7 @@ export class NewResourceModalComponent {
         ).subscribe(
             resource => {
                 if (resource) {
-                    this.imageUploader.upload(this.apiService.getApiUrlFromEndpoint("/resources/" + resource.id + "/image")).subscribe(
+                    this.imageUploader.uploadToUrl(this.apiService.getApiUrlFromEndpoint("/resources/" + resource.id + "/image")).subscribe(
                         success => {
                             if (success) {
                                 this.modal.closeModal();

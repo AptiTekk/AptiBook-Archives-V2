@@ -24,11 +24,11 @@
     color: white;
 }
 
-.resource-panel-image {
+.resource-panel resource-image {
     float: left;
     padding-right: 20px;
 }
 
-.resource-panel-title {
+.resource-panel h3 {
     margin-top: 0;
 }

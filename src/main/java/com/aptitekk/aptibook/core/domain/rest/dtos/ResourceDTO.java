@@ -18,6 +18,8 @@ public class ResourceDTO {
 
     public Boolean needsApproval;
 
+    public Boolean hasImage;
+
     public ResourceCategoryDTO.WithoutResources resourceCategory;
 
     public List<ReservationDTO.WithoutResource> reservations;

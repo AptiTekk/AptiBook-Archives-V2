@@ -44,6 +44,11 @@ export class EditResourceModalComponent {
         this.modal.openModal();
     }
 
+    public close() {
+        this.resource = null;
+        this.modal.closeModal();
+    }
+
     private resetFormGroup() {
         this.formGroup = this.formBuilder.group({
             name: [this.resource ? this.resource.name : null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
@@ -62,14 +67,28 @@ export class EditResourceModalComponent {
             .subscribe(
                 resource => {
                     if (resource) {
-                        this.imageUploader.upload(this.apiService.getApiUrlFromEndpoint("/resources/" + resource.id + "/image")).subscribe(
-                            success => {
-                                if (success) {
-                                    this.modal.closeModal();
-                                    this.submitted.next();
+                        if (this.imageUploader.hasImage()) {
+
+                            // If there is an image, upload it.
+                            this.imageUploader.uploadToUrl(this.apiService.getApiUrlFromEndpoint("/resources/" + resource.id + "/image")).subscribe(
+                                success => {
+                                    if (success) {
+                                        this.close();
+                                        this.submitted.next();
+                                    }
                                 }
-                            }
-                        );
+                            );
+                        } else {
+                            // Otherwise, delete any existing image.
+                            this.apiService
+                                .del("/resources/" + resource.id + "/image")
+                                .subscribe(
+                                    response => {
+                                        this.close();
+                                        this.submitted.next();
+                                    }
+                                );
+                        }
                     }
                 }
             );

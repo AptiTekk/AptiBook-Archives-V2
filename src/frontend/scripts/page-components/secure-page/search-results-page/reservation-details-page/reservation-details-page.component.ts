@@ -13,7 +13,8 @@ import Moment = moment.Moment;
 import moment = require("moment");
 @Component({
     selector: 'reservation-details-page',
-    templateUrl: 'reservation-details-page.component.html'
+    templateUrl: 'reservation-details-page.component.html',
+    styleUrls: ['reservation-details-page.component.css']
 })
 export class ReservationDetailsComponent {
 

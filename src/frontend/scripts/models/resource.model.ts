@@ -4,6 +4,7 @@ export interface Resource {
     id?: number;
     name?: string;
     needsApproval?: boolean;
+    hasImage?: boolean;
     reservations?: any[];
     resourceCategory?: ResourceCategory;
     owner?: UserGroup;

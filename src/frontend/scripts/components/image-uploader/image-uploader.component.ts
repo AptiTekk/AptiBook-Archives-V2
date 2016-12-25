@@ -2,6 +2,7 @@ import {Component, ViewChild, ElementRef, Input} from "@angular/core";
 import {FileItem} from "ng2-file-upload/file-upload/file-item.class";
 import {FileUploader, FileUploaderOptions} from "ng2-file-upload";
 import {Observable} from "rxjs";
+import {APIService} from "../../services/singleton/api.service";
 declare const $: any;
 
 @Component({
@@ -11,14 +12,16 @@ declare const $: any;
 })
 export class ImageUploaderComponent {
 
-    @Input() defaultImageUrl: string = "/static/resource-no-image.jpg";
+    noImageUrl: string = "/static/resource-no-image.jpg";
+
+    @Input() currentImageUrl: string;
 
     @ViewChild('imageUploadInput') protected imageUploadInput: ElementRef;
     protected imagePreviewSrc: string;
 
     protected fileUploader: FileUploader;
 
-    constructor() {
+    constructor(protected apiService: APIService) {
         this.fileUploader = new FileUploader(<FileUploaderOptions>{});
         this.setOptions(null);
 
@@ -51,7 +54,11 @@ export class ImageUploaderComponent {
         $(this.imageUploadInput.nativeElement).trigger('click');
     }
 
-    public upload(url: string): Observable<boolean> {
+    public hasImage(): boolean {
+        return this.currentImageUrl != null || this.fileUploader.queue.length > 0;
+    }
+
+    public uploadToUrl(url: string): Observable<boolean> {
         return Observable.create(listener => {
             if (this.fileUploader.queue.length > 0) {
                 //Set options with correct url
@@ -67,13 +74,14 @@ export class ImageUploaderComponent {
                 //Clear options
                 this.setOptions(null);
             } else
-                listener.next(false);
+                listener.next(true);
         });
     }
 
     public clearImage() {
         this.fileUploader.clearQueue();
-        this.imagePreviewSrc = undefined;
+        this.currentImageUrl = null;
+        this.imagePreviewSrc = null;
     }
 
 }

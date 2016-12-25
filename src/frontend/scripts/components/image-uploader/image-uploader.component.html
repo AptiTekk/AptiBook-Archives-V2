@@ -10,7 +10,7 @@
      [ngClass]="{'file-over-image': fileOverImage}"
      (fileOver)="fileOverImage = $event"
      [uploader]="fileUploader"
-     [style.background-image]="'url(' + (imagePreviewSrc ? imagePreviewSrc : defaultImageUrl) + ')'">
+     [style.background-image]="'url(' + (imagePreviewSrc ? imagePreviewSrc : currentImageUrl ? currentImageUrl : noImageUrl) + ')'">
     <i class="fa fa-folder-open text-primary image-preview-open-icon"></i>
 </div>
 <input ng2FileSelect
@@ -18,6 +18,6 @@
        [uploader]="fileUploader"
        type="file"
        style="display: none"/>
-<span (click)="clearImage()" class="image-preview-trash" *ngIf="fileUploader?.queue[0]">
+<span (click)="clearImage()" class="image-preview-trash" *ngIf="hasImage()">
     <i class="fa fa-trash text-danger"></i>
 </span>

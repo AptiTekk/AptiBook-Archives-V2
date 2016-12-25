@@ -7,8 +7,7 @@ import Moment = moment.Moment;
 
 @Component({
     selector: 'reservation-info-modal',
-    templateUrl: 'reservation-info-modal.component.html',
-    styleUrls: ['reservation-info-modal.component.css']
+    templateUrl: 'reservation-info-modal.component.html'
 })
 export class ReservationInfoModalComponent {
 

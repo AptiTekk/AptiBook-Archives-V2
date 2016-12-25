@@ -23,14 +23,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.util.StreamUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
-import java.io.InputStream;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
@@ -82,17 +80,7 @@ public class ResourceController extends APIControllerAbstract {
             }
         }
 
-        try {
-            org.springframework.core.io.Resource noImageSpringResource = resourceLoader.getResource(RESOURCE_NO_IMAGE_PATH);
-            if (noImageSpringResource != null) {
-                InputStream inputStream = noImageSpringResource.getInputStream();
-                return ok(StreamUtils.copyToByteArray(inputStream));
-            }
-        } catch (IOException e) {
-            logService.logException(getClass(), e, "Could not read or write resource-no-image.jpg");
-        }
-
-        return null;
+        return noContent();
     }
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -153,6 +141,29 @@ public class ResourceController extends APIControllerAbstract {
                 return badRequest("Could not read image. It may be corrupt.");
             }
         }
+    }
+
+    @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteImage(@PathVariable Long id) {
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        Resource resource = resourceRepository.findInCurrentTenant(id);
+
+        if (resource == null)
+            return noPermission();
+
+        if (!canUserEditResource(resource, authService.getCurrentUser()))
+            return noPermission();
+
+        File imageFile = resource.image;
+
+        if (imageFile != null) {
+            resource.image = null;
+            fileRepository.delete(imageFile);
+        }
+
+        return noContent();
     }
 
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
