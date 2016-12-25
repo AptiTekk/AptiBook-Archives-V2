@@ -91,7 +91,7 @@
                         <panel-footer>
 
                             <!-- Edit Button -->
-                            <button class="btn btn-default" (click)="false">Edit</button>
+                            <button class="btn btn-default" (click)="editResourceModal.open(resource)">Edit</button>
 
                             <!-- Delete Button -->
                             <button class="btn btn-danger pull-right"
@@ -116,8 +116,12 @@
 </edit-category-modal>
 
 <new-resource-modal #newResourceModal
-                    (submitted)="onNewResource($event)">
+                    (submitted)="onNewResource()">
 </new-resource-modal>
+
+<edit-resource-modal #editResourceModal
+                     (submitted)="onEditResource()">
+</edit-resource-modal>
 
 <deletion-confirmation-modal #resourceDeleteModal
                              [message]="resourceForDeletion ? 'Are you sure you want to delete the \'' + resourceForDeletion.name + '\' Resource?' : ''"

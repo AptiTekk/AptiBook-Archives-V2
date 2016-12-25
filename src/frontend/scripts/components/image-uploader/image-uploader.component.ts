@@ -1,4 +1,4 @@
-import {Component, ViewChild, ElementRef} from "@angular/core";
+import {Component, ViewChild, ElementRef, Input} from "@angular/core";
 import {FileItem} from "ng2-file-upload/file-upload/file-item.class";
 import {FileUploader, FileUploaderOptions} from "ng2-file-upload";
 import {Observable} from "rxjs";
@@ -10,6 +10,8 @@ declare const $: any;
     styleUrls: ['image-uploader.component.css']
 })
 export class ImageUploaderComponent {
+
+    @Input() defaultImageUrl: string = "/static/resource-no-image.jpg";
 
     @ViewChild('imageUploadInput') protected imageUploadInput: ElementRef;
     protected imagePreviewSrc: string;

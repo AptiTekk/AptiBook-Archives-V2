@@ -10,7 +10,7 @@
      [ngClass]="{'file-over-image': fileOverImage}"
      (fileOver)="fileOverImage = $event"
      [uploader]="fileUploader"
-     [style.background-image]="'url(' + (imagePreviewSrc ? imagePreviewSrc : '/static/resource-no-image.jpg') + ')'">
+     [style.background-image]="'url(' + (imagePreviewSrc ? imagePreviewSrc : defaultImageUrl) + ')'">
     <i class="fa fa-folder-open text-primary image-preview-open-icon"></i>
 </div>
 <input ng2FileSelect

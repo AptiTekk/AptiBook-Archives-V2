@@ -33,12 +33,25 @@ export class ResourceService {
         });
     }
 
+    patchResource(resource: Resource): Observable<Resource> {
+        return Observable.create(listener => {
+            this.apiService
+                .patch("/resources/" + resource.id, resource)
+                .subscribe(
+                    response => listener.next(response),
+                    err => listener.next(undefined)
+                )
+        })
+    }
+
     deleteResource(resource: Resource): Observable<boolean> {
         return Observable.create(listener => {
-            this.apiService.del("/resources/" + resource.id).subscribe(
-                response => listener.next(true),
-                err => listener.next(false)
-            )
+            this.apiService
+                .del("/resources/" + resource.id)
+                .subscribe(
+                    response => listener.next(true),
+                    err => listener.next(false)
+                )
         });
     }
 

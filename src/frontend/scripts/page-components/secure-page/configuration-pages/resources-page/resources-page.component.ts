@@ -77,6 +77,10 @@ export class ResourcesPageComponent {
         this.resourceCategoryService.fetchResourceCategories();
     }
 
+    onEditResource() {
+        this.resourceCategoryService.fetchResourceCategories();
+    }
+
     onDeleteResource() {
         if (!this.resourceForDeletion)
             return;
