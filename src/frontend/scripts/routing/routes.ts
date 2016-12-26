@@ -15,6 +15,7 @@ import {SearchGuard} from "./guards/search.guard";
 import {ReservationDetailsComponent} from "../page-components/secure-page/search-results-page/reservation-details-page/reservation-details-page.component";
 import {SuccessPageComponent} from "../page-components/secure-page/search-results-page/success-page/success-page.component";
 import {ResourcesPageComponent} from "../page-components/secure-page/configuration-pages/resources-page/resources-page.component";
+import {UsersPageComponent} from "../page-components/secure-page/configuration-pages/users-page/users-page.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -85,6 +86,10 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                     {
                         path: 'resources/:resourceCategory',
                         component: ResourcesPageComponent,
+                    },
+                    {
+                        path: 'users',
+                        component: UsersPageComponent
                     },
                     {
                         path: '**',
