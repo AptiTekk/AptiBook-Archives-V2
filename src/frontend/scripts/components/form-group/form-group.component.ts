@@ -3,8 +3,9 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, Input} from "@angular/core";
-import {FormGroup} from "@angular/forms";
+import {Component, Input, OnChanges, SimpleChanges} from "@angular/core";
+import {FormControl} from "@angular/forms";
+import {UUIDGenerator} from "../../utils/UUIDGenerator";
 
 @Component({
     selector: 'form-group',
@@ -13,48 +14,49 @@ import {FormGroup} from "@angular/forms";
 export class FormGroupComponent {
 
     /**
-     * The FormGroup (Reactive Forms)
+     * The control
      */
-    @Input()
-    group: FormGroup;
-
-    /**
-     * The Name of the Control in the FormGroup
-     */
-    @Input()
-    controlName: string;
+    @Input() control: FormControl;
 
     /**
      * Object containing the Error Messages to be shown when input is invalid.
      */
-    @Input()
-    errorMessages: {[errorName: string]: string};
+    @Input() errorMessages: {[errorName: string]: string};
 
     /**
      * Label Text
      */
-    @Input()
-    label: string;
+    @Input() label: string;
 
     /**
      * Type of Input
      */
-    @Input()
-    inputType: string;
+    @Input() inputType: string;
 
-    @Input()
-    autoFocus: boolean = false;
+    /**
+     * Placeholder text for the input
+     */
+    @Input() placeholder: string;
+
+    /**
+     * Value of the input field (will be overwritten by FormGroup Control)
+     */
+    @Input() value: string;
+
+    @Input() autoFocus: boolean = false;
+
+    @Input() readOnly: boolean = false;
 
     /**
      * Font Awesome Icon Name
      */
-    @Input()
-    faIconName: string;
+    @Input() faIconName: string;
 
-    getErrorMessage(): string {
+    uuid: string = UUIDGenerator.generateUUID();
 
-        if (this.errorMessages && this.group && this.controlName) {
-            let errors: {[key: string]: any} = this.group.controls[this.controlName].errors;
+    protected getErrorMessage(): string {
+        if (this.errorMessages && this.control) {
+            let errors: {[key: string]: any} = this.control.errors;
             if (errors) {
                 for (let errorName in this.errorMessages) {
                     if (this.errorMessages.hasOwnProperty(errorName)) {
@@ -67,5 +69,4 @@ export class FormGroupComponent {
 
         return undefined;
     }
-
 }

@@ -16,12 +16,12 @@ export class ModalComponent {
 
     @Input() cancelButtonLabel: string;
     @Input() submitButtonLabel: string;
+    @Input() submitButtonDisabled: boolean = false;
     @Input() dangerSubmitButtonLabel: string;
 
-    @Output()
-    public onSubmit: EventEmitter<any> = new EventEmitter();
-    @Output()
-    public onDangerSubmit: EventEmitter<any> = new EventEmitter();
+    @Output() public onSubmit: EventEmitter<any> = new EventEmitter();
+    @Output() public onCancel: EventEmitter<any> = new EventEmitter();
+    @Output() public onDangerSubmit: EventEmitter<any> = new EventEmitter();
 
     private isOpen: boolean = false;
     private backdropElement: HTMLDivElement;
@@ -37,7 +37,7 @@ export class ModalComponent {
         this.backdropElement.classList.add("in");
     }
 
-    openModal() {
+    public openModal() {
         if (this.isOpen)
             return;
 
@@ -47,7 +47,7 @@ export class ModalComponent {
         document.body.classList.add("modal-open");
     }
 
-    closeModal() {
+    public closeModal() {
         if (!this.isOpen)
             return;
 
@@ -56,7 +56,12 @@ export class ModalComponent {
         document.body.classList.remove("modal-open");
     }
 
-    isModalOpen(): boolean {
+    protected cancel() {
+        this.closeModal();
+        this.onCancel.next();
+    }
+
+    public isModalOpen(): boolean {
         return this.isOpen;
     }
 

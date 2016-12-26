@@ -15,17 +15,15 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 })
 export class ToggleSwitchComponent implements AfterViewInit, ControlValueAccessor {
 
-    @Input()
-    onText: string = "On";
-    @Input()
-    offText: string = "Off";
+    @Input() onText: string = "On";
+    @Input() offText: string = "Off";
 
     switchWidth: number = 0;
 
     @Output()
     onToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    on: boolean = false;
+    on: boolean;
 
     ngAfterViewInit(): void {
         this.calculateSwitchWidth();

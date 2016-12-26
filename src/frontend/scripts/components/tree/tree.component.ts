@@ -1,37 +1,59 @@
-import {Component, Input, ViewEncapsulation} from "@angular/core";
+import {Component, Input, ViewEncapsulation, forwardRef} from "@angular/core";
 import {UserGroup} from "../../models/user-group.model";
 import {TreeNodeComponent} from "./tree-node/tree-node.component";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {UserGroupService} from "../../services/singleton/usergroup.service";
 declare const $: any;
 
 @Component({
     selector: 'tree',
     templateUrl: 'tree.component.html',
     styleUrls: ['tree.component.css'],
-    encapsulation: ViewEncapsulation.None
+    encapsulation: ViewEncapsulation.None,
+    providers: [
+        {
+            provide: NG_VALUE_ACCESSOR,
+            useExisting: forwardRef(() => TreeComponent),
+            multi: true
+        }
+    ]
 })
-export class TreeComponent {
+export class TreeComponent implements ControlValueAccessor {
 
-    @Input()
-    dragAndDrop: boolean = true;
+    @Input() dragAndDrop: boolean = false;
 
-    @Input()
-    selectable: boolean = true;
+    @Input() selectable: boolean = true;
 
-    @Input()
-    showRoot: boolean = false;
+    @Input() showRoot: boolean = false;
 
-    @Input()
-    userGroup: UserGroup;
+    rootGroup: UserGroup;
 
-    @Input()
-    higlightedUserGroups: UserGroup[];
+    @Input() highlightedUserGroups: UserGroup[];
 
-    selectedNode: TreeNodeComponent;
+    selectedUserGroup: UserGroup;
 
     draggingNode: TreeNodeComponent;
 
-    onNodeSelected(treeNode: TreeNodeComponent) {
-        this.selectedNode = treeNode;
+    constructor(userGroupService: UserGroupService) {
+        userGroupService.getRootUserGroup().subscribe(root => this.rootGroup = root);
     }
 
+    onNodeSelected(treeNode: TreeNodeComponent) {
+        this.selectedUserGroup = treeNode.userGroup;
+        this.propagateChanges(this.selectedUserGroup);
+    }
+
+    writeValue(obj: any): void {
+        this.selectedUserGroup = obj;
+    }
+
+    private propagateChanges = (group: UserGroup) => {
+    };
+
+    registerOnChange(fn: any): void {
+        this.propagateChanges = fn;
+    }
+
+    registerOnTouched(fn: any): void {
+    }
 }

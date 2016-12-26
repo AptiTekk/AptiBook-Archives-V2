@@ -6,8 +6,8 @@ import * as moment from "moment";
 import Moment = moment.Moment;
 @Component({
     selector: 'my-notifications-page',
-    templateUrl: 'notifications-page.component.html'
-
+    templateUrl: 'notifications-page.component.html',
+    styleUrls: ['notifications-page.component.css']
 })
 export class NotificationsPageComponent {
 
