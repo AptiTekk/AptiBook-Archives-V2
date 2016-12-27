@@ -4,6 +4,10 @@
  * Proprietary and confidential.
  */
 
+.app {
+    padding-top: 70px;
+}
+
 .app a {
     color: #4272b7;
 }

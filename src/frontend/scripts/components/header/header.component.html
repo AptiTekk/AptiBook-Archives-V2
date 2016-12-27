@@ -4,7 +4,7 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="navbar navbar-default">
+<div class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"
@@ -23,7 +23,7 @@
         <div class="collapse navbar-collapse" id="navbar-collapse" *ngIf="!nonInteractive">
             <div id="header">
 
-                <ul class="nav navbar-nav navbar-right" *ngIf="user != undefined">
+                <ul class="nav navbar-nav navbar-right" *ngIf="user">
 
                     <!-- Reservation Management Dropdown -->
                     <li class="dropdown" *ngIf="user.admin || (user.userGroups && user.userGroups.length > 0)">
