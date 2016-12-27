@@ -10,30 +10,33 @@
     <li class="active">Calendar</li>
 </ol>
 
-<div class="hidden-xs hidden-sm col-md-9 col-lg-9 ">
-    <div class="full-height-breadcrumb">
-        <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
-                  [hiddenStatuses]="['rejected', 'cancelled']"
-                  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
-                  [filterByResourceCategories]="enabledResourceCategories"
-                  [filterByUserGroupOwners]="userGroupOwnerFilter"
-                  (eventSelected)="reservationInfoModal.display($event)"></calendar>
+<div class="row">
+    <!-- Calendar Section -->
+    <div class="hidden-xs hidden-sm col-md-9 col-lg-9 ">
+        <div class="full-height-breadcrumb">
+            <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
+                      [hiddenStatuses]="['rejected', 'cancelled']"
+                      [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
+                      [filterByResourceCategories]="enabledResourceCategories"
+                      [filterByUserGroupOwners]="userGroupOwnerFilter"
+                      (eventSelected)="reservationInfoModal.display($event)"></calendar>
+        </div>
     </div>
-</div>
 
-<!-- Right Toolbar / Filter Section -->
-<div class="hidden-xs hidden-sm col-md-3 col-lg-3 ">
-    <panel [type]="'primary'" [title]="'Calendar Filters'">
-        <panel-body>
-            <h4>Category Filters</h4>
-            <hr/>
-            <div class="form-group" *ngFor="let resourceCategory of resourceCategories">
-                <toggle-switch [(ngModel)]="resourceCategory.enabled"
-                               (onToggle)="updateEnabledResourceCategories()"
-                               style="margin-right: 10px"></toggle-switch>
-                <label>{{resourceCategory.name}}</label>
-            </div>
-        </panel-body>
-    </panel>
+    <!-- Right Toolbar / Filter Section -->
+    <div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+        <panel [type]="'primary'" [title]="'Calendar Filters'">
+            <panel-body>
+                <h4>Category Filters</h4>
+                <hr/>
+                <div class="form-group" *ngFor="let resourceCategory of resourceCategories">
+                    <toggle-switch [(ngModel)]="resourceCategory.enabled"
+                                   (onToggle)="updateEnabledResourceCategories()"
+                                   style="margin-right: 10px"></toggle-switch>
+                    <label>{{resourceCategory.name}}</label>
+                </div>
+            </panel-body>
+        </panel>
+    </div>
 </div>
 <reservation-info-modal #reservationInfoModal></reservation-info-modal>
