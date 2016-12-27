@@ -20,6 +20,11 @@ export class UsersPageComponent implements OnInit {
             .subscribe(users => this.users = users.filter(user => !user.admin));
     }
 
+    //noinspection JSMethodCanBeStatic
+    /**
+     * Returns an array containing only the names of the user's UserGroups
+     * @param user The User
+     */
     protected getUserGroupsNames(user: User): string[] {
         return user.userGroups.map(userGroup => {
             return userGroup.name

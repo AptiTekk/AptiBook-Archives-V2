@@ -7,7 +7,8 @@ import {
     Output,
     EventEmitter,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    OnInit
 } from "@angular/core";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
@@ -20,7 +21,7 @@ declare const $: any;
     styleUrls: ['calendar.component.css'],
     encapsulation: ViewEncapsulation.None
 })
-export class CalendarComponent implements AfterViewInit, OnChanges {
+export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     @ViewChild('calendarContainer')
     calendarContainer;
@@ -51,7 +52,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
 
     private calendarBuilt: boolean = false;
 
-    constructor() {
+    ngOnInit(): void {
         //Re-render and re-size calendar when window size is changed
         window.onresize = (event) => {
             this.refreshCalendar();

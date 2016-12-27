@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {User} from "../../models/user.model";
 import {AuthService} from "../../services/singleton/auth.service";
 import {Router} from "@angular/router";
@@ -12,7 +12,7 @@ import {Notification} from "../../models/notification.model";
 })
 
 
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
     @Input()
     nonInteractive: boolean;
@@ -37,9 +37,14 @@ export class HeaderComponent {
         {label: 'Properties', path: 'properties', icon: 'cog', indented: false}
     ];
 
-    constructor(private router: Router, private authService: AuthService, private  notificationService: NotificationService) {
-        authService.getUser().subscribe(user => {
-            if (user != undefined) {
+    constructor(private router: Router,
+                private authService: AuthService,
+                private  notificationService: NotificationService) {
+    }
+
+    ngOnInit(): void {
+        this.authService.getUser().subscribe(user => {
+            if (user) {
                 this.user = user;
                 this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
                     this.unreadNotifications = unreadNotifications;

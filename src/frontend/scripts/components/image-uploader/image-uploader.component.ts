@@ -1,4 +1,4 @@
-import {Component, ViewChild, ElementRef, Input} from "@angular/core";
+import {Component, ViewChild, ElementRef, Input, OnInit} from "@angular/core";
 import {FileItem} from "ng2-file-upload/file-upload/file-item.class";
 import {FileUploader, FileUploaderOptions} from "ng2-file-upload";
 import {Observable} from "rxjs";
@@ -10,7 +10,7 @@ declare const $: any;
     templateUrl: 'image-uploader.component.html',
     styleUrls: ['image-uploader.component.css']
 })
-export class ImageUploaderComponent {
+export class ImageUploaderComponent implements OnInit {
 
     noImageUrl: string = "/static/resource-no-image.jpg";
 
@@ -22,6 +22,9 @@ export class ImageUploaderComponent {
     protected fileUploader: FileUploader;
 
     constructor(protected apiService: APIService) {
+    }
+
+    ngOnInit(): void {
         this.fileUploader = new FileUploader(<FileUploaderOptions>{});
         this.setOptions(null);
 
