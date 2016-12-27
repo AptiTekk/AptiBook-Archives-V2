@@ -8,4 +8,5 @@ export * from './management/calendar-page/calendar-page.component';
 export * from './management/pending-page/pending-page.component';
 export * from './management/approved-page/approved-page.component';
 export * from './management/rejected-page/rejected-page.component';
+export * from './management/management-container.component';
 export * from './secure-page.component';

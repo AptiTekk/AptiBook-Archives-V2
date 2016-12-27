@@ -19,6 +19,7 @@ import {CalendarPageComponent} from "../page-components/secure-page/management/c
 import {PendingPageComponent} from "../page-components/secure-page/management/pending-page/pending-page.component";
 import {ApprovedPageComponent} from "../page-components/secure-page/management/approved-page/approved-page.component";
 import {RejectedPageComponent} from "../page-components/secure-page/management/rejected-page/rejected-page.component";
+import {ManagementContainerComponent} from "../page-components/secure-page/management/management-container.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -73,6 +74,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'management',
+                component: ManagementContainerComponent,
                 children: [
                     {
                         path: 'pending',

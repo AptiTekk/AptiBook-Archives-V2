@@ -1,0 +1,37 @@
+<style>
+    .bs-docs-sidebar .nav > .active > a {
+        font-weight: bold;
+        color: #4272b7;
+    }
+
+    /* all links */
+    .bs-docs-sidebar .nav>li>a {
+        color: #777;
+    }
+
+    .bs-docs-sidebar .nav>li>a:focus {
+        text-decoration: none;
+        background-color: transparent;
+    }
+</style>
+
+    <div class="hidden-xs hidden-sm col-md-3 col-lg-2" style="position: fixed;">
+        <div class="bs-docs-sidebar">
+            <ul class="nav nav-list">
+                <li [routerLinkActive]="['active']"><a [routerLink]="['','secure','management','pending']"><span><i
+                        class="fa fa-hourglass-half"></i></span> Pending</a></li>
+                <li [routerLinkActive]="['active']"><a [routerLink]="['','secure','management','approved']"><span><i
+                        class="fa fa-calendar-check-o"></i></span> Approved</a></li>
+                <li [routerLinkActive]="['active']"><a [routerLink]="['','secure','management','rejected']"><span><i
+                        class="fa fa-calendar-times-o"></i></span> Rejected</a></li>
+                <li [routerLinkActive]="['active']"><a [routerLink]="['','secure','management','calendar']"> <span><i
+                        class="fa fa-calendar"></i></span>  Calendar</a></li>
+            </ul>
+        </div>
+    </div>
+<div class="col-lg-offset-2 col-md-offset-3">
+    <router-outlet></router-outlet>
+</div>
+
+
+
