@@ -4,6 +4,10 @@
  * Proprietary and confidential.
  */
 
+.header-padding {
+    padding-top: 70px;
+}
+
 .navbar {
     background-color: #fff !important;
     box-shadow: #aaa 0 -5px 20px 1px;
