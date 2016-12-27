@@ -13,14 +13,9 @@
     </ol>
 
     <datatable>
-        <datatable-column [title]="'Item Name'">
-            <datatable-cell *ngFor="let item of items">
-                <a href="#">{{item}}</a>
-            </datatable-cell>
-        </datatable-column>
-        <datatable-column [title]="'The Number'">
-            <datatable-cell *ngFor="let num of otherStuff">
-                {{num}}
+        <datatable-column [title]="'Email Address'">
+            <datatable-cell *ngFor="let user of users">
+                {{user.emailAddress}}
             </datatable-cell>
         </datatable-column>
     </datatable>

@@ -1,17 +1,23 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {UserService} from "../../../../services/singleton/user.service";
+import {User} from "../../../../models/user.model";
 
 @Component({
     selector: 'users-page',
     templateUrl: 'users-page.component.html',
     styleUrls: ['users-page.component.css']
 })
-export class UsersPageComponent {
+export class UsersPageComponent implements OnInit {
 
-    items: string[] = ["test", "test2", "test3"];
-    otherStuff: number[] = [5,3,6];
+    users: User[];
 
-    constructor(userService: UserService) {
+    constructor(private userService: UserService) {
+    }
+
+    ngOnInit(): void {
+        this.userService
+            .getUsers()
+            .subscribe(users => this.users = users);
     }
 
 }

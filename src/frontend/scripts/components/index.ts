@@ -1,6 +1,6 @@
 export * from './alert/alert.component';
 export * from './calendar/calendar.component';
-export * from './data-table';
+export * from './datatable';
 export * from './date-time-picker/date-time-picker.component';
 export * from './deletion-confirmation-modal/deletion-confirmation-modal.component';
 export * from './footer';
