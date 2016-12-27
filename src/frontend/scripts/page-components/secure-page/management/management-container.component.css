@@ -4,16 +4,21 @@
  * Proprietary and confidential.
  */
 
-.sidebar .nav > .active > a {
-    font-weight: bold;
-    color: #4272b7;
+.sidebar {
+    font-family: "Roboto", sans-serif;
+    font-size: 12pt;
 }
 
-/* all links */
+.sidebar .nav > li {
+    margin-bottom: 10px;
+}
+
 .sidebar .nav > li > a {
     color: #777;
+    border-radius: 5px;
 }
 
-.sidebar .nav > li > a:focus {
-    background-color: initial;
+.sidebar .nav > li.active > a, .sidebar .nav > li.active > a:focus {
+    color: white;
+    background-color: #4272b7;
 }
