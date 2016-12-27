@@ -18,6 +18,21 @@
                 {{user.emailAddress}}
             </datatable-cell>
         </datatable-column>
+        <datatable-column [title]="'First Name'">
+            <datatable-cell *ngFor="let user of users">
+                {{user.firstName}}
+            </datatable-cell>
+        </datatable-column>
+        <datatable-column [title]="'Last Name'">
+            <datatable-cell *ngFor="let user of users">
+                {{user.lastName}}
+            </datatable-cell>
+        </datatable-column>
+        <datatable-column [title]="'Assigned User Groups'">
+            <datatable-cell *ngFor="let user of users">
+                {{getUserGroupsNames(user).join(', ')}}
+            </datatable-cell>
+        </datatable-column>
     </datatable>
 
 </div>

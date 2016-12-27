@@ -17,7 +17,13 @@ export class UsersPageComponent implements OnInit {
     ngOnInit(): void {
         this.userService
             .getUsers()
-            .subscribe(users => this.users = users);
+            .subscribe(users => this.users = users.filter(user => !user.admin));
+    }
+
+    protected getUserGroupsNames(user: User): string[] {
+        return user.userGroups.map(userGroup => {
+            return userGroup.name
+        });
     }
 
 }
