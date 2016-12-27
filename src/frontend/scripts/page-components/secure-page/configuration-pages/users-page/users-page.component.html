@@ -12,4 +12,17 @@
         <li class="active">Users</li>
     </ol>
 
+    <datatable>
+        <datatable-column [title]="'Item Name'">
+            <datatable-cell *ngFor="let item of items">
+                <a href="#">{{item}}</a>
+            </datatable-cell>
+        </datatable-column>
+        <datatable-column [title]="'The Number'">
+            <datatable-cell *ngFor="let num of otherStuff">
+                {{num}}
+            </datatable-cell>
+        </datatable-column>
+    </datatable>
+
 </div>
