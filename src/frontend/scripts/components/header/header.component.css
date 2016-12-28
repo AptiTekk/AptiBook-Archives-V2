@@ -38,7 +38,7 @@
 }
 
 .dropdown-menu > li > a {
-    padding: 3px 15px !important;
+    padding: 3px 15px;
 }
 
 .dropdown-menu > li > a > span {
@@ -47,10 +47,6 @@
 
 .dropdown-menu .fa {
     width: 16px;
-}
-
-.manage-nav-link a::before {
-    content: '<span class="glyphicon glyphicon-edit" />';
 }
 
 .badge.notifications-badge {
@@ -84,19 +80,36 @@
         min-width: 60%;
     }
 
-    .navbar-default .navbar-nav > li {
+    .navbar-nav > li {
         height: 100%;
     }
 
-    .navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav > li > a:focus {
+    .navbar-nav > li > a,
+    .navbar-nav > li > a:focus {
         color: white;
         height: 100%;
         padding-top: 8px;
     }
 
-    .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li.open > a {
+    .navbar-nav > li.open > a {
+        background-color: transparent;
+    }
+
+    .navbar-nav > li > a:hover {
         color: white;
         background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-nav > li.dropdown.open > .dropdown-menu {
+        display: none;
+    }
+
+    .navbar-nav > li.dropdown:hover > .dropdown-menu {
+        display: block;
+    }
+
+    .navbar-nav > li.dropdown > a {
+        cursor: default;
     }
 
     .badge.notifications-badge {

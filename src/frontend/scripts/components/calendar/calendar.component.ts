@@ -125,23 +125,16 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
                         return false;
 
                     // Remove events not matching filtered users
-                    if (this.filterByUsers && this.filterByUsers.filter(user => user.id === event.user.id).length == 0)
+                    if (this.filterByUsers && this.filterByUsers.filter(user => user.id === event.user.id).length === 0)
                         return false;
 
                     // Remove events not matching filtered resource categories
-                    if (this.filterByResourceCategories && this.filterByResourceCategories.filter(category => category.id === event.resource.resourceCategory.id).length == 0)
+                    if (this.filterByResourceCategories && this.filterByResourceCategories.filter(category => category.id === event.resource.resourceCategory.id).length === 0)
                         return false;
-                    //test commit
 
-                    //test commmit2
                     // Remove events whose resources do not match the filtered user group owners
-                    //TODO: Get back end method from JSF version, check against event resource owner, implement in calendar page
-                   // if(event.resource.owner)
-                    if(this.filterByUserGroupOwners && this.filterByUserGroupOwners.filter(owner=> owner.id === event.resource.owner.id).length == 0)
+                    if (this.filterByUserGroupOwners && this.filterByUserGroupOwners.filter(owner => owner.id === event.resource.owner.id).length === 0)
                         return false;
-
-                    if (this.filterByUserGroupOwners)
-                        this.filterByUserGroupOwners.forEach(owner => console.log("Owner" + owner));
 
                     // If all is well, add the status to the class list.
                     let domElement: HTMLLinkElement = element[0];
@@ -159,7 +152,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             }
         });
 
-        if (this.title != undefined)
+        if (this.title)
             this.calendarContainer.nativeElement.getElementsByClassName('fc-center')[0].innerHTML = "<h3>" + this.title + "</h3>";
 
         this.calendarBuilt = true;

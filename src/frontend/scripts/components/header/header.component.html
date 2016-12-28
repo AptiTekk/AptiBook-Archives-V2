@@ -28,13 +28,13 @@
 
                     <!-- Reservation Management Dropdown -->
                     <li class="dropdown" *ngIf="user.admin || (user.userGroups && user.userGroups.length > 0)">
-                        <a href="#" class="dropdown-toggle" data-toggle="dropdown">
+                        <a data-toggle="dropdown">
                             <span><i class="fa fa-calendar-check-o"></i></span>
                             Reservation Management
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li *ngFor="let link of reservationManagementLinks">
+                            <li *ngFor="let link of reservationManagementLinks" [routerLinkActive]="'active'">
                                 <a href="#" [routerLink]="['', 'secure', 'management', link.path]">
                                     <span><i class="fa fa-{{link.icon}}"></i></span>
                                     {{link.label}}
@@ -53,8 +53,10 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li *ngFor="let link of configurationLinks"
-                                [ngStyle]="{'padding-left': link.indented ? '10px' : null}">
-                                <a href="#" [routerLink]="['', 'secure', 'configuration', link.path]">
+                                [routerLinkActive]="'active'">
+                                <a href="#"
+                                   [routerLink]="['', 'secure', 'configuration', link.path]"
+                                   [ngStyle]="{'padding-left': link.indented ? '25px' : null}">
                                     <span><i class="fa fa-{{link.icon}}"></i></span>
                                     {{link.label}}
                                 </a>
@@ -70,7 +72,7 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>
+                            <li [routerLinkActive]="'active'">
                                 <a href="#" [routerLink]="['', 'secure', 'my', 'account']">
                                     <span><i class="fa fa-pencil"></i></span>
                                     My Account
