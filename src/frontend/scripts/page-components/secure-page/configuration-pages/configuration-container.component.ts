@@ -7,14 +7,14 @@ import {Component} from "@angular/core";
 import {HeaderComponent} from "../../../components/header/header.component";
 
 @Component({
-    selector: 'management-container',
-    templateUrl: 'management-container.component.html'
+    selector: 'configuration-container',
+    templateUrl: 'configuration-container.component.html'
 })
-export class ManagementContainerComponent {
+export class ConfigurationContainerComponent {
 
     //noinspection JSMethodCanBeStatic
-    get managementLinks() {
-        return HeaderComponent.RESERVATION_MANAGEMENT_LINKS;
+    get configurationLinks() {
+        return HeaderComponent.CONFIGURATION_LINKS;
     }
 
 }

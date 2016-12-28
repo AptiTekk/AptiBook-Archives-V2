@@ -35,7 +35,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li *ngFor="let link of reservationManagementLinks" [routerLinkActive]="'active'">
-                                <a href="#" [routerLink]="['', 'secure', 'management', link.path]">
+                                <a href="#" [routerLink]="link.path">
                                     <span><i class="fa fa-{{link.icon}}"></i></span>
                                     {{link.label}}
                                 </a>
@@ -55,8 +55,7 @@
                             <li *ngFor="let link of configurationLinks"
                                 [routerLinkActive]="'active'">
                                 <a href="#"
-                                   [routerLink]="['', 'secure', 'configuration', link.path]"
-                                   [ngStyle]="{'padding-left': link.indented ? '25px' : null}">
+                                   [routerLink]="link.path">
                                     <span><i class="fa fa-{{link.icon}}"></i></span>
                                     {{link.label}}
                                 </a>

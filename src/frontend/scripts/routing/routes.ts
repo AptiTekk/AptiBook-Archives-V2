@@ -21,6 +21,7 @@ import {ReservationDetailsComponent} from "../page-components/secure-page/search
 import {ResourcesPageComponent} from "../page-components/secure-page/configuration-pages/resources-page/resources-page.component";
 import {SuccessPageComponent} from "../page-components/secure-page/search-results-page/success-page/success-page.component";
 import {UsersPageComponent} from "../page-components/secure-page/configuration-pages/users-page/users-page.component";
+import {ConfigurationContainerComponent} from "../page-components/secure-page/configuration-pages/configuration-container.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -83,6 +84,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'configuration',
+                component: ConfigurationContainerComponent,
                 children: [
                     {
                         path: 'resources',
