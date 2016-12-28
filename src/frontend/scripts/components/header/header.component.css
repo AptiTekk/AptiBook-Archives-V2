@@ -10,7 +10,7 @@
 
 .navbar {
     background-color: #fff !important;
-    box-shadow: #aaa 0 -5px 20px 1px;
+    box-shadow: #666 0 -5px 20px 1px;
     font-family: "Roboto", sans-serif;
     font-size: 16px;
     border: none;
@@ -22,9 +22,15 @@
     background-color: #6D6E71;
 }
 
-.navbar-brand {
+.navbar-brand,
+.navbar-brand:hover,
+.navbar-brand:focus {
     position: fixed;
-    padding-top: 5px !important;
+    height: 60px;
+    padding-top: 10px !important;
+    background-color: white;
+    border-bottom-right-radius: 10px;
+    box-shadow: #666 0 0 10px -2px;
 }
 
 .navbar-brand img {
