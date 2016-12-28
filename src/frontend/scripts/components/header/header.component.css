@@ -30,6 +30,10 @@
     height: 40px;
 }
 
+.navbar-header {
+    position: fixed;
+}
+
 .dropdown-menu {
     min-width: 100%;
     font-size: 16px;
