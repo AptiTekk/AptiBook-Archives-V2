@@ -1,0 +1,34 @@
+#resource-categories-list {
+    list-style: none;
+    padding: 0;
+}
+
+#resource-categories-list > li {
+    height: 50px;
+    width: 100%;
+    padding: 10px;
+    font-size: 22px;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    cursor: pointer;
+    border: 1px dashed #666;
+}
+
+#resource-categories-list > li:hover {
+    background-color: #f1f1f1;
+}
+
+#resource-categories-list > li.selected {
+    background-color: #4272b7;
+    border: none;
+    color: white;
+}
+
+.resource-panel resource-image {
+    float: left;
+    padding-right: 20px;
+}
+
+.resource-panel h3 {
+    margin-top: 0;
+}

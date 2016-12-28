@@ -1,6 +1,7 @@
 export * from "./api.service";
 export * from "./auth.service";
 export * from "./help.service";
+export * from "./loader.service";
 export * from "./reservation.service";
 export * from "./resource.service";
 export * from "./search.service";

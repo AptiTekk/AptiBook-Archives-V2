@@ -24,6 +24,10 @@
     pointer-events: auto;
 }
 
+.calendar .fc-more {
+    pointer-events: auto;
+}
+
 .calendar.selectable .fc-event {
     cursor: pointer;
 }

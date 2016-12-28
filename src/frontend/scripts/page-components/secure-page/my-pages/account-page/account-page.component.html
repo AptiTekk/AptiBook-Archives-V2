@@ -33,8 +33,7 @@
 
                         <div class="row">
                             <div class="col-xs-12 col-md-6">
-                                <form-group [group]="personalInformation"
-                                            [controlName]="'firstName'"
+                                <form-group [control]="personalInformation.controls['firstName']"
                                             [label]="'First Name'"
                                             [errorMessages]="
                                                 {
@@ -44,8 +43,7 @@
                                 </form-group>
                             </div>
                             <div class="col-xs-12 col-md-6">
-                                <form-group [group]="personalInformation"
-                                            [controlName]="'lastName'"
+                                <form-group [control]="personalInformation.controls['lastName']"
                                             [label]="'Last Name'"
                                             [errorMessages]="
                                                 {
@@ -56,8 +54,7 @@
                             </div>
                         </div>
 
-                        <form-group [group]="personalInformation"
-                                    [controlName]="'phoneNumber'"
+                        <form-group [control]="personalInformation.controls['phoneNumber']"
                                     [label]="'Phone Number'"
                                     [faIconName]="'phone'"
                                     [errorMessages]="
@@ -67,8 +64,7 @@
                                             }">
                         </form-group>
 
-                        <form-group [group]="personalInformation"
-                                    [controlName]="'location'"
+                        <form-group [control]="personalInformation.controls['location']"
                                     [label]="'Location'"
                                     [faIconName]="'map-marker'"
                                     [errorMessages]="
@@ -145,8 +141,9 @@
                             </div>
                             <div *ngIf="!user.admin">
                                 <p style="font-weight: bold">Your assigned groups are highlighted.</p>
-                                <tree [userGroup]="rootUserGroup" [selectable]="false" [dragAndDrop]="false"
-                                      [higlightedUserGroups]="user.userGroups"></tree>
+                                <tree [selectable]="false"
+                                      [highlightedUserGroups]="user.userGroups">
+                                </tree>
                             </div>
                         </panel-body>
                     </panel>

@@ -1,0 +1,14 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+.resource-details-card resource-image {
+    float: left;
+    margin-right: 20px;
+}
+
+.resource-details-card h3 {
+    margin-top: 0;
+}

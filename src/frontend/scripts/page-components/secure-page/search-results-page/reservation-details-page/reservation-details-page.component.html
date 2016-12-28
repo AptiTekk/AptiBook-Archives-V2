@@ -15,11 +15,10 @@
     <div class="row">
         <!-- Sidebar with Resource name and image -->
         <div class="col-xs-12 col-md-4">
-            <panel [type]="'primary'">
+            <panel [type]="'primary'" class="resource-details-card">
                 <panel-body>
-                    <img [src]="apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image')"
-                         height="150px" class="resource-panel-image"/>
-                    <h3 class="resource-panel-title">{{resource.name}}</h3>
+                    <resource-image [resource]="resource"></resource-image>
+                    <h3>{{resource.name}}</h3>
                     <hr/>
                     Category: <span style="font-weight: bold">{{resource.resourceCategory.name}}</span>
                 </panel-body>
@@ -31,17 +30,16 @@
             <form (ngSubmit)="reserve()" [formGroup]="formGroup">
                 <panel [type]="'primary'" [title]="'Reservation Details'">
                     <panel-body>
-                        <form-group
-                                [group]="formGroup"
-                                [controlName]="'title'"
-                                [label]="'Title *'"
-                                [autoFocus]="true"
-                                [errorMessages]="
-                                    {
-                                    required: 'This is required.',
-                                    pattern: 'These characters are not allowed: < > ; =',
-                                    maxlength: 'This must be 100 characters or less.'
-                                    }">
+                        <form-group [control]="formGroup.controls['title']"
+                                    [label]="'Title *'"
+                                    [autoFocus]="true"
+                                    [placeholder]="'What is this reservation for?'"
+                                    [errorMessages]="
+                                        {
+                                        required: 'This is required.',
+                                        pattern: 'These characters are not allowed: < > ; =',
+                                        maxlength: 'This must be 100 characters or less.'
+                                        }">
                         </form-group>
                         <div class="form-group">
                             <label for="start">Start Time:</label>

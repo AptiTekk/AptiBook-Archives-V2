@@ -7,16 +7,14 @@
 <form id="loginForm" [formGroup]="signInFormGroup" (submit)="onSubmit()">
     <alert #loginAlert [severity]="'danger'"></alert>
 
-    <form-group [label]="'Email Address'"
-                [group]="signInFormGroup"
-                [controlName]="'emailAddress'"
+    <form-group [control]="signInFormGroup.controls['emailAddress']"
+                [label]="'Email Address'"
                 [faIconName]="'at'"
                 [autoFocus]="true">
     </form-group>
 
-    <form-group [label]="'Password'"
-                [group]="signInFormGroup"
-                [controlName]="'password'"
+    <form-group [control]="signInFormGroup.controls['password']"
+                [label]="'Password'"
                 [faIconName]="'asterisk'"
                 [inputType]="'password'">
     </form-group>
@@ -35,5 +33,3 @@
 <hr/>
 
 <button [routerLink]="['/register']" class="btn btn-default btn-block">Register</button>
-
-<loader #loader></loader>

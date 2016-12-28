@@ -10,7 +10,7 @@ import {
     NotificationsPageComponent
 } from "../page-components";
 import {FrontPageGuard, SecureGuard} from "./guards";
-import {SearchResultsPageComponent} from "../page-components/secure-page/results-container/search-results-page/search-results-page.component";
+import {SearchResultsPageComponent} from "../page-components/secure-page/search-results-page/search-results-page.component";
 import {SearchGuard} from "./guards/search.guard";
 import {ReservationDetailsComponent} from "../page-components/secure-page/results-container/reservation-details-page/reservation-details-page.component";
 import {ResultsContainerComponent} from "../page-components/secure-page/results-container/results-container-page.component";
@@ -20,6 +20,9 @@ import {PendingPageComponent} from "../page-components/secure-page/management/pe
 import {ApprovedPageComponent} from "../page-components/secure-page/management/approved-page/approved-page.component";
 import {RejectedPageComponent} from "../page-components/secure-page/management/rejected-page/rejected-page.component";
 import {ManagementContainerComponent} from "../page-components/secure-page/management/management-container.component";
+import {ReservationDetailsComponent} from "../page-components/secure-page/search-results-page/reservation-details-page/reservation-details-page.component";
+import {SuccessPageComponent} from "../page-components/secure-page/search-results-page/success-page/success-page.component";
+import {ResourcesPageComponent} from "../page-components/secure-page/configuration-pages/resources-page/resources-page.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -47,12 +50,11 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'search-results',
-                component: ResultsContainerComponent,
                 canActivate: [SearchGuard],
                 children: [
                     {
                         path: 'reservation-details',
-                        component: ReservationDetailsComponent,
+                        component: ReservationDetailsComponent
                     },
                     {
                         path: 'success',
@@ -60,17 +62,43 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                     },
                     {
                         path: '**',
-                        component: SearchResultsPageComponent,
+                        component: SearchResultsPageComponent
                     }
                 ]
             },
             {
-                path: 'my/account',
-                component: AccountPageComponent
+                path: 'my',
+                children: [
+                    {
+                        path: 'account',
+                        component: AccountPageComponent
+                    },
+                    {
+                        path: 'notifications',
+                        component: NotificationsPageComponent
+                    },
+                    {
+                        path: '**',
+                        redirectTo: 'account'
+                    }
+                ]
             },
             {
-                path: 'my/notifications',
-                component: NotificationsPageComponent
+                path: 'configuration',
+                children: [
+                    {
+                        path: 'resources',
+                        component: ResourcesPageComponent
+                    },
+                    {
+                        path: 'resources/:resourceCategory',
+                        component: ResourcesPageComponent,
+                    },
+                    {
+                        path: '**',
+                        redirectTo: 'resources'
+                    }
+                ]
             },
             {
                 path: 'management',

@@ -7,9 +7,8 @@
 <form id="registerForm" [formGroup]="formGroup" (submit)="onSubmit()">
     <div class="alert alert-danger" #alert *ngIf="alertMessage">{{alertMessage}}</div>
 
-    <form-group [label]="'Email Address'"
-                [group]="formGroup"
-                [controlName]="'emailAddress'"
+    <form-group [control]="formGroup.controls['emailAddress']"
+                [label]="'Email Address'"
                 [faIconName]="'at'"
                 [autoFocus]="true"
                 [errorMessages]="
@@ -20,9 +19,8 @@
                     }">
     </form-group>
 
-    <form-group [label]="'First Name'"
-                [group]="formGroup"
-                [controlName]="'firstName'"
+    <form-group [control]="formGroup.controls['firstName']"
+                [label]="'First Name'"
                 [errorMessages]="
                     {
                     pattern: 'These characters are not allowed:  < > ; =',
@@ -30,9 +28,8 @@
                     }">
     </form-group>
 
-    <form-group [label]="'Last Name'"
-                [group]="formGroup"
-                [controlName]="'lastName'"
+    <form-group [control]="formGroup.controls['lastName']"
+                [label]="'Last Name'"
                 [errorMessages]="
                     {
                     pattern: 'These characters are not allowed:  < > ; =',
@@ -40,9 +37,8 @@
                     }">
     </form-group>
 
-    <form-group [label]="'Password'"
-                [group]="formGroup"
-                [controlName]="'password'"
+    <form-group [control]="formGroup.controls['password']"
+                [label]="'Password'"
                 [faIconName]="'asterisk'"
                 [inputType]="'password'"
                 [errorMessages]="
@@ -52,9 +48,8 @@
                     }">
     </form-group>
 
-    <form-group [label]="'Confirm Password'"
-                [group]="formGroup"
-                [controlName]="'confirmPassword'"
+    <form-group [control]="formGroup.controls['confirmPassword']"
+                [label]="'Confirm Password'"
                 [faIconName]="'asterisk'"
                 [inputType]="'password'"
                 [errorMessages]="

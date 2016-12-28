@@ -10,28 +10,43 @@
                [message]="'This reservation is pending approval, and is subject to changes.'"></alert>
         <alert [displayed]="reservation.cancelled && modal.isModalOpen()" [severity]="'danger'"
                [message]="'This reservation has been cancelled.'"></alert>
-        <h4>{{reservation.title}}</h4>
-        <p>You are viewing a reservation of
-            <span style="font-weight: bold">{{reservation.resource.name}}</span>
-            for
-            <span style="font-weight: bold">{{reservation.user.fullName}}</span>.</p>
-        <p>This reservation...</p>
-        <ul>
-            <li>
-                Starts on
-                <span style="font-weight: bold">{{reservationStartMoment.format('dddd, MMMM Do, YYYY')}}</span>
-                at
-                <span style="font-weight: bold">{{reservationStartMoment.format('h:mm A')}}.</span>
-            </li>
-            <li>
-                Ends on
-                <span style="font-weight: bold">{{reservationEndMoment.format('dddd, MMMM Do, YYYY')}}</span>
-                at
-                <span style="font-weight: bold">{{reservationEndMoment.format('h:mm A')}}.</span>
-            </li>
-            <!--<li>
-                Will last about <span style="font-weight: bold">{{humanizeDifference()}}.</span>
-            </li>-->
-        </ul>
+        <div class="row">
+            <div class="col-xs-12 col-sm-3">
+                <div class="row">
+                    <div class="col-xs-5 col-sm-12">
+                        <resource-image [resource]="reservation.resource"
+                                        [width]="'100%'"
+                                        [maxWidth]="'150px'">
+                        </resource-image>
+                    </div>
+                    <div class="col-xs-7 col-sm-12">
+                        <h4>{{reservation.resource.name}}</h4>
+                        Category: <span style="font-weight: bold">{{reservation.resource.resourceCategory.name}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-xs-12 col-sm-9">
+                <h4>{{reservation.title}}</h4>
+                <p>You are viewing a reservation of
+                    <span style="font-weight: bold">{{reservation.resource.name}}</span>
+                    for
+                    <span style="font-weight: bold">{{reservation.user.fullName}}</span>.</p>
+                <p>This reservation...</p>
+                <ul>
+                    <li>
+                        Starts on
+                        <span style="font-weight: bold">{{reservationStartMoment.format('dddd, MMMM Do, YYYY')}}</span>
+                        at
+                        <span style="font-weight: bold">{{reservationStartMoment.format('h:mm A')}}.</span>
+                    </li>
+                    <li>
+                        Ends on
+                        <span style="font-weight: bold">{{reservationEndMoment.format('dddd, MMMM Do, YYYY')}}</span>
+                        at
+                        <span style="font-weight: bold">{{reservationEndMoment.format('h:mm A')}}.</span>
+                    </li>
+                </ul>
+            </div>
+        </div>
     </modal-body>
 </modal>

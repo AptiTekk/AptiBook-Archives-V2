@@ -53,7 +53,7 @@
                         <ul class="dropdown-menu">
                             <li *ngFor="let link of configurationLinks"
                                 [ngStyle]="{'padding-left': link.indented ? '10px' : null}">
-                                <a href="#">
+                                <a href="#" [routerLink]="['', 'secure', 'configuration', link.path]">
                                     <span><i class="fa fa-{{link.icon}}"></i></span>
                                     {{link.label}}
                                 </a>

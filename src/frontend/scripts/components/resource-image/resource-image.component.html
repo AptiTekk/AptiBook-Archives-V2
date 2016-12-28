@@ -4,4 +4,6 @@
   ~ Proprietary and confidential.
   -->
 
-<router-outlet></router-outlet>
+<img [src]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : noImageUrl"
+     [style.width]="width ? width : '150px'"
+     [style.maxWidth]="maxWidth ? maxWidth : null"/>

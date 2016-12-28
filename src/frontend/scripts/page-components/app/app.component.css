@@ -4,7 +4,13 @@
  * Proprietary and confidential.
  */
 
+/* Link and Text Styling */
+
 .app a {
+    color: #4272b7;
+}
+
+.app .text-primary {
     color: #4272b7;
 }
 
@@ -35,17 +41,17 @@
     border-color: #39629C;
 }
 
-app .btn:focus {
+.app .btn:focus {
     outline: none;
 }
 
-app .btn.btn-large {
+.app .btn.btn-large {
     font-size: 30px;
 }
 
 /* Select Box Styling */
 
-select.big-select {
+.app select.big-select {
     display: block;
     font-size: 20px;
     width: 100%;
@@ -54,11 +60,11 @@ select.big-select {
     margin-bottom: 10px;
 }
 
-select.big-select:disabled {
+.app select.big-select:disabled {
     background-color: #eee;
 }
 
-select.form-control {
+.app select.form-control {
     height: 34px !important;
 }
 

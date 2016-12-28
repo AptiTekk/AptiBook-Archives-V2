@@ -1,6 +1,5 @@
 import {Injectable} from "@angular/core";
-import {ReplaySubject} from "rxjs";
-import {User} from "../../models/user.model";
+import {ReplaySubject, Observable} from "rxjs";
 import {AuthService} from "./auth.service";
 import {APIService} from "./api.service";
 import {ResourceCategory} from "../../models/resource-category.model";
@@ -21,6 +20,33 @@ export class ResourceCategoryService {
 
     getResourceCategories() {
         return this.resourceCategories;
+    }
+
+    addNewResourceCategory(name: string): Observable<ResourceCategory> {
+        return Observable.create(listener => {
+            this.apiService.post("/resourceCategories", {name: name}).subscribe(
+                response => listener.next(response),
+                err => listener.next(undefined)
+            )
+        });
+    }
+
+    patchResourceCategory(category: ResourceCategory): Observable<ResourceCategory> {
+        return Observable.create(listener => {
+            this.apiService.patch("/resourceCategories/" + category.id, category).subscribe(
+                response => listener.next(response),
+                err => listener.next(undefined)
+            )
+        });
+    }
+
+    deleteResourceCategory(category: ResourceCategory): Observable<boolean> {
+        return Observable.create(listener => {
+            this.apiService.del("/resourceCategories/" + category.id).subscribe(
+                response => listener.next(true),
+                err => listener.next(false)
+            )
+        });
     }
 
 }
