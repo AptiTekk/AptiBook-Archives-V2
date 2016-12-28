@@ -12,7 +12,7 @@
 
 <div class="row">
     <!-- Calendar Section -->
-    <div class="hidden-xs hidden-sm col-md-9 col-lg-9 ">
+    <div class="col-xs-12 col-lg-9 ">
         <div class="full-height-breadcrumb">
             <calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
                       [hiddenStatuses]="['rejected', 'cancelled']"
@@ -23,8 +23,10 @@
         </div>
     </div>
 
+    <div class="col-xs-12 hidden-lg" style="margin-top: 20px"></div>
+
     <!-- Right Toolbar / Filter Section -->
-    <div class="hidden-xs hidden-sm col-md-3 col-lg-3">
+    <div class="col-xs-12 col-lg-3">
         <panel [type]="'primary'" [title]="'Calendar Filters'">
             <panel-body>
                 <h4>Category Filters</h4>
