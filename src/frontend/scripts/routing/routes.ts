@@ -22,6 +22,8 @@ import {ResourcesPageComponent} from "../page-components/secure-page/configurati
 import {SuccessPageComponent} from "../page-components/secure-page/search-results-page/success-page/success-page.component";
 import {UsersPageComponent} from "../page-components/secure-page/configuration-pages/users-page/users-page.component";
 import {ConfigurationContainerComponent} from "../page-components/secure-page/configuration-pages/configuration-container.component";
+import {AllUsersSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/all-users-section/all-users-section.component";
+import {GroupsSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/groups-section/groups-section.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -96,7 +98,21 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                     },
                     {
                         path: 'users',
-                        component: UsersPageComponent
+                        component: UsersPageComponent,
+                        children: [
+                            {
+                                path: 'all',
+                                component: AllUsersSectionComponent
+                            },
+                            {
+                                path: 'groups',
+                                component: GroupsSectionComponent
+                            },
+                            {
+                                path: '**',
+                                redirectTo: 'all'
+                            }
+                        ]
                     },
                     {
                         path: '**',

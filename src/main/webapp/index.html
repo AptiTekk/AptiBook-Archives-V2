@@ -53,7 +53,7 @@
             background-color: rgba(66, 114, 183, 0.3);
         }
 
-        #loading {
+        #splashscreen {
             width: 100%;
             height: 100%;
             position: fixed;
@@ -65,11 +65,11 @@
             transition: opacity linear 0.5s;
         }
 
-        app:empty + #loading {
+        app:empty + #splashscreen {
             opacity: 1;
         }
 
-        #loading-background {
+        #splashscreen-background {
             width: 100%;
             height: 100%;
             position: fixed;
@@ -83,7 +83,7 @@
             animation: fadein 1s;
         }
 
-        #loading-color-overlay {
+        #splashscreen-color-overlay {
             width: 100%;
             height: 100%;
             position: fixed;
@@ -95,7 +95,7 @@
             background-color: rgba(66, 114, 183, 0.3);
         }
 
-        #loading-foreground {
+        #splashscreen-foreground {
             width: 100%;
             height: 100%;
             position: fixed;
@@ -112,7 +112,7 @@
 
         @media (max-width: 767px) {
 
-            #loading-foreground {
+            #splashscreen-foreground {
                 background-size: 50% !important;
             }
 
@@ -131,12 +131,12 @@
 <body>
 <app></app>
 
-<div id="loading">
-    <div id="loading-background">
+<div id="splashscreen">
+    <div id="splashscreen-background">
     </div>
-    <div id="loading-color-overlay">
+    <div id="splashscreen-color-overlay">
     </div>
-    <div id="loading-foreground">
+    <div id="splashscreen-foreground">
     </div>
 </div>
 <script type="text/javascript" src="/packed/scripts/polyfills.bundle.js"></script>

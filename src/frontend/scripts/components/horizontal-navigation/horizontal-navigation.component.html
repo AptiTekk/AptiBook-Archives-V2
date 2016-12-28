@@ -1,0 +1,14 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<ul class="nav nav-tabs">
+    <li *ngFor="let link of links" [routerLinkActive]="'active'">
+        <a [routerLink]="link.path">
+            <span><i class="fa fa-{{link.icon}}"></i></span>
+            {{link.label}}
+        </a>
+    </li>
+</ul>

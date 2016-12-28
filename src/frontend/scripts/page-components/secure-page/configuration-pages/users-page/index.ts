@@ -5,3 +5,5 @@
  */
 
 export * from './users-page.component';
+export * from './all-users-section/all-users-section.component';
+export * from './groups-section/groups-section.component';
