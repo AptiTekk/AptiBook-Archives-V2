@@ -12,9 +12,14 @@ import {
 import {FrontPageGuard, SecureGuard} from "./guards";
 import {SearchResultsPageComponent} from "../page-components/secure-page/search-results-page/search-results-page.component";
 import {SearchGuard} from "./guards/search.guard";
+import {CalendarPageComponent} from "../page-components/secure-page/management/calendar-page/calendar-page.component";
+import {PendingPageComponent} from "../page-components/secure-page/management/pending-page/pending-page.component";
+import {ApprovedPageComponent} from "../page-components/secure-page/management/approved-page/approved-page.component";
+import {RejectedPageComponent} from "../page-components/secure-page/management/rejected-page/rejected-page.component";
+import {ManagementContainerComponent} from "../page-components/secure-page/management/management-container.component";
 import {ReservationDetailsComponent} from "../page-components/secure-page/search-results-page/reservation-details-page/reservation-details-page.component";
-import {SuccessPageComponent} from "../page-components/secure-page/search-results-page/success-page/success-page.component";
 import {ResourcesPageComponent} from "../page-components/secure-page/configuration-pages/resources-page/resources-page.component";
+import {SuccessPageComponent} from "../page-components/secure-page/search-results-page/success-page/success-page.component";
 import {UsersPageComponent} from "../page-components/secure-page/configuration-pages/users-page/users-page.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
@@ -94,6 +99,32 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                     {
                         path: '**',
                         redirectTo: 'resources'
+                    }
+                ]
+            },
+            {
+                path: 'management',
+                component: ManagementContainerComponent,
+                children: [
+                    {
+                        path: 'pending',
+                        component: PendingPageComponent
+                    },
+                    {
+                        path: 'approved',
+                        component: ApprovedPageComponent
+                    },
+                    {
+                        path: 'rejected',
+                        component: RejectedPageComponent
+                    },
+                    {
+                        path: 'calendar',
+                        component: CalendarPageComponent
+                    },
+                    {
+                        path: '**',
+                        redirectTo: 'pending'
                     }
                 ]
             },

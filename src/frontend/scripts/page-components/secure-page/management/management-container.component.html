@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div class="container-fluid">
+    <div class="row">
+
+        <!-- Sidebar Navigation -->
+        <div class="hidden-xs hidden-sm col-md-3 col-lg-2" style="position: fixed;">
+            <div class="sidebar">
+                <ul class="nav nav-list">
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['','secure','management','pending']">
+                            <span><i class="fa fa-hourglass-half"></i></span> Pending
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['','secure','management','approved']">
+                            <span><i class="fa fa-calendar-check-o"></i></span> Approved
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['','secure','management','rejected']">
+                            <span><i class="fa fa-calendar-times-o"></i></span> Rejected
+                        </a>
+                    </li>
+                    <li [routerLinkActive]="['active']">
+                        <a [routerLink]="['','secure','management','calendar']">
+                            <span><i class="fa fa-calendar"></i></span> Calendar
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-offset-3 col-lg-offset-2 col-xs-12 col-md-9 col-lg-10">
+            <router-outlet></router-outlet>
+        </div>
+    </div>
+</div>
+
