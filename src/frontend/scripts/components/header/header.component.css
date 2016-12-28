@@ -23,15 +23,12 @@
 }
 
 .navbar-brand {
+    position: fixed;
     padding-top: 5px !important;
 }
 
 .navbar-brand img {
     height: 40px;
-}
-
-.navbar-header {
-    position: fixed;
 }
 
 .dropdown-menu {
