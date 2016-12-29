@@ -15,8 +15,6 @@ import {
 } from "@angular/core";
 import {DataTableColumn} from "./datatable-column/datatable-column.component";
 
-declare const $;
-
 @Component({
     selector: 'datatable',
     templateUrl: 'datatable.component.html',
@@ -71,23 +69,24 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
      */
     private initDataTable() {
         this.datatable = $(this.dataTableContainer.nativeElement).DataTable(
-            {
-                columns: this.columns.map(column => {
-                    return {title: column.title}
-                }),
-                data: (() => {
-                    let dataArray = [];
+            <any>
+                {
+                    columns: this.columns.map(column => {
+                        return {title: column.title}
+                    }),
+                    data: (() => {
+                        let dataArray = [];
 
-                    for (let i = 0; i < this.numRows; i++) {
-                        let rowData = [];
-                        this.columns.forEach(column => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
-                        dataArray.push(rowData);
-                    }
+                        for (let i = 0; i < this.numRows; i++) {
+                            let rowData = [];
+                            this.columns.forEach(column => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
+                            dataArray.push(rowData);
+                        }
 
-                    return dataArray;
-                })(),
-                select: this.selectableRows ? 'single' : false
-            }
+                        return dataArray;
+                    })(),
+                    select: this.selectableRows ? 'single' : false
+                }
         );
     }
 

@@ -3,7 +3,6 @@ import {FileItem} from "ng2-file-upload/file-upload/file-item.class";
 import {FileUploader, FileUploaderOptions} from "ng2-file-upload";
 import {Observable} from "rxjs";
 import {APIService} from "../../services/singleton/api.service";
-declare const $: any;
 
 @Component({
     selector: 'image-uploader',
@@ -12,7 +11,7 @@ declare const $: any;
 })
 export class ImageUploaderComponent implements OnInit {
 
-    noImageUrl: string = "/static/resource-no-image.jpg";
+    @Input() noImageUrl: string = "/static/resource-no-image.jpg";
 
     @Input() currentImageUrl: string;
 
@@ -58,7 +57,11 @@ export class ImageUploaderComponent implements OnInit {
     }
 
     public hasImage(): boolean {
-        return this.currentImageUrl != null || this.fileUploader.queue.length > 0;
+        if (this.currentImageUrl)
+            return true;
+        else if (this.fileUploader.queue.length > 0)
+            return true;
+        return false;
     }
 
     public uploadToUrl(url: string): Observable<boolean> {

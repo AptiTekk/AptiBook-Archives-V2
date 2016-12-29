@@ -2,7 +2,6 @@ import {
     Component,
     ViewChild,
     AfterViewInit,
-    ViewEncapsulation,
     Input,
     Output,
     EventEmitter,
@@ -14,47 +13,38 @@ import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import {ResourceCategory} from "../../models/resource-category.model";
 import {UserGroup} from "../../models/user-group.model";
-declare const $: any;
 
 @Component({
     selector: 'calendar',
     templateUrl: 'calendar.component.html',
-    styleUrls: ['calendar.component.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['calendar.component.css']
 })
 export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     @ViewChild('calendarContainer')
     calendarContainer;
 
-    @Input()
-    events: [{id: number, title: string, start: any, end: any, status: string}];
+    @Input() events: [{id: number, title: string, start: any, end: any, status: string}];
 
-    @Input()
-    eventFeedUrl: string;
+    @Input() eventFeedUrl: string;
 
-    @Input()
-    allowSelection: boolean = true;
+    @Input() allowSelection: boolean = true;
 
-    @Input()
-    hiddenStatuses: string[];
+    @Input() hiddenStatuses: string[];
 
-    @Input()
-    filterByUsers: User[];
+    @Input() filterByUsers: User[];
 
-    @Input()
-    filterByUserGroupOwners: UserGroup[];
+    @Input() filterByUserGroupOwners: UserGroup[];
 
-    @Input()
-    filterByResourceCategories: ResourceCategory[];
+    @Input() filterByResourceCategories: ResourceCategory[];
 
-    @Input()
-    title: string;
+    @Input() title: string;
 
-    @Output()
-    eventSelected: EventEmitter<number> = new EventEmitter<number>();
+    @Output() eventSelected: EventEmitter<any> = new EventEmitter<any>();
 
     private calendarBuilt: boolean = false;
+
+    private calendar: any;
 
     ngOnInit(): void {
         //Re-render and re-size calendar when window size is changed
@@ -77,11 +67,11 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
                     case 'events':
                     case 'eventFeedUrl':
                         //Remove any existing event sources
-                        $(this.calendarContainer.nativeElement).fullCalendar('removeEventSources');
+                        this.calendar.fullCalendar('removeEventSources');
 
                         if (this.events || this.eventFeedUrl) {
                             //Add the new event source
-                            $(this.calendarContainer.nativeElement).fullCalendar('addEventSource',
+                            this.calendar.fullCalendar('addEventSource',
                                 this.getEventsToUse())
                         }
                         break;
@@ -104,7 +94,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     private buildCalendar(): void {
-        $(this.calendarContainer.nativeElement).fullCalendar({
+        this.calendar = $(this.calendarContainer.nativeElement);
+        this.calendar.fullCalendar({
             height: 'parent',
             header: {
                 left: 'title',
@@ -160,10 +151,10 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     private refreshCalendar(refreshEvents: boolean = false): void {
         if (this.calendarBuilt) {
-            $(this.calendarContainer.nativeElement).fullCalendar('render');
+            this.calendar.fullCalendar('render');
 
             if (refreshEvents)
-                $(this.calendarContainer.nativeElement).fullCalendar('rerenderEvents');
+                this.calendar.fullCalendar('rerenderEvents');
         }
     }
 }

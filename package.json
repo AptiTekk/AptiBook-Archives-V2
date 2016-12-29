@@ -34,9 +34,13 @@
     "zone.js": "^0.6.25"
   },
   "devDependencies": {
+    "@types/bootstrap.v3.datetimepicker": "^4.17.34",
     "@types/core-js": "^0.9.34",
+    "@types/fullcalendar": "^2.7.36",
     "@types/jasmine": "^2.5.35",
-    "@types/node": "^6.0.45",
+    "@types/jquery": "^2.0.34",
+    "@types/jquery.datatables": "^1.10.34",
+    "@types/node": "^6.0.54",
     "angular2-template-loader": "^0.6.0",
     "awesome-typescript-loader": "^2.2.4",
     "css-loader": "^0.25.0",

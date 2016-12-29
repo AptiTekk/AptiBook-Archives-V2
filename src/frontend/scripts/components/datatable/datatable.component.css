@@ -1,4 +1,10 @@
-:host >>> table.dataTable tbody > tr.selected,
-:host >>> table.dataTable tbody > tr > .selected {
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+:host /deep/ table.dataTable tbody > tr.selected,
+:host /deep/ table.dataTable tbody > tr > .selected {
     background-color: #4272b7;
 }
