@@ -12,7 +12,7 @@
      (drop)="onDropPointDrop($event)"></div>
 
 <div class="tree-node"
-     [ngClass]="{'node-selected': tree.selectedNode == this, 'node-highlighted': shouldHighlight(), 'node-dragging': tree.draggingNode === this}"
+     [ngClass]="{'node-selected': tree.selectedUserGroup?.id === userGroup?.id, 'node-highlighted': shouldHighlight(), 'node-dragging': tree.draggingNode == this}"
      [ngStyle]="{cursor: tree.selectable ? 'pointer' : null}"
      (click)="onNodeClick()"
      (dragstart)="onDragStart($event)"

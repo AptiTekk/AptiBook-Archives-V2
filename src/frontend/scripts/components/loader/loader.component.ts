@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {LoaderService} from "../../services/singleton/loader.service";
 
 @Component({
     selector: 'loader',
@@ -7,10 +8,10 @@ import {Component} from "@angular/core";
 })
 export class LoaderComponent {
 
-    displayed: boolean = false;
+    loading: boolean;
 
-    public setDisplayed(displayed: boolean) {
-        this.displayed = displayed;
+    constructor(loaderService: LoaderService) {
+        loaderService.isLoading().subscribe(loading => this.loading = loading);
     }
 
 }

@@ -1,6 +1,7 @@
 export * from "./api.service";
 export * from "./auth.service";
 export * from "./help.service";
+export * from "./loader.service";
 export * from "./reservation.service";
 export * from "./resource.service";
 export * from "./search.service";
@@ -9,3 +10,4 @@ export * from "./user.service";
 export * from "./usergroup.service";
 export * from "./notification.service";
 export * from "./resource-category.service"
+export * from "./reservation-details.service"

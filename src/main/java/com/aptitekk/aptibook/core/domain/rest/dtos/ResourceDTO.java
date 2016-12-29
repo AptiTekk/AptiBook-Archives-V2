@@ -16,7 +16,9 @@ public class ResourceDTO {
 
     public String name;
 
-    public boolean needsApproval;
+    public Boolean needsApproval;
+
+    public Boolean hasImage;
 
     public ResourceCategoryDTO.WithoutResources resourceCategory;
 

@@ -1,0 +1,67 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+
+<div class="container">
+    <ol class="breadcrumb">
+        <li><a [routerLink]="['', 'secure']">Home</a></li>
+        <li><a [routerLink]="['','secure','search-results']">Search</a></li>
+        <li class="active">Request Reservation</li>
+    </ol>
+
+    <div class="row">
+        <!-- Sidebar with Resource name and image -->
+        <div class="col-xs-12 col-md-4">
+            <panel [type]="'primary'" class="resource-details-card">
+                <panel-body>
+                    <resource-image [resource]="resource"></resource-image>
+                    <h3>{{resource.name}}</h3>
+                    <hr/>
+                    Category: <span style="font-weight: bold">{{resource.resourceCategory.name}}</span>
+                </panel-body>
+            </panel>
+        </div>
+
+        <!-- Form Content Area -->
+        <div class="col-xs-12 col-md-8">
+            <form (ngSubmit)="reserve()" [formGroup]="formGroup">
+                <panel [type]="'primary'" [title]="'Reservation Details'">
+                    <panel-body>
+                        <form-group [control]="formGroup.controls['title']"
+                                    [label]="'Title *'"
+                                    [autoFocus]="true"
+                                    [placeholder]="'What is this reservation for?'"
+                                    [errorMessages]="
+                                        {
+                                        required: 'This is required.',
+                                        pattern: 'These characters are not allowed: < > ; =',
+                                        maxlength: 'This must be 100 characters or less.'
+                                        }">
+                        </form-group>
+                        <div class="form-group">
+                            <label for="start">Start Time:</label>
+                            <input type="text" readonly="readonly" class="form-control" id="start"
+                                   value="{{start.calendar()}}">
+                        </div>
+                        <div class="form-group">
+                            <label for="end">End Time:</label>
+                            <input type="text" readonly="readonly" class="form-control" id="end"
+                                   value="{{end.calendar()}}">
+                        </div>
+                    </panel-body>
+                    <panel-footer>
+                        <button type="submit" class="btn btn-primary" [disabled]="formGroup.invalid">
+                            Submit Reservation
+                        </button>
+                        <button [routerLink]="['', 'secure', 'search-results']" class="btn btn-default">Cancel</button>
+                    </panel-footer>
+                </panel>
+            </form>
+        </div>
+    </div>
+
+    <br/>
+</div>

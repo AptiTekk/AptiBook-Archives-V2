@@ -6,6 +6,10 @@
 
 <div class="container">
 
+    <ol class="breadcrumb">
+        <li><a [routerLink]="['', 'secure']">Home</a></li>
+        <li class="active">Search by Time</li>
+    </ol>
     <div id="search-settings" class="row">
         <div class="col-xs-12 col-sm-5 col-md-4">
             <label for="startTimePicker">Start Time: </label>
@@ -37,7 +41,8 @@
                     <div *ngFor="let category of resourceCategories">
                         <div class="row" style="margin-bottom: 10px;">
                             <div class="col-xs-12">
-                                <toggle-switch [(ngModel)]="category.enabled" style="margin-right: 10px"></toggle-switch>
+                                <toggle-switch [(ngModel)]="category.enabled"
+                                               style="margin-right: 10px"></toggle-switch>
                                 <label>{{category.name}}</label>
                             </div>
                         </div>
@@ -46,20 +51,23 @@
             </panel>
         </div>
         <div class="col-xs-12 col-md-9">
-            <div class="col-xs-12 col-md-6"
-                 *ngFor="let resource of availableResources | resourceCategoryFilter:resourceCategories">
-                <panel [type]="'primary'">
-                    <panel-body>
-                        <img [src]="apiService.getApiUrlFromEndpoint('/resources/' + resource.id + '/image')"
-                             height="150px" class="resource-panel-image"/>
-                        <h3 class="resource-panel-title">{{resource.name}}</h3>
-                        <hr/>
-                        Category: <span style="font-weight: bold">{{resource.resourceCategory.name}}</span>
-                    </panel-body>
-                    <panel-footer>
-                        <button class="btn btn-primary">Reserve This</button>
-                    </panel-footer>
-                </panel>
+            <h3 *ngIf="(availableResources | resourceCategoryFilter:resourceCategories).length == 0">
+                There are no available resources! Try adjusting your reservation date or filters.</h3>
+            <div class="row">
+                <div class="col-xs-12 col-md-6"
+                     *ngFor="let resource of availableResources | resourceCategoryFilter:resourceCategories">
+                    <panel [type]="'primary'" class="resource-result-panel">
+                        <panel-body>
+                            <resource-image [resource]="resource"></resource-image>
+                            <h3>{{resource.name}}</h3>
+                            <hr/>
+                            Category: <span style="font-weight: bold">{{resource.resourceCategory.name}}</span>
+                        </panel-body>
+                        <panel-footer>
+                            <button class="btn btn-primary" (click)="reserve(resource)">Reserve This</button>
+                        </panel-footer>
+                    </panel>
+                </div>
             </div>
         </div>
     </div>

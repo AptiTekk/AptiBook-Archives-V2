@@ -1,9 +1,10 @@
 import {Component, ViewChild, AfterViewInit} from "@angular/core";
 import {Router, ActivatedRoute} from "@angular/router";
-import {LoaderComponent} from "../../../components/loader/loader.component";
 import {OAuthService} from "../../../services/stateful/oauth.service";
 import {AuthService} from "../../../services/singleton/auth.service";
 import {AlertComponent} from "../../../components/alert/alert.component";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {LoaderService} from "../../../services/singleton/loader.service";
 
 @Component({
     selector: 'sign-in',
@@ -11,17 +12,25 @@ import {AlertComponent} from "../../../components/alert/alert.component";
 })
 export class SignInComponent implements AfterViewInit {
 
-    @ViewChild('loader')
-    loader: LoaderComponent;
-
     @ViewChild('loginAlert')
     loginAlert: AlertComponent;
 
-    emailAddress: string;
-    password: string;
+    signInFormGroup: FormGroup;
+
     googleSignInUrl: string;
 
-    constructor(private router: Router, private activeRoute: ActivatedRoute, private oAuthService: OAuthService, private authService: AuthService) {
+    constructor(formBuilder: FormBuilder,
+                private router: Router,
+                private activeRoute: ActivatedRoute,
+                private oAuthService: OAuthService,
+                private authService: AuthService,
+                private loaderService: LoaderService) {
+
+        this.signInFormGroup = formBuilder.group({
+            emailAddress: [null, Validators.required],
+            password: [null, Validators.required]
+        });
+
         //Get the Google Sign In URL
         this.oAuthService.getGoogleOAuthUrl().subscribe(url => this.googleSignInUrl = url);
     }
@@ -43,13 +52,13 @@ export class SignInComponent implements AfterViewInit {
     }
 
     onSubmit() {
-        this.loader.setDisplayed(true);
-        this.authService.signIn(this.emailAddress, this.password).subscribe(
-            (successful: boolean) => {
+        this.loaderService.startLoading();
+        this.authService.signIn(this.signInFormGroup.controls['emailAddress'].value, this.signInFormGroup.controls['password'].value).subscribe(
+            successful => {
                 if (successful)
-                    this.router.navigateByUrl("/secure");
+                    this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
                 else
-                    this.loader.setDisplayed(false);
+                    this.loaderService.stopLoading();
             });
     }
 

@@ -119,17 +119,19 @@ public class DemoTenant {
                 null
         );
 
-        UserGroup teachersUserGroup = createUserGroup(
-                "Teachers",
-                administratorsUserGroup,
-                null
-        );
-
         UserGroup librariansUserGroup = createUserGroup(
                 "Librarians",
                 administratorsUserGroup,
                 null
         );
+
+        UserGroup teachersUserGroup = createUserGroup(
+                "Teachers",
+                librariansUserGroup,
+                null
+        );
+
+
 
         //Add Users
         User administrator = createUser(
@@ -216,7 +218,25 @@ public class DemoTenant {
                 cart2Tags
         );
 
+        Resource teacherLaptop = createResource(
+                "Teacher Laptop",
+                equipment,
+                teachersUserGroup,
+                true,
+                null
+        );
+
         //Add reservations
+        Reservation teacherLaptopReservation = createReservation(
+                teacher,
+                "Test",
+                Reservation.Status.APPROVED,
+                teacherLaptop,
+                6, 7,
+                12, 33,
+                15, 0
+        );
+
         Reservation libraryReservation = createReservation(
                 teacher,
                 "Book Fair",
@@ -270,6 +290,12 @@ public class DemoTenant {
                 cart2Reservation,
                 administratorsUserGroup,
                 administrator,
+                true
+        );
+        createReservationDecision(
+                teacherLaptopReservation,
+                teachersUserGroup,
+                teacher,
                 true
         );
 

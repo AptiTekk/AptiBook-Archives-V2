@@ -25,7 +25,7 @@
     left: 0;
     padding-top: 25%;
     background-color: rgba(255, 255, 255, 0.5);
-    z-index: 1000;
+    z-index: 10000;
 }
 
 .loader {

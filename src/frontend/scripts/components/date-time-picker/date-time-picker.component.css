@@ -7,3 +7,11 @@
 th.picker-switch[title="Select Decade"] {
     pointer-events: none;
 }
+
+.bootstrap-datetimepicker-widget table td.active, .bootstrap-datetimepicker-widget table td.active:hover {
+    background-color: #4272b7;
+}
+
+.bootstrap-datetimepicker-widget table td.today:before {
+    border-bottom-color: #4272b7;
+}

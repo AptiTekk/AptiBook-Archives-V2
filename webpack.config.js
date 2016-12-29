@@ -7,6 +7,11 @@
 var path = require('path');
 var webpack = require('webpack');
 
+var opts = {
+    rootDir: process.cwd(),
+    devBuild: process.env.NODE_ENV !== 'production'
+};
+
 var config = {
     cache: true,
     devtool: 'source-map',
@@ -73,7 +78,8 @@ var config = {
             jQuery: 'jquery',
             $: 'jquery',
             jquery: 'jquery'
-        })
+        }),
+        new webpack.OldWatchingPlugin()
     ],
 
     resolve: {

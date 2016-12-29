@@ -21,21 +21,20 @@ export class HeaderComponent {
     unreadNotifications: Notification[] = [];
 
     //TODO: Add route urls
-    reservationManagementLinks: [{icon: string, label: string}] = [
-        {icon: 'hourglass-half', label: 'Pending'},
-        {icon: 'calendar-check-o', label: 'Approved'},
-        {icon: 'calendar-times-o', label: 'Rejected'},
-        {icon: 'calendar', label: 'Calendar'}
+    reservationManagementLinks: [{icon: string, label: string, path: string}] = [
+        {icon: 'hourglass-half', label: 'Pending', path: 'pending'},
+        {icon: 'calendar-check-o', label: 'Approved', path: 'approved'},
+        {icon: 'calendar-times-o', label: 'Rejected', path: 'rejected'},
+        {icon: 'calendar', label: 'Calendar', path: 'calendar'}
     ];
 
     //TODO: Add route urls and permissions
-    configurationLinks: [{icon: string, label: string, indented: boolean}] = [
-        {icon: 'folder-open', label: 'Resource Categories', indented: false},
-        {icon: 'tags', label: 'Resources', indented: true},
-        {icon: 'sitemap', label: 'User Groups', indented: false},
-        {icon: 'user', label: 'Users', indented: true},
-        {icon: 'unlock', label: 'Permissions', indented: false},
-        {icon: 'cog', label: 'Properties', indented: false}
+    configurationLinks: [{label: string, path: string, icon: string, indented: boolean}] = [
+        {label: 'Resources', path: 'resources', icon: 'tags', indented: false},
+        {label: 'User Groups', path: 'userGroups', icon: 'sitemap', indented: false},
+        {label: 'Users', path: 'users', icon: 'user', indented: true},
+        {label: 'Permissions', path: 'permissions', icon: 'unlock', indented: false},
+        {label: 'Properties', path: 'properties', icon: 'cog', indented: false}
     ];
 
     constructor(private router: Router, private authService: AuthService, private  notificationService: NotificationService) {

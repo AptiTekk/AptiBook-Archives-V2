@@ -24,7 +24,9 @@ public class DevService {
 
     private SpringProfileService springProfileService;
     private LogService logService;
+
     private ProcessMonitor devServerMonitor;
+    private CommandLineListener commandLineListener;
 
     @Autowired
     public DevService(SpringProfileService springProfileService, LogService logService) {
@@ -37,6 +39,7 @@ public class DevService {
         if (springProfileService.isProfileActive(SpringProfileService.Profile.DEV)) {
             logService.logInfo(getClass(), "Development Mode is Enabled");
             startWebpackWatcher();
+            startCommandLineListener();
         }
     }
 
@@ -68,6 +71,13 @@ public class DevService {
             logService.logInfo(getClass(), "Failed to start Webpack Watcher");
             e.printStackTrace();
         }
+    }
+
+    private void startCommandLineListener() {
+        this.commandLineListener = new CommandLineListener(this);
+        commandLineListener.start();
+
+        logService.logInfo(getClass(), "Command Line Listener started.");
     }
 
     @PreDestroy
@@ -112,8 +122,7 @@ public class DevService {
                         processLine(line);
 
                 }
-            } catch (IOException e) {
-                e.printStackTrace();
+            } catch (IOException ignored) {
             }
 
             this.process.destroy();
@@ -123,6 +132,38 @@ public class DevService {
 
         public void cancel() {
             this.cancelled.set(true);
+        }
+
+    }
+
+    private class CommandLineListener extends Thread {
+
+        private final DevService devService;
+        private AtomicBoolean cancelled = new AtomicBoolean(false);
+
+        public CommandLineListener(DevService devService) {
+            this.devService = devService;
+        }
+
+        @Override
+        public void run() {
+            try {
+                BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(System.in));
+                while (true) {
+                    if (cancelled.get())
+                        break;
+                    String line = bufferedReader.readLine();
+                    if (line == null)
+                        break;
+                    else
+                        processCommand(line);
+                }
+            } catch (IOException ignored) {
+            }
+        }
+
+        private void processCommand(String command) {
+
         }
 
     }

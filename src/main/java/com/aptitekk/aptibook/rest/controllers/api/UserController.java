@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @APIController
@@ -59,53 +60,55 @@ public class UserController extends APIControllerAbstract {
 
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchUser(@PathVariable long id, @RequestBody UserDTO.WithNewPassword userDTO) {
+    public ResponseEntity<?> patchUser(@PathVariable long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
         if (userDTO != null) {
             User currentUser = userRepository.findInCurrentTenant(id);
             if (currentUser != null &&
                     (currentUser.equals(authService.getCurrentUser()) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))) {
 
-                User otherUser = userRepository.findByEmailAddress(userDTO.emailAddress);
-                if (otherUser != null && !otherUser.getId().equals(id))
-                    return badRequest("The Email Address is already in use.");
+                if (!passwordOnly) {
+                    User otherUser = userRepository.findByEmailAddress(userDTO.emailAddress);
+                    if (otherUser != null && !otherUser.getId().equals(id))
+                        return badRequest("The Email Address is already in use.");
 
-                if (userDTO.emailAddress != null)
-                    if (!currentUser.isAdmin() && !EmailValidator.getInstance().isValid(userDTO.emailAddress))
-                        return badRequest("The Email Address is invalid.");
-                    else
-                        currentUser.setEmailAddress(userDTO.emailAddress);
+                    if (userDTO.emailAddress != null)
+                        if (!currentUser.isAdmin() && !EmailValidator.getInstance().isValid(userDTO.emailAddress))
+                            return badRequest("The Email Address is invalid.");
+                        else
+                            currentUser.setEmailAddress(userDTO.emailAddress);
 
-                if (userDTO.firstName != null)
-                    if (!userDTO.firstName.matches("[^<>;=]*"))
-                        return badRequest("The First Name cannot contain these characters: < > ; =");
-                    else if (userDTO.firstName.length() > 30)
-                        return badRequest("The First Name must be 30 characters or less.");
-                    else
-                        currentUser.firstName = userDTO.firstName;
+                    if (userDTO.firstName != null)
+                        if (!userDTO.firstName.matches("[^<>;=]*"))
+                            return badRequest("The First Name cannot contain these characters: < > ; =");
+                        else if (userDTO.firstName.length() > 30)
+                            return badRequest("The First Name must be 30 characters or less.");
+                        else
+                            currentUser.firstName = userDTO.firstName;
 
-                if (userDTO.lastName != null)
-                    if (!userDTO.lastName.matches("[^<>;=]*"))
-                        return badRequest("The Last Name cannot contain these characters: < > ; =");
-                    else if (userDTO.lastName.length() > 30)
-                        return badRequest("The Last Name must be 30 characters or less.");
-                    else
-                        currentUser.lastName = userDTO.lastName;
+                    if (userDTO.lastName != null)
+                        if (!userDTO.lastName.matches("[^<>;=]*"))
+                            return badRequest("The Last Name cannot contain these characters: < > ; =");
+                        else if (userDTO.lastName.length() > 30)
+                            return badRequest("The Last Name must be 30 characters or less.");
+                        else
+                            currentUser.lastName = userDTO.lastName;
 
-                if (userDTO.phoneNumber != null)
-                    if (!userDTO.phoneNumber.matches("[^<>;=]*"))
-                        return badRequest("The Phone Number cannot contain these characters: < > ; =");
-                    else if (userDTO.phoneNumber.length() > 30)
-                        return badRequest("The Phone Number must be 30 characters or less.");
-                    else
-                        currentUser.phoneNumber = userDTO.phoneNumber;
+                    if (userDTO.phoneNumber != null)
+                        if (!userDTO.phoneNumber.matches("[^<>;=]*"))
+                            return badRequest("The Phone Number cannot contain these characters: < > ; =");
+                        else if (userDTO.phoneNumber.length() > 30)
+                            return badRequest("The Phone Number must be 30 characters or less.");
+                        else
+                            currentUser.phoneNumber = userDTO.phoneNumber;
 
-                if (userDTO.location != null)
-                    if (!userDTO.location.matches("[^<>;=]*"))
-                        return badRequest("The Location cannot contain these characters: < > ; =");
-                    else if (userDTO.location.length() > 250)
-                        return badRequest("The Location must be 250 characters or less.");
-                    else
-                        currentUser.location = userDTO.location;
+                    if (userDTO.location != null)
+                        if (!userDTO.location.matches("[^<>;=]*"))
+                            return badRequest("The Location cannot contain these characters: < > ; =");
+                        else if (userDTO.location.length() > 250)
+                            return badRequest("The Location must be 250 characters or less.");
+                        else
+                            currentUser.location = userDTO.location;
+                }
 
                 if (userDTO.newPassword != null)
                     if (userDTO.newPassword.length() > 30)

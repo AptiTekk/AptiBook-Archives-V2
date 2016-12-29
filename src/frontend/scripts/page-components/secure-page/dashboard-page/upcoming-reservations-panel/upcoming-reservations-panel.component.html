@@ -6,31 +6,37 @@
 
 <panel [type]="'primary'" [title]="'Your Upcoming Reservations'">
     <panel-body>
-        <div *ngIf="reservations != undefined && reservations.length > 0">
-            <panel *ngFor="let reservation of reservations | slice:0:3">
+        <div *ngIf="reservations">
+            <panel *ngFor="let reservation of reservations">
                 <panel-body>
-                    <h4 style="margin: 5px 0;">{{reservation.resource.name}}</h4>
+                    <!-- Reservation Title Label -->
+                    <h4 style="margin: 5px 0;">{{reservation.title}}</h4>
+
+                    <!-- Status Label -->
                     <span class="label label-{{getStatusLabelClassSuffix(reservation)}} pull-right"
                           style="margin-top: -30px;">{{getStatusLabelText(reservation)}}</span>
-                    <div style="font-weight: bold">{{reservation.title}}</div>
+
+                    <!-- Resource Name Label -->
+                    <div style="font-weight: bold">{{reservation.resource.name}}</div>
+
+                    <!-- Start Time Label -->
                     <span class="label label-default">Start</span>
                     {{reservation.start | date:'EEEE, MMM dd, yyyy, h:mm a'}}
                     <br/>
+
+                    <!-- End Time Label -->
                     <span class="label label-default">End</span>
                     {{reservation.end | date:'EEEE, MMM dd, yyyy, h:mm a'}}
                 </panel-body>
+                <panel-footer>
+                    <!-- Details Button-->
+                    <button class="btn btn-default" (click)="infoModal.display(reservation)">Details</button>
+                </panel-footer>
             </panel>
         </div>
         <div *ngIf="reservations == undefined || reservations.length == 0">
             <h4>You have no Upcoming Reservations.</h4>
         </div>
     </panel-body>
-    <panel-footer>
-        <span style="font-size: 16px; position: absolute; margin-top: 5px;" class="label label-default"
-              *ngIf="reservations != undefined && reservations.length > 3">+ {{reservations.length - 3}} more</span>
-        <div class="btn-toolbar">
-            <button class="btn btn-default pull-right" [routerLink]="['', 'secure', 'my', 'reservations']">View All
-            </button>
-        </div>
-    </panel-footer>
 </panel>
+<reservation-info-modal #infoModal></reservation-info-modal>

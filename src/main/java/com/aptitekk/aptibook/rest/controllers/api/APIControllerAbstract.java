@@ -6,24 +6,25 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.ApplicationContextProvider;
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
+import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.util.LinkedMultiValueMap;
+import org.springframework.util.MultiValueMap;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Collections;
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public abstract class APIControllerAbstract {
 
-    final String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
+    final static String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
+    final static String VALID_CHARACTER_PATTERN = "[^<>;=]*";
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -33,12 +34,36 @@ public abstract class APIControllerAbstract {
     @Autowired
     LogService logService;
 
+    @Autowired
+    TenantSessionService tenantSessionService;
+
     APIControllerAbstract() {
         modelMapper.getConfiguration().setFieldMatchingEnabled(true);
     }
 
     ResponseEntity<?> ok(Object entity) {
         return ResponseEntity.ok(entity);
+    }
+
+    ResponseEntity<?> created(Object entity, String path) {
+        MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
+
+        //Ensure that the path starts with /api/*
+        if (!path.startsWith("/api") && !path.startsWith("api")) {
+            if (path.startsWith("/"))
+                path = "/api" + (path.startsWith("/") ? "" : "/") + path;
+        } else if (path.startsWith("api"))
+            path = "/" + path;
+
+        //Add on the tenant url
+        if (tenantSessionService.getTenant() != null)
+            path = "/" + tenantSessionService.getTenant().getSlug() + path;
+
+        String uriString = ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
+
+        headers.put("Location", Collections.singletonList(uriString));
+
+        return new ResponseEntity<>(entity, headers, HttpStatus.CREATED);
     }
 
     ResponseEntity<Void> noContent() {

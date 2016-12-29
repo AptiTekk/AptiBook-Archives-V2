@@ -4,7 +4,8 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="navbar navbar-default">
+<div class="header-padding"></div>
+<div class="navbar navbar-default navbar-fixed-top">
     <div class="container-fluid">
         <div class="navbar-header">
             <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar-collapse"
@@ -23,7 +24,7 @@
         <div class="collapse navbar-collapse" id="navbar-collapse" *ngIf="!nonInteractive">
             <div id="header">
 
-                <ul class="nav navbar-nav navbar-right" *ngIf="user != undefined">
+                <ul class="nav navbar-nav navbar-right" *ngIf="user">
 
                     <!-- Reservation Management Dropdown -->
                     <li class="dropdown" *ngIf="user.admin || (user.userGroups && user.userGroups.length > 0)">
@@ -34,7 +35,7 @@
                         </a>
                         <ul class="dropdown-menu">
                             <li *ngFor="let link of reservationManagementLinks">
-                                <a href="#">
+                                <a href="#" [routerLink]="['', 'secure', 'management', link.path]">
                                     <span><i class="fa fa-{{link.icon}}"></i></span>
                                     {{link.label}}
                                 </a>
@@ -52,7 +53,7 @@
                         <ul class="dropdown-menu">
                             <li *ngFor="let link of configurationLinks"
                                 [ngStyle]="{'padding-left': link.indented ? '10px' : null}">
-                                <a href="#">
+                                <a href="#" [routerLink]="['', 'secure', 'configuration', link.path]">
                                     <span><i class="fa fa-{{link.icon}}"></i></span>
                                     {{link.label}}
                                 </a>
@@ -68,12 +69,6 @@
                             <span class="caret"></span>
                         </a>
                         <ul class="dropdown-menu">
-                            <li>
-                                <a href="#" [routerLink]="['', 'secure', 'my', 'reservations']">
-                                    <span><i class="fa fa-calendar"></i></span>
-                                    My Reservations
-                                </a>
-                            </li>
                             <li>
                                 <a href="#" [routerLink]="['', 'secure', 'my', 'account']">
                                     <span><i class="fa fa-pencil"></i></span>
@@ -94,7 +89,7 @@
                     <li class="nav-notifications">
                         <a href="#" [routerLink]="['', 'secure', 'my', 'notifications']">
                             <span><i class="fa fa-bell"></i></span>
-                            <span class="notifications-badge badge" *ngIf="unreadNotifications.length > 0" >{{unreadNotifications.length}}</span>
+                            <span class="notifications-badge badge" *ngIf="unreadNotifications.length > 0">{{unreadNotifications.length}}</span>
                         </a>
                     </li>
                 </ul>

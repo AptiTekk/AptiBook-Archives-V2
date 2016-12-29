@@ -12,132 +12,151 @@
 
     <div class="row">
         <div class="col-xs-12 col-md-6">
-            <form (submit)="onAccountDetailsSubmit()">
-                <h4>Personal Information</h4>
-                <hr/>
+            <form [formGroup]="personalInformation" (submit)="onPersonalInformationSubmit()">
+                <panel [type]="'primary'" [title]="'Personal Information'">
+                    <panel-body>
+                        <alert #errorAlert [severity]="'danger'"></alert>
 
-                <alert #errorAlert [severity]="'danger'"></alert>
+                        <alert #personalInfoAlert [severity]="'info'"></alert>
 
-                <alert #personalInfoAlert [severity]="'info'"></alert>
-
-                <div class="form-group">
-                    <label for="emailAddressField">Email Address:</label>
-                    <div class="input-group">
-                        <div class="input-group-addon">
-                            <i class="fa fa-at"></i>
-                        </div>
-                        <input name="emailAddress" id="emailAddressField" class="form-control"
-                               [ngModel]="user.emailAddress"
-                               readonly>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
                         <div class="form-group">
-                            <label for="firstNameField">First Name:</label>
-                            <input name="firstName" id="firstNameField" class="form-control"
-                                   [(ngModel)]="user.firstName" maxlength="30">
-                        </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="lastNameField">Last Name:</label>
-                            <input name="lastName" id="lastNameField" class="form-control" [(ngModel)]="user.lastName"
-                                   maxlength="30">
-                        </div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="phoneNumberField">Phone Number:</label>
-                    <div class="input-group">
-                        <span class="input-group-addon">
-                            <i class="fa fa-phone"></i>
-                        </span>
-                        <input name="phoneNumber" id="phoneNumberField" class="form-control"
-                               [(ngModel)]="user.phoneNumber" maxlength="30">
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label for="locationField">Location:</label>
-                    <div class="input-group">
-                        <div class="input-group-addon">
-                            <i class="fa fa-map-marker"></i>
-                        </div>
-                        <input name="location" id="locationField" class="form-control" [(ngModel)]="user.location"
-                               maxlength="250">
-                    </div>
-                </div>
-
-                <h4>Change Password</h4>
-                <hr/>
-
-                <alert #passwordsInfoAlert [severity]="'info'"></alert>
-
-                <alert [severity]="'warning'" [message]="'The Passwords do not match!'"
-                       [displayed]="!doPasswordsMatch()"></alert>
-
-                <div class="row">
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="newPasswordField">New Password:</label>
+                            <label for="emailAddressField">Email Address:</label>
                             <div class="input-group">
                                 <div class="input-group-addon">
-                                    <i class="fa fa-asterisk"></i>
+                                    <i class="fa fa-at"></i>
                                 </div>
-                                <input type="password" name="newPassword" id="newPasswordField" class="form-control"
-                                       [(ngModel)]="user.newPassword" maxlength="30">
+                                <input name="emailAddress" id="emailAddressField" class="form-control"
+                                       [value]="user.emailAddress"
+                                       readonly>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-xs-12 col-md-6">
-                        <div class="form-group">
-                            <label for="confirmPasswordField">Confirm Password:</label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-asterisk"></i>
-                                </div>
-                                <input type="password" name="confirmPassword" id="confirmPasswordField"
-                                       class="form-control" [(ngModel)]="user.confirmPassword" maxlength="30">
+
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <form-group [control]="personalInformation.controls['firstName']"
+                                            [label]="'First Name'"
+                                            [errorMessages]="
+                                                {
+                                                pattern: 'These characters are not allowed:  < > ; =',
+                                                maxlength: 'This must be 30 characters or less.'
+                                                }">
+                                </form-group>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <form-group [control]="personalInformation.controls['lastName']"
+                                            [label]="'Last Name'"
+                                            [errorMessages]="
+                                                {
+                                                pattern: 'These characters are not allowed:  < > ; =',
+                                                maxlength: 'This must be 30 characters or less.'
+                                                }">
+                                </form-group>
                             </div>
                         </div>
-                    </div>
-                </div>
 
-                <hr/>
+                        <form-group [control]="personalInformation.controls['phoneNumber']"
+                                    [label]="'Phone Number'"
+                                    [faIconName]="'phone'"
+                                    [errorMessages]="
+                                            {
+                                            pattern: 'These characters are not allowed:  < > ; =',
+                                            maxlength: 'This must be 30 characters or less.'
+                                            }">
+                        </form-group>
 
-                <div class="btn-toolbar">
-                    <button class="btn btn-primary"
-                            disabled="{{personalInfoAlert.isDisplayed() || passwordsInfoAlert.isDisplayed()  || errorAlert.isDisplayed()  || !doPasswordsMatch() ? 'disabled' : null}}">
-                        Save Changes
-                    </button>
-                </div>
+                        <form-group [control]="personalInformation.controls['location']"
+                                    [label]="'Location'"
+                                    [faIconName]="'map-marker'"
+                                    [errorMessages]="
+                                            {
+                                            pattern: 'These characters are not allowed:  < > ; =',
+                                            maxlength: 'This must be 250 characters or less.'
+                                            }">
+                        </form-group>
+                    </panel-body>
+                    <panel-footer>
+                        <button class="btn btn-primary"
+                                disabled="{{personalInformation.invalid || personalInfoAlert.isDisplayed() || errorAlert.isDisplayed()  || !doPasswordsMatch() ? 'disabled' : null}}">
+                            Save Changes
+                        </button>
+                    </panel-footer>
+                </panel>
+            </form>
+
+            <form (submit)="onChangePasswordSubmit()">
+                <panel [type]="'primary'" [title]="'Change Password'">
+                    <panel-body>
+
+                        <alert #passwordsInfoAlert [severity]="'info'"></alert>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="newPasswordField">New Password:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-asterisk"></i>
+                                        </div>
+                                        <input type="password" name="newPassword" id="newPasswordField"
+                                               class="form-control"
+                                               [(ngModel)]="user.newPassword" maxlength="30">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-xs-12 col-md-6">
+                                <div class="form-group">
+                                    <label for="confirmPasswordField">Confirm Password:</label>
+                                    <div class="input-group">
+                                        <div class="input-group-addon">
+                                            <i class="fa fa-asterisk"></i>
+                                        </div>
+                                        <input type="password" name="confirmPassword" id="confirmPasswordField"
+                                               class="form-control" [(ngModel)]="user.confirmPassword" maxlength="30">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </panel-body>
+                    <panel-footer>
+                        <button class="btn btn-primary"
+                                disabled="{{personalInformation.invalid || passwordsInfoAlert.isDisplayed() || errorAlert.isDisplayed() || !doPasswordsMatch() || !user.newPassword ? 'disabled' : null}}">
+                            Save Changes
+                        </button>
+                        <div *ngIf="!doPasswordsMatch()" style="display: inline-block; color: darkred">
+                            The Passwords do not match!
+                        </div>
+                    </panel-footer>
+                </panel>
             </form>
         </div>
         <div class="col-xs-12 col-md-4">
 
             <div class="row">
                 <div class="col-xs-12" *ngIf="user.admin || user.userGroups.length > 0">
-                    <h4>Assigned Groups</h4>
-                    <hr/>
-                    <div *ngIf="user.admin">
-                        <p>The admin account is automatically granted full permissions. No Groups need to be
-                            assigned.</p>
-                    </div>
-                    <div *ngIf="!user.admin">
-                        <p>The groups that you are assigned to are highlighted.</p>
-                        <tree [userGroup]="rootUserGroup" [selectable]="false" [dragAndDrop]="false"
-                              [higlightedUserGroups]="user.userGroups"></tree>
-                    </div>
+                    <panel [type]="'primary'" [title]="'Assigned Groups'">
+                        <panel-body>
+                            <div *ngIf="user.admin">
+                                <p>The admin account is automatically granted full permissions. No Groups need to be
+                                    assigned.</p>
+                            </div>
+                            <div *ngIf="!user.admin">
+                                <p style="font-weight: bold">Your assigned groups are highlighted.</p>
+                                <tree [selectable]="false"
+                                      [highlightedUserGroups]="user.userGroups">
+                                </tree>
+                            </div>
+                        </panel-body>
+                    </panel>
                 </div>
             </div>
 
             <div class="row">
                 <div class="col-xs-12">
-                    <h4>Email Notification Preferences</h4>
-                    <hr/>
+                    <panel [type]="'primary'" [title]="'Email Notification Preferences'">
+                        <panel-body>
+
+                        </panel-body>
+                    </panel>
                 </div>
             </div>
 

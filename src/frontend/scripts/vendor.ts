@@ -5,6 +5,7 @@ import "@angular/common";
 import "@angular/http";
 import "@angular/router";
 import "rxjs";
+import "node-uuid";
 import "moment-timezone";
 import "moment";
 import "jquery";

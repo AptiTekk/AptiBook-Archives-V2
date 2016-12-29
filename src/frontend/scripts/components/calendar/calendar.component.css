@@ -4,12 +4,28 @@
  * Proprietary and confidential.
  */
 
+/* General Styling */
+
+/*.calendar .fc-day:hover {
+    background-color: #f9f9f9 !important;
+}*/
+
+.calendar .fc-content-skeleton {
+    pointer-events: none;
+}
+
 /* Event Styling */
 
 .calendar .fc-event {
     border: 2px solid #ededed;
+    padding: 1px 1px;
     background-color: #4272b7;
     color: #fff;
+    pointer-events: auto;
+}
+
+.calendar .fc-more {
+    pointer-events: auto;
 }
 
 .calendar.selectable .fc-event {
@@ -97,6 +113,12 @@
 
 .calendar .fc-scroller {
     overflow-y: hidden !important;
+}
+
+/* Week List Styling */
+
+.calendar.selectable .fc-list-item {
+    cursor: pointer;
 }
 
 /* Button Styling */

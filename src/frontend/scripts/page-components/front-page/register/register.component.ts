@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'register',
@@ -6,12 +7,19 @@ import {Component} from "@angular/core";
 })
 export class RegisterComponent {
 
-    emailAddress: string;
-    firstName: string;
-    lastName: string;
+    formGroup: FormGroup;
 
-    password: string;
-    confirmPassword: string;
+    constructor(formBuilder: FormBuilder) {
+
+        this.formGroup = formBuilder.group({
+            emailAddress: [null, Validators.compose([Validators.required, Validators.maxLength(100), Validators.pattern("[^<>;=]*")])],
+            firstName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+            lastName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+            password: [null, Validators.compose([Validators.required, Validators.maxLength(50)])],
+            confirmPassword: [null, Validators.compose([Validators.required, Validators.maxLength(50)])]
+        });
+
+    }
 
     onSubmit() {
         console.log("Submitted.");
