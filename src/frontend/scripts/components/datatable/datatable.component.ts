@@ -10,7 +10,8 @@ import {
     ContentChildren,
     QueryList,
     AfterViewInit,
-    AfterViewChecked
+    AfterViewChecked,
+    Input
 } from "@angular/core";
 import {DataTableColumn} from "./datatable-column/datatable-column.component";
 
@@ -22,6 +23,8 @@ declare const $;
     styleUrls: ['datatable.component.css']
 })
 export class DataTableComponent implements AfterViewInit, AfterViewChecked {
+
+    @Input() selectableRows: boolean;
 
     @ViewChild('dataTableContainer') dataTableContainer: ElementRef;
     private datatable;
@@ -82,7 +85,8 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
                     }
 
                     return dataArray;
-                })()
+                })(),
+                select: this.selectableRows ? 'single' : false
             }
         );
     }

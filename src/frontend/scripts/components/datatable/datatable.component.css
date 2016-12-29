@@ -1,0 +1,4 @@
+:host >>> table.dataTable tbody > tr.selected,
+:host >>> table.dataTable tbody > tr > .selected {
+    background-color: #4272b7;
+}

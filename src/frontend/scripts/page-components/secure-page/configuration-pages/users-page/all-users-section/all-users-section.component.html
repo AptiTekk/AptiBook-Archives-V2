@@ -4,7 +4,7 @@
   ~ Proprietary and confidential.
   -->
 
-<datatable>
+<datatable [selectableRows]="true">
     <datatable-column [title]="'Email Address'">
         <datatable-cell *ngFor="let user of users">
             {{user.emailAddress}}
