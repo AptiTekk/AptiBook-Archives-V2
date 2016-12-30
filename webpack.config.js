@@ -18,7 +18,7 @@ var config = {
 
     entry: {
         polyfills: './src/frontend/scripts/polyfills',
-        vendor: './src/frontend/scripts/vendor',
+        vendor: './src/frontend/scripts/vendors/vendors',
         main: './src/frontend/scripts/main'
     },
 
@@ -35,6 +35,10 @@ var config = {
                 test: /\.ts$/,
                 loaders: ['awesome-typescript-loader', 'angular2-template-loader'],
                 exclude: [/\.(spec|e2e)\.ts$/]
+            },
+            {
+                test: /datatables\.net.*/,
+                loader: 'imports?define=>false'
             },
             {
                 test: /\.json$/,

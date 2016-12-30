@@ -10,7 +10,7 @@
 
 .navbar {
     background-color: #fff !important;
-    box-shadow: #aaa 0 -5px 20px 1px;
+    box-shadow: #666 0 -5px 20px 1px;
     font-family: "Roboto", sans-serif;
     font-size: 16px;
     border: none;
@@ -22,9 +22,15 @@
     background-color: #6D6E71;
 }
 
-.navbar-brand {
+.navbar-brand,
+.navbar-brand:hover,
+.navbar-brand:focus {
     position: fixed;
-    padding-top: 5px !important;
+    height: 60px;
+    padding-top: 10px !important;
+    background-color: white;
+    border-bottom-right-radius: 10px;
+    box-shadow: #666 0 0 10px -2px;
 }
 
 .navbar-brand img {
@@ -38,7 +44,7 @@
 }
 
 .dropdown-menu > li > a {
-    padding: 3px 15px !important;
+    padding: 3px 15px;
 }
 
 .dropdown-menu > li > a > span {
@@ -47,10 +53,6 @@
 
 .dropdown-menu .fa {
     width: 16px;
-}
-
-.manage-nav-link a::before {
-    content: '<span class="glyphicon glyphicon-edit" />';
 }
 
 .badge.notifications-badge {
@@ -84,19 +86,36 @@
         min-width: 60%;
     }
 
-    .navbar-default .navbar-nav > li {
+    .navbar-nav > li {
         height: 100%;
     }
 
-    .navbar-default .navbar-nav > li > a, .navbar-default .navbar-nav > li > a:focus {
+    .navbar-nav > li > a,
+    .navbar-nav > li > a:focus {
         color: white;
         height: 100%;
         padding-top: 8px;
     }
 
-    .navbar-default .navbar-nav > li > a:hover, .navbar-default .navbar-nav > li.open > a {
+    .navbar-nav > li.open > a {
+        background-color: transparent;
+    }
+
+    .navbar-nav > li > a:hover {
         color: white;
         background-color: rgba(0, 0, 0, 0.1);
+    }
+
+    .navbar-nav > li.dropdown.open > .dropdown-menu {
+        display: none;
+    }
+
+    .navbar-nav > li.dropdown:hover > .dropdown-menu {
+        display: block;
+    }
+
+    .navbar-nav > li.dropdown > a {
+        cursor: default;
     }
 
     .badge.notifications-badge {

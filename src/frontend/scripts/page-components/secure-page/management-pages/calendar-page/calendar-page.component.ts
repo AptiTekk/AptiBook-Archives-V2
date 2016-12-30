@@ -3,7 +3,7 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild, OnInit} from "@angular/core";
 import {UserGroupService} from "../../../../services/singleton/usergroup.service";
 import {UserGroup} from "../../../../models/user-group.model";
 import {APIService} from "../../../../services/singleton/api.service";
@@ -18,7 +18,7 @@ import {AuthService} from "../../../../services/singleton/auth.service";
     selector: 'calendar-page',
     templateUrl: 'calendar-page.component.html'
 })
-export class CalendarPageComponent{
+export class CalendarPageComponent implements OnInit {
     @ViewChild('reservationInfoModal')
     reservationInfoModal: ReservationInfoModalComponent;
 
@@ -28,22 +28,24 @@ export class CalendarPageComponent{
     enabledResourceCategories: ResourceCategory[];
     filterOnlyUsersEvents: boolean = false;
 
-    onCalendarEventClicked(event: Reservation) {
-        this.reservationInfoModal.display(event);
+    constructor(private userGroupService: UserGroupService,
+                private apiService: APIService,
+                private resourceCategoryService: ResourceCategoryService,
+                private authService: AuthService) {
     }
 
+    ngOnInit(): void {
 
-    updateEnabledResourceCategories() {
-        this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
-    }
+        // Get user and hierarchy down
+        this.authService.getUser().subscribe(user => {
+            this.currentUser = user;
+            if (user)
+                this.userGroupService.getUserGroupHierarchyDown(user).take(1).subscribe(
+                    response => this.userGroupOwnerFilter = response
+                );
+        });
 
-    constructor(private userGroupService: UserGroupService, private apiService: APIService, private resourceCategoryService: ResourceCategoryService, private authService: AuthService) {
-        authService.getUser().subscribe(user => this.currentUser = user);
-        userGroupService.getUserGroupHierarchyDownFilter();
-        userGroupService.getUserGroupHierarchyDown().take(1).subscribe(response =>
-            this.userGroupOwnerFilter = response
-        );
-
+        // Get Resource Categories
         this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategory => {
             this.resourceCategories = resourceCategory.map(category => {
                 category['enabled'] = true;
@@ -51,4 +53,13 @@ export class CalendarPageComponent{
             });
         });
     }
+
+    onCalendarEventClicked(event: Reservation) {
+        this.reservationInfoModal.display(event);
+    }
+
+    updateEnabledResourceCategories() {
+        this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
+    }
+
 }
