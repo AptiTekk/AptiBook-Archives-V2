@@ -10,6 +10,7 @@ import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
 import {ReservationDetails} from "../../../../models/reservation-details.model";
 import {ResourceCategory} from "../../../../models/resource-category.model";
+import moment = require("moment");
 
 @Component({
     selector: 'pending-page',
@@ -28,6 +29,13 @@ export class PendingPageComponent {
             this.reservationDetails = details;
         })
     }
+
+
+    formatFriendly(date: string){
+        return moment(date);
+    }
+
+
 }
 
 

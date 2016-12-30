@@ -12,6 +12,18 @@ import {Response} from "@angular/http";
 export class ReservationService {
 
     private lastReservationMade: ReplaySubject<Reservation> = new ReplaySubject<Reservation>(1);
+    /*
+    private pendingReservationDetails: ReplaySubject<ReservationDetails[]> = new ReplaySubject<ReservationDetails[]>(1);
+    private pendingReservationResourceCategories: ReplaySubject<ReservationDetails[]> = new ReplaySubject<ReservationDetails[]>(1);
+
+
+    getPendingReservationDetailsList(): ReplaySubject<ReservationDetails[]>{
+        return this.pendingReservationDetails;
+    }
+
+    getPendingReservationResourceCategoriesList(){
+        return this.pendingReservationResourceCategories;
+    }*/
 
     constructor(private apiService: APIService) {
     }
@@ -27,7 +39,7 @@ export class ReservationService {
                 )
         });
     }
-
+//TODO: get rid of listener next, not used since replay subject, and get rid of observable
     public makeReservation(reservation: Reservation): Observable<Reservation> {
         return Observable.create(listener => {
             let body = JSON.stringify(reservation);

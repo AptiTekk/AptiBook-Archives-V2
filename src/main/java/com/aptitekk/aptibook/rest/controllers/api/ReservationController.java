@@ -11,6 +11,7 @@ import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDetailsDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
@@ -112,7 +113,7 @@ public class ReservationController extends APIControllerAbstract {
                 for(Map.Entry<ResourceCategory, List<ReservationDetails>> entry : reservationDetailsMap.entrySet()){
                     reservationDetails.addAll(entry.getValue());
                 }
-                return ok(modelMapper.map(reservationDetails,new TypeToken<List<ReservationDetails>>() {
+                return ok(modelMapper.map(reservationDetails,new TypeToken<List<ReservationDetailsDTO>>() {
                 }.getType()));
             }
             return noPermission();
