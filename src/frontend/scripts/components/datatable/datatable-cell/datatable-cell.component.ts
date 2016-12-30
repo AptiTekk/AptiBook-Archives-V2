@@ -3,8 +3,7 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-
-import {Component, TemplateRef, ViewContainerRef} from '@angular/core';
+import {Component, ViewContainerRef, Output, EventEmitter} from "@angular/core";
 
 @Component({
     selector: 'datatable-cell',
@@ -12,8 +11,10 @@ import {Component, TemplateRef, ViewContainerRef} from '@angular/core';
 })
 export class DataTableCell {
 
-    constructor(public viewRef: ViewContainerRef) {
+    @Output() selected: EventEmitter<void> = new EventEmitter<void>();
+    @Output() deselected: EventEmitter<void> = new EventEmitter<void>();
 
+    constructor(public viewRef: ViewContainerRef) {
     }
 
 }

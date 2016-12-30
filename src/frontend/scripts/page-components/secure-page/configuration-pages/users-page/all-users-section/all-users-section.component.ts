@@ -14,7 +14,8 @@ import {UserService} from "../../../../../services/singleton/user.service";
 })
 export class AllUsersSectionComponent implements OnInit {
 
-    users: User[];
+    protected users: User[];
+    protected selectedUser: User;
 
     constructor(private userService: UserService) {
     }
@@ -34,6 +35,18 @@ export class AllUsersSectionComponent implements OnInit {
         return user.userGroups.map(userGroup => {
             return userGroup.name
         });
+    }
+
+    protected onAddNewUser() {
+        this.userService.fetchUsers();
+    }
+
+    protected onUserSelected(user: User) {
+        this.selectedUser = user;
+    }
+
+    protected onUserDeselected(user: User) {
+        this.selectedUser = null;
     }
 
 }

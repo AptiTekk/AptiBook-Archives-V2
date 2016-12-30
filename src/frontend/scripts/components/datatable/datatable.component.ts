@@ -14,6 +14,8 @@ import {
     Input
 } from "@angular/core";
 import {DataTableColumn} from "./datatable-column/datatable-column.component";
+import {DataTableCell} from "./datatable-cell/datatable-cell.component";
+import DataTable = DataTables.DataTable;
 
 @Component({
     selector: 'datatable',
@@ -60,6 +62,27 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
     ngAfterViewInit(): void {
         // Initialize the table.
         this.initDataTable();
+
+        // Set up Event Listeners
+        this.datatable.on('select', (e, dt: DataTable, type, indexes) => {
+            if (type === 'row') {
+                this.columns.forEach((column: DataTableColumn) => {
+                    let cell: DataTableCell = column.cells.toArray()[indexes[0]];
+                    if (cell)
+                        cell.selected.emit();
+                })
+            }
+        });
+
+        this.datatable.on('deselect', (e, dt: DataTable, type, indexes) => {
+            if (type === 'row') {
+                this.columns.forEach((column: DataTableColumn) => {
+                    let cell: DataTableCell = column.cells.toArray()[indexes[0]];
+                    if (cell)
+                        cell.deselected.emit();
+                })
+            }
+        });
 
         // Schedule a re-draw of the table any time the content changes.
         this.columns.changes.subscribe(columns => this.scheduleRedraw());
