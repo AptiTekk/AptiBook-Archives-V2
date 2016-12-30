@@ -13,9 +13,11 @@ import {DataTableComponent} from "../datatable.component";
 })
 export class DataTableColumn implements AfterViewInit {
 
-    @Input() public title: string;
+    @Input() title: string;
+    @Input() orderable: boolean = true;
+    @Input() width: string;
 
-    @ContentChildren(DataTableCell) public cells: QueryList<DataTableCell>;
+    @ContentChildren(DataTableCell) cells: QueryList<DataTableCell>;
 
     constructor(@Inject(forwardRef(() => DataTableComponent)) private datatable: DataTableComponent) {
     }

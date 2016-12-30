@@ -10,7 +10,7 @@ export * from './horizontal-navigation/horizontal-navigation.component';
 export * from './image-uploader/image-uploader.component';
 export * from './loader/loader.component';
 export * from './modal/modal.component';
-export * from './panel/panel.component';
+export * from './panel';
 export * from './reservation-info-modal/reservation-info-modal.component';
 export * from './resource-image/resource-image.component';
 export * from './toggle-switch/toggle-switch.component';

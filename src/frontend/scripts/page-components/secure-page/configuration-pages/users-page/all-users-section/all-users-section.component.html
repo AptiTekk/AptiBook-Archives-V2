@@ -11,6 +11,11 @@
         </div>
         <hr/>
         <datatable [selectableRows]="true">
+            <datatable-column [orderable]="false" [width]="'30px'">
+                <datatable-cell *ngFor="let user of users">
+                    <img src="user.svg" width="30px"/>
+                </datatable-cell>
+            </datatable-column>
             <datatable-column [title]="'Email Address'">
                 <datatable-cell *ngFor="let user of users"
                                 (selected)="onUserSelected(user)"
@@ -36,11 +41,21 @@
         </datatable>
     </div>
     <div class="col-xs-12 col-md-4">
-        <panel id="selected-user-panel" class="has-footer" [type]="'primary'" [title]="'Selected User'">
+        <panel id="selected-user-panel"
+               [class.has-footer]="selectedUser"
+               [type]="'primary'"
+               [title]="'Selected User'">
             <panel-body>
-                <h1>{{selectedUser?.emailAddress}}</h1>
+                <div *ngIf="!selectedUser">
+                    <h3>Select a User by clicking on their row.</h3>
+                </div>
+                <div *ngIf="selectedUser">
+                    <img src="user.svg" width="150px" style="float: left; padding-right: 20px;"/>
+                    <h3>{{selectedUser.emailAddress}}</h3>
+                    <hr/>
+                </div>
             </panel-body>
-            <panel-footer>
+            <panel-footer *ngIf="selectedUser">
                 <button class="btn btn-default">Edit User</button>
             </panel-footer>
         </panel>

@@ -95,15 +95,20 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
         this.datatable = $(this.dataTableContainer.nativeElement).DataTable(
             <any>
                 {
-                    columns: this.columns.map(column => {
-                        return {title: column.title}
+                    order: [],
+                    columns: this.columns.map((column: DataTableColumn) => {
+                        return {
+                            title: column.title,
+                            orderable: column.orderable,
+                            width: column.width
+                        }
                     }),
                     data: (() => {
                         let dataArray = [];
 
                         for (let i = 0; i < this.numRows; i++) {
                             let rowData = [];
-                            this.columns.forEach(column => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
+                            this.columns.forEach((column: DataTableColumn) => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
                             dataArray.push(rowData);
                         }
 
