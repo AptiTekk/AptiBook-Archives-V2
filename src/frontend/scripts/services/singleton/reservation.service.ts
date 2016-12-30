@@ -4,6 +4,9 @@ import {Observable, ReplaySubject} from "rxjs";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import * as moment from "moment";
+import {ResourceCategory} from "../../models/resource-category.model";
+import {ReservationDetails} from "../../models/reservation-details.model";
+import {Response} from "@angular/http";
 
 @Injectable()
 export class ReservationService {
@@ -39,6 +42,53 @@ export class ReservationService {
 
         });
     }
+
+
+    public getPendingReservationDetails(user: User): Observable<ReservationDetails[]> {
+        return Observable.create(listener => {
+            if (user == undefined) {
+                listener.next(undefined);
+                console.log("user is error")
+            }
+            else {
+                this.apiService.get("reservations/pending/details/user/" + user.id).subscribe(
+                    response => {
+                        listener.next(<ReservationDetails[]>response);
+                        console.log("no error in service");
+                    },
+                    err => {
+                        console.log("error in service");
+                        listener.next(undefined)
+                    }
+                );
+                console.log("user is fine");
+            }
+        });
+    }
+
+
+    public getPendingReservationCategories(user: User): Observable<ResourceCategory[]> {
+        return Observable.create(listener => {
+            if (user == undefined) {
+                listener.next(undefined);
+                console.log("user is error")
+            }
+            else {
+                this.apiService.get("reservations/pending/categories/user/" + user.id).subscribe(
+                    response => {
+                        listener.next(<ResourceCategory[]>response);
+                        console.log("no error in service");
+                    },
+                    err => {
+                        console.log("error in service");
+                        listener.next(undefined)
+                    }
+                );
+                console.log("user is fine");
+            }
+        });
+    }
+
 
     getLastReservationMade(): ReplaySubject<Reservation> {
         return this.lastReservationMade;

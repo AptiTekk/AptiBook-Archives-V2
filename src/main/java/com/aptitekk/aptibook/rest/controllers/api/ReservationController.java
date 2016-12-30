@@ -11,8 +11,10 @@ import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
+import com.aptitekk.aptibook.core.util.ReservationDetails;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.time.DateUtils;
@@ -27,6 +29,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 @APIController
 public class ReservationController extends APIControllerAbstract {
@@ -96,48 +99,45 @@ public class ReservationController extends APIControllerAbstract {
         return unauthorized();
     }
 
-
-/*    private void init() {
-        reservations = new ArrayList<>();
-        for (UserGroup userGroup : authenticationController.getAuthenticatedUser().getUserGroups()) {
-            reservations.addAll(userGroupService.getHierarchyDownReservations(userGroup));
-        }
-
-        scheduleModel = new ReservationScheduleModel() {
-            @Override
-            public List<Reservation> getReservationsBetweenDates(ZonedDateTime start, ZonedDateTime end) {
-                ArrayList<Reservation> prunedReservations = new ArrayList<>(reservations);
-                Iterator<Reservation> iterator = prunedReservations.iterator();
-                while (iterator.hasNext()) {
-                    Reservation next = iterator.next();
-                    if (next.getStatus() == Reservation.Status.REJECTED)
-                        iterator.remove();
-                    else if (next.getEndTime().isBefore(start) || next.getStartTime().isAfter(end))
-                        iterator.remove();
-                }
-
-                return prunedReservations;
-            }
-        };
-
-        helpController.setCurrentTopic(HelpController.Topic.RESERVATION_MANAGEMENT_CALENDAR);
-    }*/
-
-/*
-    @RequestMapping(value = "/reservations/resourceOwner/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getResourceOwnerReservations(@PathVariable Long id,@RequestParam(value = "start", required = false) String start, @RequestParam(value = "end", required = false) String end){
-        if(authService.isUserSignedIn()){
+    @RequestMapping(value = "/reservations/pending/details/user/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPendingReservationDetails(@PathVariable Long id) {
+        if (id == null)
+            return badRequest("Missing ID");
+        if (authService.isUserSignedIn()) {
             User user = authService.getCurrentUser();
             if (user.isAdmin() || user.getId().equals(id)) {
-                ArrayList<Reservation> reservations = new ArrayList<>();
-                for(UserGroup userGroup : user.userGroups){
-                   // reservations.addAll(us)
-                    //TODO: Implement getHierarchyDownReservations
+                Map<ResourceCategory, List<ReservationDetails>> reservationDetailsMap;
+                reservationDetailsMap = reservationService.buildReservationList(Reservation.Status.PENDING);
+                List<ReservationDetails> reservationDetails = new ArrayList<>();
+                for(Map.Entry<ResourceCategory, List<ReservationDetails>> entry : reservationDetailsMap.entrySet()){
+                    reservationDetails.addAll(entry.getValue());
                 }
+                return ok(modelMapper.map(reservationDetails,new TypeToken<List<ReservationDetails>>() {
+                }.getType()));
             }
+            return noPermission();
         }
-    }*/
+        return unauthorized();
+    }
 
+
+
+    @RequestMapping(value = "/reservations/pending/categories/user/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPendingReservationCategories(@PathVariable Long id) {
+        if (id == null)
+            return badRequest("Missing ID");
+        if (authService.isUserSignedIn()) {
+            User user = authService.getCurrentUser();
+            if (user.isAdmin() || user.getId().equals(id)) {
+                Map<ResourceCategory, List<ReservationDetails>> reservationDetailsMap;
+                reservationDetailsMap = reservationService.buildReservationList(Reservation.Status.PENDING);
+                return ok(modelMapper.map(reservationDetailsMap.keySet(),new TypeToken<ResourceCategoryDTO[]>() {
+                }.getType()));
+            }
+            return noPermission();
+        }
+        return unauthorized();
+    }
 
 
     @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.POST)

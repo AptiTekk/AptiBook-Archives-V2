@@ -4,4 +4,27 @@
   ~ Proprietary and confidential.
   -->
 
-Pending Page
+<ol class="breadcrumb">
+    <li><a [routerLink]="['', 'secure']">Home</a></li>
+    <li class="active">Reservation Management</li>
+    <li class="active">Pending</li>
+</ol>
+
+    <div *ngIf="pendingReservations.length == 0">
+        <h4>
+            No Reservations are Pending Approval.
+        </h4>
+    </div>
+    <div *ngIf="pendingReservations.length > 0">
+        <div *ngFor="let reservation of pendingReservations">
+                <div class="row">
+                    <div class="col-xs-12">
+                    <h4>{{reservation.name}}</h4>
+                    <hr>
+                </div>
+            </div>
+            <div *ngFor="let reservationDetailsVar of reservationDetails">
+                <p>{{reservationDetailsVar.reservation.resource.name}}</p>
+            </div>
+        </div>
+    </div>

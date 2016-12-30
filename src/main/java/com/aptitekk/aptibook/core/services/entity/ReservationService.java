@@ -6,24 +6,90 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.Reservation;
-import com.aptitekk.aptibook.core.domain.entities.Resource;
+import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
+import com.aptitekk.aptibook.core.services.auth.AuthService;
+import com.aptitekk.aptibook.core.util.ReservationDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @EntityService
 public class ReservationService {
 
     private final ResourceRepository resourceRepository;
+    private final AuthService authService;
+    private final UserGroupService userGroupService;
 
     @Autowired
-    public ReservationService(ResourceRepository resourceRepository) {
+    public ReservationService(ResourceRepository resourceRepository, AuthService authService, UserGroupService userGroupService) {
         this.resourceRepository = resourceRepository;
+        this.authService = authService;
+        this.userGroupService = userGroupService;
+    }
+
+
+    public Map<ResourceCategory, List<ReservationDetails>> buildReservationList(Reservation.Status status) {
+        Map<ResourceCategory, List<ReservationDetails>> reservationDetailsMap = new LinkedHashMap<>();
+
+        Queue<UserGroup> queue = new LinkedList<>();
+        queue.addAll(authService.getCurrentUser().userGroups);
+
+        //Traverse down the hierarchy and determine which reservations are approved.
+        //Then, build details about each reservation and store it in the reservationDetailsMap.
+        UserGroup currentGroup;
+        while ((currentGroup = queue.poll()) != null) {
+            queue.addAll(currentGroup.getChildren());
+
+            for (Resource resource : currentGroup.getResources()) {
+                for (Reservation reservation : resource.reservations) {
+
+                    //Found a reservation with a pending status.
+                    if (reservation.getStatus() == status) {
+                        //If there is not an ResourceCategory already in the notificationTypeSettings, add one with an empty list.
+
+                        reservationDetailsMap.putIfAbsent(resource.resourceCategory, new ArrayList<>());
+
+                        reservationDetailsMap.get(resource.resourceCategory).add(generateReservationDetails(reservation));
+                    }
+                }
+            }
+        }
+
+        return reservationDetailsMap;
+    }
+
+    private ReservationDetails generateReservationDetails(Reservation reservation) {
+        //Traverse up the hierarchy and determine the decisions that have already been made.
+        LinkedHashMap<UserGroup, ReservationDecision> hierarchyDecisions = new LinkedHashMap<>();
+        List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(reservation.getResource().owner);
+        UserGroup behalfUserGroup = null;
+        //This for loop descends to properly order the groups for display on the page.
+        for (int i = hierarchyUp.size() - 1; i >= 0; i--) {
+            UserGroup userGroup = hierarchyUp.get(i);
+            //This group is the group that the authenticated user is acting on behalf of when making a decision.
+            if (authService.getCurrentUser().userGroups.contains(userGroup))
+                behalfUserGroup = userGroup;
+            for (ReservationDecision decision : reservation.getDecisions()) {
+                if (decision.getUserGroup().equals(userGroup)) {
+                    hierarchyDecisions.put(userGroup, decision);
+                    break;
+                }
+            }
+            hierarchyDecisions.putIfAbsent(userGroup, null);
+        }
+
+        ReservationDecision currentDecision = null;
+        for (ReservationDecision decision : reservation.getDecisions()) {
+            if (decision.getUserGroup().equals(behalfUserGroup)) {
+                currentDecision = decision;
+                break;
+            }
+        }
+
+        return new ReservationDetails(reservation, behalfUserGroup, currentDecision, hierarchyDecisions);
     }
 
     /**
