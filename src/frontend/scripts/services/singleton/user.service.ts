@@ -31,11 +31,28 @@ export class UserService {
             if (!user)
                 listener.next(false);
             else {
-                this.apiService.patch("users/" + user.id + (passwordOnly ? "?passwordOnly=true" : ""), user).subscribe(
-                    response => listener.next(true),
-                    err => listener.next(false));
+                this.apiService
+                    .patch("users/" + user.id + (passwordOnly ? "?passwordOnly=true" : ""), user)
+                    .subscribe(
+                        response => listener.next(true),
+                        err => listener.next(false)
+                    );
             }
         });
     }
 
+    public deleteUser(user: User): Observable<boolean> {
+        return Observable.create(listener => {
+            if (!user)
+                listener.next(false);
+            else {
+                this.apiService
+                    .del("users/" + user.id)
+                    .subscribe(
+                        response => listener.next(true),
+                        err => listener.next(false)
+                    );
+            }
+        });
+    }
 }

@@ -57,7 +57,18 @@
             </panel-body>
             <panel-footer *ngIf="selectedUser">
                 <button class="btn btn-default">Edit User</button>
+                <button class="btn btn-danger pull-right"
+                        [disabled]="isSelectedUserCurrentUser()"
+                        (click)="userDeleteModal.open()">
+                    Delete User
+                </button>
             </panel-footer>
         </panel>
     </div>
 </div>
+
+<deletion-confirmation-modal #userDeleteModal
+                             [message]="'Are you sure you want to delete the User \'' + selectedUser?.emailAddress + '\''"
+                             [warning]="'All Reservations made by this User will also be deleted!'"
+                             (confirm)="onDeleteSelectedUser()">
+</deletion-confirmation-modal>
