@@ -23,6 +23,7 @@ import {DataTableColumn} from "./datatable-column/datatable-column.component";
 export class DataTableComponent implements AfterViewInit, AfterViewChecked {
 
     @Input() selectableRows: boolean;
+    @Input() responsive: boolean = true;
 
     @ViewChild('dataTableContainer') dataTableContainer: ElementRef;
     private datatable;
@@ -85,7 +86,8 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
 
                         return dataArray;
                     })(),
-                    select: this.selectableRows ? 'single' : false
+                    select: this.selectableRows ? 'single' : false,
+                    responsive: this.responsive
                 }
         );
     }

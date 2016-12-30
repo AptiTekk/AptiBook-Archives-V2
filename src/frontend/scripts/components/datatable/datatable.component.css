@@ -4,7 +4,22 @@
  * Proprietary and confidential.
  */
 
+/* Row Selection */
+
 :host /deep/ table.dataTable tbody > tr.selected,
 :host /deep/ table.dataTable tbody > tr > .selected {
     background-color: #4272b7;
+}
+
+/* Responsive + / - Collapser */
+
+:host /deep/ table.dataTable.dtr-inline.collapsed > tbody > tr > td:first-child:before,
+:host /deep/ table.dataTable.dtr-inline.collapsed > tbody > tr > th:first-child:before {
+    background-color: #4272b7;
+}
+
+:host /deep/ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > td:first-child:before,
+:host /deep/ table.dataTable.dtr-inline.collapsed > tbody > tr.parent > th:first-child:before {
+    background-color: #ddd;
+    color: #333;
 }

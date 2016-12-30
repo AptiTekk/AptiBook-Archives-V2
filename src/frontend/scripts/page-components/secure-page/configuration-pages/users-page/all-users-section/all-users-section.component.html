@@ -4,25 +4,38 @@
   ~ Proprietary and confidential.
   -->
 
-<datatable [selectableRows]="true">
-    <datatable-column [title]="'Email Address'">
-        <datatable-cell *ngFor="let user of users">
-            {{user.emailAddress}}
-        </datatable-cell>
-    </datatable-column>
-    <datatable-column [title]="'First Name'">
-        <datatable-cell *ngFor="let user of users">
-            {{user.firstName}}
-        </datatable-cell>
-    </datatable-column>
-    <datatable-column [title]="'Last Name'">
-        <datatable-cell *ngFor="let user of users">
-            {{user.lastName}}
-        </datatable-cell>
-    </datatable-column>
-    <datatable-column [title]="'Assigned User Groups'">
-        <datatable-cell *ngFor="let user of users">
-            {{getUserGroupsNames(user).join(', ')}}
-        </datatable-cell>
-    </datatable-column>
-</datatable>
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+        <div class="btn-toolbar">
+            <button class="btn btn-primary">Add New User</button>
+        </div>
+        <hr/>
+        <datatable [selectableRows]="true">
+            <datatable-column [title]="'Email Address'">
+                <datatable-cell *ngFor="let user of users">
+                    {{user.emailAddress}}
+                </datatable-cell>
+            </datatable-column>
+            <datatable-column [title]="'First Name'">
+                <datatable-cell *ngFor="let user of users">
+                    {{user.firstName}}
+                </datatable-cell>
+            </datatable-column>
+            <datatable-column [title]="'Last Name'">
+                <datatable-cell *ngFor="let user of users">
+                    {{user.lastName}}
+                </datatable-cell>
+            </datatable-column>
+            <datatable-column [title]="'Assigned User Groups'">
+                <datatable-cell *ngFor="let user of users">
+                    {{getUserGroupsNames(user).join(', ')}}
+                </datatable-cell>
+            </datatable-column>
+        </datatable>
+    </div>
+    <div class="col-xs-12 col-md-4">
+        <panel [type]="'primary'" [title]="'Selected User'">
+
+        </panel>
+    </div>
+</div>
