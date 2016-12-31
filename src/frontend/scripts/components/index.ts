@@ -14,5 +14,6 @@ export * from './panel';
 export * from './reservation-info-modal/reservation-info-modal.component';
 export * from './resource-image/resource-image.component';
 export * from './toggle-switch/toggle-switch.component';
+export * from './user-image/user-image.component';
 export * from './tree';
 export * from './vertical-navigation/vertical-navigation.component';

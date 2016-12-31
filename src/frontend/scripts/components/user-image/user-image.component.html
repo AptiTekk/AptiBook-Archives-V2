@@ -4,7 +4,7 @@
   ~ Proprietary and confidential.
   -->
 
-<img [src]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : noImageUrl"
+<img [src]="noImageUrl"
 	 [style.width]="width ? width : '150px'"
 	 [style.maxWidth]="maxWidth ? maxWidth : null"
 	 draggable="false"/>

@@ -19,37 +19,31 @@
 
                         <alert #personalInfoAlert [severity]="'info'"></alert>
 
-                        <div class="form-group">
-                            <label for="emailAddressField">Email Address:</label>
-                            <div class="input-group">
-                                <div class="input-group-addon">
-                                    <i class="fa fa-at"></i>
-                                </div>
-                                <input name="emailAddress" id="emailAddressField" class="form-control"
-                                       [value]="user.emailAddress"
-                                       readonly>
-                            </div>
-                        </div>
+                        <form-group [value]="user.emailAddress"
+                                    [label]="'Email Address'"
+                                    [faIconName]="'at'"
+                                    [readOnly]="true">
+                        </form-group>
 
                         <div class="row">
                             <div class="col-xs-12 col-md-6">
                                 <form-group [control]="personalInformation.controls['firstName']"
                                             [label]="'First Name'"
                                             [errorMessages]="
-                                                {
-                                                pattern: 'These characters are not allowed:  < > ; =',
-                                                maxlength: 'This must be 30 characters or less.'
-                                                }">
+                                            {
+                                            pattern: 'These characters are not allowed:  < > ; =',
+                                            maxlength: 'This must be 30 characters or less.'
+                                            }">
                                 </form-group>
                             </div>
                             <div class="col-xs-12 col-md-6">
                                 <form-group [control]="personalInformation.controls['lastName']"
                                             [label]="'Last Name'"
                                             [errorMessages]="
-                                                {
-                                                pattern: 'These characters are not allowed:  < > ; =',
-                                                maxlength: 'This must be 30 characters or less.'
-                                                }">
+                                            {
+                                            pattern: 'These characters are not allowed:  < > ; =',
+                                            maxlength: 'This must be 30 characters or less.'
+                                            }">
                                 </form-group>
                             </div>
                         </div>
@@ -58,20 +52,20 @@
                                     [label]="'Phone Number'"
                                     [faIconName]="'phone'"
                                     [errorMessages]="
-                                            {
-                                            pattern: 'These characters are not allowed:  < > ; =',
-                                            maxlength: 'This must be 30 characters or less.'
-                                            }">
+                                    {
+                                    pattern: 'These characters are not allowed:  < > ; =',
+                                    maxlength: 'This must be 30 characters or less.'
+                                    }">
                         </form-group>
 
                         <form-group [control]="personalInformation.controls['location']"
                                     [label]="'Location'"
                                     [faIconName]="'map-marker'"
                                     [errorMessages]="
-                                            {
-                                            pattern: 'These characters are not allowed:  < > ; =',
-                                            maxlength: 'This must be 250 characters or less.'
-                                            }">
+                                    {
+                                    pattern: 'These characters are not allowed:  < > ; =',
+                                    maxlength: 'This must be 250 characters or less.'
+                                    }">
                         </form-group>
                     </panel-body>
                     <panel-footer>

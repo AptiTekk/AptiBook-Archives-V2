@@ -26,6 +26,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
 
     @Input() selectableRows: boolean;
     @Input() responsive: boolean = true;
+    @Input() bodyHeight: string;
 
     @ViewChild('dataTableContainer') dataTableContainer: ElementRef;
     private datatable;
@@ -96,6 +97,8 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
             <any>
                 {
                     order: [],
+                    scrollY: this.bodyHeight,
+                    scrollCollapse: true,
                     columns: this.columns.map((column: DataTableColumn) => {
                         return {
                             title: column.title,

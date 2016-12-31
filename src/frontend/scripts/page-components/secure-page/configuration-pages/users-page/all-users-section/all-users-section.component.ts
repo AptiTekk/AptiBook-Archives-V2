@@ -7,6 +7,8 @@ import {Component, OnInit} from "@angular/core";
 import {User} from "../../../../../models/user.model";
 import {UserService} from "../../../../../services/singleton/user.service";
 import {AuthService} from "../../../../../services/singleton/auth.service";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {UserGroup} from "../../../../../models/user-group.model";
 
 @Component({
     selector: 'all-users-section',
@@ -26,12 +28,28 @@ export class AllUsersSectionComponent implements OnInit {
     protected selectedUser: User;
 
     /**
+     * The selected user's personal information form group.
+     */
+    protected selectedUserPersonalInformation: FormGroup;
+
+    /**
+     * Whether or not the selected user is being edited.
+     */
+    protected editingSelectedUser: boolean;
+
+    /**
      * The currently signed in user
      */
     protected currentUser: User;
 
-    constructor(private userService: UserService,
-                private authService: AuthService) {
+    /**
+     * Root User Group
+     */
+    protected rootUserGroup: UserGroup;
+
+    constructor(private authService: AuthService,
+                private formBuilder: FormBuilder,
+                private userService: UserService) {
     }
 
     ngOnInit(): void {
@@ -39,14 +57,13 @@ export class AllUsersSectionComponent implements OnInit {
             .getUsers()
             .subscribe(users => {
                 this.users = users.filter(user => !user.admin);
-                this.selectedUser = null;
+                this.onUserDeselected();
             });
 
-        this.authService
-            .getUser()
-            .subscribe(
-                user => this.currentUser = user
-            );
+        this.authService.reloadUser();
+        this.authService.getUser().take(1).subscribe(user => {
+            this.currentUser = user;
+        });
     }
 
     //noinspection JSMethodCanBeStatic
@@ -82,10 +99,34 @@ export class AllUsersSectionComponent implements OnInit {
 
     protected onUserSelected(user: User) {
         this.selectedUser = user;
+
+        this.selectedUserPersonalInformation = this.formBuilder.group({
+            emailAddress: [this.selectedUser.emailAddress, Validators.compose([Validators.maxLength(100)])],
+            firstName: [this.selectedUser.firstName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+            lastName: [this.selectedUser.lastName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+            phoneNumber: [this.selectedUser.phoneNumber, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+            location: [this.selectedUser.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])]
+        });
+
+        this.editingSelectedUser = false;
     }
 
-    protected onUserDeselected(user: User) {
+    protected onUserDeselected() {
         this.selectedUser = null;
+        this.selectedUserPersonalInformation = null;
+        this.editingSelectedUser = false;
+    }
+
+    protected onStartEditingUser() {
+        this.editingSelectedUser = true;
+    }
+
+    protected onSaveUserChanges() {
+
+    }
+
+    protected onCancelEditingUser() {
+        this.onUserSelected(this.selectedUser);
     }
 
 }
