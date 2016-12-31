@@ -8,11 +8,12 @@ import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
 import {UserGroup} from "../../../../../models/user-group.model";
-import {ImageUploaderComponent} from "../../../../../components/image-uploader/image-uploader.component";
 import {ResourceService} from "../../../../../services/singleton/resource.service";
 import {ResourceCategory} from "../../../../../models/resource-category.model";
 import {APIService} from "../../../../../services/singleton/api.service";
 import {LoaderService} from "../../../../../services/singleton/loader.service";
+import {ResourceImageComponent} from "../../../../../components/resource-image/resource-image.component";
+import {Resource} from "../../../../../models/resource.model";
 
 @Component({
     selector: 'new-resource-modal',
@@ -30,7 +31,7 @@ export class NewResourceModalComponent {
 
     rootGroup: UserGroup;
 
-    @ViewChild('imageUploader') imageUploader: ImageUploaderComponent;
+    @ViewChild(ResourceImageComponent) resourceImage: ResourceImageComponent;
 
     @Output() submitted: EventEmitter<void> = new EventEmitter<void>();
 
@@ -46,7 +47,7 @@ export class NewResourceModalComponent {
     public open(resourceCategory: ResourceCategory) {
         this.resourceCategory = resourceCategory;
         this.resetFormGroup();
-        this.imageUploader.clearImage();
+        this.resourceImage.clearImage();
         this.modal.openModal();
     }
 
@@ -68,16 +69,18 @@ export class NewResourceModalComponent {
         ).subscribe(
             resource => {
                 if (resource) {
-                    this.imageUploader.uploadToUrl(this.apiService.getApiUrlFromEndpoint("/resources/" + resource.id + "/image")).subscribe(
-                        success => {
-                            if (success) {
-                                this.modal.closeModal();
-                                this.submitted.next();
-                            }
+                    this.resourceImage
+                        .upload(resource)
+                        .subscribe(
+                            success => {
+                                if (success) {
+                                    this.modal.closeModal();
+                                    this.submitted.next();
+                                }
 
-                            this.loaderService.stopLoading();
-                        }
-                    );
+                                this.loaderService.stopLoading();
+                            }
+                        );
                 }
             }
         );
