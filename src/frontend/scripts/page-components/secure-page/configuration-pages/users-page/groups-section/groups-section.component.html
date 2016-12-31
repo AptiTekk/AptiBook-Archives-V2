@@ -11,10 +11,12 @@
 				Add New User Group
 			</button>
 		</div>
-		<hr />
-		<panel [type]="'primary'" [title]="'Select a User Group'">
+		<hr/>
+		<panel [type]="'primary'"
+			   [title]="'Select a User Group'">
 			<panel-body>
-				<tree [selectable]="true">
+				<tree [selectable]="true"
+					  [dragAndDrop]="true">
 				</tree>
 			</panel-body>
 		</panel>
