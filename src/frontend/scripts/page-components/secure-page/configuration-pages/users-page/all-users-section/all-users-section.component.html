@@ -127,6 +127,7 @@
 					Cancel
 				</button>
 				<button class="btn btn-danger pull-right"
+						*ngIf="editingSelectedUser"
 						[disabled]="isSelectedUserCurrentUser()"
 						(click)="userDeleteModal.open()">
 					Delete User
