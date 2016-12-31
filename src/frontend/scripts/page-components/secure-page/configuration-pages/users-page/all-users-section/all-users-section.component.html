@@ -111,6 +111,7 @@
 						<label class="control-label">Assigned User Groups</label>
 						<tree [selectable]="editingSelectedUser"
 							  [selectMultiple]="true"
+							  [preventSameBranchSelection]="true"
 							  [formControl]="selectedUserPersonalInformation?.controls.userGroups">
 						</tree>
 					</div>

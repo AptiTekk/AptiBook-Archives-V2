@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, Input, ViewChildren, QueryList} from "@angular/core";
 import {UserGroup} from "../../../models/user-group.model";
 import {TreeComponent} from "../tree.component";
 
@@ -8,11 +8,13 @@ import {TreeComponent} from "../tree.component";
 })
 export class TreeNodeComponent {
 
-    @Input()
-    tree: TreeComponent;
+    @Input() tree: TreeComponent;
 
-    @Input()
-    userGroup: UserGroup;
+    @Input() parent: TreeNodeComponent;
+
+    @Input() userGroup: UserGroup;
+
+    @ViewChildren(TreeNodeComponent) children: QueryList<TreeNodeComponent>;
 
     private nodeOverDropPoint: boolean = false;
 
@@ -22,14 +24,10 @@ export class TreeNodeComponent {
     }
 
     protected isSelected(): boolean {
-        console.log("Am I selected?");
-
         for (let userGroup of this.tree.selectedUserGroups) {
             if (userGroup.id === this.userGroup.id)
                 return true;
         }
-
-        console.log("Nope");
 
         return false;
     }
