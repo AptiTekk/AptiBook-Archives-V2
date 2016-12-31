@@ -5,26 +5,27 @@
   -->
 
 <div class="tree-node-drop-point"
-     [ngClass]="{'node-over': nodeOverDropPoint}"
-     (dragenter)="onDragEnterDropPoint($event)"
-     (dragover)="onDragEnterDropPoint($event)"
-     (dragleave)="onDragLeaveDropPoint($event)"
-     (drop)="onDropPointDrop($event)"></div>
+	 [class.node-over]="nodeOverDropPoint"
+	 (dragenter)="onDragEnterDropPoint($event)"
+	 (dragover)="onDragEnterDropPoint($event)"
+	 (dragleave)="onDragLeaveDropPoint($event)"
+	 (drop)="onDropPointDrop($event)"></div>
 
 <div class="tree-node"
-     [ngClass]="{'node-selected': tree.selectedUserGroup?.id === userGroup?.id, 'node-highlighted': shouldHighlight(), 'node-dragging': tree.draggingNode == this}"
-     [ngStyle]="{cursor: tree.selectable ? 'pointer' : null}"
-     (click)="onNodeClick()"
-     (dragstart)="onDragStart($event)"
-     (dragend)="onDragEnd($event)"
-     [draggable]="tree.dragAndDrop">
-    {{userGroup.name}}
+	 [class.node-selected]="isSelected()"
+	 [class.node-dragging]="tree.draggingNode === this"
+	 [style.cursor]="tree.selectable ? 'pointer' : 'default'"
+	 (click)="onNodeClick($event)"
+	 (dragstart)="onDragStart($event)"
+	 (dragend)="onDragEnd($event)"
+	 [draggable]="tree.dragAndDrop">
+	{{userGroup.name}}
 </div>
 
-<ul *ngIf="userGroup.children != undefined && userGroup.children.length > 0">
-    <li *ngFor="let userGroup of userGroup.children">
-        <tree-node
-                [tree]="tree"
-                [userGroup]="userGroup"></tree-node>
-    </li>
+<ul *ngIf="userGroup.children && userGroup.children.length > 0">
+	<li *ngFor="let userGroup of userGroup.children">
+		<tree-node
+				[tree]="tree"
+				[userGroup]="userGroup"></tree-node>
+	</li>
 </ul>

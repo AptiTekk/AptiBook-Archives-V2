@@ -136,7 +136,7 @@
                             <div *ngIf="!user.admin">
                                 <p style="font-weight: bold">Your assigned groups are highlighted.</p>
                                 <tree [selectable]="false"
-                                      [highlightedUserGroups]="user.userGroups">
+                                      [formControl]="personalInformation?.controls.userGroups">
                                 </tree>
                             </div>
                         </panel-body>

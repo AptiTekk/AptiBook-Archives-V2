@@ -8,7 +8,6 @@ import {User} from "../../../../../models/user.model";
 import {UserService} from "../../../../../services/singleton/user.service";
 import {AuthService} from "../../../../../services/singleton/auth.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserGroup} from "../../../../../models/user-group.model";
 
 @Component({
     selector: 'all-users-section',
@@ -42,11 +41,6 @@ export class AllUsersSectionComponent implements OnInit {
      */
     protected currentUser: User;
 
-    /**
-     * Root User Group
-     */
-    protected rootUserGroup: UserGroup;
-
     constructor(private authService: AuthService,
                 private formBuilder: FormBuilder,
                 private userService: UserService) {
@@ -63,6 +57,15 @@ export class AllUsersSectionComponent implements OnInit {
         this.authService.reloadUser();
         this.authService.getUser().take(1).subscribe(user => {
             this.currentUser = user;
+        });
+
+        this.selectedUserPersonalInformation = this.formBuilder.group({
+            emailAddress: null,
+            firstName: null,
+            lastName: null,
+            phoneNumber: null,
+            location: null,
+            userGroups: null
         });
     }
 
@@ -105,7 +108,8 @@ export class AllUsersSectionComponent implements OnInit {
             firstName: [this.selectedUser.firstName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             lastName: [this.selectedUser.lastName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             phoneNumber: [this.selectedUser.phoneNumber, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
-            location: [this.selectedUser.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])]
+            location: [this.selectedUser.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])],
+            userGroups: this.selectedUser.userGroups
         });
 
         this.editingSelectedUser = false;
@@ -113,7 +117,8 @@ export class AllUsersSectionComponent implements OnInit {
 
     protected onUserDeselected() {
         this.selectedUser = null;
-        this.selectedUserPersonalInformation = null;
+        if (this.selectedUserPersonalInformation)
+            this.selectedUserPersonalInformation.reset();
         this.editingSelectedUser = false;
     }
 

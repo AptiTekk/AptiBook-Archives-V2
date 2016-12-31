@@ -11,11 +11,8 @@
 }
 
 :host /deep/ #selected-user-panel .panel-body {
-    height: calc(100vh - 306px);
-}
-
-:host /deep/ #selected-user-panel.has-footer .panel-body {
     height: calc(100vh - 361px);
+    overflow-y: auto;
 }
 
 :host /deep/ #selected-user-panel user-image img {

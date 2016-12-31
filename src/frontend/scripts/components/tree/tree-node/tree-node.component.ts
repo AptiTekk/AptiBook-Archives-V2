@@ -16,42 +16,48 @@ export class TreeNodeComponent {
 
     private nodeOverDropPoint: boolean = false;
 
-    shouldHighlight(): boolean {
-        if (this.tree.highlightedUserGroups == undefined)
-            return false;
-
-        return this.tree.highlightedUserGroups.map(value => value.id).includes(this.userGroup.id);
-    }
-
-    onNodeClick() {
+    protected onNodeClick(event: MouseEvent) {
         if (this.tree.selectable)
-            this.tree.onNodeSelected(this);
+            this.tree.onNodeSelected(this, event.ctrlKey);
     }
 
-    onDragStart(event: DragEvent) {
+    protected isSelected(): boolean {
+        console.log("Am I selected?");
+
+        for (let userGroup of this.tree.selectedUserGroups) {
+            if (userGroup.id === this.userGroup.id)
+                return true;
+        }
+
+        console.log("Nope");
+
+        return false;
+    }
+
+    protected onDragStart(event: DragEvent) {
         event.dataTransfer.effectAllowed = "move";
         this.tree.draggingNode = this;
     }
 
-    onDragEnd(event: DragEvent) {
+    protected onDragEnd(event: DragEvent) {
         this.tree.draggingNode = undefined;
     }
 
-    onDragEnterDropPoint(event: DragEvent) {
-        if (this.tree.draggingNode != undefined && this.tree.draggingNode != this) {
+    protected onDragEnterDropPoint(event: DragEvent) {
+        if (this.tree.draggingNode && this.tree.draggingNode !== this) {
             event.preventDefault();
             event.dataTransfer.dropEffect = "move";
             this.nodeOverDropPoint = true;
         }
     }
 
-    onDragLeaveDropPoint(event: DragEvent) {
+    protected onDragLeaveDropPoint(event: DragEvent) {
         event.dataTransfer.dropEffect = undefined;
         this.nodeOverDropPoint = false;
     }
 
-    onDropPointDrop(event: DragEvent) {
-        if (this.tree.draggingNode != undefined && this.nodeOverDropPoint) {
+    protected onDropPointDrop(event: DragEvent) {
+        if (this.tree.draggingNode && this.nodeOverDropPoint) {
             console.log("Dropping " + this.tree.draggingNode.userGroup.name + " before " + this.userGroup.name);
             this.nodeOverDropPoint = false;
         }

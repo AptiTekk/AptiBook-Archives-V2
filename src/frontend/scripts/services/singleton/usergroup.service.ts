@@ -2,7 +2,6 @@ import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {Observable, ReplaySubject} from "rxjs";
 import {UserGroup} from "../../models/user-group.model";
-import {AuthService} from "./auth.service";
 import {User} from "../../models/user.model";
 
 @Injectable()
@@ -10,8 +9,8 @@ export class UserGroupService {
 
     private rootUserGroup: ReplaySubject<UserGroup> = new ReplaySubject<UserGroup>(1);
 
-    constructor(private apiService: APIService, private authService: AuthService) {
-
+    constructor(private apiService: APIService) {
+        this.reloadRootUserGroup();
     }
 
     public getUserGroupHierarchyDown(user: User): Observable<UserGroup[]> {

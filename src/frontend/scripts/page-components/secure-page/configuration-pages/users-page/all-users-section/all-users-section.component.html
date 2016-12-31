@@ -47,30 +47,28 @@
 		</datatable>
 	</div>
 	<div class="col-xs-12 col-md-4">
-		<panel id="selected-user-panel"
-			   [class.has-footer]="selectedUser"
-			   [type]="'primary'"
-			   [title]="'User Information'">
-			<panel-body>
-				<div *ngIf="!selectedUser">
-					<h4>Select a User by clicking on a row in the table.</h4>
-				</div>
-				<div *ngIf="selectedUser">
-					<user-image [width]="'130px'">
+		<form [formGroup]="selectedUserPersonalInformation">
+			<panel id="selected-user-panel"
+				   [type]="'primary'"
+				   [title]="'User Information'">
+				<panel-body>
+					<user-image [user]="selectedUser"
+								[width]="'130px'">
 					</user-image>
 					<div id="user-info">
-						<form-group [control]="selectedUserPersonalInformation?.controls['emailAddress']"
+						<form-group [control]="selectedUserPersonalInformation?.controls.emailAddress"
 									[label]="'Email Address'"
 									[faIconName]="'at'"
+									[readOnly]="!editingSelectedUser"
 									[errorMessages]="
                                     {
-                                    pattern: 'These characters are not allowed:  < > ; =',
-                                    maxlength: 'This must be 30 characters or less.'
+                                    maxlength: 'This must be 100 characters or less.'
                                     }">
 						</form-group>
 						
-						<form-group [control]="selectedUserPersonalInformation?.controls['firstName']"
+						<form-group [control]="selectedUserPersonalInformation?.controls.firstName"
 									[label]="'First Name'"
+									[readOnly]="!editingSelectedUser"
 									[errorMessages]="
                                     {
                                     pattern: 'These characters are not allowed:  < > ; =',
@@ -78,8 +76,9 @@
                                     }">
 						</form-group>
 						
-						<form-group [control]="selectedUserPersonalInformation?.controls['lastName']"
+						<form-group [control]="selectedUserPersonalInformation?.controls.lastName"
 									[label]="'Last Name'"
+									[readOnly]="!editingSelectedUser"
 									[errorMessages]="
 									{
 									pattern: 'These characters are not allowed:  < > ; =',
@@ -87,9 +86,10 @@
 									}">
 						</form-group>
 						
-						<form-group [control]="selectedUserPersonalInformation?.controls['phoneNumber']"
+						<form-group [control]="selectedUserPersonalInformation?.controls.phoneNumber"
 									[label]="'Phone Number'"
 									[faIconName]="'phone'"
+									[readOnly]="!editingSelectedUser"
 									[errorMessages]="
                                     {
                                     pattern: 'These characters are not allowed:  < > ; =',
@@ -97,43 +97,55 @@
                                     }">
 						</form-group>
 						
-						<form-group [control]="selectedUserPersonalInformation?.controls['location']"
+						<form-group [control]="selectedUserPersonalInformation?.controls.location"
 									[label]="'Location'"
 									[faIconName]="'map-marker'"
+									[readOnly]="!editingSelectedUser"
 									[errorMessages]="
                                     {
                                     pattern: 'These characters are not allowed:  < > ; =',
                                     maxlength: 'This must be 250 characters or less.'
                                     }">
 						</form-group>
+						
+						<label class="control-label">Assigned User Groups</label>
+						<tree [selectable]="editingSelectedUser"
+							  [selectMultiple]="true"
+							  [formControl]="selectedUserPersonalInformation?.controls.userGroups">
+						</tree>
 					</div>
-				</div>
-			</panel-body>
-			<panel-footer *ngIf="selectedUser">
-				<button class="btn btn-default"
-						*ngIf="!editingSelectedUser"
-						(click)="onStartEditingUser()">
-					Edit User
-				</button>
-				<button class="btn btn-primary"
-						*ngIf="editingSelectedUser"
-						(click)="onSaveUserChanges()"
-						[disabled]="selectedUserPersonalInformation.invalid">
-					Save Changes
-				</button>
-				<button class="btn btn-default"
-						*ngIf="editingSelectedUser"
-						(click)="onCancelEditingUser()">
-					Cancel
-				</button>
-				<button class="btn btn-danger pull-right"
-						*ngIf="editingSelectedUser"
-						[disabled]="isSelectedUserCurrentUser()"
-						(click)="userDeleteModal.open()">
-					Delete User
-				</button>
-			</panel-footer>
-		</panel>
+				</panel-body>
+				<panel-footer>
+					<div *ngIf="!selectedUser">
+						Select a User by clicking on a row in the table.
+					</div>
+					<div *ngIf="selectedUser">
+						<button class="btn btn-default"
+								*ngIf="!editingSelectedUser"
+								(click)="onStartEditingUser()">
+							Edit User
+						</button>
+						<button class="btn btn-primary"
+								*ngIf="editingSelectedUser"
+								(click)="onSaveUserChanges()"
+								[disabled]="selectedUserPersonalInformation.invalid">
+							Save Changes
+						</button>
+						<button class="btn btn-default"
+								*ngIf="editingSelectedUser"
+								(click)="onCancelEditingUser()">
+							Cancel
+						</button>
+						<button class="btn btn-danger pull-right"
+								*ngIf="editingSelectedUser"
+								[disabled]="isSelectedUserCurrentUser()"
+								(click)="userDeleteModal.open()">
+							Delete User
+						</button>
+					</div>
+				</panel-footer>
+			</panel>
+		</form>
 	</div>
 </div>
 
