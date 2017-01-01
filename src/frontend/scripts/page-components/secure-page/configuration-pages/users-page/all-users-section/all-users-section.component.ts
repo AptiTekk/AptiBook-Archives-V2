@@ -3,11 +3,12 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {User} from "../../../../../models/user.model";
 import {UserService} from "../../../../../services/singleton/user.service";
 import {AuthService} from "../../../../../services/singleton/auth.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {DataTableComponent} from "../../../../../components/datatable/datatable.component";
 
 @Component({
     selector: 'all-users-section',
@@ -15,6 +16,8 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
     styleUrls: ['all-users-section.component.css']
 })
 export class AllUsersSectionComponent implements OnInit {
+
+    @ViewChild(DataTableComponent) dataTable: DataTableComponent;
 
     /**
      * All of the users, except admin.
@@ -51,7 +54,10 @@ export class AllUsersSectionComponent implements OnInit {
             .getUsers()
             .subscribe(users => {
                 this.users = users.filter(user => !user.admin);
-                this.onUserDeselected();
+                if (this.selectedUser) {
+                    this.selectRowByUser(this.selectedUser);
+                    this.editingSelectedUser = false;
+                }
             });
 
         this.authService.reloadUser();
@@ -67,6 +73,19 @@ export class AllUsersSectionComponent implements OnInit {
             location: null,
             userGroups: null
         });
+    }
+
+    private selectRowByUser(user: User) {
+        let groupIndex = -1;
+        for (let i = 0; i < this.users.length; i++) {
+            if (this.users[i].id === user.id) {
+                groupIndex = i;
+                break;
+            }
+        }
+
+        if (groupIndex > -1)
+            this.dataTable.selectRow(groupIndex);
     }
 
     //noinspection JSMethodCanBeStatic
@@ -96,7 +115,10 @@ export class AllUsersSectionComponent implements OnInit {
         this.userService
             .deleteUser(this.selectedUser)
             .subscribe(
-                success => this.userService.fetchUsers()
+                success => {
+                    this.onUserDeselected();
+                    this.userService.fetchUsers()
+                }
             );
     }
 
@@ -127,7 +149,16 @@ export class AllUsersSectionComponent implements OnInit {
     }
 
     protected onSaveUserChanges() {
+        this.selectedUser.emailAddress = this.selectedUserPersonalInformation.controls['emailAddress'].value;
+        this.selectedUser.firstName = this.selectedUserPersonalInformation.controls['firstName'].value;
+        this.selectedUser.lastName = this.selectedUserPersonalInformation.controls['lastName'].value;
+        this.selectedUser.phoneNumber = this.selectedUserPersonalInformation.controls['phoneNumber'].value;
+        this.selectedUser.location = this.selectedUserPersonalInformation.controls['location'].value;
+        this.selectedUser.userGroups = [].concat(this.selectedUserPersonalInformation.controls['userGroups'].value);
 
+        this.userService
+            .patchUser(this.selectedUser)
+            .subscribe(user => this.userService.fetchUsers());
     }
 
     protected onCancelEditingUser() {

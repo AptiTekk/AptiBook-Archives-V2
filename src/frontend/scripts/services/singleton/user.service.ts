@@ -26,7 +26,7 @@ export class UserService {
         return this.users;
     }
 
-    public patchUser(user: User, passwordOnly: boolean = false): Observable<boolean> {
+    public patchUser(user: User, passwordOnly: boolean = false): Observable<User> {
         return Observable.create(listener => {
             if (!user)
                 listener.next(false);
@@ -34,8 +34,8 @@ export class UserService {
                 this.apiService
                     .patch("users/" + user.id + (passwordOnly ? "?passwordOnly=true" : ""), user)
                     .subscribe(
-                        response => listener.next(true),
-                        err => listener.next(false)
+                        response => listener.next(response),
+                        err => listener.next(undefined)
                     );
             }
         });

@@ -37,7 +37,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
     /**
      * Returns the number of rows needed for this table.
      */
-    get numRows(): number {
+    private get numRowsRequired(): number {
         let numRows: number = 0;
 
         this.columns.forEach(column => {
@@ -109,7 +109,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
                     data: (() => {
                         let dataArray = [];
 
-                        for (let i = 0; i < this.numRows; i++) {
+                        for (let i = 0; i < this.numRowsRequired; i++) {
                             let rowData = [];
                             this.columns.forEach((column: DataTableColumn) => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
                             dataArray.push(rowData);
@@ -130,6 +130,11 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
             this.datatable.destroy();
             this.initDataTable();
         }
+    }
+
+    public selectRow(rowIndex: number) {
+        if(this.datatable)
+            this.datatable.row(rowIndex);
     }
 
     /**
