@@ -50,8 +50,8 @@ export class AccountPageComponent implements OnInit {
         this.user.phoneNumber = this.personalInformation.controls['phoneNumber'].value;
         this.user.location = this.personalInformation.controls['location'].value;
 
-        this.userService.patchUser(this.user, changingPassword).take(1).subscribe((value: boolean) => {
-            if (value) {
+        this.userService.patchUser(this.user, changingPassword).take(1).subscribe(user => {
+            if (user) {
                 this.authService.reloadUser();
                 if (!changingPassword)
                     this.personalInfoAlert.display("Personal Information updated successfully.");

@@ -45,7 +45,11 @@ public class DevService {
 
     private void startWebpackWatcher() {
         try {
-            devServerMonitor = new ProcessMonitor("Webpack Watcher", "node_modules/.bin/webpack.cmd", "--watch", "--watchOptions.poll=300") {
+            devServerMonitor = new ProcessMonitor(
+                    "Webpack Watcher",
+                    "node_modules/.bin/webpack.cmd",
+                    "--config", "webpack/webpack.dev.config.js",
+                    "--watch", "--watchOptions.poll=300") {
                 boolean keepPrinting;
 
                 @Override
@@ -85,6 +89,11 @@ public class DevService {
         if (devServerMonitor != null) {
             logService.logInfo(getClass(), "Stopping Webpack Watcher");
             devServerMonitor.cancel();
+        }
+
+        if (commandLineListener != null) {
+            logService.logInfo(getClass(), "Stopping Command Line Listener");
+            commandLineListener.cancel();
         }
     }
 
@@ -166,6 +175,9 @@ public class DevService {
 
         }
 
+        public void cancel() {
+            this.cancelled.set(true);
+        }
     }
 
 }
