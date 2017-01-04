@@ -14,6 +14,7 @@ import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
+import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.modelmapper.TypeToken;
@@ -33,13 +34,16 @@ public class UserController extends APIControllerAbstract {
 
     private final UserRepository userRepository;
     private final UserGroupRepository userGroupRepository;
+    private final UserGroupService userGroupService;
 
     @Autowired
     public UserController(
             UserRepository userRepository,
-            UserGroupRepository userGroupRepository) {
+            UserGroupRepository userGroupRepository,
+            UserGroupService userGroupService) {
         this.userRepository = userRepository;
         this.userGroupRepository = userGroupRepository;
+        this.userGroupService = userGroupService;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -139,8 +143,21 @@ public class UserController extends APIControllerAbstract {
                             return badRequest("A User Group is missing an ID.");
 
                         UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTO.id);
+
+                        // Make sure the group exists.
                         if (userGroup == null)
                             return badRequest("A User Group was not found.");
+
+                        // Make sure the group is not root
+                        if (userGroup.isRoot())
+                            return badRequest("You may not assign a user to the root group.");
+
+                        // Make sure there are not other groups being assigned on this same branch.
+                        List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
+                        for (UserGroup otherGroup : newUserGroupList) {
+                            if (hierarchyDown.contains(otherGroup))
+                                return badRequest("You may not assign a user to two or more groups of the same branch.");
+                        }
 
                         newUserGroupList.add(userGroup);
                     }

@@ -41,7 +41,7 @@
 			</datatable-column>
 			<datatable-column [title]="'Assigned User Groups'">
 				<datatable-cell *ngFor="let user of users">
-					{{getUserGroupsNames(user).join(', ')}}
+					{{user.userGroups?.length > 0 ? getUserGroupsNames(user).join(', ') : '-'}}
 				</datatable-cell>
 			</datatable-column>
 		</datatable>
