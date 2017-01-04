@@ -158,7 +158,10 @@ export class AllUsersSectionComponent implements OnInit {
 
         this.userService
             .patchUser(this.selectedUser)
-            .subscribe(user => this.userService.fetchUsers());
+            .subscribe(user => {
+                this.selectedUser = user;
+                this.userService.fetchUsers();
+            });
     }
 
     protected onCancelEditingUser() {

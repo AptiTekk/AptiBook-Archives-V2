@@ -9,8 +9,11 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
+import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.modelmapper.TypeToken;
@@ -22,16 +25,21 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.websocket.server.PathParam;
+import java.util.ArrayList;
 import java.util.List;
 
 @APIController
 public class UserController extends APIControllerAbstract {
 
     private final UserRepository userRepository;
+    private final UserGroupRepository userGroupRepository;
 
     @Autowired
-    public UserController(UserRepository userRepository) {
+    public UserController(
+            UserRepository userRepository,
+            UserGroupRepository userGroupRepository) {
         this.userRepository = userRepository;
+        this.userGroupRepository = userGroupRepository;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -120,6 +128,29 @@ public class UserController extends APIControllerAbstract {
                             logService.logException(getClass(), e, "Could not hash password from PATCH.");
                             return serverError("Could not save new password.");
                         }
+
+                if (userDTO.userGroups != null) {
+                    if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+                        return noPermission("You may not modify User Groups.");
+
+                    List<UserGroup> newUserGroupList = new ArrayList<>();
+                    for (UserGroupDTO userGroupDTO : userDTO.userGroups) {
+                        if (userGroupDTO.id == null)
+                            return badRequest("A User Group is missing an ID.");
+
+                        UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTO.id);
+                        if (userGroup == null)
+                            return badRequest("A User Group was not found.");
+
+                        newUserGroupList.add(userGroup);
+                    }
+
+                    for (UserGroup userGroup : currentUser.userGroups) {
+                        userGroup.getUsers().remove(currentUser);
+                    }
+
+                    currentUser.userGroups = newUserGroupList;
+                }
 
                 userRepository.save(currentUser);
 

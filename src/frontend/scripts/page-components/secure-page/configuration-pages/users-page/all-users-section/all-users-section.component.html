@@ -13,6 +13,8 @@
 		</div>
 		<hr/>
 		<datatable [selectableRows]="true"
+				   (rowSelected)="onUserSelected(users[$event])"
+				   (rowDeselected)="onUserDeselected()"
 				   [bodyHeight]="'calc(100vh - 475px)'">
 			<datatable-column [orderable]="false"
 							  [width]="'30px'">
@@ -23,9 +25,7 @@
 				</datatable-cell>
 			</datatable-column>
 			<datatable-column [title]="'Email Address'">
-				<datatable-cell *ngFor="let user of users"
-								(selected)="onUserSelected(user)"
-								(deselected)="onUserDeselected(user)">
+				<datatable-cell *ngFor="let user of users">
 					{{user.emailAddress}}
 				</datatable-cell>
 			</datatable-column>
