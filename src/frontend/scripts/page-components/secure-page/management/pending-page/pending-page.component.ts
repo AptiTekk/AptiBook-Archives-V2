@@ -11,6 +11,8 @@ import {User} from "../../../../models/user.model";
 import {ReservationDetails} from "../../../../models/reservation-details.model";
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import moment = require("moment");
+import {Reservation} from "../../../../models/reservation.model";
+import {ReservationDecision} from "../../../../models/reservation-decision.model";
 
 @Component({
     selector: 'pending-page',
@@ -18,22 +20,30 @@ import moment = require("moment");
 })
 export class PendingPageComponent {
     user: User;
-    pendingReservations: ResourceCategory[]= [];
-    reservationDetails: ReservationDetails[] = [];
-    constructor(reservationService: ReservationService, authService: AuthService) {
+    pendingReservations: Reservation[]= [];
+    reservationDecisions: ReservationDecision[] = [];
+    constructor(private reservationService: ReservationService, authService: AuthService) {
         authService.getUser().subscribe(user => this.user = user);
-        reservationService.getPendingReservationCategories(this.user).subscribe(resourceCategories => {
-                this.pendingReservations = resourceCategories;
+        reservationService.getPendingReservations(this.user).subscribe(reservations => {
+                this.pendingReservations = reservations;
         });
-        reservationService.getPendingReservationDetails(this.user).subscribe(details =>{
-            this.reservationDetails = details;
-        })
+
     }
 
 
     formatFriendly(date: string){
         return moment(date);
     }
+
+    getReservationDecisions(reservation: Reservation){
+        if(reservation == undefined){
+            console.log("passed if");
+            this.reservationService.getReservationDecisions(reservation).subscribe(decisions =>
+                this.reservationDecisions = decisions
+            );
+        }
+    }
+
 
 
 }

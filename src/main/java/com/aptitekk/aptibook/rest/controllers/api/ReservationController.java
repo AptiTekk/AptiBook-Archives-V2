@@ -11,6 +11,7 @@ import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDetailsDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
@@ -99,7 +100,7 @@ public class ReservationController extends APIControllerAbstract {
         }
         return unauthorized();
     }
-
+/*
     @RequestMapping(value = "/reservations/pending/details/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getPendingReservationDetails(@PathVariable Long id) {
         if (id == null)
@@ -119,23 +120,37 @@ public class ReservationController extends APIControllerAbstract {
             return noPermission();
         }
         return unauthorized();
-    }
+    }*/
 
 
 
-    @RequestMapping(value = "/reservations/pending/categories/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPendingReservationCategories(@PathVariable Long id) {
+    @RequestMapping(value = "/reservations/pending/user/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPendingReservations(@PathVariable Long id) {
         if (id == null)
             return badRequest("Missing ID");
         if (authService.isUserSignedIn()) {
             User user = authService.getCurrentUser();
             if (user.isAdmin() || user.getId().equals(id)) {
-                Map<ResourceCategory, List<ReservationDetails>> reservationDetailsMap;
-                reservationDetailsMap = reservationService.buildReservationList(Reservation.Status.PENDING);
-                return ok(modelMapper.map(reservationDetailsMap.keySet(),new TypeToken<ResourceCategoryDTO[]>() {
+                List<Reservation> reservationList = new ArrayList<>();
+                reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
+                return ok(modelMapper.map(reservationList,new TypeToken<ReservationDTO[]>() {
                 }.getType()));
             }
             return noPermission();
+        }
+        return unauthorized();
+    }
+
+
+    @RequestMapping(value = "/reservations/decisions/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPendingReservationDecisions(@PathVariable Long id) {
+        if (id == null)
+            return badRequest("Missing ID");
+        if (authService.isUserSignedIn()) {
+            Reservation reservation = reservationRepository.find(id);
+            List<ReservationDecision> decisionList = new ArrayList<>();
+            decisionList = reservationService.generateReservationDecisions(reservation);
+            return ok(modelMapper.map(decisionList, new TypeToken<ReservationDecisionDTO[]>(){}.getType()));
         }
         return unauthorized();
     }

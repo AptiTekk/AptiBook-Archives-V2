@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.core.services.entity;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
 import com.aptitekk.aptibook.core.util.ReservationDetails;
@@ -31,8 +32,8 @@ public class ReservationService {
     }
 
 
-    public Map<ResourceCategory, List<ReservationDetails>> buildReservationList(Reservation.Status status) {
-        Map<ResourceCategory, List<ReservationDetails>> reservationDetailsMap = new LinkedHashMap<>();
+    public ArrayList<Reservation> buildReservationList(Reservation.Status status) {
+       ArrayList<Reservation> reservationList = new ArrayList<>();
 
         Queue<UserGroup> queue = new LinkedList<>();
         queue.addAll(authService.getCurrentUser().userGroups);
@@ -45,43 +46,34 @@ public class ReservationService {
 
             for (Resource resource : currentGroup.getResources()) {
                 for (Reservation reservation : resource.reservations) {
-
-                    //Found a reservation with a pending status.
                     if (reservation.getStatus() == status) {
-                        //If there is not an ResourceCategory already in the notificationTypeSettings, add one with an empty list.
-
-                        reservationDetailsMap.putIfAbsent(resource.resourceCategory, new ArrayList<>());
-
-                        reservationDetailsMap.get(resource.resourceCategory).add(generateReservationDetails(reservation));
+                       reservationList.add(reservation);
                     }
                 }
             }
         }
 
-        return reservationDetailsMap;
+        return reservationList;
     }
 
-    private ReservationDetails generateReservationDetails(Reservation reservation) {
+    public List<ReservationDecision> generateReservationDecisions(Reservation reservation) {
         //Traverse up the hierarchy and determine the decisions that have already been made.
-        LinkedHashMap<UserGroup, ReservationDecision> hierarchyDecisions = new LinkedHashMap<>();
+        List<ReservationDecision> hierarchyDecisions = new ArrayList<>();
         List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(reservation.getResource().owner);
-        UserGroup behalfUserGroup = null;
+
         //This for loop descends to properly order the groups for display on the page.
         for (int i = hierarchyUp.size() - 1; i >= 0; i--) {
             UserGroup userGroup = hierarchyUp.get(i);
-            //This group is the group that the authenticated user is acting on behalf of when making a decision.
-            if (authService.getCurrentUser().userGroups.contains(userGroup))
-                behalfUserGroup = userGroup;
             for (ReservationDecision decision : reservation.getDecisions()) {
                 if (decision.getUserGroup().equals(userGroup)) {
-                    hierarchyDecisions.put(userGroup, decision);
-                    break;
+                    hierarchyDecisions.add(decision);
                 }
             }
-            hierarchyDecisions.putIfAbsent(userGroup, null);
-        }
 
-        ReservationDecision currentDecision = null;
+        }
+        return hierarchyDecisions;
+
+    /*    ReservationDecision currentDecision = null;
         for (ReservationDecision decision : reservation.getDecisions()) {
             if (decision.getUserGroup().equals(behalfUserGroup)) {
                 currentDecision = decision;
@@ -89,7 +81,7 @@ public class ReservationService {
             }
         }
 
-        return new ReservationDetails(reservation, behalfUserGroup, currentDecision, hierarchyDecisions);
+        return new ReservationDetails(reservation, behalfUserGroup, currentDecision, hierarchyDecisions);*/
     }
 
     /**

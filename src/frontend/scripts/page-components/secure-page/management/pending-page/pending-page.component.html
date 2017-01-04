@@ -72,7 +72,47 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-xs-12">
+                                <hr style="border-top: dotted 2px;" />
+                                <div class="form-group">
+                                    <div class="row">
+                                    <div *ngFor="let userGroup of reservationDetailsVar.hierarchyGroups">
 
+                                        <div *ngIf="!(userGroup.root && userGroup.decisions == null)">
+                                            <label>{{userGroup.name}}</label>
+                                            <div *ngIf="reservationDetailsVar.hierarchyDecisions.get(userGroup) != null">
+                                                <label>User {{reservationDetailsVar.hierarchyDecisions.get(userGroup).user.fullName}} </label>
+                                            </div>
+                                            has
+                                                <div *ngIf="reservationDetailsVar.hierarchyDecisions.get(userGroup).approved">
+                                                    <span class="label label-success">approved</span>
+                                                </div>
+                                                <div *ngIf="!reservationDetailsVar.hierarchyDecisions.get(userGroup).approved">
+                                                    <span class="label label-danger">rejected</span>
+                                                </div>
+                                           this Reservation.
+                                        </div>
+                                        <span class="label label-info">Overridden</span>
+                                        by the decision of
+                                        <label>
+                                            {{reservationDetailsVar.overridingDecisions.get(userGroup).user.fullName}}
+                                        </label>
+                                        to
+                                        <div *ngIf="reservationDetailsVar.overridingDecisions.get(userGroup).approved">
+                                            <span class="label label-success">approve</span>
+                                        </div>
+                                        <div *ngIf="!reservationDetailsVar.overridingDecisions.get(userGroup).approved">
+                                            <span class="label label-danger">reject</span>
+                                        </div>
+                                        on behalf of the
+                                        <label>
+                                            {{reservationDetailsVar.overridingDecisions.get(userGroup).userGroup.name}}
+                                        </label>
+                                    </div>
+                                    </div>
+
+                                </div>
+                            </div>
                         </panel-body>
                     </panel>
 

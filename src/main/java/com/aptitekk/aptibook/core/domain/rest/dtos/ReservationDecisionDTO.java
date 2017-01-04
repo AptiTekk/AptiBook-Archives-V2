@@ -18,10 +18,10 @@ import javax.persistence.ManyToOne;
 public class ReservationDecisionDTO {
 
 
-    private Long id;
-    private UserDTO user;
-    private UserGroupDTO userGroup;
-    private ReservationDTO reservation;
-    private boolean approved;
-    private String comment;
+    public Long id;
+    public UserDTO user;
+    public UserGroupDTO userGroup;
+    public ReservationDTO reservation;
+    public boolean approved;
+    public String comment;
 }

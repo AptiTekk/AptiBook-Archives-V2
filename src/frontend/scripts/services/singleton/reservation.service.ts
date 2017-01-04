@@ -7,6 +7,7 @@ import * as moment from "moment";
 import {ResourceCategory} from "../../models/resource-category.model";
 import {ReservationDetails} from "../../models/reservation-details.model";
 import {Response} from "@angular/http";
+import {ReservationDecision} from "../../models/reservation-decision.model";
 
 @Injectable()
 export class ReservationService {
@@ -78,15 +79,26 @@ export class ReservationService {
         });
     }
 
+    public getReservationDecisions(reservation: Reservation): Observable<ReservationDecision[]>{
+        return Observable.create(listner =>{
+            if(reservation == undefined)
+                listner.next(undefined);
+            this.apiService.get("reservations/decisions/" + reservation.id).subscribe(
+                response => listner.next(response),
+                err => listner.next(undefined)
+            )
+        })
+    }
 
-    public getPendingReservationCategories(user: User): Observable<ResourceCategory[]> {
+
+    public getPendingReservations(user: User): Observable<Reservation[]> {
         return Observable.create(listener => {
             if (user == undefined) {
                 listener.next(undefined);
                 console.log("user is error")
             }
             else {
-                this.apiService.get("reservations/pending/categories/user/" + user.id).subscribe(
+                this.apiService.get("reservations/pending/user/" + user.id).subscribe(
                     response => {
                         listener.next(<ResourceCategory[]>response);
                         console.log("no error in service");
