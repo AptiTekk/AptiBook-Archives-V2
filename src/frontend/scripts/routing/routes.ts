@@ -24,6 +24,7 @@ import {UsersPageComponent} from "../page-components/secure-page/configuration-p
 import {ConfigurationContainerComponent} from "../page-components/secure-page/configuration-pages/configuration-container.component";
 import {AllUsersSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/all-users-section/all-users-section.component";
 import {GroupsSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/groups-section/groups-section.component";
+import {MyContainerComponent} from "../page-components/secure-page/my-pages/my-container.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -69,6 +70,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'my',
+                component: MyContainerComponent,
                 children: [
                     {
                         path: 'account',

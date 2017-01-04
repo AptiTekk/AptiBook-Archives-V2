@@ -6,6 +6,7 @@
 
 package com.aptitekk.aptibook.core.services;
 
+import com.aptitekk.aptibook.core.cron.DemoTenantBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -24,14 +25,19 @@ public class DevService {
 
     private SpringProfileService springProfileService;
     private LogService logService;
+    private final DemoTenantBuilder demoTenantBuilder;
 
     private ProcessMonitor devServerMonitor;
     private CommandLineListener commandLineListener;
 
     @Autowired
-    public DevService(SpringProfileService springProfileService, LogService logService) {
+    public DevService(
+            SpringProfileService springProfileService,
+            LogService logService,
+            DemoTenantBuilder demoTenantBuilder) {
         this.springProfileService = springProfileService;
         this.logService = logService;
+        this.demoTenantBuilder = demoTenantBuilder;
     }
 
     @PostConstruct
@@ -172,7 +178,11 @@ public class DevService {
         }
 
         private void processCommand(String command) {
-
+            switch (command) {
+                case "demo":
+                    logService.logInfo(getClass(), "Rebuilding Demo");
+                    demoTenantBuilder.rebuildDemoTenant();
+            }
         }
 
         public void cancel() {

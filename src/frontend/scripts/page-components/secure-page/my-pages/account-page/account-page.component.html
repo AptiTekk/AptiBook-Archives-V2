@@ -4,157 +4,175 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="container">
-    <ol class="breadcrumb">
-        <li><a [routerLink]="['', 'secure']">Home</a></li>
-        <li class="active">My Account</li>
-    </ol>
+<ol class="breadcrumb">
+	<li><a [routerLink]="['', 'secure']">Home</a></li>
+	<li class="active">My Account</li>
+</ol>
 
-    <div class="row">
-        <div class="col-xs-12 col-md-6">
-            <form [formGroup]="personalInformation" (submit)="onPersonalInformationSubmit()">
-                <panel [type]="'primary'" [title]="'Personal Information'">
-                    <panel-body>
-                        <alert #errorAlert [severity]="'danger'"></alert>
-
-                        <alert #personalInfoAlert [severity]="'info'"></alert>
-
-                        <form-group [value]="user.emailAddress"
-                                    [label]="'Email Address'"
-                                    [faIconName]="'at'"
-                                    [readOnly]="true">
-                        </form-group>
-
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6">
-                                <form-group [control]="personalInformation.controls['firstName']"
-                                            [label]="'First Name'"
-                                            [errorMessages]="
+<div class="row">
+	<div class="col-xs-12 col-md-2"
+		 style="margin-bottom: 20px;">
+		<user-image [user]="user"></user-image>
+	</div>
+	<div class="col-xs-12 col-md-6">
+		<form [formGroup]="personalInformation"
+			  (submit)="onPersonalInformationSubmit()">
+			<panel [type]="'primary'"
+				   [title]="'Personal Information'">
+				<panel-body>
+					<alert #errorAlert
+						   [severity]="'danger'"></alert>
+					
+					<alert #personalInfoAlert
+						   [severity]="'info'"></alert>
+					
+					<form-group [value]="user.emailAddress"
+								[label]="'Email Address'"
+								[faIconName]="'at'"
+								[readOnly]="true">
+					</form-group>
+					
+					<div class="row">
+						<div class="col-xs-12 col-md-6">
+							<form-group [control]="personalInformation.controls['firstName']"
+										[label]="'First Name'"
+										[errorMessages]="
                                             {
                                             pattern: 'These characters are not allowed:  < > ; =',
                                             maxlength: 'This must be 30 characters or less.'
                                             }">
-                                </form-group>
-                            </div>
-                            <div class="col-xs-12 col-md-6">
-                                <form-group [control]="personalInformation.controls['lastName']"
-                                            [label]="'Last Name'"
-                                            [errorMessages]="
+							</form-group>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<form-group [control]="personalInformation.controls['lastName']"
+										[label]="'Last Name'"
+										[errorMessages]="
                                             {
                                             pattern: 'These characters are not allowed:  < > ; =',
                                             maxlength: 'This must be 30 characters or less.'
                                             }">
-                                </form-group>
-                            </div>
-                        </div>
-
-                        <form-group [control]="personalInformation.controls['phoneNumber']"
-                                    [label]="'Phone Number'"
-                                    [faIconName]="'phone'"
-                                    [errorMessages]="
+							</form-group>
+						</div>
+					</div>
+					
+					<form-group [control]="personalInformation.controls['phoneNumber']"
+								[label]="'Phone Number'"
+								[faIconName]="'phone'"
+								[errorMessages]="
                                     {
                                     pattern: 'These characters are not allowed:  < > ; =',
                                     maxlength: 'This must be 30 characters or less.'
                                     }">
-                        </form-group>
-
-                        <form-group [control]="personalInformation.controls['location']"
-                                    [label]="'Location'"
-                                    [faIconName]="'map-marker'"
-                                    [errorMessages]="
+					</form-group>
+					
+					<form-group [control]="personalInformation.controls['location']"
+								[label]="'Location'"
+								[faIconName]="'map-marker'"
+								[errorMessages]="
                                     {
                                     pattern: 'These characters are not allowed:  < > ; =',
                                     maxlength: 'This must be 250 characters or less.'
                                     }">
-                        </form-group>
-                    </panel-body>
-                    <panel-footer>
-                        <button class="btn btn-primary"
-                                disabled="{{personalInformation.invalid || personalInfoAlert.isDisplayed() || errorAlert.isDisplayed()  || !doPasswordsMatch() ? 'disabled' : null}}">
-                            Save Changes
-                        </button>
-                    </panel-footer>
-                </panel>
-            </form>
-
-            <form (submit)="onChangePasswordSubmit()">
-                <panel [type]="'primary'" [title]="'Change Password'">
-                    <panel-body>
-
-                        <alert #passwordsInfoAlert [severity]="'info'"></alert>
-
-                        <div class="row">
-                            <div class="col-xs-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="newPasswordField">New Password:</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-asterisk"></i>
-                                        </div>
-                                        <input type="password" name="newPassword" id="newPasswordField"
-                                               class="form-control"
-                                               [(ngModel)]="user.newPassword" maxlength="30">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-md-6">
-                                <div class="form-group">
-                                    <label for="confirmPasswordField">Confirm Password:</label>
-                                    <div class="input-group">
-                                        <div class="input-group-addon">
-                                            <i class="fa fa-asterisk"></i>
-                                        </div>
-                                        <input type="password" name="confirmPassword" id="confirmPasswordField"
-                                               class="form-control" [(ngModel)]="user.confirmPassword" maxlength="30">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </panel-body>
-                    <panel-footer>
-                        <button class="btn btn-primary"
-                                disabled="{{personalInformation.invalid || passwordsInfoAlert.isDisplayed() || errorAlert.isDisplayed() || !doPasswordsMatch() || !user.newPassword ? 'disabled' : null}}">
-                            Save Changes
-                        </button>
-                        <div *ngIf="!doPasswordsMatch()" style="display: inline-block; color: darkred">
-                            The Passwords do not match!
-                        </div>
-                    </panel-footer>
-                </panel>
-            </form>
-        </div>
-        <div class="col-xs-12 col-md-4">
-
-            <div class="row">
-                <div class="col-xs-12" *ngIf="user.admin || user.userGroups.length > 0">
-                    <panel [type]="'primary'" [title]="'Assigned Groups'">
-                        <panel-body>
-                            <div *ngIf="user.admin">
-                                <p>The admin account is automatically granted full permissions. No Groups need to be
-                                    assigned.</p>
-                            </div>
-                            <div *ngIf="!user.admin">
-                                <p style="font-weight: bold">Your assigned groups are highlighted.</p>
-                                <tree [selectable]="false"
-                                      [formControl]="personalInformation?.controls.userGroups">
-                                </tree>
-                            </div>
-                        </panel-body>
-                    </panel>
-                </div>
-            </div>
-
-            <div class="row">
-                <div class="col-xs-12">
-                    <panel [type]="'primary'" [title]="'Email Notification Preferences'">
-                        <panel-body>
-
-                        </panel-body>
-                    </panel>
-                </div>
-            </div>
-
-        </div>
-    </div>
-
+					</form-group>
+				</panel-body>
+				<panel-footer>
+					<button class="btn btn-primary"
+							disabled="{{personalInformation.invalid || personalInfoAlert.isDisplayed() || errorAlert.isDisplayed()  || !doPasswordsMatch() ? 'disabled' : null}}">
+						Save Changes
+					</button>
+				</panel-footer>
+			</panel>
+		</form>
+		
+		<form (submit)="onChangePasswordSubmit()">
+			<panel [type]="'primary'"
+				   [title]="'Change Password'">
+				<panel-body>
+					
+					<alert #passwordsInfoAlert
+						   [severity]="'info'"></alert>
+					
+					<div class="row">
+						<div class="col-xs-12 col-md-6">
+							<div class="form-group">
+								<label for="newPasswordField">New Password:</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-asterisk"></i>
+									</div>
+									<input type="password"
+										   name="newPassword"
+										   id="newPasswordField"
+										   class="form-control"
+										   [(ngModel)]="user.newPassword"
+										   maxlength="30">
+								</div>
+							</div>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<div class="form-group">
+								<label for="confirmPasswordField">Confirm Password:</label>
+								<div class="input-group">
+									<div class="input-group-addon">
+										<i class="fa fa-asterisk"></i>
+									</div>
+									<input type="password"
+										   name="confirmPassword"
+										   id="confirmPasswordField"
+										   class="form-control"
+										   [(ngModel)]="user.confirmPassword"
+										   maxlength="30">
+								</div>
+							</div>
+						</div>
+					</div>
+				</panel-body>
+				<panel-footer>
+					<button class="btn btn-primary"
+							disabled="{{personalInformation.invalid || passwordsInfoAlert.isDisplayed() || errorAlert.isDisplayed() || !doPasswordsMatch() || !user.newPassword ? 'disabled' : null}}">
+						Save Changes
+					</button>
+					<div *ngIf="!doPasswordsMatch()"
+						 style="display: inline-block; color: darkred">
+						The Passwords do not match!
+					</div>
+				</panel-footer>
+			</panel>
+		</form>
+	</div>
+	<div class="col-xs-12 col-md-4">
+		
+		<div class="row">
+			<div class="col-xs-12"
+				 *ngIf="user.admin || user.userGroups.length > 0">
+				<panel [type]="'primary'"
+					   [title]="'Assigned Groups'">
+					<panel-body>
+						<div *ngIf="user.admin">
+							<p>The admin account is automatically granted full permissions. No Groups need to be
+							   assigned.</p>
+						</div>
+						<div *ngIf="!user.admin">
+							<p style="font-weight: bold">Your assigned groups are highlighted.</p>
+							<tree [selectable]="false"
+								  [formControl]="personalInformation?.controls.userGroups">
+							</tree>
+						</div>
+					</panel-body>
+				</panel>
+			</div>
+		</div>
+		
+		<div class="row">
+			<div class="col-xs-12">
+				<panel [type]="'primary'"
+					   [title]="'Email Notification Preferences'">
+					<panel-body>
+					
+					</panel-body>
+				</panel>
+			</div>
+		</div>
+	
+	</div>
 </div>

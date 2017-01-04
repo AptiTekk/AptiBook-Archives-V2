@@ -55,6 +55,7 @@ export class AllUsersSectionComponent implements OnInit {
             .subscribe(users => {
                 this.users = users.filter(user => !user.admin);
                 if (this.selectedUser) {
+                    console.log("Selecting Selected User");
                     this.selectRowByUser(this.selectedUser);
                     this.editingSelectedUser = false;
                 }
@@ -116,7 +117,7 @@ export class AllUsersSectionComponent implements OnInit {
             .deleteUser(this.selectedUser)
             .subscribe(
                 success => {
-                    this.onUserDeselected();
+                    this.dataTable.deselectRows();
                     this.userService.fetchUsers()
                 }
             );

@@ -28,7 +28,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
     @Input() selectableRows: boolean;
     @Output() rowSelected: EventEmitter<number> = new EventEmitter<number>();
     @Output() rowDeselected: EventEmitter<number> = new EventEmitter<number>();
-    private selectedRow: number;
+    private selectedRow: number = -1;
 
     @Input() responsive: boolean = true;
     @Input() bodyHeight: string;
@@ -71,7 +71,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
 
         // Set up Event Listeners
         this.datatable.on('select', (e, dt: DataTable, type, indexes) => {
-            this.selectedRow = null;
+            this.selectedRow = -1;
             if (type === 'row') {
                 this.selectedRow = indexes[0];
                 this.rowSelected.emit(this.selectedRow);
@@ -79,7 +79,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
         });
 
         this.datatable.on('deselect', (e, dt: DataTable, type, indexes) => {
-            this.selectedRow = null;
+            this.selectedRow = -1;
             if (type === 'row') {
                 this.rowDeselected.emit(indexes[0]);
             }
@@ -174,9 +174,20 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
     }
 
     /**
+     * Deselects all rows.
+     */
+    deselectRows() {
+        if (this.datatable) {
+            this.selectedRow = -1;
+            this.datatable.rows().deselect();
+        }
+    }
+
+    /**
      * Schedules a re-draw to be performed.
      */
     public scheduleRedraw(invalidateColumns: boolean = false) {
         this.redrawOptions = {invalidateColumns};
     }
+
 }

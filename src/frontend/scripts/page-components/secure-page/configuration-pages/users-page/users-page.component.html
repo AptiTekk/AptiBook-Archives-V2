@@ -4,17 +4,13 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="container-fluid">
+<ol class="breadcrumb">
+	<li><a [routerLink]="['', 'secure']">Home</a></li>
+	<li class="active">Configuration</li>
+	<li class="active">Users</li>
+</ol>
 
-    <ol class="breadcrumb">
-        <li><a [routerLink]="['', 'secure']">Home</a></li>
-        <li class="active">Configuration</li>
-        <li class="active">Users</li>
-    </ol>
+<horizontal-navigation [links]="horizontalLinks">
+</horizontal-navigation>
 
-    <horizontal-navigation [links]="horizontalLinks">
-    </horizontal-navigation>
-
-   <router-outlet></router-outlet>
-
-</div>
+<router-outlet></router-outlet>
