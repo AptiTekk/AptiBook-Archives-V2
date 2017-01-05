@@ -21,13 +21,13 @@ import {ReservationDecision} from "../../../../models/reservation-decision.model
 export class PendingPageComponent {
     user: User;
     pendingReservations: Reservation[]= [];
-    reservationDecisions: ReservationDecision[] = [];
+    displayCategories: ResourceCategory[] = [];
     constructor(private reservationService: ReservationService, authService: AuthService) {
         authService.getUser().subscribe(user => this.user = user);
         reservationService.getPendingReservations(this.user).subscribe(reservations => {
                 this.pendingReservations = reservations;
         });
-
+        this.pendingReservations.forEach(item => this.displayCategories.push(item.resource.resourceCategory));
     }
 
 
@@ -36,12 +36,14 @@ export class PendingPageComponent {
     }
 
     getReservationDecisions(reservation: Reservation){
+        let reservationDecisions: ReservationDecision[] = [];
         if(reservation == undefined){
             console.log("passed if");
             this.reservationService.getReservationDecisions(reservation).subscribe(decisions =>
-                this.reservationDecisions = decisions
+                reservationDecisions = decisions
             );
         }
+        return reservationDecisions;
     }
 
 

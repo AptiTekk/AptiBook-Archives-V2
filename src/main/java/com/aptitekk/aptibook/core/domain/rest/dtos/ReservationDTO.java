@@ -35,6 +35,8 @@ public class ReservationDTO {
 
     public ResourceDTO.WithoutReservations resource;
 
+
+
     public UserDTO.WithoutUserGroups user;
 
     public boolean approved;
