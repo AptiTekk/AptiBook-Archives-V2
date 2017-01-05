@@ -80,12 +80,14 @@ export class ReservationService {
     }
 
     public getReservationDecisions(reservation: Reservation): Observable<ReservationDecision[]>{
-        return Observable.create(listner =>{
-            if(reservation == undefined)
-                listner.next(undefined);
+        console.log("in function");
+        return Observable.create(listener =>{
             this.apiService.get("reservations/decisions/" + reservation.id).subscribe(
-                response => listner.next(response),
-                err => listner.next(undefined)
+                response =>{
+                    console.log("response is perfect");
+                    listener.next(response);
+                },
+                err => listener.next(undefined)
             )
         })
     }

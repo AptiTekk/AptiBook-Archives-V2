@@ -13,6 +13,7 @@ import {ResourceCategory} from "../../../../models/resource-category.model";
 import moment = require("moment");
 import {Reservation} from "../../../../models/reservation.model";
 import {ReservationDecision} from "../../../../models/reservation-decision.model";
+import {UserGroup} from "../../../../models/user-group.model";
 
 @Component({
     selector: 'pending-page',
@@ -21,7 +22,13 @@ import {ReservationDecision} from "../../../../models/reservation-decision.model
 export class PendingPageComponent {
     user: User;
     pendingReservations: Reservation[]= [];
+    behalfUserGroup: UserGroup;
     displayCategories: ResourceCategory[] = [];
+    userGroupHierarchy: UserGroup[] = [];
+    lowerApprovalOverrides: UserGroup[] = [];
+    lowerRejectionOverrides: UserGroup[] = [];
+
+
     constructor(private reservationService: ReservationService, authService: AuthService) {
         authService.getUser().subscribe(user => this.user = user);
         reservationService.getPendingReservations(this.user).subscribe(reservations => {
@@ -37,16 +44,52 @@ export class PendingPageComponent {
 
     getReservationDecisions(reservation: Reservation){
         let reservationDecisions: ReservationDecision[] = [];
-        if(reservation == undefined){
             console.log("passed if");
             this.reservationService.getReservationDecisions(reservation).subscribe(decisions =>
                 reservationDecisions = decisions
             );
-        }
-        return reservationDecisions;
+
+        this.organizeDecisions(reservationDecisions);
     }
 
+    organizeDecisions(reservationDecisions: ReservationDecision[]){
+        console.log("Size of decision list: " + reservationDecisions.length);
+        let userGroup: UserGroup[] = [];
+        reservationDecisions.forEach(item =>{
+            userGroup.push(item.userGroup);
+        });
+        let reachedUserGroup: boolean;
+        let behalfUserGroup: UserGroup;
+        reachedUserGroup = false;
 
+            userGroup.forEach(item => {
+                this.user.userGroups.forEach(userG => {
+                    if (userG === item) {
+                        behalfUserGroup = userG;
+                        reachedUserGroup = true;
+                    }
+                });
+                if(reachedUserGroup){
+                    reservationDecisions.forEach(decision =>{
+                        if(decision.userGroup === behalfUserGroup){
+                            if(decision.reservation.approved == null){
+                                this.lowerApprovalOverrides.push(decision.userGroup);
+                                this.lowerRejectionOverrides.push(decision.userGroup);
+                            }
+                            if(decision.reservation.approved){
+                                this.lowerRejectionOverrides.push(decision.userGroup);
+                            }else if(!decision.reservation.approved){
+                                this.lowerApprovalOverrides.push(decision.userGroup);
+                            }
+                        }
+                    })
+                }
+
+            });
+
+        reachedUserGroup = false;
+        this.behalfUserGroup = behalfUserGroup;
+    }
 
 }
 
