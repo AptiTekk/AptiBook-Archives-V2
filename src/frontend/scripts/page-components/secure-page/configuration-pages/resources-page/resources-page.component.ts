@@ -1,4 +1,4 @@
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ResourceCategoryService} from "../../../../services/singleton/resource-category.service";
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import {ActivatedRoute, Router} from "@angular/router";
@@ -11,7 +11,7 @@ import {ResourceService} from "../../../../services/singleton/resource.service";
     templateUrl: 'resources-page.component.html',
     styleUrls: ['resources-page.component.css']
 })
-export class ResourcesPageComponent {
+export class ResourcesPageComponent implements OnInit {
 
     currentResourceCategory: ResourceCategory;
     resourceCategories: ResourceCategory[];
@@ -19,15 +19,17 @@ export class ResourcesPageComponent {
     resourceForDeletion: Resource;
 
     constructor(private router: Router,
-                route: ActivatedRoute,
+                private route: ActivatedRoute,
                 protected apiService: APIService,
                 private resourceCategoryService: ResourceCategoryService,
                 private resourceService: ResourceService) {
+    }
 
-        resourceCategoryService.getResourceCategories().subscribe(resourceCategories => {
+    ngOnInit(): void {
+        this.resourceCategoryService.getResourceCategories().subscribe(resourceCategories => {
             this.resourceCategories = resourceCategories;
 
-            route.params.subscribe(params => {
+            this.route.params.subscribe(params => {
                 let resourceCategoryName = params['resourceCategory'];
                 if (resourceCategoryName) {
                     let filteredCategories = this.resourceCategories.filter(resourceCategory => resourceCategory.name.toLowerCase() === resourceCategoryName.toLowerCase());

@@ -65,7 +65,7 @@ export class NewResourceModalComponent {
             this.resourceCategory,
             this.formGroup.controls['name'].value,
             this.formGroup.controls['needsApproval'].value,
-            this.formGroup.controls['owner'].value
+            [].concat(this.formGroup.controls['owner'].value)[0]
         ).subscribe(
             resource => {
                 if (resource) {

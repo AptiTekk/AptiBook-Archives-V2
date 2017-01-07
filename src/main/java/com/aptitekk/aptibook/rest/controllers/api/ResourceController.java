@@ -20,7 +20,6 @@ import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,7 +38,6 @@ import java.util.List;
 @APIController
 public class ResourceController extends APIControllerAbstract {
 
-    private static final String RESOURCE_NO_IMAGE_PATH = "/static/resource-no-image.jpg";
     private static final List<String> ACCEPTED_IMAGE_TYPES = Arrays.asList("image/jpeg", "image/pjpeg", "image/png");
 
     private final ResourceRepository resourceRepository;
@@ -48,7 +46,6 @@ public class ResourceController extends APIControllerAbstract {
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
     private final ReservationService reservationService;
-    private final ResourceLoader resourceLoader;
 
     @Autowired
     public ResourceController(ResourceRepository resourceRepository,
@@ -56,15 +53,13 @@ public class ResourceController extends APIControllerAbstract {
                               FileRepository fileRepository,
                               UserGroupRepository userGroupRepository,
                               UserGroupService userGroupService,
-                              ReservationService reservationService,
-                              ResourceLoader resourceLoader) {
+                              ReservationService reservationService) {
         this.resourceRepository = resourceRepository;
         this.resourceCategoryRepository = resourceCategoryRepository;
         this.fileRepository = fileRepository;
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.reservationService = reservationService;
-        this.resourceLoader = resourceLoader;
     }
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -186,7 +181,7 @@ public class ResourceController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
-    public ResponseEntity<?> addResource(@RequestBody ResourceDTO resourceDTO) {
+    public ResponseEntity<?> addResource(@RequestBody ResourceDTO.WithoutReservations resourceDTO) {
         if (!authService.isUserSignedIn())
             return unauthorized();
         else if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL))

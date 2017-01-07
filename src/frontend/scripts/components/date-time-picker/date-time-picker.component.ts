@@ -129,14 +129,12 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
 
         if (this.minDate && currentDate) {
             if (!currentDate.isAfter(this.minDate)) {
-                console.log("Not After.");
                 currentDate = DateTimePickerComponent.removeTime(this.minDate, true).add(1, 'minute');
                 this.setDate(currentDate);
                 return false;
             }
         }
 
-        console.log("After.");
         return true;
     }
 

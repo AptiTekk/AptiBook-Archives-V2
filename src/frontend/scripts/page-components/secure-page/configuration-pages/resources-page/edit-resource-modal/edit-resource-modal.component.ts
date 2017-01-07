@@ -63,7 +63,7 @@ export class EditResourceModalComponent {
 
         this.resource.name = this.formGroup.controls['name'].value;
         this.resource.needsApproval = this.formGroup.controls['needsApproval'].value;
-        this.resource.owner = this.formGroup.controls['owner'].value;
+        this.resource.owner = [].concat(this.formGroup.controls['owner'].value)[0];
 
         this.resourceService
             .patchResource(this.resource)
