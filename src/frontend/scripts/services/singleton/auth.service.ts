@@ -49,9 +49,14 @@ export class AuthService {
                 "Authorization": "Basic " + btoa(emailAddress + ":" + password)
             })).subscribe(
                 response => {
-                    this.user.next(<User>response);
-                    this.authMessage.next(undefined);
-                    listener.next(true);
+                    if (response) {
+                        this.user.next(<User>response);
+                        this.authMessage.next(undefined);
+                        listener.next(true);
+                    } else {
+                        this.user.next(undefined);
+                        listener.next(false);
+                    }
                 },
                 err => {
                     this.user.next(undefined);

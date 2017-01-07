@@ -9,7 +9,6 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
-import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
@@ -47,21 +46,25 @@ public class UserGroupController extends APIControllerAbstract {
 
 
     @RequestMapping(value = "/userGroups/hierarchyDown/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserGroupHierarchyDown(@PathVariable Long id) {
+    public ResponseEntity<?> getUserGroupsHierarchyDown(@PathVariable Long id) {
         if (id == null)
             return badRequest("Missing ID");
 
-        if (authService.isUserSignedIn()) {
-            User user = authService.getCurrentUser();
-            List<UserGroup> userGroupList = new ArrayList<>();
-            if (user.isAdmin() || user.getId().equals(id)) {
-                for (UserGroup userGroup : user.userGroups) {
-                    userGroupList.addAll(userGroupService.getHierarchyDown(userGroup));
-                }
-                return ok(modelMapper.map(userGroupList, new TypeToken<List<UserGroupDTO>>() {
-                }.getType()));
-            }
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        // Ensure that the user requesting is an admin or is the same user as being requested.
+        User user = authService.getCurrentUser();
+        if (!user.isAdmin() && !user.getId().equals(id))
+            return noPermission();
+
+        // Add all usergroups in the hierarchy belonging to the user
+        List<UserGroup> userGroupList = new ArrayList<>();
+        for (UserGroup userGroup : user.userGroups) {
+            userGroupList.addAll(userGroupService.getHierarchyDown(userGroup));
         }
-        return noPermission();
+
+        return ok(modelMapper.map(userGroupList, new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
+        }.getType()));
     }
 }

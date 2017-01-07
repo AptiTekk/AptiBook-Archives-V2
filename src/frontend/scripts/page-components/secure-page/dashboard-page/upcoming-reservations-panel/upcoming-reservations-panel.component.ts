@@ -6,8 +6,7 @@ import {ReservationService} from "../../../../services/singleton/reservation.ser
 @Component({
     selector: 'upcoming-reservations-panel',
     templateUrl: 'upcoming-reservations-panel.component.html',
-    styleUrls: ['upcoming-reservations-panel.component.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['upcoming-reservations-panel.component.css']
 })
 export class UpcomingReservationsPanelComponent {
 
@@ -15,7 +14,7 @@ export class UpcomingReservationsPanelComponent {
 
     constructor(authService: AuthService, reservationService: ReservationService) {
         authService.getUser().subscribe(user => {
-            if (user != undefined)
+            if (user)
                 reservationService.getUpcomingUserReservations(user).subscribe(reservations => this.reservations = reservations);
         });
     }

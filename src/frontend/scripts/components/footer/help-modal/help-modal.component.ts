@@ -1,4 +1,4 @@
-import {Component, ViewChild} from "@angular/core";
+import {Component, ViewChild, OnInit} from "@angular/core";
 import {ModalComponent} from "../../modal/modal.component";
 import {HelpService} from "../../../services/singleton";
 
@@ -6,15 +6,18 @@ import {HelpService} from "../../../services/singleton";
     selector: 'help-modal',
     templateUrl: 'help-modal.component.html'
 })
-export class HelpModalComponent {
+export class HelpModalComponent implements OnInit {
 
     @ViewChild('modal')
     modal: ModalComponent;
 
     helpTopics: [{title: string, slug: string}];
 
-    constructor(helpService: HelpService) {
-        helpService.getCurrentHelpTopics().subscribe(helpTopics => this.helpTopics = helpTopics);
+    constructor(private helpService: HelpService) {
+    }
+
+    ngOnInit(): void {
+        this.helpService.getCurrentHelpTopics().subscribe(helpTopics => this.helpTopics = helpTopics);
     }
 
     openModal() {

@@ -12,14 +12,18 @@ import {
 import {FrontPageGuard, SecureGuard} from "./guards";
 import {SearchResultsPageComponent} from "../page-components/secure-page/search-results-page/search-results-page.component";
 import {SearchGuard} from "./guards/search.guard";
-import {CalendarPageComponent} from "../page-components/secure-page/management/calendar-page/calendar-page.component";
-import {PendingPageComponent} from "../page-components/secure-page/management/pending-page/pending-page.component";
-import {ApprovedPageComponent} from "../page-components/secure-page/management/approved-page/approved-page.component";
-import {RejectedPageComponent} from "../page-components/secure-page/management/rejected-page/rejected-page.component";
-import {ManagementContainerComponent} from "../page-components/secure-page/management/management-container.component";
+import {CalendarPageComponent} from "../page-components/secure-page/management-pages/calendar-page/calendar-page.component";
+import {PendingPageComponent} from "../page-components/secure-page/management-pages/pending-page/pending-page.component";
+import {ApprovedPageComponent} from "../page-components/secure-page/management-pages/approved-page/approved-page.component";
+import {RejectedPageComponent} from "../page-components/secure-page/management-pages/rejected-page/rejected-page.component";
+import {ManagementContainerComponent} from "../page-components/secure-page/management-pages/management-container.component";
 import {ReservationDetailsComponent} from "../page-components/secure-page/search-results-page/reservation-details-page/reservation-details-page.component";
 import {ResourcesPageComponent} from "../page-components/secure-page/configuration-pages/resources-page/resources-page.component";
 import {SuccessPageComponent} from "../page-components/secure-page/search-results-page/success-page/success-page.component";
+import {UsersPageComponent} from "../page-components/secure-page/configuration-pages/users-page/users-page.component";
+import {ConfigurationContainerComponent} from "../page-components/secure-page/configuration-pages/configuration-container.component";
+import {AllUsersSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/all-users-section/all-users-section.component";
+import {GroupsSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/groups-section/groups-section.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -82,6 +86,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'configuration',
+                component: ConfigurationContainerComponent,
                 children: [
                     {
                         path: 'resources',
@@ -90,6 +95,24 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                     {
                         path: 'resources/:resourceCategory',
                         component: ResourcesPageComponent,
+                    },
+                    {
+                        path: 'users',
+                        component: UsersPageComponent,
+                        children: [
+                            {
+                                path: 'all',
+                                component: AllUsersSectionComponent
+                            },
+                            {
+                                path: 'groups',
+                                component: GroupsSectionComponent
+                            },
+                            {
+                                path: '**',
+                                redirectTo: 'all'
+                            }
+                        ]
                     },
                     {
                         path: '**',

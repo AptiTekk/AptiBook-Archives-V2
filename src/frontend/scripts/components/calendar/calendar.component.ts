@@ -2,60 +2,51 @@ import {
     Component,
     ViewChild,
     AfterViewInit,
-    ViewEncapsulation,
     Input,
     Output,
     EventEmitter,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    OnInit
 } from "@angular/core";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import {ResourceCategory} from "../../models/resource-category.model";
 import {UserGroup} from "../../models/user-group.model";
-declare const $: any;
 
 @Component({
     selector: 'calendar',
     templateUrl: 'calendar.component.html',
-    styleUrls: ['calendar.component.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['calendar.component.css']
 })
-export class CalendarComponent implements AfterViewInit, OnChanges {
+export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     @ViewChild('calendarContainer')
     calendarContainer;
 
-    @Input()
-    events: [{id: number, title: string, start: any, end: any, status: string}];
+    @Input() events: [{id: number, title: string, start: any, end: any, status: string}];
 
-    @Input()
-    eventFeedUrl: string;
+    @Input() eventFeedUrl: string;
 
-    @Input()
-    allowSelection: boolean = true;
+    @Input() allowSelection: boolean = true;
 
-    @Input()
-    hiddenStatuses: string[];
+    @Input() hiddenStatuses: string[];
 
-    @Input()
-    filterByUsers: User[];
+    @Input() filterByUsers: User[];
 
-    @Input()
-    filterByUserGroupOwners: UserGroup[];
+    @Input() filterByUserGroupOwners: UserGroup[];
 
-    @Input()
-    filterByResourceCategories: ResourceCategory[];
+    @Input() filterByResourceCategories: ResourceCategory[];
 
-    @Input()
-    title: string;
+    @Input() title: string;
 
-    @Output()
-    eventSelected: EventEmitter<number> = new EventEmitter<number>();
+    @Output() eventSelected: EventEmitter<any> = new EventEmitter<any>();
 
     private calendarBuilt: boolean = false;
 
-    constructor() {
+    private calendar: any;
+
+    ngOnInit(): void {
         //Re-render and re-size calendar when window size is changed
         window.onresize = (event) => {
             this.refreshCalendar();
@@ -76,11 +67,11 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                     case 'events':
                     case 'eventFeedUrl':
                         //Remove any existing event sources
-                        $(this.calendarContainer.nativeElement).fullCalendar('removeEventSources');
+                        this.calendar.fullCalendar('removeEventSources');
 
                         if (this.events || this.eventFeedUrl) {
                             //Add the new event source
-                            $(this.calendarContainer.nativeElement).fullCalendar('addEventSource',
+                            this.calendar.fullCalendar('addEventSource',
                                 this.getEventsToUse())
                         }
                         break;
@@ -103,7 +94,8 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
     }
 
     private buildCalendar(): void {
-        $(this.calendarContainer.nativeElement).fullCalendar({
+        this.calendar = $(this.calendarContainer.nativeElement);
+        this.calendar.fullCalendar({
             height: 'parent',
             header: {
                 left: 'title',
@@ -124,23 +116,16 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
                         return false;
 
                     // Remove events not matching filtered users
-                    if (this.filterByUsers && this.filterByUsers.filter(user => user.id === event.user.id).length == 0)
+                    if (this.filterByUsers && this.filterByUsers.filter(user => user.id === event.user.id).length === 0)
                         return false;
 
                     // Remove events not matching filtered resource categories
-                    if (this.filterByResourceCategories && this.filterByResourceCategories.filter(category => category.id === event.resource.resourceCategory.id).length == 0)
+                    if (this.filterByResourceCategories && this.filterByResourceCategories.filter(category => category.id === event.resource.resourceCategory.id).length === 0)
                         return false;
-                    //test commit
 
-                    //test commmit2
                     // Remove events whose resources do not match the filtered user group owners
-                    //TODO: Get back end method from JSF version, check against event resource owner, implement in calendar page
-                   // if(event.resource.owner)
-                    if(this.filterByUserGroupOwners && this.filterByUserGroupOwners.filter(owner=> owner.id === event.resource.owner.id).length == 0)
+                    if (this.filterByUserGroupOwners && this.filterByUserGroupOwners.filter(owner => owner.id === event.resource.owner.id).length === 0)
                         return false;
-
-                    if (this.filterByUserGroupOwners)
-                        this.filterByUserGroupOwners.forEach(owner => console.log("Owner" + owner));
 
                     // If all is well, add the status to the class list.
                     let domElement: HTMLLinkElement = element[0];
@@ -158,7 +143,7 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
             }
         });
 
-        if (this.title != undefined)
+        if (this.title)
             this.calendarContainer.nativeElement.getElementsByClassName('fc-center')[0].innerHTML = "<h3>" + this.title + "</h3>";
 
         this.calendarBuilt = true;
@@ -166,10 +151,10 @@ export class CalendarComponent implements AfterViewInit, OnChanges {
 
     private refreshCalendar(refreshEvents: boolean = false): void {
         if (this.calendarBuilt) {
-            $(this.calendarContainer.nativeElement).fullCalendar('render');
+            this.calendar.fullCalendar('render');
 
             if (refreshEvents)
-                $(this.calendarContainer.nativeElement).fullCalendar('rerenderEvents');
+                this.calendar.fullCalendar('rerenderEvents');
         }
     }
 }

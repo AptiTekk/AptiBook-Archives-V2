@@ -15,6 +15,9 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.time.format.DateTimeParseException;
 
 @Service
 public class CookieService {
@@ -36,14 +39,19 @@ public class CookieService {
      * @param data The cookie data to encrypt.
      * @return The encrypted cookie data.
      */
-    private String encryptCookieData(String data) {
+    private String encryptCookieData(String data, int maxAgeSeconds) {
         if (data == null)
             return null;
+
+        // Get the current time and add the max age to it to determine when this cookie will expire.
+        LocalDateTime expireDateTime = LocalDateTime.now();
+        expireDateTime = expireDateTime.plusSeconds(maxAgeSeconds);
 
         BasicTextEncryptor basicTextEncryptor = new BasicTextEncryptor();
         basicTextEncryptor.setPassword(ENCRYPTION_KEY);
         try {
-            return basicTextEncryptor.encrypt(data);
+            // Store the data and the expires date together.
+            return basicTextEncryptor.encrypt(data + "EXPIRES" + expireDateTime.format(DateTimeFormatter.ISO_LOCAL_DATE_TIME));
         } catch (EncryptionOperationNotPossibleException e) {
             if (e.getMessage() != null)
                 logService.logException(getClass(), e, "Could not encrypt auth cookie");
@@ -66,7 +74,27 @@ public class CookieService {
         BasicTextEncryptor basicTextEncryptor = new BasicTextEncryptor();
         basicTextEncryptor.setPassword(ENCRYPTION_KEY);
         try {
-            return basicTextEncryptor.decrypt(encryptedData);
+            String decrypted = basicTextEncryptor.decrypt(encryptedData);
+
+            //Check for encrypted expires time
+            String[] split = decrypted.split("EXPIRES");
+            if (split.length != 2)
+                return null;
+            else {
+                //Check to make sure the current time is not after the expires time.
+                try {
+                    LocalDateTime expiresDateTime = LocalDateTime.parse(split[1], DateTimeFormatter.ISO_LOCAL_DATE_TIME);
+
+                    // Return null if the current time is after the expires time (this cookie has expired, and the user is still trying to use it).
+                    if (LocalDateTime.now().isAfter(expiresDateTime))
+                        return null;
+
+                    // All checked out, return the data.
+                    return split[0];
+                } catch (DateTimeParseException e) {
+                    return null;
+                }
+            }
         } catch (EncryptionOperationNotPossibleException e) {
             if (e.getMessage() != null)
                 logService.logException(getClass(), e, "Could not decrypt auth cookie");
@@ -80,7 +108,7 @@ public class CookieService {
         if (key == null || value == null || tenant == null)
             return;
 
-        Cookie cookie = new Cookie(key, encryptCookieData(value));
+        Cookie cookie = new Cookie(key, encryptCookieData(value, maxAgeSeconds));
 
         if (springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
             cookie.setSecure(true);

@@ -13,8 +13,7 @@ import {ReservationDetailsService} from "../../../services/singleton/reservation
 @Component({
     selector: 'search-results-page',
     templateUrl: 'search-results-page.component.html',
-    styleUrls: ['search-results-page.component.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['search-results-page.component.css']
 })
 export class SearchResultsPageComponent {
 

@@ -1,0 +1,48 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div class="row">
+    <div class="col-xs-12 col-md-8">
+        <div class="btn-toolbar">
+            <button class="btn btn-primary" (click)="onAddNewUser()">Add New User</button>
+        </div>
+        <hr/>
+        <datatable [selectableRows]="true">
+            <datatable-column [title]="'Email Address'">
+                <datatable-cell *ngFor="let user of users"
+                                (selected)="onUserSelected(user)"
+                                (deselected)="onUserDeselected(user)">
+                    {{user.emailAddress}}
+                </datatable-cell>
+            </datatable-column>
+            <datatable-column [title]="'First Name'">
+                <datatable-cell *ngFor="let user of users">
+                    {{user.firstName}}
+                </datatable-cell>
+            </datatable-column>
+            <datatable-column [title]="'Last Name'">
+                <datatable-cell *ngFor="let user of users">
+                    {{user.lastName}}
+                </datatable-cell>
+            </datatable-column>
+            <datatable-column [title]="'Assigned User Groups'">
+                <datatable-cell *ngFor="let user of users">
+                    {{getUserGroupsNames(user).join(', ')}}
+                </datatable-cell>
+            </datatable-column>
+        </datatable>
+    </div>
+    <div class="col-xs-12 col-md-4">
+        <panel id="selected-user-panel" class="has-footer" [type]="'primary'" [title]="'Selected User'">
+            <panel-body>
+                <h1>{{selectedUser?.emailAddress}}</h1>
+            </panel-body>
+            <panel-footer>
+                <button class="btn btn-default">Edit User</button>
+            </panel-footer>
+        </panel>
+    </div>
+</div>

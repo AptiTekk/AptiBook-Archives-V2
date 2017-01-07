@@ -39,7 +39,7 @@ export class SignInComponent implements AfterViewInit {
         //Check for errors in the parameters
         this.activeRoute.queryParams.subscribe(
             params => {
-                if (params['googleError'] != undefined) {
+                if (params['googleError']) {
                     if (params['googleError'] === "access_denied")
                         this.loginAlert.display("Unfortunately, Sign In with Google failed because access was denied.", false);
                     else if (params['googleError'] === "inactive")
@@ -53,13 +53,15 @@ export class SignInComponent implements AfterViewInit {
 
     onSubmit() {
         this.loaderService.startLoading();
-        this.authService.signIn(this.signInFormGroup.controls['emailAddress'].value, this.signInFormGroup.controls['password'].value).subscribe(
-            successful => {
-                if (successful)
-                    this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
-                else
-                    this.loaderService.stopLoading();
-            });
+        this.authService
+            .signIn(this.signInFormGroup.controls['emailAddress'].value, this.signInFormGroup.controls['password'].value)
+            .subscribe(
+                successful => {
+                    if (successful)
+                        this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
+                    else
+                        this.loaderService.stopLoading();
+                });
     }
 
     onGoogleSignIn() {

@@ -4,20 +4,18 @@ import {
     ViewChild,
     Input,
     forwardRef,
-    ViewEncapsulation,
     OnChanges,
-    SimpleChanges
+    SimpleChanges,
+    ElementRef
 } from "@angular/core";
 import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 import moment = require("moment");
 import Moment = moment.Moment;
-declare const $: any;
 
 @Component({
     selector: 'date-time-picker',
     templateUrl: 'date-time-picker.component.html',
     styleUrls: ['date-time-picker.component.css'],
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
@@ -28,25 +26,21 @@ declare const $: any;
 })
 export class DateTimePickerComponent implements AfterViewInit, OnChanges, ControlValueAccessor {
 
-    dateTimePickerBuilt: boolean = false;
+    private dateTimePickerBuilt: boolean = false;
 
-    @ViewChild('container')
-    container;
+    @ViewChild('container') private container: ElementRef;
 
-    @Input()
-    inline: boolean = true;
+    @Input() private inline: boolean = true;
 
-    @Input()
-    sideBySide: boolean = false;
+    @Input() private sideBySide: boolean = false;
 
-    @Input()
-    stacked: boolean = false;
+    @Input() private stacked: boolean = false;
 
-    @Input()
-    format: string = "dddd, MM/DD/YYYY, h:mm a";
+    @Input() private format: string = "dddd, MM/DD/YYYY, h:mm a";
 
-    @Input()
-    minDate: Moment;
+    @Input() private minDate: Moment;
+
+    private dateTimePicker: JQuery;
 
     ngAfterViewInit(): void {
         this.buildDateTimePicker();
@@ -63,6 +57,7 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
                 switch (propName) {
                     case 'minDate':
                         dateTimePicker.data("DateTimePicker").minDate(this.getMinDateToUse());
+                        this.ensureDateIsAfterMinDate();
                         break;
                 }
             }
@@ -70,48 +65,88 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
         }
     }
 
-    private static removeSeconds(date): Moment {
+    /**
+     * Clones and removes (sets to 0) the time of the provided moment, and returns the result as a new moment.
+     * @param date The moment to reference.
+     * @param onlySeconds If only the seconds (and milliseconds) should be removed. Otherwise, minutes and hours will also be removed.
+     * @returns The new moment, or undefined if the date was undefined.
+     */
+    private static removeTime(date: Moment, onlySeconds: boolean = false): Moment {
         if (!date)
             return undefined;
 
-        return date.seconds(0).milliseconds(0);
+        return date.clone().startOf(onlySeconds ? 'minute' : 'day');
     }
 
+    /**
+     * Determines what should be set to the 'minDate' key of the DateTimePicker options.
+     * @returns {Moment|boolean}
+     */
     private getMinDateToUse() {
-        return this.minDate != undefined ? DateTimePickerComponent.removeSeconds(this.minDate) : false;
+        return this.minDate ? DateTimePickerComponent.removeTime(this.minDate) : false;
     }
 
+    /**
+     * Builds the dateTimePicker using the options provided.
+     */
     private buildDateTimePicker() {
-        let dateTimePicker = $(this.container.nativeElement);
+        this.dateTimePicker = $(this.container.nativeElement);
 
-        dateTimePicker.datetimepicker({
+        this.dateTimePicker.datetimepicker({
             inline: this.inline,
             sideBySide: this.stacked || this.sideBySide,
-            format: this.format != undefined ? this.format : false,
+            format: this.format ? this.format : false,
             minDate: this.getMinDateToUse(),
             allowInputToggle: !this.inline
         });
 
         if (this.stacked) {
-            dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.remove("col-md-6");
-            dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.add("col-xs-12");
+            this.dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.remove("col-md-6");
+            this.dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.add("col-xs-12");
 
-            dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.remove("col-md-6");
-            dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.add("col-xs-12");
+            this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.remove("col-md-6");
+            this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.add("col-xs-12");
         }
 
-        dateTimePicker.on("dp.change", e => {
-            this.propagateChange(e.date);
+        this.dateTimePicker.on("dp.change", e => {
+            let newDate: Moment = e.date;
+
+            if (this.ensureDateIsAfterMinDate())
+                this.propagateChange(newDate);
         });
 
-        this.propagateChange(DateTimePickerComponent.removeSeconds(dateTimePicker.data("DateTimePicker").date()));
+        this.ensureDateIsAfterMinDate();
 
         this.dateTimePickerBuilt = true;
     }
 
-    setDate(date) {
-        if (this.dateTimePickerBuilt && date != undefined)
-            $(this.container.nativeElement).data("DateTimePicker").date(DateTimePickerComponent.removeSeconds(date));
+    /**
+     * Ensures that the current date is after the minDate (by at least 1 minute).
+     * If not, then it will be reset to 1 minute after the minDate.
+     *
+     * @returns true if the date was after the minDate, false if it was reset.
+     */
+    private ensureDateIsAfterMinDate(): boolean {
+        let currentDate: Moment = this.dateTimePicker.data("DateTimePicker").date();
+
+        if (this.minDate && currentDate) {
+            if (!currentDate.isAfter(this.minDate)) {
+                currentDate = DateTimePickerComponent.removeTime(this.minDate, true).add(1, 'minute');
+                this.setDate(currentDate);
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * Sets the date of the picker.
+     * @param date The new date
+     */
+    public setDate(date) {
+        if (this.dateTimePickerBuilt && date)
+            this.dateTimePicker.data("DateTimePicker").date(DateTimePickerComponent.removeTime(date, true));
     }
 
     propagateChange = (value: Moment) => {

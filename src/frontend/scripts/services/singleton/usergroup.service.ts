@@ -9,25 +9,19 @@ import {User} from "../../models/user.model";
 export class UserGroupService {
 
     private rootUserGroup: ReplaySubject<UserGroup> = new ReplaySubject<UserGroup>(1);
-    private user: User;
-    private userGroupHierarchyDown: ReplaySubject<UserGroup[]> = new ReplaySubject<UserGroup[]>(1);
 
     constructor(private apiService: APIService, private authService: AuthService) {
 
     }
 
-    public getUserGroupHierarchyDown(): ReplaySubject<UserGroup[]> {
-        return this.userGroupHierarchyDown;
+    public getUserGroupHierarchyDown(user: User): Observable<UserGroup[]> {
+        return Observable.create(listener => {
+            this.apiService.get("/userGroups/hierarchyDown/" + user.id).subscribe(
+                response => listener.next(response),
+                err => listener.next([])
+            );
+        });
     }
-
-    public getUserGroupHierarchyDownFilter() {
-        this.authService.getUser().subscribe(user => this.user = user);
-            this.apiService.get("/userGroups/hierarchyDown/" + this.user.id).subscribe(
-                response =>
-                    this.userGroupHierarchyDown.next(response),
-                     err => this.userGroupHierarchyDown.next([]))
-    }
-
 
     public patchUserGroup(userGroup: UserGroup): Observable<boolean> {
         return Observable.create(listener => {

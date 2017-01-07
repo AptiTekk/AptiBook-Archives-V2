@@ -3,13 +3,11 @@ import {UserGroup} from "../../models/user-group.model";
 import {TreeNodeComponent} from "./tree-node/tree-node.component";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {UserGroupService} from "../../services/singleton/usergroup.service";
-declare const $: any;
 
 @Component({
     selector: 'tree',
     templateUrl: 'tree.component.html',
     styleUrls: ['tree.component.css'],
-    encapsulation: ViewEncapsulation.None,
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
