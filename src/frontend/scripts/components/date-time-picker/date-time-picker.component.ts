@@ -50,13 +50,11 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
         if (!this.dateTimePickerBuilt)
             return;
 
-        let dateTimePicker = $(this.container.nativeElement);
-
         try {
             for (let propName in changes) {
                 switch (propName) {
                     case 'minDate':
-                        dateTimePicker.data("DateTimePicker").minDate(this.getMinDateToUse());
+                        this.dateTimePicker.data("DateTimePicker").minDate(this.getMinDateToUse());
                         this.ensureDateIsAfterMinDate();
                         break;
                 }
@@ -131,12 +129,14 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
 
         if (this.minDate && currentDate) {
             if (!currentDate.isAfter(this.minDate)) {
+                console.log("Not After.");
                 currentDate = DateTimePickerComponent.removeTime(this.minDate, true).add(1, 'minute');
                 this.setDate(currentDate);
                 return false;
             }
         }
 
+        console.log("After.");
         return true;
     }
 
@@ -145,8 +145,9 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
      * @param date The new date
      */
     public setDate(date) {
-        if (this.dateTimePickerBuilt && date)
+        if (this.dateTimePickerBuilt && date) {
             this.dateTimePicker.data("DateTimePicker").date(DateTimePickerComponent.removeTime(date, true));
+        }
     }
 
     propagateChange = (value: Moment) => {

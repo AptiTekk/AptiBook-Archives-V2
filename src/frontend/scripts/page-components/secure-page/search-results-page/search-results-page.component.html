@@ -10,14 +10,14 @@
         <li><a [routerLink]="['', 'secure']">Home</a></li>
         <li class="active">Search by Time</li>
     </ol>
-    <div id="search-settings" class="row">
+    <div id="search-settings" class="row" *ngIf="start && end">
         <div class="col-xs-12 col-sm-5 col-md-4">
-            <label for="startTimePicker">Start Time: </label>
+            <label for="startTimePicker">Start Time:</label>
             <date-time-picker id="startTimePicker" [(ngModel)]="start" [inline]="false"
                               [sideBySide]="true"></date-time-picker>
         </div>
         <div class="col-xs-12 col-sm-5 col-md-4">
-            <label for="startTimePicker">End Time: </label>
+            <label for="startTimePicker">End Time:</label>
             <date-time-picker id="endTimePicker" [(ngModel)]="end" [minDate]="start" [inline]="false"
                               [sideBySide]="true"></date-time-picker>
         </div>
