@@ -7,11 +7,11 @@ import {Component, ViewChild, Output, EventEmitter} from "@angular/core";
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
-import {ImageUploaderComponent} from "../../../../../components/image-uploader/image-uploader.component";
 import {ResourceService} from "../../../../../services/singleton/resource.service";
 import {APIService} from "../../../../../services/singleton/api.service";
 import {Resource} from "../../../../../models/resource.model";
 import {LoaderService} from "../../../../../services/singleton/loader.service";
+import {ResourceImageComponent} from "../../../../../components/resource-image/resource-image.component";
 
 @Component({
     selector: 'edit-resource-modal',
@@ -20,14 +20,13 @@ import {LoaderService} from "../../../../../services/singleton/loader.service";
 })
 export class EditResourceModalComponent {
 
-    @ViewChild('modal')
-    modal: ModalComponent;
+    @ViewChild(ModalComponent) modal: ModalComponent;
 
     formGroup: FormGroup;
 
     resource: Resource;
 
-    @ViewChild('imageUploader') imageUploader: ImageUploaderComponent;
+    @ViewChild(ResourceImageComponent) resourceImage: ResourceImageComponent;
 
     @Output() submitted: EventEmitter<void> = new EventEmitter<void>();
 
@@ -42,7 +41,7 @@ export class EditResourceModalComponent {
     public open(resource: Resource) {
         this.resource = resource;
         this.resetFormGroup();
-        this.imageUploader.clearImage();
+        this.resourceImage.clearImage();
         this.modal.openModal();
     }
 
@@ -64,17 +63,17 @@ export class EditResourceModalComponent {
 
         this.resource.name = this.formGroup.controls['name'].value;
         this.resource.needsApproval = this.formGroup.controls['needsApproval'].value;
-        this.resource.owner = this.formGroup.controls['owner'].value;
+        this.resource.owner = [].concat(this.formGroup.controls['owner'].value)[0];
 
         this.resourceService
             .patchResource(this.resource)
             .subscribe(
                 resource => {
                     if (resource) {
-                        if (this.imageUploader.hasImage()) {
+                        if (this.resourceImage.hasImageToUpload()) {
 
                             // If there is an image, upload it.
-                            this.imageUploader.uploadToUrl(this.apiService.getApiUrlFromEndpoint("/resources/" + resource.id + "/image")).subscribe(
+                            this.resourceImage.upload().subscribe(
                                 success => {
                                     if (success) {
                                         this.close();
@@ -86,8 +85,7 @@ export class EditResourceModalComponent {
                             );
                         } else {
                             // Otherwise, delete any existing image.
-                            this.apiService
-                                .del("/resources/" + resource.id + "/image")
+                            this.resourceImage.deleteImageFromServer()
                                 .subscribe(
                                     response => {
                                         this.close();

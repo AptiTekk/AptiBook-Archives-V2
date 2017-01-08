@@ -6,17 +6,17 @@
 
 /* General Styling */
 
-/*.calendar .fc-day:hover {
+/*:host /deep/ .fc-day:hover {
     background-color: #f9f9f9 !important;
 }*/
 
-.calendar .fc-content-skeleton {
+:host /deep/ .fc-content-skeleton {
     pointer-events: none;
 }
 
 /* Event Styling */
 
-.calendar .fc-event {
+:host /deep/ .fc-event {
     border: 2px solid #ededed;
     padding: 1px 1px;
     background-color: #4272b7;
@@ -24,94 +24,94 @@
     pointer-events: auto;
 }
 
-.calendar .fc-more {
+:host /deep/ .fc-more {
     pointer-events: auto;
 }
 
-.calendar.selectable .fc-event {
+:host /deep/ .selectable .fc-event {
     cursor: pointer;
 }
 
-.calendar .fc-list-item-title > a:hover {
+:host /deep/ .fc-list-item-title > a:hover {
     text-decoration: none;
 }
 
-.calendar.selectable .fc-list-item-title > a {
+:host /deep/ .selectable .fc-list-item-title > a {
     cursor: pointer;
 }
 
-.calendar .fc-time-grid-event .fc-bg {
+:host /deep/ .fc-time-grid-event .fc-bg {
     display: none;
 }
 
-.calendar .fc-event-dot {
+:host /deep/ .fc-event-dot {
     background-color: #4272b7;
 }
 
 /* Event Status Styling */
 
-.calendar .fc-event.pending {
+:host /deep/ .fc-event.pending {
     background-color: #fff;
     border: 1px dashed #666;
 }
 
-.calendar .fc-event.pending .fc-content {
+:host /deep/ .fc-event.pending .fc-content {
     color: #666;
 }
 
-.calendar .fc-event.rejected {
+:host /deep/ .fc-event.rejected {
     background-color: #f2dede;
     border: 1px solid #ebccd1;
 }
 
-.calendar .fc-event.rejected .fc-content {
+:host /deep/ .fc-event.rejected .fc-content {
     color: #333;
     text-decoration: line-through;
 }
 
-.calendar .fc-event.cancelled {
+:host /deep/ .fc-event.cancelled {
     background-color: #ddd;
     border: 1px solid #333;
 }
 
-.calendar .fc-event.cancelled .fc-content {
+:host /deep/ .fc-event.cancelled .fc-content {
     color: #333;
     text-decoration: line-through;
 }
 
 /* Day Grid Styling */
 
-.calendar .fc-day-grid td.fc-day.fc-today {
+:host /deep/ .fc-day-grid td.fc-day.fc-today {
     background-color: #fff;
 }
 
-.calendar .fc-basicWeek-view .fc-day-grid td.fc-day, .calendar .fc-basicDay-view .fc-day-grid td.fc-day {
+:host /deep/ .fc-basicWeek-view .fc-day-grid td.fc-day, :host /deep/ .fc-basicDay-view .fc-day-grid td.fc-day {
     box-shadow: inset #eee 0 8px 0 0;
 }
 
-.calendar .fc-basicWeek-view .fc-day-grid td.fc-day.fc-today, .calendar .fc-basicDay-view .fc-day-grid td.fc-day.fc-today {
+:host /deep/ .fc-basicWeek-view .fc-day-grid td.fc-day.fc-today, :host /deep/ .fc-basicDay-view .fc-day-grid td.fc-day.fc-today {
     box-shadow: inset #4272b7 0 8px 0 0;
 }
 
-.calendar .fc-basicWeek-view .fc-event-container, .calendar .fc-basicDay-view .fc-event-container {
+:host /deep/ .fc-basicWeek-view .fc-event-container, :host /deep/ .fc-basicDay-view .fc-event-container {
     padding-top: 10px;
 }
 
-.calendar .fc-day-grid td.fc-day-top.fc-today {
+:host /deep/ .fc-day-grid td.fc-day-top.fc-today {
     border-top: 4px solid #4272b7;
     color: #4272b7;
     font-weight: bold;
 }
 
-.calendar td.fc-day-top.fc-today {
+:host /deep/ td.fc-day-top.fc-today {
     color: inherit;
 }
 
-.calendar .fc-list-empty {
+:host /deep/ .fc-list-empty {
     background-color: #fff;
 }
 
-.calendar .fc-scroller {
+:host /deep/ .fc-scroller {
     overflow-y: hidden !important;
 }
 
@@ -123,39 +123,39 @@
 
 /* Button Styling */
 
-.calendar button {
+:host /deep/ button {
     border: none;
     background: #eee none;
     box-shadow: none;
 }
 
-.calendar button.fc-state-hover {
+:host /deep/ button.fc-state-hover {
     background-color: #ddd;
 }
 
-.calendar button:focus {
+:host /deep/ button:focus {
     outline: none;
 }
 
-.calendar button.fc-state-active {
+:host /deep/ button.fc-state-active {
     background-color: #4272b7;
     color: #fff;
     text-shadow: none;
 }
 
-.calendar .fc-button-group > * {
+:host /deep/ .fc-button-group > * {
     margin: 0;
 }
 
 /* Header Styling */
 
-.calendar h3 {
+:host /deep/ h3 {
     margin: 0;
 }
 
 @media (max-width: 992px) {
 
-    .calendar h2, .calendar h3 {
+    :host /deep/ h2, :host /deep/ h3 {
         font-size: 20px;
     }
 

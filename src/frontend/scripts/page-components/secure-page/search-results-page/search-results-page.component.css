@@ -8,12 +8,11 @@
     margin-right: 10px;
 }
 
-#search-settings date-time-picker {
+:host /deep/ #search-settings date-time-picker {
     display: inline-block;
-    margin-right: 10px;
 }
 
-#search-settings date-time-picker .form-control {
+:host /deep/ #search-settings date-time-picker .form-control {
     min-width: 250px;
 }
 

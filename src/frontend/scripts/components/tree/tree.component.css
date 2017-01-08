@@ -4,17 +4,13 @@
  * Proprietary and confidential.
  */
 
-.tree {
-
-}
-
-.tree ul {
+:host /deep/ ul {
     list-style-type: none;
     padding-left: 20px;
     border-left: 1px dashed #ddd;
 }
 
-.tree .tree-node {
+:host /deep/ .tree-node {
     padding: 1px 4px;
     font-size: 12px;
     border: 1px solid #eee;
@@ -22,20 +18,21 @@
     margin: 0 5px;
 }
 
-.tree .tree-node.node-selected, .tree .tree-node.node-highlighted {
+:host /deep/ .tree-node.node-selected,
+:host /deep/ .tree-node.node-highlighted {
     color: #fff;
     background-color: #4272b7;
 }
 
-.tree .tree-node-drop-point {
+:host /deep/ .tree-node-drop-point {
     background-color: #fff;
     height: 10px;
 }
 
-.tree .tree-node.node-dragging {
+:host /deep/ .tree-node.node-dragging {
     opacity: 0.5;
 }
 
-.tree .tree-node-drop-point.node-over {
+:host /deep/ .tree-node-drop-point.node-over {
     background-color: #f1f1f1;
 }

@@ -1,0 +1,26 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div class="container-fluid">
+	<div class="row">
+		
+		<!-- Sidebar Navigation -->
+		<div class="hidden-xs hidden-sm col-md-3 col-lg-2"
+			 style="position: fixed;">
+			<ol class="breadcrumb">
+				<li class="active">Navigation</li>
+			</ol>
+			<vertical-navigation [links]="configurationLinks">
+			</vertical-navigation>
+		</div>
+		
+		<!-- Main Content -->
+		<div class="col-md-offset-3 col-lg-offset-2 col-xs-12 col-md-9 col-lg-10">
+			<router-outlet></router-outlet>
+		</div>
+	</div>
+</div>
+

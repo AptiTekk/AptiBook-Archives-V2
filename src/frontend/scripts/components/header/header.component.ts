@@ -1,4 +1,4 @@
-import {Component, Input} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {User} from "../../models/user.model";
 import {AuthService} from "../../services/singleton/auth.service";
 import {Router} from "@angular/router";
@@ -12,34 +12,40 @@ import {Notification} from "../../models/notification.model";
 })
 
 
-export class HeaderComponent {
+export class HeaderComponent implements OnInit {
 
-    @Input()
-    nonInteractive: boolean;
+    @Input() protected nonInteractive: boolean;
 
-    user: User;
-    unreadNotifications: Notification[] = [];
+    protected user: User;
+    protected unreadNotifications: Notification[] = [];
 
-    //TODO: Add route urls
-    reservationManagementLinks: [{icon: string, label: string, path: string}] = [
-        {icon: 'hourglass-half', label: 'Pending', path: 'pending'},
-        {icon: 'calendar-check-o', label: 'Approved', path: 'approved'},
-        {icon: 'calendar-times-o', label: 'Rejected', path: 'rejected'},
-        {icon: 'calendar', label: 'Calendar', path: 'calendar'}
+    public static RESERVATION_MANAGEMENT_LINKS: [{ icon: string, label: string, path: string[] }] = [
+        {icon: 'hourglass-half', label: 'Pending', path: ['', 'secure', 'management', 'pending']},
+        {icon: 'calendar-check-o', label: 'Approved', path: ['', 'secure', 'management', 'approved']},
+        {icon: 'calendar-times-o', label: 'Rejected', path: ['', 'secure', 'management', 'rejected']},
+        {icon: 'calendar', label: 'Calendar', path: ['', 'secure', 'management', 'calendar']}
     ];
 
-    //TODO: Add route urls and permissions
-    configurationLinks: [{label: string, path: string, icon: string, indented: boolean}] = [
-        {label: 'Resources', path: 'resources', icon: 'tags', indented: false},
-        {label: 'User Groups', path: 'userGroups', icon: 'sitemap', indented: false},
-        {label: 'Users', path: 'users', icon: 'user', indented: true},
-        {label: 'Permissions', path: 'permissions', icon: 'unlock', indented: false},
-        {label: 'Properties', path: 'properties', icon: 'cog', indented: false}
+    public static CONFIGURATION_LINKS: [{ icon: string, label: string, path: string[] }] = [
+        {icon: 'tags', label: 'Resources', path: ['', 'secure', 'configuration', 'resources']},
+        {icon: 'user', label: 'Users', path: ['', 'secure', 'configuration', 'users']},
+        {icon: 'unlock', label: 'Permissions', path: ['', 'secure', 'configuration', 'permissions']},
+        {icon: 'cog', label: 'Properties', path: ['', 'secure', 'configuration', 'properties']}
     ];
 
-    constructor(private router: Router, private authService: AuthService, private  notificationService: NotificationService) {
-        authService.getUser().subscribe(user => {
-            if (user != undefined) {
+    public static MY_LINKS: [{ icon: string, label: string, path: string[] }] = [
+        {icon: 'pencil', label: 'My Account', path: ['', 'secure', 'my', 'account']},
+        {icon: 'bell', label: 'My Notifications', path: ['', 'secure', 'my', 'notifications']}
+    ];
+
+    constructor(private router: Router,
+                private authService: AuthService,
+                private  notificationService: NotificationService) {
+    }
+
+    ngOnInit(): void {
+        this.authService.getUser().subscribe(user => {
+            if (user) {
                 this.user = user;
                 this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
                     this.unreadNotifications = unreadNotifications;
@@ -48,11 +54,21 @@ export class HeaderComponent {
         });
     }
 
+    //noinspection JSMethodCanBeStatic
+    get reservationManagementLinks() {
+        return HeaderComponent.RESERVATION_MANAGEMENT_LINKS;
+    }
+
+    //noinspection JSMethodCanBeStatic
+    get configurationLinks() {
+        return HeaderComponent.CONFIGURATION_LINKS;
+    }
+
     onSignOut() {
         this.authService.signOut().subscribe(
             (value: boolean) => {
                 if (value)
-                    this.router.navigateByUrl("");
+                    this.router.navigate(['sign-in']);
                 else
                     console.log("Could not sign out!")
             });

@@ -5,10 +5,10 @@
   -->
 
 <div class="tree">
-    <ul *ngIf="rootGroup != undefined">
-        <li *ngFor="let userGroup of showRoot ? [rootGroup] : rootGroup.children">
-            <tree-node [tree]="this"
-                       [userGroup]="userGroup"></tree-node>
-        </li>
-    </ul>
+	<ul *ngIf="rootGroup">
+		<li *ngFor="let userGroup of showRoot ? [rootGroup] : rootGroup.children">
+			<tree-node [tree]="this"
+					   [userGroup]="userGroup"></tree-node>
+		</li>
+	</ul>
 </div>

@@ -13,8 +13,7 @@ import {ReservationDetailsService} from "../../../services/singleton/reservation
 @Component({
     selector: 'search-results-page',
     templateUrl: 'search-results-page.component.html',
-    styleUrls: ['search-results-page.component.css'],
-    encapsulation: ViewEncapsulation.None
+    styleUrls: ['search-results-page.component.css']
 })
 export class SearchResultsPageComponent {
 
@@ -34,6 +33,7 @@ export class SearchResultsPageComponent {
         searchService.getSearchResults().subscribe(resources => {
             this.availableResources = resources;
         });
+
         searchService.getStartTime().subscribe(start => this.start = start);
         searchService.getEndTime().subscribe(end => this.end = end);
 

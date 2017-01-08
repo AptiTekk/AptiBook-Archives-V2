@@ -14,6 +14,14 @@
     color: #4272b7;
 }
 
+/* Nav Styling */
+
+.dropdown-menu > .active > a,
+.dropdown-menu > .active > a:hover,
+.dropdown-menu > .active > a:focus {
+    background-color: #4272b7;
+}
+
 /* Button Styling */
 
 .app .btn-primary,
@@ -89,7 +97,7 @@
 }
 
 ::-webkit-scrollbar-thumb {
-    background-color: #bbb;
+    background-color: #ddd;
     border: 4px solid transparent;
     border-radius: 8px;
     background-clip: content-box;

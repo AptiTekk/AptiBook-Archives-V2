@@ -1,0 +1,157 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div class="row">
+	<div class="col-xs-12 col-md-8">
+		<div class="btn-toolbar">
+			<button class="btn btn-primary"
+					(click)="onAddNewUser()">Add New User
+			</button>
+		</div>
+		<hr/>
+		<datatable [selectableRows]="true"
+				   (rowSelected)="onUserSelected(users[$event])"
+				   (rowDeselected)="onUserDeselected()"
+				   [bodyHeight]="'calc(100vh - 475px)'">
+			<datatable-column [orderable]="false"
+							  [width]="'30px'">
+				<datatable-cell *ngFor="let user of users">
+					<user-image [user]="user"
+								[width]="'30px'">
+					</user-image>
+				</datatable-cell>
+			</datatable-column>
+			<datatable-column [title]="'Email Address'">
+				<datatable-cell *ngFor="let user of users">
+					{{user.emailAddress}}
+				</datatable-cell>
+			</datatable-column>
+			<datatable-column [title]="'First Name'">
+				<datatable-cell *ngFor="let user of users">
+					{{user.firstName}}
+				</datatable-cell>
+			</datatable-column>
+			<datatable-column [title]="'Last Name'">
+				<datatable-cell *ngFor="let user of users">
+					{{user.lastName}}
+				</datatable-cell>
+			</datatable-column>
+			<datatable-column [title]="'Assigned User Groups'">
+				<datatable-cell *ngFor="let user of users">
+					{{user.userGroups?.length > 0 ? getUserGroupsNames(user).join(', ') : '-'}}
+				</datatable-cell>
+			</datatable-column>
+		</datatable>
+	</div>
+	<div class="col-xs-12 col-md-4">
+		<form [formGroup]="selectedUserPersonalInformation">
+			<panel id="selected-user-panel"
+				   [type]="'primary'"
+				   [title]="'User Information'">
+				<panel-body>
+					<user-image [user]="selectedUser"
+								[width]="'130px'">
+					</user-image>
+					<div id="user-info">
+						<form-group [control]="selectedUserPersonalInformation?.controls.emailAddress"
+									[label]="'Email Address'"
+									[faIconName]="'at'"
+									[readOnly]="!editingSelectedUser"
+									[errorMessages]="
+                                    {
+                                    maxlength: 'This must be 100 characters or less.'
+                                    }">
+						</form-group>
+						
+						<form-group [control]="selectedUserPersonalInformation?.controls.firstName"
+									[label]="'First Name'"
+									[readOnly]="!editingSelectedUser"
+									[errorMessages]="
+                                    {
+                                    pattern: 'These characters are not allowed:  < > ; =',
+                                    maxlength: 'This must be 30 characters or less.'
+                                    }">
+						</form-group>
+						
+						<form-group [control]="selectedUserPersonalInformation?.controls.lastName"
+									[label]="'Last Name'"
+									[readOnly]="!editingSelectedUser"
+									[errorMessages]="
+									{
+									pattern: 'These characters are not allowed:  < > ; =',
+									maxlength: 'This must be 30 characters or less.'
+									}">
+						</form-group>
+						
+						<form-group [control]="selectedUserPersonalInformation?.controls.phoneNumber"
+									[label]="'Phone Number'"
+									[faIconName]="'phone'"
+									[readOnly]="!editingSelectedUser"
+									[errorMessages]="
+                                    {
+                                    pattern: 'These characters are not allowed:  < > ; =',
+                                    maxlength: 'This must be 30 characters or less.'
+                                    }">
+						</form-group>
+						
+						<form-group [control]="selectedUserPersonalInformation?.controls.location"
+									[label]="'Location'"
+									[faIconName]="'map-marker'"
+									[readOnly]="!editingSelectedUser"
+									[errorMessages]="
+                                    {
+                                    pattern: 'These characters are not allowed:  < > ; =',
+                                    maxlength: 'This must be 250 characters or less.'
+                                    }">
+						</form-group>
+						
+						<label class="control-label">Assigned User Groups</label>
+						<tree [selectable]="editingSelectedUser"
+							  [selectMultiple]="true"
+							  [preventSameBranchSelection]="true"
+							  [formControl]="selectedUserPersonalInformation?.controls.userGroups">
+						</tree>
+					</div>
+				</panel-body>
+				<panel-footer>
+					<div *ngIf="!selectedUser">
+						Select a User by clicking on a row in the table.
+					</div>
+					<div *ngIf="selectedUser">
+						<button class="btn btn-default"
+								*ngIf="!editingSelectedUser"
+								(click)="onStartEditingUser()">
+							Edit User
+						</button>
+						<button class="btn btn-primary"
+								*ngIf="editingSelectedUser"
+								(click)="onSaveUserChanges()"
+								[disabled]="selectedUserPersonalInformation.invalid">
+							Save Changes
+						</button>
+						<button class="btn btn-default"
+								*ngIf="editingSelectedUser"
+								(click)="onCancelEditingUser()">
+							Cancel
+						</button>
+						<button class="btn btn-danger pull-right"
+								*ngIf="editingSelectedUser"
+								[disabled]="isSelectedUserCurrentUser()"
+								(click)="userDeleteModal.open()">
+							Delete User
+						</button>
+					</div>
+				</panel-footer>
+			</panel>
+		</form>
+	</div>
+</div>
+
+<deletion-confirmation-modal #userDeleteModal
+							 [message]="'Are you sure you want to delete the User \'' + selectedUser?.emailAddress + '\'?'"
+							 [warning]="'All Reservations made by this User will also be deleted!'"
+							 (confirm)="onDeleteSelectedUser()">
+</deletion-confirmation-modal>
