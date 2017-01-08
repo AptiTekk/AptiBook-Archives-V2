@@ -61,8 +61,14 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
             else
                 this.selectedUserGroups.splice(index, 1);
         } else {
-            // Clear the array and set the selected User Group to the one clicked.
-            this.selectedUserGroups = [treeNode.userGroup];
+
+            // If the group is already selected, deselect it.
+            if (this.selectedUserGroups.length > 0 && this.selectedUserGroups[0].id === treeNode.userGroup.id) {
+                this.selectedUserGroups = [];
+            } else {
+                // Otherwise, clear the array and set the selected User Group to the one clicked.
+                this.selectedUserGroups = [treeNode.userGroup];
+            }
         }
 
         // Check if multiple nodes are selected on the same branch,

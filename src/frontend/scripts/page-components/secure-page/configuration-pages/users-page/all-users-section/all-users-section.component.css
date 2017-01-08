@@ -10,7 +10,7 @@
     margin-bottom: 0;
 }
 
-:host /deep/ #selected-user-panel .panel-body {
+:host /deep/ #selected-user-panel > .panel > .panel-body {
     height: calc(100vh - 361px);
     overflow-y: auto;
 }

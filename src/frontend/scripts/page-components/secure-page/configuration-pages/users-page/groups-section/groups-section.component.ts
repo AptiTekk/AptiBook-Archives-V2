@@ -4,6 +4,7 @@
  * Proprietary and confidential.
  */
 import {Component, OnInit} from "@angular/core";
+import {UserGroup} from "../../../../../models/user-group.model";
 
 @Component({
     selector: 'groups-section',
@@ -12,7 +13,17 @@ import {Component, OnInit} from "@angular/core";
 })
 export class GroupsSectionComponent implements OnInit {
 
+    protected selectedUserGroups: UserGroup[];
+
     ngOnInit(): void {
+    }
+
+    get selectedUserGroup(): UserGroup {
+        if(this.selectedUserGroups)
+            if(this.selectedUserGroups.length > 0)
+                return this.selectedUserGroups[0];
+
+        return null;
     }
 }
 

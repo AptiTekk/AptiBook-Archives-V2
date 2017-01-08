@@ -16,12 +16,23 @@
 			   [title]="'Select a User Group'">
 			<panel-body>
 				<tree [selectable]="true"
-					  [dragAndDrop]="true">
+					  [dragAndDrop]="true"
+					  [(ngModel)]="selectedUserGroups">
 				</tree>
 			</panel-body>
+			<panel-footer>
+				<p>Drag and drop Groups to re-arrange them.</p>
+			</panel-footer>
 		</panel>
 	</div>
 	<div class="col-xs-12 col-md-9">
-	
+		<div class="btn-toolbar">
+			<button class="btn btn-danger"
+					[disabled]="!selectedUserGroup">
+				Delete User Group
+			</button>
+		</div>
+		<hr/>
+		<h3>{{selectedUserGroup?.name}}</h3>
 	</div>
 </div>
