@@ -3,15 +3,13 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, ViewContainerRef} from "@angular/core";
+
+import {Component} from '@angular/core';
 
 @Component({
-    selector: 'datatable-cell',
+    selector: 'panel-body',
     template: '<ng-content></ng-content>'
 })
-export class DataTableCell {
-
-    constructor(public viewRef: ViewContainerRef) {
-    }
+export class PanelBodyComponent {
 
 }

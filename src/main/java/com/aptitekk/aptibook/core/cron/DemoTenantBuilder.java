@@ -25,7 +25,7 @@ import java.util.Arrays;
 import java.util.List;
 
 @Service
-public class DemoTenant {
+public class DemoTenantBuilder {
 
     private Tenant demoTenant;
 
@@ -58,20 +58,20 @@ public class DemoTenant {
     private final LogService logService;
 
     @Autowired
-    public DemoTenant(TenantRepository tenantRepository,
-                      TenantManagementService tenantManagementService,
-                      UserGroupService userGroupService,
-                      UserGroupRepository userGroupRepository,
-                      UserRepository userRepository,
-                      ResourceCategoryRepository resourceCategoryRepository,
-                      ResourceRepository resourceRepository,
-                      TagRepository tagRepository,
-                      PermissionRepository permissionRepository,
-                      ReservationDecisionRepository reservationDecisionRepository,
-                      ReservationRepository reservationRepository,
-                      TenantIntegrityService tenantIntegrityService,
-                      NotificationRepository notificationRepository,
-                      LogService logService) {
+    public DemoTenantBuilder(TenantRepository tenantRepository,
+                             TenantManagementService tenantManagementService,
+                             UserGroupService userGroupService,
+                             UserGroupRepository userGroupRepository,
+                             UserRepository userRepository,
+                             ResourceCategoryRepository resourceCategoryRepository,
+                             ResourceRepository resourceRepository,
+                             TagRepository tagRepository,
+                             PermissionRepository permissionRepository,
+                             ReservationDecisionRepository reservationDecisionRepository,
+                             ReservationRepository reservationRepository,
+                             TenantIntegrityService tenantIntegrityService,
+                             NotificationRepository notificationRepository,
+                             LogService logService) {
         this.tenantRepository = tenantRepository;
         this.tenantManagementService = tenantManagementService;
         this.userGroupService = userGroupService;

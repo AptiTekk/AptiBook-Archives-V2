@@ -4,11 +4,7 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="tree">
-	<ul *ngIf="rootGroup">
-		<li *ngFor="let userGroup of showRoot ? [rootGroup] : rootGroup.children">
-			<tree-node [tree]="this"
-					   [userGroup]="userGroup"></tree-node>
-		</li>
-	</ul>
-</div>
+<img [src]="noImageUrl"
+	 [style.width]="width ? width : '150px'"
+	 [style.maxWidth]="maxWidth ? maxWidth : null"
+	 draggable="false"/>

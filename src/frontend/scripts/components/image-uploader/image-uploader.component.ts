@@ -11,7 +11,7 @@ import {APIService} from "../../services/singleton/api.service";
 })
 export class ImageUploaderComponent implements OnInit {
 
-    @Input() noImageUrl: string = "/static/resource-no-image.jpg";
+    @Input() noImageUrl;
 
     @Input() currentImageUrl: string;
 

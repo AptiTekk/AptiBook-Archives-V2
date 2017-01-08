@@ -7,26 +7,13 @@
 var path = require('path');
 var webpack = require('webpack');
 
-var opts = {
-    rootDir: process.cwd(),
-    devBuild: process.env.NODE_ENV !== 'production'
-};
-
 var config = {
     cache: true,
-    devtool: 'source-map',
 
     entry: {
-        polyfills: './src/frontend/scripts/polyfills',
-        vendor: './src/frontend/scripts/vendors/vendors',
-        main: './src/frontend/scripts/main'
-    },
-
-    output: {
-        path: path.join(__dirname, 'src/main/webapp/'),
-        filename: './packed/scripts/[name].bundle.js',
-        sourceMapFilename: './packed/scripts/[name].map',
-        chunkFilename: './packed/scripts/[id].chunk.js'
+        polyfills: path.join(__dirname, '../src/frontend/scripts/polyfills'),
+        vendor: path.join(__dirname, '../src/frontend/scripts/vendors/vendors'),
+        main: path.join(__dirname, '../src/frontend/scripts/main')
     },
 
     module: {
@@ -91,7 +78,7 @@ var config = {
         modulesDirectories: ['node_modules'],
         alias: {
             // Force all modules to use the same jquery version.
-            'jquery': path.join(__dirname, 'node_modules/jquery/src/jquery')
+            'jquery': path.join(__dirname, '../node_modules/jquery/src/jquery')
         }
     },
 
@@ -107,4 +94,5 @@ var config = {
         setTimeout: true
     }
 };
+
 module.exports = config;

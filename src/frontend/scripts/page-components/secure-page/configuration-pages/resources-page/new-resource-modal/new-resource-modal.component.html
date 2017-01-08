@@ -4,43 +4,47 @@
   ~ Proprietary and confidential.
   -->
 
-<modal #modal [title]="'New Resource'"
-       [cancelButtonLabel]="'Cancel'"
-       [submitButtonLabel]="'Add Resource'"
-       [submitButtonDisabled]="formGroup.invalid"
-       (onSubmit)="onSubmitted()"
-       *ngIf="formGroup">
-    <modal-body>
-        <form [formGroup]="formGroup">
-            <div class="row">
-                <div class="col-xs-6 col-sm-4 col-md-3">
-                    <image-uploader #imageUploader></image-uploader>
-                </div>
-                <div class="col-xs-12 col-sm-8 col-md-9">
-                    <form-group [control]="formGroup.controls['name']"
-                                [label]="'Name'"
-                                [placeholder]="'Must be unique'"
-                                [errorMessages]="
+<modal #modal
+	   [title]="'New Resource'"
+	   [cancelButtonLabel]="'Cancel'"
+	   [submitButtonLabel]="'Add Resource'"
+	   [submitButtonDisabled]="formGroup.invalid"
+	   (onSubmit)="onSubmitted()"
+	   *ngIf="formGroup">
+	<modal-body>
+		<form [formGroup]="formGroup">
+			<div class="row">
+				<div class="col-xs-6 col-sm-4 col-md-3">
+					<resource-image [useUploader]="true"></resource-image>
+				</div>
+				<div class="col-xs-12 col-sm-8 col-md-9">
+					<form-group [control]="formGroup.controls['name']"
+								[label]="'Name'"
+								[placeholder]="'Must be unique'"
+								[errorMessages]="
                                     {
                                     required: 'This is required.',
                                     pattern: 'These characters are not allowed:  < > ; =',
                                     maxlength: 'This must be 30 characters or less.'
                                     }">
-                    </form-group>
-                    <div class="form-group">
-                        <label>Do Reservations Require Approval?</label>
-                        <br/>
-                        <toggle-switch [onText]="'Yes'" [offText]="'No'" style="margin-right: 10px"
-                                       formControlName="needsApproval">
-                        </toggle-switch>
-                    </div>
-                    <div class="form-group">
-                        <label>Which User Group owns this Resource?</label>
-                        <tree [selectable]="true" formControlName="owner">
-                        </tree>
-                    </div>
-                </div>
-            </div>
-        </form>
-    </modal-body>
+					</form-group>
+					<div class="form-group">
+						<label>Do Reservations Require Approval?</label>
+						<br/>
+						<toggle-switch [onText]="'Yes'"
+									   [offText]="'No'"
+									   style="margin-right: 10px"
+									   formControlName="needsApproval">
+						</toggle-switch>
+					</div>
+					<div class="form-group">
+						<label>Which User Group owns this Resource?</label>
+						<tree [selectable]="true"
+							  formControlName="owner">
+						</tree>
+					</div>
+				</div>
+			</div>
+		</form>
+	</modal-body>
 </modal>
