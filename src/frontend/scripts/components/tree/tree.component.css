@@ -6,7 +6,8 @@
 
 :host /deep/ ul {
     list-style-type: none;
-    padding-left: 20px;
+    margin-left: 15px;
+    padding-left: 5px;
     border-left: 1px dashed #ddd;
 }
 
