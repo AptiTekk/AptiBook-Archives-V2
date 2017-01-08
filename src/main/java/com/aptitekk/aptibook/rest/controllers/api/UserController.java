@@ -72,7 +72,7 @@ public class UserController extends APIControllerAbstract {
 
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchUser(@PathVariable long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
+    public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
         if (userDTO != null) {
             User currentUser = userRepository.findInCurrentTenant(id);
             if (currentUser != null &&

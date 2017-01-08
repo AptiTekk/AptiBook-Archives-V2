@@ -41,7 +41,7 @@ export class UserGroupService {
 
     public getUserGroupHierarchyDown(user: User): Observable<UserGroup[]> {
         return Observable.create(listener => {
-            this.apiService.get("/userGroups/hierarchyDown/" + user.id).subscribe(
+            this.apiService.get("userGroups/hierarchyDown/" + user.id).subscribe(
                 response => listener.next(response),
                 err => listener.next([])
             );
@@ -53,7 +53,7 @@ export class UserGroupService {
             if (!userGroup)
                 listener.next(false);
             else {
-                this.apiService.patch("usersGroups/" + userGroup.id, userGroup).subscribe(
+                this.apiService.patch("userGroups/" + userGroup.id, userGroup).subscribe(
                     response => listener.next(true),
                     err => listener.next(false));
             }
@@ -76,7 +76,7 @@ export class UserGroupService {
     }
 
     public reloadRootUserGroup(): void {
-        this.apiService.get("/userGroups").subscribe(
+        this.apiService.get("userGroups").subscribe(
             response => this.rootUserGroup.next(<UserGroup>response),
             err => this.rootUserGroup.next(undefined)
         )

@@ -3,11 +3,12 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {UserGroup} from "../../../../../models/user-group.model";
 import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
 import {User} from "../../../../../models/user.model";
+import {AlertComponent} from "../../../../../components/alert/alert.component";
 
 @Component({
     selector: 'groups-section',
@@ -19,7 +20,10 @@ export class GroupsSectionComponent implements OnInit {
     protected selectedUserGroups: UserGroup[];
     protected selectedUserGroup: UserGroup;
 
+    @ViewChild('detailsInfoAlert') private detailsInfoAlert: AlertComponent;
+    @ViewChild('detailsDangerAlert') private detailsDangerAlert: AlertComponent;
     protected userGroupDetailsFormGroup: FormGroup;
+    protected editingDetails: boolean;
 
     constructor(private formBuilder: FormBuilder,
                 private userGroupService: UserGroupService) {
@@ -43,6 +47,8 @@ export class GroupsSectionComponent implements OnInit {
     }
 
     onUserGroupSelected() {
+        this.editingDetails = false;
+
         if (this.selectedUserGroups)
             if (this.selectedUserGroups.length > 0) {
                 this.userGroupService
@@ -61,5 +67,29 @@ export class GroupsSectionComponent implements OnInit {
         this.userGroupDetailsFormGroup.reset();
         this.selectedUserGroup = null;
     }
+
+    onEditUserGroupDetails() {
+        this.editingDetails = true;
+    }
+
+    onSaveUserGroupDetails() {
+        this.editingDetails = false;
+        this.selectedUserGroup.name = this.userGroupDetailsFormGroup.controls['name'].value;
+        this.userGroupService
+            .patchUserGroup(this.selectedUserGroup)
+            .subscribe(success => {
+                if (success)
+                    this.detailsInfoAlert.display("Details Updated.");
+                else
+                    this.detailsDangerAlert.display("Could not update Details due to an Internal Server Error.")
+                this.userGroupService.reloadRootUserGroup();
+                this.onUserGroupSelected();
+            });
+    }
+
+    onCancelUserGroupDetails() {
+        this.onUserGroupSelected();
+    }
+
 }
 

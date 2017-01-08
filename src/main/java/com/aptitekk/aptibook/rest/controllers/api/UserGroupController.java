@@ -18,6 +18,7 @@ import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -76,6 +77,33 @@ public class UserGroupController extends APIControllerAbstract {
 
         return ok(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
         }.getType()));
+    }
+
+    @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.PATCH)
+    public ResponseEntity<?> patchUserGroup(@PathVariable Long id, @RequestBody UserGroupDTO.WithoutParentOrChildren userGroupDTO) {
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
+            return noPermission();
+
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return badRequest("User Group not found.");
+
+        if (userGroupDTO == null)
+            return badRequest("User Group was not supplied.");
+
+        if (userGroupDTO.name != null)
+            if (userGroupDTO.name.length() > 30)
+                return badRequest("The Name must be 30 characters or less.");
+            else if (!userGroupDTO.name.matches("[^<>;=]*"))
+                return badRequest("The Name cannot contain these characters: < > ; =");
+            else
+                userGroup.setName(userGroupDTO.name);
+
+        userGroup = userGroupRepository.save(userGroup);
+        return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}/move", method = RequestMethod.PATCH)
