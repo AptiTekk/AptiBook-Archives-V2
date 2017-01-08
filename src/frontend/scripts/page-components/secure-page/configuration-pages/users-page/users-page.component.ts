@@ -8,7 +8,7 @@ import {Component} from "@angular/core";
 export class UsersPageComponent {
 
     horizontalLinks: [{icon: string, label: string, path: string[]}] = [
-        {icon: 'user', label: 'All Users', path: ['', 'secure', 'configuration', 'users', 'all']},
+        {icon: 'user', label: 'All Users', path: ['', 'secure', 'configuration', 'users']},
         {icon: 'sitemap', label: 'User Groups', path: ['', 'secure', 'configuration', 'users', 'groups']}
     ];
 

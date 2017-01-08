@@ -5,6 +5,9 @@
  */
 import {Component, OnInit} from "@angular/core";
 import {UserGroup} from "../../../../../models/user-group.model";
+import {FormGroup, FormBuilder, Validators} from "@angular/forms";
+import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
+import {User} from "../../../../../models/user.model";
 
 @Component({
     selector: 'groups-section',
@@ -14,16 +17,49 @@ import {UserGroup} from "../../../../../models/user-group.model";
 export class GroupsSectionComponent implements OnInit {
 
     protected selectedUserGroups: UserGroup[];
+    protected selectedUserGroup: UserGroup;
 
-    ngOnInit(): void {
+    protected userGroupDetailsFormGroup: FormGroup;
+
+    constructor(private formBuilder: FormBuilder,
+                private userGroupService: UserGroupService) {
     }
 
-    get selectedUserGroup(): UserGroup {
-        if(this.selectedUserGroups)
-            if(this.selectedUserGroups.length > 0)
-                return this.selectedUserGroups[0];
+    ngOnInit(): void {
+        this.userGroupDetailsFormGroup = this.formBuilder.group({
+            name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
+        });
+    }
 
-        return null;
+    //noinspection JSMethodCanBeStatic
+    /**
+     * Returns an array containing only the names of the user's UserGroups
+     * @param user The User
+     */
+    protected getUserGroupsNames(user: User): string[] {
+        return user.userGroups.map(userGroup => {
+            return userGroup.name
+        });
+    }
+
+    onUserGroupSelected() {
+        if (this.selectedUserGroups)
+            if (this.selectedUserGroups.length > 0) {
+                this.userGroupService
+                    .getUsersByGroup(this.selectedUserGroups[0])
+                    .subscribe(users => {
+                        if (users) {
+                            this.selectedUserGroup = this.selectedUserGroups[0];
+                            this.selectedUserGroup.users = users;
+                            this.userGroupDetailsFormGroup.reset();
+                            this.userGroupDetailsFormGroup.controls['name'].setValue(this.selectedUserGroup.name)
+                        }
+                    });
+                return;
+            }
+
+        this.userGroupDetailsFormGroup.reset();
+        this.selectedUserGroup = null;
     }
 }
 

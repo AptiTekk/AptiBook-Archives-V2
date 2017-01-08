@@ -103,7 +103,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                         component: UsersPageComponent,
                         children: [
                             {
-                                path: 'all',
+                                path: '',
                                 component: AllUsersSectionComponent
                             },
                             {
@@ -112,7 +112,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                             },
                             {
                                 path: '**',
-                                redirectTo: 'all'
+                                redirectTo: ''
                             }
                         ]
                     },

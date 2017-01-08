@@ -13,6 +13,32 @@ export class UserGroupService {
         this.reloadRootUserGroup();
     }
 
+    public getUserGroupById(id: number): Observable<UserGroup> {
+        return Observable.create(listener => {
+            if (!id)
+                listener.next(null);
+            else
+                this.apiService.get("userGroups/" + id)
+                    .subscribe(
+                        response => listener.next(response),
+                        err => listener.next(null)
+                    );
+        });
+    }
+
+    public getUsersByGroup(userGroup: UserGroup): Observable<User[]> {
+        return Observable.create(listener => {
+            if (!userGroup)
+                listener.next(null);
+            else
+                this.apiService.get("userGroups/" + userGroup.id + "/users")
+                    .subscribe(
+                        response => listener.next(response),
+                        err => listener.next(null)
+                    );
+        });
+    }
+
     public getUserGroupHierarchyDown(user: User): Observable<UserGroup[]> {
         return Observable.create(listener => {
             this.apiService.get("/userGroups/hierarchyDown/" + user.id).subscribe(
@@ -59,5 +85,4 @@ export class UserGroupService {
     public getRootUserGroup(): ReplaySubject<UserGroup> {
         return this.rootUserGroup;
     }
-
 }

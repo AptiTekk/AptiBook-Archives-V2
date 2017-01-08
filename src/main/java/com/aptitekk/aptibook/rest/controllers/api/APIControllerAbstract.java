@@ -11,6 +11,7 @@ import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
 import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +35,7 @@ public abstract class APIControllerAbstract {
     @Autowired
     LogService logService;
 
+    @SuppressWarnings("WeakerAccess")
     @Autowired
     TenantSessionService tenantSessionService;
 

@@ -21,6 +21,10 @@ ul.nav > li > a {
     border: none;
 }
 
+ul.nav > li > a:hover {
+    background-color: #f6f6f6;
+}
+
 ul.nav > li.active > a,
 ul.nav > li.active > a:focus {
     background-color: #eeeeee;

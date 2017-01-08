@@ -5,7 +5,7 @@
   -->
 
 <div class="form-group"
-     [class.has-error]="control ? (control.touched || control.dirty) && control.invalid : false">
+     [class.has-error]="control ? (control.touched || control.dirty) && control.invalid && !readOnly : false">
 
     <!--Label (if enabled) -->
     <label *ngIf="label" class="control-label" [attr.for]="uuid">{{label}}</label>

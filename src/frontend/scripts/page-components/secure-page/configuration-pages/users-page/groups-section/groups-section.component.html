@@ -17,11 +17,12 @@
 			<panel-body>
 				<tree [selectable]="true"
 					  [dragAndDrop]="true"
+					  (selected)="onUserGroupSelected()"
 					  [(ngModel)]="selectedUserGroups">
 				</tree>
 			</panel-body>
 			<panel-footer>
-				<p>Drag and drop Groups to re-arrange them.</p>
+				Drag and drop Groups to re-arrange them.
 			</panel-footer>
 		</panel>
 	</div>
@@ -33,6 +34,70 @@
 			</button>
 		</div>
 		<hr/>
-		<h3>{{selectedUserGroup?.name}}</h3>
+		<div class="row">
+			<div class="col-xs-12 col-md-4">
+				<panel [type]="'primary'"
+					   [title]="'User Group Details'">
+					<panel-body>
+						<form [formGroup]="userGroupDetailsFormGroup">
+							<form-group [control]="userGroupDetailsFormGroup?.controls.name"
+										[label]="'Name'"
+										[readOnly]="true">
+							</form-group>
+						</form>
+					</panel-body>
+					<panel-footer>
+						<span *ngIf="!selectedUserGroup">Select a User Group by clicking on it.</span>
+						<button class="btn btn-default"
+								*ngIf="selectedUserGroup">
+							Edit Details
+						</button>
+					</panel-footer>
+				</panel>
+			</div>
+			<div class="col-xs-12 col-md-8">
+				<panel [type]="'primary'"
+					   [title]="'Assigned Users'">
+					<panel-body>
+						<datatable [selectableRows]="true"
+								   (rowSelected)="onUserSelected(selectedUserGroup?.users[$event])"
+								   (rowDeselected)="onUserDeselected()"
+								   [bodyHeight]="'500px'">
+							<datatable-column [orderable]="false"
+											  [width]="'30px'">
+								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+									<user-image [user]="user"
+												[width]="'30px'">
+									</user-image>
+								</datatable-cell>
+							</datatable-column>
+							<datatable-column [title]="'Email Address'">
+								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+									{{user.emailAddress}}
+								</datatable-cell>
+							</datatable-column>
+							<datatable-column [title]="'First Name'">
+								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+									{{user.firstName}}
+								</datatable-cell>
+							</datatable-column>
+							<datatable-column [title]="'Last Name'">
+								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+									{{user.lastName}}
+								</datatable-cell>
+							</datatable-column>
+							<datatable-column [title]="'Assigned User Groups'">
+								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+									{{user.userGroups?.length > 0 ? getUserGroupsNames(user).join(', ') : '-'}}
+								</datatable-cell>
+							</datatable-column>
+						</datatable>
+					</panel-body>
+					<panel-footer>
+						<span *ngIf="true">Select a User by clicking on a row in the table.</span>
+					</panel-footer>
+				</panel>
+			</div>
+		</div>
 	</div>
 </div>

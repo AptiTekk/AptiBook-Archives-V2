@@ -10,6 +10,7 @@ import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
@@ -40,10 +41,41 @@ public class UserGroupController extends APIControllerAbstract {
     public ResponseEntity<?> getUserGroups() {
 
         if (authService.isUserSignedIn()) {
-            return ok(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.WithoutParentOrUsers.class));
+            return ok(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.WithoutParent.class));
         }
 
         return noPermission();
+    }
+
+    @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserGroup(@PathVariable Long id) {
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return badRequest("User Group could not be found.");
+
+        return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
+    }
+
+    @RequestMapping(value = "/userGroups/{id}/users", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserGroupUsers(@PathVariable Long id) {
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return badRequest("User Group could not be found.");
+
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)
+                && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
+            return noPermission();
+
+        return ok(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
+        }.getType()));
     }
 
     @RequestMapping(value = "/userGroups/{id}/move", method = RequestMethod.PATCH)
@@ -66,7 +98,7 @@ public class UserGroupController extends APIControllerAbstract {
             return badRequest("This User Group and the New Parent User Group cannot be the same.");
 
         if (userGroup.getParent().equals(newParentUserGroup))
-            return ok(modelMapper.map(userGroup, UserGroupDTO.WithOnlyName.class));
+            return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
 
         List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
         if (hierarchyDown.contains(newParentUserGroup))
@@ -75,7 +107,7 @@ public class UserGroupController extends APIControllerAbstract {
         userGroup.getParent().getChildren().remove(userGroup);
         userGroup.setParent(newParentUserGroup);
         userGroup = userGroupRepository.save(userGroup);
-        return ok(modelMapper.map(userGroup, UserGroupDTO.WithOnlyName.class));
+        return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
     }
 
     @RequestMapping(value = "/userGroups/hierarchyDown/{id}", method = RequestMethod.GET)

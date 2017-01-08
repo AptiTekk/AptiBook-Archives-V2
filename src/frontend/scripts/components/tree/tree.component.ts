@@ -1,4 +1,4 @@
-import {Component, Input, forwardRef, OnInit} from "@angular/core";
+import {Component, Input, forwardRef, OnInit, EventEmitter, Output} from "@angular/core";
 import {UserGroup} from "../../models/user-group.model";
 import {TreeNodeComponent} from "./tree-node/tree-node.component";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
@@ -22,6 +22,7 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
     @Input() dragAndDrop: boolean = false;
 
     @Input() selectable: boolean = true;
+    @Output() selected: EventEmitter<UserGroup[]> = new EventEmitter<UserGroup[]>();
 
     @Input() selectMultiple: boolean = false;
 
@@ -83,6 +84,7 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
         }
 
         this.propagateChanges(this.selectedUserGroups);
+        this.selected.emit(this.selectedUserGroups);
     }
 
     /**
