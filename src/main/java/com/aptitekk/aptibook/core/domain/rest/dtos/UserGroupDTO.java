@@ -16,6 +16,8 @@ public class UserGroupDTO {
 
     public String name;
 
+    public boolean root;
+
     public UserGroupDTO.WithoutChildren parent;
 
     public List<UserDTO.WithoutUserGroups> users;
