@@ -4,4 +4,24 @@
   ~ Proprietary and confidential.
   -->
 
-Groups Page
+<div class="row">
+	<div class="col-xs-12 col-md-3">
+		<div class="btn-toolbar">
+			<button class="btn btn-primary">
+				Add New User Group
+			</button>
+		</div>
+		<hr/>
+		<panel [type]="'primary'"
+			   [title]="'Select a User Group'">
+			<panel-body>
+				<tree [selectable]="true"
+					  [dragAndDrop]="true">
+				</tree>
+			</panel-body>
+		</panel>
+	</div>
+	<div class="col-xs-12 col-md-9">
+	
+	</div>
+</div>

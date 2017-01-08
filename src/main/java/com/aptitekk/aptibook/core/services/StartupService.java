@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.core.services;
 
-import com.aptitekk.aptibook.core.cron.DemoTenant;
+import com.aptitekk.aptibook.core.cron.DemoTenantBuilder;
 import com.aptitekk.aptibook.core.cron.NotificationCleaner;
 import com.aptitekk.aptibook.core.cron.TenantSynchronizer;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
@@ -33,17 +33,17 @@ public class StartupService implements Serializable {
     private final NotificationCleaner notificationCleaner;
     private final TenantSynchronizer tenantSynchronizer;
 
-    private final DemoTenant demoTenant;
+    private final DemoTenantBuilder demoTenantBuilder;
 
     private static final AtomicBoolean started = new AtomicBoolean(false);
 
     @Autowired
-    public StartupService(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, NotificationCleaner notificationCleaner, TenantSynchronizer tenantSynchronizer, DemoTenant demoTenant) {
+    public StartupService(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, NotificationCleaner notificationCleaner, TenantSynchronizer tenantSynchronizer, DemoTenantBuilder demoTenantBuilder) {
         this.tenantRepository = tenantRepository;
         this.tenantIntegrityService = tenantIntegrityService;
         this.notificationCleaner = notificationCleaner;
         this.tenantSynchronizer = tenantSynchronizer;
-        this.demoTenant = demoTenant;
+        this.demoTenantBuilder = demoTenantBuilder;
     }
 
     @PostConstruct
@@ -58,7 +58,7 @@ public class StartupService implements Serializable {
 
         notificationCleaner.cleanReadNotifications();
         tenantSynchronizer.synchronizeTenants();
-        demoTenant.rebuildDemoTenant();
+        demoTenantBuilder.rebuildDemoTenant();
     }
 
     public static boolean isStarted() {

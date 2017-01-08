@@ -90,6 +90,10 @@ public abstract class APIControllerAbstract {
         return createErrorResponseEntity("You do not have permission.", HttpStatus.UNAUTHORIZED);
     }
 
+    ResponseEntity<Object> noPermission(String message) {
+        return createErrorResponseEntity(message, HttpStatus.UNAUTHORIZED);
+    }
+
     ResponseEntity<Object> serverError() {
         return serverError("Internal Server Error");
     }

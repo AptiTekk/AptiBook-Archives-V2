@@ -4,6 +4,11 @@
   ~ Proprietary and confidential.
   -->
 
-<img [src]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : noImageUrl"
-     [style.width]="width ? width : '150px'"
-     [style.maxWidth]="maxWidth ? maxWidth : null"/>
+<img *ngIf="!useUploader"
+	 [src]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : noImageUrl"
+	 [style.width]="width ? width : '150px'"
+	 [style.maxWidth]="maxWidth ? maxWidth : null"
+	 draggable="false"/>
+<image-uploader *ngIf="useUploader"
+				[noImageUrl]="noImageUrl"
+				[currentImageUrl]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : null"></image-uploader>

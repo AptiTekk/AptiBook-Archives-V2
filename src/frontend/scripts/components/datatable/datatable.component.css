@@ -23,3 +23,9 @@
     background-color: #ddd;
     color: #333;
 }
+
+/* Vertical Scrolling */
+
+:host /deep/ div.dataTables_scrollBody table {
+    margin-bottom: 6px !important;
+}

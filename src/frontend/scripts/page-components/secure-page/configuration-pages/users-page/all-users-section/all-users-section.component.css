@@ -11,9 +11,15 @@
 }
 
 :host /deep/ #selected-user-panel .panel-body {
-    height: calc(100vh - 306px);
+    height: calc(100vh - 361px);
+    overflow-y: auto;
 }
 
-:host /deep/ #selected-user-panel.has-footer .panel-body {
-    height: calc(100vh - 361px);
+:host /deep/ #selected-user-panel user-image img {
+    float: left;
+    margin-right: 20px;
+}
+
+:host /deep/ #selected-user-panel #user-info form-group:first-child .form-group {
+    padding-top: 70px;
 }

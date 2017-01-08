@@ -1,44 +1,21 @@
-import {Component, Directive, Input, AfterViewInit, ViewChild} from "@angular/core";
+import {Component, Input, ContentChildren, QueryList} from "@angular/core";
+import {PanelFooterComponent} from "./panel-footer/panel-footer.component";
 
 @Component({
     selector: 'panel',
     templateUrl: 'panel.component.html',
     styleUrls: ['panel.component.css']
 })
-export class PanelComponent implements AfterViewInit {
+export class PanelComponent {
 
-    @ViewChild('footer')
-    footer;
+    @ContentChildren(PanelFooterComponent) footer: QueryList<PanelFooterComponent>;
 
-    @Input()
-    type: string = 'default';
+    @Input() type: string = 'default';
 
-    @Input()
-    title: string;
+    @Input() title: string;
 
-    @Input()
-    panelClass: string;
+    @Input() panelClass: string;
 
-    @Input()
-    panelBodyClass: string;
-
-    ngAfterViewInit(): void {
-        if(this.footer.nativeElement.children.length == 0)
-            this.footer.nativeElement.classList.add('hidden');
-    }
-
-}
-
-@Directive({
-    selector: 'panel-body'
-})
-export class PanelComponentBody {
-
-}
-
-@Directive({
-    selector: 'panel-footer'
-})
-export class PanelComponentFooter {
+    @Input() panelBodyClass: string;
 
 }

@@ -10,7 +10,6 @@
 
 :host /deep/ #search-settings date-time-picker {
     display: inline-block;
-    margin-right: 10px;
 }
 
 :host /deep/ #search-settings date-time-picker .form-control {

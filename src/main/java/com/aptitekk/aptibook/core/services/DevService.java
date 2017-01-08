@@ -6,6 +6,7 @@
 
 package com.aptitekk.aptibook.core.services;
 
+import com.aptitekk.aptibook.core.cron.DemoTenantBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
@@ -24,14 +25,19 @@ public class DevService {
 
     private SpringProfileService springProfileService;
     private LogService logService;
+    private final DemoTenantBuilder demoTenantBuilder;
 
     private ProcessMonitor devServerMonitor;
     private CommandLineListener commandLineListener;
 
     @Autowired
-    public DevService(SpringProfileService springProfileService, LogService logService) {
+    public DevService(
+            SpringProfileService springProfileService,
+            LogService logService,
+            DemoTenantBuilder demoTenantBuilder) {
         this.springProfileService = springProfileService;
         this.logService = logService;
+        this.demoTenantBuilder = demoTenantBuilder;
     }
 
     @PostConstruct
@@ -45,7 +51,11 @@ public class DevService {
 
     private void startWebpackWatcher() {
         try {
-            devServerMonitor = new ProcessMonitor("Webpack Watcher", "node_modules/.bin/webpack.cmd", "--watch", "--watchOptions.poll=300") {
+            devServerMonitor = new ProcessMonitor(
+                    "Webpack Watcher",
+                    "node_modules/.bin/webpack.cmd",
+                    "--config", "webpack/webpack.dev.config.js",
+                    "--watch", "--watchOptions.poll=300") {
                 boolean keepPrinting;
 
                 @Override
@@ -85,6 +95,11 @@ public class DevService {
         if (devServerMonitor != null) {
             logService.logInfo(getClass(), "Stopping Webpack Watcher");
             devServerMonitor.cancel();
+        }
+
+        if (commandLineListener != null) {
+            logService.logInfo(getClass(), "Stopping Command Line Listener");
+            commandLineListener.cancel();
         }
     }
 
@@ -163,9 +178,16 @@ public class DevService {
         }
 
         private void processCommand(String command) {
-
+            switch (command) {
+                case "demo":
+                    logService.logInfo(getClass(), "Rebuilding Demo");
+                    demoTenantBuilder.rebuildDemoTenant();
+            }
         }
 
+        public void cancel() {
+            this.cancelled.set(true);
+        }
     }
 
 }

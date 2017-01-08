@@ -26,8 +26,8 @@ export class SearchService {
 
     clearResults() {
         this.searchResults.next([]);
-        this.startTime.next(moment());
-        this.endTime.next(moment());
+        this.startTime.next(undefined);
+        this.endTime.next(undefined);
     }
 
     getSearchResults(): ReplaySubject<Resource[]> {

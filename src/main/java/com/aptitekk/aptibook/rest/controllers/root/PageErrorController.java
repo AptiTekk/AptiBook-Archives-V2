@@ -22,7 +22,7 @@ public class PageErrorController implements ErrorController {
 
     @RequestMapping("/error")
     public void onError(HttpServletResponse response) {
-        response.setStatus(404);
+        response.setStatus(500);
     }
 
 }

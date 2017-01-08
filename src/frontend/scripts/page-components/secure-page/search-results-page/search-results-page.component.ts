@@ -33,6 +33,7 @@ export class SearchResultsPageComponent {
         searchService.getSearchResults().subscribe(resources => {
             this.availableResources = resources;
         });
+
         searchService.getStartTime().subscribe(start => this.start = start);
         searchService.getEndTime().subscribe(end => this.end = end);
 
