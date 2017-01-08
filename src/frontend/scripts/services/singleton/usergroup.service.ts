@@ -34,6 +34,21 @@ export class UserGroupService {
         });
     }
 
+    public moveUserGroup(userGroup: UserGroup, newParentUserGroup: UserGroup): Observable<boolean> {
+        return Observable.create(listener => {
+            if (!userGroup || !newParentUserGroup)
+                listener.next(false);
+            else if (userGroup.id === newParentUserGroup.id)
+                listener.next(false);
+            else {
+                this.apiService.patch("userGroups/" + userGroup.id + "/move?newParentId=" + newParentUserGroup.id).subscribe(
+                    response => listener.next(true),
+                    err => listener.next(false)
+                )
+            }
+        });
+    }
+
     public reloadRootUserGroup(): void {
         this.apiService.get("/userGroups").subscribe(
             response => this.rootUserGroup.next(<UserGroup>response),

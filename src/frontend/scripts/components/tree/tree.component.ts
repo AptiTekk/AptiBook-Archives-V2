@@ -1,4 +1,4 @@
-import {Component, Input, forwardRef} from "@angular/core";
+import {Component, Input, forwardRef, OnInit} from "@angular/core";
 import {UserGroup} from "../../models/user-group.model";
 import {TreeNodeComponent} from "./tree-node/tree-node.component";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
@@ -17,7 +17,7 @@ import * as Collections from "typescript-collections";
         }
     ]
 })
-export class TreeComponent implements ControlValueAccessor {
+export class TreeComponent implements OnInit, ControlValueAccessor {
 
     @Input() dragAndDrop: boolean = false;
 
@@ -35,8 +35,11 @@ export class TreeComponent implements ControlValueAccessor {
 
     draggingNode: TreeNodeComponent;
 
-    constructor(userGroupService: UserGroupService) {
-        userGroupService.getRootUserGroup().subscribe(root => this.rootGroup = root);
+    constructor(private userGroupService: UserGroupService) {
+    }
+
+    ngOnInit(): void {
+        this.userGroupService.getRootUserGroup().subscribe(root => this.rootGroup = root);
     }
 
     onNodeSelected(treeNode: TreeNodeComponent, ctrlDown: boolean = false) {
@@ -113,6 +116,23 @@ export class TreeComponent implements ControlValueAccessor {
             // Filter the node's User Group from the Selected User Groups.
             this.selectedUserGroups = this.selectedUserGroups.filter((userGroup: UserGroup) => userGroup.id !== childNode.userGroup.id);
         }
+    }
+
+    public moveNode(node: TreeNodeComponent, newParentNode: TreeNodeComponent) {
+        if (!node)
+            return;
+
+        if (node === newParentNode)
+            return;
+
+        if (node.userGroup.root)
+            return;
+
+        this.userGroupService
+            .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.rootGroup)
+            .subscribe(
+                success => this.userGroupService.reloadRootUserGroup()
+            );
     }
 
     writeValue(obj: UserGroup[]|UserGroup): void {
