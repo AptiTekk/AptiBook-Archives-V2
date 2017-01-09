@@ -28,21 +28,6 @@ import {MyContainerComponent} from "../page-components/secure-page/my-pages/my-c
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
-        path: '',
-        component: FrontPageComponent,
-        children: [
-            {
-                path: 'sign-in',
-                component: SignInComponent
-            },
-            {
-                path: 'register',
-                component: RegisterComponent
-            }
-        ],
-        canActivate: [FrontPageGuard]
-    },
-    {
         path: 'secure',
         component: SecurePageComponent,
         children: [
@@ -154,6 +139,25 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             }
         ],
         canActivate: [SecureGuard]
+    },
+    {
+        path: '',
+        component: FrontPageComponent,
+        children: [
+            {
+                path: 'sign-in',
+                component: SignInComponent
+            },
+            {
+                path: 'register',
+                component: RegisterComponent
+            },
+            {
+                path: '**',
+                redirectTo: 'sign-in'
+            }
+        ],
+        canActivate: [FrontPageGuard]
     },
     {
         path: '**',
