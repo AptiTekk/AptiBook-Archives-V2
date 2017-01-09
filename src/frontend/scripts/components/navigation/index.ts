@@ -5,3 +5,4 @@
  */
 
 export * from './navigation.component';
+export * from './navigation-link.component';

@@ -10,7 +10,6 @@ import {UserGroupService} from "../../../../../services/singleton/usergroup.serv
 import {User} from "../../../../../models/user.model";
 import {AlertComponent} from "../../../../../components/alert/alert.component";
 import {UserService} from "../../../../../services/singleton/user.service";
-import {HorizontalNavigationLink} from "../../../../../components/navigation/navigation-link.model";
 
 @Component({
     selector: 'groups-section',
@@ -26,6 +25,8 @@ export class GroupsSectionComponent implements OnInit {
     @ViewChild('detailsDangerAlert') private detailsDangerAlert: AlertComponent;
     protected userGroupDetailsFormGroup: FormGroup;
     protected editingDetails: boolean;
+
+    protected showAssignedUsers: boolean = true;
 
     constructor(private formBuilder: FormBuilder,
                 private userGroupService: UserGroupService,
@@ -108,6 +109,10 @@ export class GroupsSectionComponent implements OnInit {
                 }
             )
 
+    }
+
+    setShowAssignedUsers(show: boolean) {
+        this.showAssignedUsers = show;
     }
 
 }

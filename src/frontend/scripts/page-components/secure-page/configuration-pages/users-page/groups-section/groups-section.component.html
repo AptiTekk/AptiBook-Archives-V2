@@ -78,48 +78,54 @@
 				</form>
 			</div>
 			<div class="col-xs-12 col-md-8">
-				<!--<navigation>
-					<navigation-link [label]="'Assigned Users'" [icon]="'user'" [active]="true" (selected)="false">
+				<navigation [horizontal]="true">
+					<navigation-link [label]="'Assigned Users'"
+									 [icon]="'user'"
+									 [active]="showAssignedUsers"
+									 (selected)="setShowAssignedUsers(true)">
 					</navigation-link>
-					<navigation-link [label]="'Assigned Resources'" [icon]="'tags'" [active]="false" (selected)="false">
+					<navigation-link [label]="'Assigned Resources'"
+									 [icon]="'tags'"
+									 [active]="!showAssignedUsers"
+									 (selected)="setShowAssignedUsers(false)">
 					</navigation-link>
-				</navigation>-->
-				<panel [type]="'primary'"
-					   [title]="'Assigned Users'">
-					<panel-body>
-						<datatable [selectableRows]="true"
-								   (rowSelected)="onUserSelected(selectedUserGroup?.users[$event])"
-								   (rowDeselected)="onUserDeselected()"
-								   [bodyHeight]="'500px'">
-							<datatable-column [orderable]="false"
-											  [width]="'30px'">
-								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
-									<user-image [user]="user"
-												[width]="'30px'">
-									</user-image>
-								</datatable-cell>
-							</datatable-column>
-							<datatable-column [title]="'Email Address'">
-								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
-									{{user.emailAddress}}
-								</datatable-cell>
-							</datatable-column>
-							<datatable-column [title]="'First Name'">
-								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
-									{{user.firstName}}
-								</datatable-cell>
-							</datatable-column>
-							<datatable-column [title]="'Last Name'">
-								<datatable-cell *ngFor="let user of selectedUserGroup?.users">
-									{{user.lastName}}
-								</datatable-cell>
-							</datatable-column>
-						</datatable>
-					</panel-body>
-					<panel-footer>
-						<span *ngIf="true">Select a User by clicking on a row in the table.</span>
-					</panel-footer>
-				</panel>
+				</navigation>
+				
+				<div *ngIf="showAssignedUsers">
+					<datatable [selectableRows]="true"
+							   (rowSelected)="onUserSelected(selectedUserGroup?.users[$event])"
+							   (rowDeselected)="onUserDeselected()"
+							   [bodyHeight]="'500px'">
+						<datatable-column [orderable]="false"
+										  [width]="'30px'">
+							<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+								<user-image [user]="user"
+											[width]="'30px'">
+								</user-image>
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Email Address'">
+							<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+								{{user.emailAddress}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'First Name'">
+							<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+								{{user.firstName}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Last Name'">
+							<datatable-cell *ngFor="let user of selectedUserGroup?.users">
+								{{user.lastName}}
+							</datatable-cell>
+						</datatable-column>
+					</datatable>
+					<span *ngIf="true">Select a User by clicking on a row in the table.</span>
+				</div>
+				
+				<div *ngIf="!showAssignedUsers">
+				
+				</div>
 			</div>
 		</div>
 	</div>

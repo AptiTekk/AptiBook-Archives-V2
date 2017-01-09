@@ -3,8 +3,9 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, Input} from "@angular/core";
+import {Component, Input, ContentChildren, QueryList} from "@angular/core";
 import {NavigationLink} from "./navigation-link.model";
+import {NavigationLinkComponent} from "./navigation-link.component";
 
 @Component({
     selector: 'navigation',
@@ -15,5 +16,7 @@ export class NavigationComponent {
 
     @Input() links: NavigationLink[];
     @Input() horizontal: boolean = false;
+
+    @ContentChildren(NavigationLinkComponent) protected navigationLinkComponents: QueryList<NavigationLinkComponent>;
 
 }
