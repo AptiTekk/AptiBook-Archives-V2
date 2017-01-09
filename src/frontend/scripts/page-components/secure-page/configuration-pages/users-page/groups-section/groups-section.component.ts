@@ -9,6 +9,7 @@ import {FormGroup, FormBuilder, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
 import {User} from "../../../../../models/user.model";
 import {AlertComponent} from "../../../../../components/alert/alert.component";
+import {UserService} from "../../../../../services/singleton/user.service";
 
 @Component({
     selector: 'groups-section',
@@ -26,7 +27,8 @@ export class GroupsSectionComponent implements OnInit {
     protected editingDetails: boolean;
 
     constructor(private formBuilder: FormBuilder,
-                private userGroupService: UserGroupService) {
+                private userGroupService: UserGroupService,
+                private userService: UserService) {
     }
 
     ngOnInit(): void {
@@ -81,14 +83,30 @@ export class GroupsSectionComponent implements OnInit {
                 if (success)
                     this.detailsInfoAlert.display("Details Updated.");
                 else
-                    this.detailsDangerAlert.display("Could not update Details due to an Internal Server Error.")
-                this.userGroupService.reloadRootUserGroup();
+                    this.detailsDangerAlert.display("Could not update Details due to an Internal Server Error.");
+                this.userGroupService.fetchRootUserGroup();
                 this.onUserGroupSelected();
             });
     }
 
     onCancelUserGroupDetails() {
         this.onUserGroupSelected();
+    }
+
+    onDeleteUserGroup() {
+        this.userGroupService
+            .deleteUserGroup(this.selectedUserGroup)
+            .subscribe(
+                success => {
+                    if (success) {
+                        this.selectedUserGroups = [];
+                        this.userGroupService.fetchRootUserGroup();
+                        this.userService.fetchUsers();
+                        this.onUserGroupSelected();
+                    }
+                }
+            )
+
     }
 
 }

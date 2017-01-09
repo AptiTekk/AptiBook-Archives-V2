@@ -139,7 +139,7 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
         this.userGroupService
             .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.rootGroup)
             .subscribe(
-                success => this.userGroupService.reloadRootUserGroup()
+                success => this.userGroupService.fetchRootUserGroup()
             );
     }
 

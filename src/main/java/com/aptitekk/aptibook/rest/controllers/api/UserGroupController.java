@@ -138,6 +138,37 @@ public class UserGroupController extends APIControllerAbstract {
         return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
     }
 
+    @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.DELETE)
+    public ResponseEntity<?> deleteUserGroup(@PathVariable Long id) {
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
+            return noPermission();
+
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return badRequest("User Group could not be found.");
+
+        if (userGroup.isRoot())
+            return badRequest("The Root Group cannot be deleted.");
+
+        // Move children groups upwards.
+        userGroup.getParent().getChildren().addAll(userGroup.getChildren());
+        for (UserGroup child : userGroup.getChildren()) {
+            child.setParent(userGroup.getParent());
+            userGroupRepository.save(child);
+        }
+
+        userGroup.getParent().getChildren().remove(userGroup);
+        userGroup.getChildren().clear();
+
+        userGroupRepository.delete(userGroup);
+
+        return noContent();
+    }
+
     @RequestMapping(value = "/userGroups/hierarchyDown/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserGroupsHierarchyDown(@PathVariable Long id) {
         if (id == null)

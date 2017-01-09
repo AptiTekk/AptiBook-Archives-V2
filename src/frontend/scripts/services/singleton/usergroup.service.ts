@@ -10,7 +10,18 @@ export class UserGroupService {
     private rootUserGroup: ReplaySubject<UserGroup> = new ReplaySubject<UserGroup>(1);
 
     constructor(private apiService: APIService) {
-        this.reloadRootUserGroup();
+        this.fetchRootUserGroup();
+    }
+
+    public fetchRootUserGroup(): void {
+        this.apiService.get("userGroups").subscribe(
+            response => this.rootUserGroup.next(<UserGroup>response),
+            err => this.rootUserGroup.next(undefined)
+        )
+    }
+
+    public getRootUserGroup(): ReplaySubject < UserGroup > {
+        return this.rootUserGroup;
     }
 
     public getUserGroupById(id: number): Observable<UserGroup> {
@@ -75,14 +86,17 @@ export class UserGroupService {
         });
     }
 
-    public reloadRootUserGroup(): void {
-        this.apiService.get("userGroups").subscribe(
-            response => this.rootUserGroup.next(<UserGroup>response),
-            err => this.rootUserGroup.next(undefined)
-        )
+    public deleteUserGroup(userGroup: UserGroup): Observable<boolean> {
+        return Observable.create(listener => {
+            if (!userGroup)
+                listener.next(false);
+            else
+                this.apiService.del("userGroups/" + userGroup.id)
+                    .subscribe(
+                        response => listener.next(true),
+                        err => listener.next(false)
+                    )
+        });
     }
 
-    public getRootUserGroup(): ReplaySubject<UserGroup> {
-        return this.rootUserGroup;
-    }
 }

@@ -29,7 +29,8 @@
 	<div class="col-xs-12 col-md-9">
 		<div class="btn-toolbar">
 			<button class="btn btn-danger"
-					[disabled]="!selectedUserGroup">
+					[disabled]="!selectedUserGroup"
+					(click)="userGroupDeleteConfirm.open()">
 				Delete User Group
 			</button>
 		</div>
@@ -122,3 +123,9 @@
 		</div>
 	</div>
 </div>
+
+<deletion-confirmation-modal #userGroupDeleteConfirm
+							 [message]="'Are you sure you want to delete the \'' + selectedUserGroup?.name + '\' User Group?'"
+							 [warning]="'All associated decisions made on Reservations, and all associated Resources will be removed as well! (Children Groups will be moved up.)'"
+							 (confirm)="onDeleteUserGroup()">
+</deletion-confirmation-modal>
