@@ -5,130 +5,145 @@
   -->
 
 <div class="container-fluid">
+	
+	<ol class="breadcrumb">
+		<li><a [routerLink]="['', 'secure']">Home</a></li>
+		<li class="active">Reservation Management</li>
+		<li class="active">Pending</li>
+	</ol>
+	
+	<div *ngIf="pendingReservations.length == 0">
+		<h4>
+			No Reservations are Pending Approval.
+		</h4>
+	</div>
 
-    <ol class="breadcrumb">
-        <li><a [routerLink]="['', 'secure']">Home</a></li>
-        <li class="active">Reservation Management</li>
-        <li class="active">Pending</li>
-    </ol>
-
-    <div *ngIf="pendingReservations.length == 0">
-        <h4>
-            No Reservations are Pending Approval.
-        </h4>
-    </div>
-    <div *ngIf="pendingReservations.length > 0">
-        <div *ngFor="let reservation of pendingReservations">
-            <div class="row">
-                <div class="col-xs-12">
-                    <h4>{{reservation.name}}</h4>
-                    <hr>
-                </div>
-            </div>
-            <div *ngFor="let reservationDetailsVar of pendingReservations">
-                <div class="col-xs-10 col-md-8 col-lg-10">
-                    <panel title="{{reservationDetailsVar.resource.name}}">
-                        <panel-body>
-                            <!-- Resource Image -->
-                            <div class="col-xs-4 col-sm-2" style="width: 175px;">
-                                <div class="form-group">
-                                    <resource-image [resource]="reservationDetailsVar.resource"></resource-image>
-                                </div>
-                            </div>
-                            <div class="col-xs-12 col-sm-10">
-                                <div class="row">
-                                    <div class="col-xs-12 col-sm-5">
-                                        <div class="form-group">
-                                            <label>Reservation Title:</label>
-                                            <input type="text" readonly="readonly" value="{{reservationDetailsVar.title}}" class="form-control">
-                                        </div>
-                                    </div>
-
-                                    <div class="col-xs-12 col-sm-3">
-                                        <div class="form-group">
-                                            <label>Requested By:</label>
-                                            <input type="text" readonly="readonly" value="{{reservationDetailsVar.user.fullName}}" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-sm-4">
-                                        <div class="form-group">
-                                            <label>Requested On:</label>
-                                            <input type="text" readonly="readonly" value="{{formatFriendly(reservationDetailsVar.dateCreated).calendar()}}" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-xs-12 col-xs-6">
-                                        <div class="form-group">
-                                            <label>Reservation Start Time:</label>
-                                            <input type="text" readonly="readonly" value="{{formatFriendly(reservationDetailsVar.start)}}" class="form-control">
-                                        </div>
-                                    </div>
-                                    <div class="col-xs-12 col-xs-6">
-                                        <div class="form-group">
-                                            <label>Reservation End Time:</label>
-                                            <input type="text" readonly="readonly" value="{{formatFriendly(reservationDetailsVar.end)}}" class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-xs-12">
-                                   <!-- {{getReservationDecisions(reservationDetailsVar)}}-->
-                                    <p>Size of lower: {{lowerApprovalOverrides.length}}</p>
-                                    <p>Size of upper: {{lowerRejectionOverrides.length}}</p>
-                                </div>
-                            </div>
-
-                       <!--     <div class="col-xs-12">
-                                <hr style="border-top: dotted 2px;" />
-                                <div class="form-group">
-                                    <div class="row">
-                                    <div *ngFor="let userGroup of reservationDetailsVar.hierarchyGroups">
-
-                                        <div *ngIf="!(userGroup.root && userGroup.decisions == null)">
-                                            <label>{{userGroup.name}}</label>
-                                            <div *ngIf="reservationDetailsVar.hierarchyDecisions.get(userGroup) != null">
-                                                <label>User {{reservationDetailsVar.hierarchyDecisions.get(userGroup).user.fullName}} </label>
-                                            </div>
-                                            has
-                                                <div *ngIf="reservationDetailsVar.hierarchyDecisions.get(userGroup).approved">
-                                                    <span class="label label-success">approved</span>
-                                                </div>
-                                                <div *ngIf="!reservationDetailsVar.hierarchyDecisions.get(userGroup).approved">
-                                                    <span class="label label-danger">rejected</span>
-                                                </div>
-                                           this Reservation.
-                                        </div>
-                                        <span class="label label-info">Overridden</span>
-                                        by the decision of
-                                        <label>
-                                            {{reservationDetailsVar.overridingDecisions.get(userGroup).user.fullName}}
-                                        </label>
-                                        to
-                                        <div *ngIf="reservationDetailsVar.overridingDecisions.get(userGroup).approved">
-                                            <span class="label label-success">approve</span>
-                                        </div>
-                                        <div *ngIf="!reservationDetailsVar.overridingDecisions.get(userGroup).approved">
-                                            <span class="label label-danger">reject</span>
-                                        </div>
-                                        on behalf of the
-                                        <label>
-                                            {{reservationDetailsVar.overridingDecisions.get(userGroup).userGroup.name}}
-                                        </label>
-                                    </div>
-                                    </div>
-
-                                </div>
-                            </div>-->
-                        </panel-body>
-                    </panel>
-
-                </div>
-
-
-            </div>
-        </div>
-    </div>
+			
+			<div *ngFor="let reservationDetailsVar of pendingReservations">
+				<div class="row">
+					<div class="col-xs-12">
+						<h4>{{reservationDetailsVar.name}}</h4>
+						<hr>
+					</div>
+				</div>
+				<div class="col-xs-10 col-md-8 col-lg-10">
+					<panel title="{{reservationDetailsVar.resource.name}}">
+						<panel-body>
+							<!-- Resource Image -->
+							<div class="col-xs-4 col-sm-2"
+								 style="width: 175px;">
+								<div class="form-group">
+									<resource-image [resource]="reservationDetailsVar.resource"></resource-image>
+								</div>
+							</div>
+							<div class="col-xs-12 col-sm-10">
+								<div class="row">
+									<div class="col-xs-12 col-sm-5">
+										<div class="form-group">
+											<label>Reservation Title:</label>
+											<input type="text"
+												   readonly="readonly"
+												   value="{{reservationDetailsVar.title}}"
+												   class="form-control">
+										</div>
+									</div>
+									
+									<div class="col-xs-12 col-sm-3">
+										<div class="form-group">
+											<label>Requested By:</label>
+											<input type="text"
+												   readonly="readonly"
+												   value="{{reservationDetailsVar.user.fullName}}"
+												   class="form-control">
+										</div>
+									</div>
+									<div class="col-xs-12 col-sm-4">
+										<div class="form-group">
+											<label>Requested On:</label>
+											<input type="text"
+												   readonly="readonly"
+												   value="{{formatFriendly(reservationDetailsVar.dateCreated).calendar()}}"
+												   class="form-control">
+										</div>
+									</div>
+								</div>
+								<div class="row">
+									<div class="col-xs-12 col-xs-6">
+										<div class="form-group">
+											<label>Reservation Start Time:</label>
+											<input type="text"
+												   readonly="readonly"
+												   value="{{formatFriendly(reservationDetailsVar.start)}}"
+												   class="form-control">
+										</div>
+									</div>
+									<div class="col-xs-12 col-xs-6">
+										<div class="form-group">
+											<label>Reservation End Time:</label>
+											<input type="text"
+												   readonly="readonly"
+												   value="{{formatFriendly(reservationDetailsVar.end)}}"
+												   class="form-control">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12">
+									<!-- {{getReservationDecisions(reservationDetailsVar)}}-->
+									<div *ngFor="let decision of reservationDetailsVar.organizeDecisions">
+										<p>title: {{decision.reservation.title}}</p>
+										<p>user: {{decision.reservation.user}}</p>
+									</div>
+								</div>
+							</div>
+							
+							<!--     <div class="col-xs-12">
+									 <hr style="border-top: dotted 2px;" />
+									 <div class="form-group">
+										 <div class="row">
+										 <div *ngFor="let userGroup of reservationDetailsVar.hierarchyGroups">
+	 
+											 <div *ngIf="!(userGroup.root && userGroup.decisions == null)">
+												 <label>{{userGroup.name}}</label>
+												 <div *ngIf="reservationDetailsVar.hierarchyDecisions.get(userGroup) != null">
+													 <label>User {{reservationDetailsVar.hierarchyDecisions.get(userGroup).user.fullName}} </label>
+												 </div>
+												 has
+													 <div *ngIf="reservationDetailsVar.hierarchyDecisions.get(userGroup).approved">
+														 <span class="label label-success">approved</span>
+													 </div>
+													 <div *ngIf="!reservationDetailsVar.hierarchyDecisions.get(userGroup).approved">
+														 <span class="label label-danger">rejected</span>
+													 </div>
+												this Reservation.
+											 </div>
+											 <span class="label label-info">Overridden</span>
+											 by the decision of
+											 <label>
+												 {{reservationDetailsVar.overridingDecisions.get(userGroup).user.fullName}}
+											 </label>
+											 to
+											 <div *ngIf="reservationDetailsVar.overridingDecisions.get(userGroup).approved">
+												 <span class="label label-success">approve</span>
+											 </div>
+											 <div *ngIf="!reservationDetailsVar.overridingDecisions.get(userGroup).approved">
+												 <span class="label label-danger">reject</span>
+											 </div>
+											 on behalf of the
+											 <label>
+												 {{reservationDetailsVar.overridingDecisions.get(userGroup).userGroup.name}}
+											 </label>
+										 </div>
+										 </div>
+	 
+									 </div>
+								 </div>-->
+						</panel-body>
+					</panel>
+				
+				</div>
+			</div>
+	
 
 </div>

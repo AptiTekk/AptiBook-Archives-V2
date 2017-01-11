@@ -38,8 +38,40 @@ export class PendingPageComponent {
                         let reservationDecisions: ReservationDecision[];
                         reservationDecisions = decisions;
 
+                        console.log("Size of decision list: " + reservationDecisions.length);
+                        let userGroup: UserGroup[] = [];
+                        reservationDecisions.forEach(item =>{
+                            userGroup.push(item.userGroup);
+                        });
+                        let reachedUserGroup: boolean;
+                        let behalfUserGroup: UserGroup;
+                        reachedUserGroup = false;
+
+                        userGroup.forEach(item => {
+                            this.user.userGroups.forEach(userG => {
+                                if (userG === item) {
+                                    behalfUserGroup = userG;
+                                    reachedUserGroup = true;
+                                }
+                            });
+                            if(reachedUserGroup){
+                                reservationDecisions.forEach(decision =>{
+                                    if(decision.userGroup === behalfUserGroup){
+                                        if(decision.reservation.approved == true){
+                                            reservation.approved = true;
+                                        }
+                                    }else if(!decision.reservation.approved){
+                                        reservation.approved = false;
+                                    }
+                                });
+                            }
+
+                        });
+
+                        reachedUserGroup = false;
+                        this.behalfUserGroup = behalfUserGroup;
                         //organize
-                        reservation['organizeDecisions'] = decisions;
+                        reservation['organizeDecisions'] = reservationDecisions;
                     })
                 });
 
@@ -84,42 +116,6 @@ export class PendingPageComponent {
 */
 
     organizeDecisions(reservationDecisions: ReservationDecision[]){
-        console.log("Size of decision list: " + reservationDecisions.length);
-        let userGroup: UserGroup[] = [];
-        reservationDecisions.forEach(item =>{
-            userGroup.push(item.userGroup);
-        });
-        let reachedUserGroup: boolean;
-        let behalfUserGroup: UserGroup;
-        reachedUserGroup = false;
-
-            userGroup.forEach(item => {
-                this.user.userGroups.forEach(userG => {
-                    if (userG === item) {
-                        behalfUserGroup = userG;
-                        reachedUserGroup = true;
-                    }
-                });
-                if(reachedUserGroup){
-                    reservationDecisions.forEach(decision =>{
-                        if(decision.userGroup === behalfUserGroup){
-                            if(decision.reservation.approved == null){
-                                this.lowerApprovalOverrides.push(decision.userGroup);
-                                this.lowerRejectionOverrides.push(decision.userGroup);
-                            }
-                            if(decision.reservation.approved){
-                                this.lowerRejectionOverrides.push(decision.userGroup);
-                            }else if(!decision.reservation.approved){
-                                this.lowerApprovalOverrides.push(decision.userGroup);
-                            }
-                        }
-                    })
-                }
-
-            });
-
-        reachedUserGroup = false;
-        this.behalfUserGroup = behalfUserGroup;
     }
 
 }
