@@ -27,21 +27,51 @@ export class PendingPageComponent {
     userGroupHierarchy: UserGroup[] = [];
     lowerApprovalOverrides: UserGroup[] = [];
     lowerRejectionOverrides: UserGroup[] = [];
-
+    reservationDecisions: ReservationDecision[][] = [];
 
     constructor(private reservationService: ReservationService, authService: AuthService) {
         authService.getUser().subscribe(user => this.user = user);
         reservationService.getPendingReservations(this.user).subscribe(reservations => {
                 this.pendingReservations = reservations;
-        });
-        this.pendingReservations.forEach(item => this.displayCategories.push(item.resource.resourceCategory));
-    }
+                this.pendingReservations.forEach(reservation =>{
+                    this.reservationService.getReservationDecisions(reservation).subscribe(decisions =>{
+                        let reservationDecisions: ReservationDecision[];
+                        reservationDecisions = decisions;
 
+                        //organize
+                        reservation['organizeDecisions'] = decisions;
+                    })
+                });
+
+        });
+       // this.pendingReservations.forEach(item => this.displayCategories.push(item.resource.resourceCategory));
+
+    }
+    doStuff() {
+        console.log("Size of reservations: " + this.pendingReservations.length); //prints 1
+        let j = this.pendingReservations.length;
+        let temp = this.pendingReservations;
+        for (let i = 0; i <= j; i++) {
+            this.reservationService.getReservationDecisions(temp[i]).subscribe(decisions => {
+                    let decisionList: ReservationDecision[];
+                    decisionList = decisions; //size is 1
+                    this.reservationDecisions[i] = decisionList;
+                }
+            );
+
+        }
+      /*  if (this.reservationDecisions == undefined) {
+            console.log("broken");
+        } else {
+            console.log("Size now: " + this.reservationDecisions[0].length); //this prints 0, should print 1
+        }*/
+    }
 
     formatFriendly(date: string){
         return moment(date);
     }
 
+/*
     getReservationDecisions(reservation: Reservation){
         let reservationDecisions: ReservationDecision[] = [];
             console.log("passed if");
@@ -51,6 +81,7 @@ export class PendingPageComponent {
 
         this.organizeDecisions(reservationDecisions);
     }
+*/
 
     organizeDecisions(reservationDecisions: ReservationDecision[]){
         console.log("Size of decision list: " + reservationDecisions.length);

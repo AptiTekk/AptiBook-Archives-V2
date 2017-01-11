@@ -20,7 +20,7 @@ public class ReservationDecisionDTO {
 
     public Long id;
     public UserDTO user;
-    public UserGroupDTO userGroup;
+    public UserGroupDTO.WithoutParent userGroup;
     public ReservationDTO reservation;
     public boolean approved;
     public String comment;
