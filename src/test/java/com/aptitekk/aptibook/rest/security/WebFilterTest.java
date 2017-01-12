@@ -15,9 +15,19 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 public class WebFilterTest extends AbstractWebClientTest {
 
-    @Test(expected = com.gargoylesoftware.htmlunit.FailingHttpStatusCodeException.class)
+    @Test
     public void testIndexPage() throws Exception {
-        this.webClient.getPage("/");
+        Page page = this.webClient.getPage("/");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(404);
+    }
+
+    @Test
+    public void testPingPage() throws Exception {
+        Page page = this.webClient.getPage("/ping");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentAsString()).isEqualToIgnoringCase("pong");
     }
 
     @Test
