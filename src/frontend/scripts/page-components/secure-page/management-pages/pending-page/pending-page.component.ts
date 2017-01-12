@@ -14,6 +14,7 @@ import moment = require("moment");
 import {Reservation} from "../../../../models/reservation.model";
 import {ReservationDecision} from "../../../../models/reservation-decision.model";
 import {UserGroup} from "../../../../models/user-group.model";
+import {UserGroupService} from "../../../../services/singleton/usergroup.service";
 
 @Component({
     selector: 'pending-page',
@@ -29,56 +30,81 @@ export class PendingPageComponent {
     lowerRejectionOverrides: UserGroup[] = [];
     reservationDecisions: ReservationDecision[][] = [];
 
-    constructor(private reservationService: ReservationService, authService: AuthService) {
+    constructor(private userGroupService: UserGroupService, private reservationService: ReservationService, authService: AuthService) {
         authService.getUser().subscribe(user => this.user = user);
         reservationService.getPendingReservations(this.user).subscribe(reservations => {
                 this.pendingReservations = reservations;
                 this.pendingReservations.forEach(reservation =>{
                     this.reservationService.getReservationDecisions(reservation).subscribe(decisions =>{
+                        let hierarchyUp: UserGroup[] = [];
+                        this.userGroupService.getUserGroupHierarchyUp(reservation.user).subscribe(userGroups =>{
+                            hierarchyUp = userGroups;
+                        });
+                        console.log("Hierarchy up size: " + hierarchyUp.length);
+                        //figure out which groups haven't decided
                         let reservationDecisions: ReservationDecision[];
                         reservationDecisions = decisions;
-
-                        console.log("Size of decision list: " + reservationDecisions.length);
-                        let userGroup: UserGroup[] = [];
+                        let decidedGroups: UserGroup[] = [];
                         reservationDecisions.forEach(item =>{
-                            userGroup.push(item.userGroup);
-                        });
-                        let reachedUserGroup: boolean;
-                        let behalfUserGroup: UserGroup;
-                        reachedUserGroup = false;
-
-                        userGroup.forEach(item => {
-                            this.user.userGroups.forEach(userG => {
-                                if (userG === item) {
-                                    behalfUserGroup = userG;
-                                    reachedUserGroup = true;
+                           decidedGroups.push(item.userGroup);
+                            });
+                        let undecidedUserGroups: UserGroup[] = [];
+                        hierarchyUp.forEach(group =>{
+                            decidedGroups.forEach(group2 =>{
+                                if(group === group2){
+                                    group['decided'] = true;
                                 }
                             });
-                            if(reachedUserGroup){
-                                reservationDecisions.forEach(decision =>{
-                                    if(decision.userGroup === behalfUserGroup){
-                                        if(decision.reservation.approved == true){
-                                            reservation.approved = true;
-                                        }
-                                    }else if(!decision.reservation.approved){
-                                        reservation.approved = false;
-                                    }
-                                });
-                            }
-
+                        });
+                        this.userGroupHierarchy = hierarchyUp;
+                        console.log("list size: " + this.userGroupHierarchy.length);
+                        reservation['organizeDecisions'] = reservationDecisions;
                         });
 
-                        reachedUserGroup = false;
-                        this.behalfUserGroup = behalfUserGroup;
-                        //organize
-                        reservation['organizeDecisions'] = reservationDecisions;
                     })
                 });
-
-        });
        // this.pendingReservations.forEach(item => this.displayCategories.push(item.resource.resourceCategory));
 
     }
+
+
+    /*         console.log("Size of decision list: " + reservationDecisions.length);
+     let userGroup: UserGroup[] = [];
+     reservationDecisions.forEach(item =>{
+     let reached: boolean = false;
+     this.user.userGroups.forEach(usergroup =>{
+     if(usergroup == item.userGroup){
+     reached = true;
+     console.log("hella");
+     behalfUserGroup = usergroup;
+     reachedUserGroup = true;
+     }else{
+     console.log("damn");
+     }
+     })
+
+     });
+     let reachedUserGroup: boolean;
+     let behalfUserGroup: UserGroup;
+     reachedUserGroup = false;
+
+     if(reachedUserGroup){
+     reservationDecisions.forEach(decision =>{
+     if(decision.userGroup === behalfUserGroup){
+     if(decision.reservation.approved == true){
+     reservation.approved = true;
+     }
+     }else if(!decision.reservation.approved){
+     reservation.approved = false;
+     }
+     });
+     }
+
+
+
+     reachedUserGroup = false;
+     this.behalfUserGroup = behalfUserGroup;
+     //organize*/
     doStuff() {
         console.log("Size of reservations: " + this.pendingReservations.length); //prints 1
         let j = this.pendingReservations.length;

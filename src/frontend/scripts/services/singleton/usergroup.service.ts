@@ -22,6 +22,15 @@ export class UserGroupService {
         });
     }
 
+    public getUserGroupHierarchyUp(user: User): Observable<UserGroup[]> {
+        return Observable.create(listener => {
+            this.apiService.get("/userGroups/hierarchyUp/" + user.id).subscribe(
+                response => listener.next(response),
+                err => listener.next([])
+            );
+        });
+    }
+
     public patchUserGroup(userGroup: UserGroup): Observable<boolean> {
         return Observable.create(listener => {
             if (!userGroup)

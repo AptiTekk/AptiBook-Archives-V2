@@ -67,4 +67,27 @@ public class UserGroupController extends APIControllerAbstract {
         return ok(modelMapper.map(userGroupList, new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
         }.getType()));
     }
+
+    @RequestMapping(value = "/userGroups/hierarchyUp/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserGroupsHierarchyUp(@PathVariable Long id) {
+        if (id == null)
+            return badRequest("Missing ID");
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        // Ensure that the user requesting is an admin or is the same user as being requested.
+        User user = authService.getCurrentUser();
+        if (!user.isAdmin() && !user.getId().equals(id))
+            return noPermission();
+
+        // Add all usergroups in the hierarchy belonging to the user
+        List<UserGroup> userGroupList = new ArrayList<>();
+        for (UserGroup userGroup : user.userGroups) {
+            userGroupList.addAll(userGroupService.getHierarchyUp(userGroup));
+        }
+
+        return ok(modelMapper.map(userGroupList, new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
+        }.getType()));
+    }
 }

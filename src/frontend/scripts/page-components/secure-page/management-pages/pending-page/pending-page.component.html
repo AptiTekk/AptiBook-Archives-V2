@@ -93,7 +93,19 @@
 									<!-- {{getReservationDecisions(reservationDetailsVar)}}-->
 									<div *ngFor="let decision of reservationDetailsVar.organizeDecisions">
 										<p>title: {{decision.reservation.title}}</p>
-										<p>user: {{decision.reservation.user}}</p>
+										<p>user: {{decision.reservation.user.fullName}}</p>
+										<div *ngFor="let group of userGroupHierarchy">
+											<div *ngIf="!group.decided">
+												<p>{{group.name}} has not yet decided</p>
+											</div>
+										</div>
+										<div *ngIf="decision.approved">
+											{{decision.userGroup.name}} approved this reservation
+										</div>
+										<div *ngIf="!decision.approved">
+											{{decision.userGroup.name}} rejected this reservation
+										</div>
+										<p></p>
 									</div>
 								</div>
 							</div>
