@@ -35,7 +35,7 @@ public class WebFilter implements Filter {
 
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
-
+        this.logService.logInfo(getClass(), "Initialized");
     }
 
     @Override
@@ -108,5 +108,6 @@ public class WebFilter implements Filter {
 
     @Override
     public void destroy() {
+        this.logService.logInfo(getClass(), "Destroyed");
     }
 }

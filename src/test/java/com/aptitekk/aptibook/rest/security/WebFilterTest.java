@@ -31,11 +31,66 @@ public class WebFilterTest extends AbstractWebClientTest {
     }
 
     @Test
-    public void testDemoIndexPage() throws Exception {
-        Page page = this.webClient.getPage("/demo/");
+    public void testFavicons() throws Exception {
+        Page page = this.webClient.getPage("/favicon.ico");
 
         assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
 
-        assertThat(page.getWebResponse().getContentType()).isEqualToIgnoringCase(MediaType.TEXT_HTML_VALUE);
+        page = this.webClient.getPage("/static/favicons/favicon.ico");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
+    }
+
+    @Test
+    public void testSplashScreen() throws Exception {
+        Page page = this.webClient.getPage("/static/splashscreen/background.jpg");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
+
+        page = this.webClient.getPage("/static/splashscreen/logo.svg");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
+    }
+
+    @Test
+    public void testDefaultImages() throws Exception {
+        Page page = this.webClient.getPage("/static/resource-no-image.svg");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
+
+        page = this.webClient.getPage("/static/user-no-image.svg");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
+    }
+
+    @Test
+    public void testPackedScripts() throws Exception {
+        Page page = this.webClient.getPage("/packed/scripts/main.bundle.js");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
+
+        page = this.webClient.getPage("/packed/scripts/polyfills.bundle.js");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
+
+        page = this.webClient.getPage("/packed/scripts/vendor.bundle.js");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
+        assertThat(page.getWebResponse().getContentLength()).isGreaterThan(0);
+    }
+
+    @Test
+    public void testDemoIndexPage() throws Exception {
+        Page page = this.webClient.getPage("/demo");
+
+        assertThat(page.getWebResponse().getStatusCode()).isEqualTo(200);
     }
 }

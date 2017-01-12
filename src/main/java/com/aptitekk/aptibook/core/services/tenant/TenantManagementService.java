@@ -46,7 +46,6 @@ public class TenantManagementService {
 
     public void refresh() {
         refreshAllowedTenants();
-        refreshDateTimeZones();
     }
 
     private void refreshAllowedTenants() {
@@ -55,20 +54,6 @@ public class TenantManagementService {
         for (Tenant tenant : tenantRepository.findAll()) {
             if (tenant.isActive())
                 allowedTenants.put(tenant.getSlug(), tenant);
-        }
-    }
-
-    private void refreshDateTimeZones() {
-        zoneIdMap = new HashMap<>();
-
-        for (Tenant tenant : tenantRepository.findAll()) {
-            Property dateTimeZoneKey = propertiesRepository.findPropertyByKey(Property.Key.DATE_TIME_TIMEZONE, tenant);
-            try {
-                ZoneId dateTimeZone = ZoneId.of(dateTimeZoneKey.getPropertyValue());
-                zoneIdMap.put(tenant, dateTimeZone);
-            } catch (Exception e) {
-                zoneIdMap.put(tenant, ZoneId.systemDefault());
-            }
         }
     }
 

@@ -12,3 +12,4 @@ target/
 /.idea/dataSources.xml
 /tmp/cache/**
 npm-debug.log*
+Test Results*.html

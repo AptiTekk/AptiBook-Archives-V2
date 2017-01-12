@@ -34,16 +34,23 @@ public class StartupService implements Serializable {
     private final TenantSynchronizer tenantSynchronizer;
 
     private final DemoTenantBuilder demoTenantBuilder;
+    private final LogService logService;
 
     private static final AtomicBoolean started = new AtomicBoolean(false);
 
     @Autowired
-    public StartupService(TenantRepository tenantRepository, TenantIntegrityService tenantIntegrityService, NotificationCleaner notificationCleaner, TenantSynchronizer tenantSynchronizer, DemoTenantBuilder demoTenantBuilder) {
+    public StartupService(TenantRepository tenantRepository,
+                          TenantIntegrityService tenantIntegrityService,
+                          NotificationCleaner notificationCleaner,
+                          TenantSynchronizer tenantSynchronizer,
+                          DemoTenantBuilder demoTenantBuilder,
+                          LogService logService) {
         this.tenantRepository = tenantRepository;
         this.tenantIntegrityService = tenantIntegrityService;
         this.notificationCleaner = notificationCleaner;
         this.tenantSynchronizer = tenantSynchronizer;
         this.demoTenantBuilder = demoTenantBuilder;
+        this.logService = logService;
     }
 
     @PostConstruct
