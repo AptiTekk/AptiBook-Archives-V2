@@ -42,4 +42,5 @@ def checkoutFromGit() {
 def runTests() {
     sh "npm i"
     sh "npm run-script heroku-postbuild"
+    sh "mvn clean install -P testing"
 }
