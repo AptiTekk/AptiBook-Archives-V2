@@ -91,21 +91,22 @@
 							<div class="row">
 								<div class="col-xs-12">
 									<!-- {{getReservationDecisions(reservationDetailsVar)}}-->
-									<div *ngFor="let decision of reservationDetailsVar.organizeDecisions">
-										<p>title: {{decision.reservation.title}}</p>
-										<p>user: {{decision.reservation.user.fullName}}</p>
-										<div *ngFor="let group of userGroupHierarchy">
-											<div *ngIf="!group.decided">
-												<p>{{group.name}} has not yet decided</p>
+									<div *ngFor="let userGroup of reservationDetailsVar.hierarchyUp">
+										<div *ngIf="!(userGroup.root && !userGroup.decision)">
+											<div *ngIf="userGroup.decision?.approved">
+												{{userGroup.name}} approved this reservation
+											</div>
+											<div *ngIf="userGroup.decision?.rejected">
+												{{userGroup.name}} rejected this reservation
+											</div>
+											<div *ngIf="!userGroup.decision">
+												{{userGroup.name}} has not yet decided
+											</div>
+											<div *ngIf="userGroup.overriddenBy">
+											<p>	Overridden by: {{userGroup.overriddenBy.name}}</p>
 											</div>
 										</div>
-										<div *ngIf="decision.approved">
-											{{decision.userGroup.name}} approved this reservation
-										</div>
-										<div *ngIf="!decision.approved">
-											{{decision.userGroup.name}} rejected this reservation
-										</div>
-										<p></p>
+										
 									</div>
 								</div>
 							</div>

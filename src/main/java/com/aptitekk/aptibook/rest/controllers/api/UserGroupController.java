@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
@@ -27,11 +28,13 @@ public class UserGroupController extends APIControllerAbstract {
 
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService) {
+    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService,UserRepository userRepository) {
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
+        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "/userGroups", method = RequestMethod.GET)
@@ -54,9 +57,7 @@ public class UserGroupController extends APIControllerAbstract {
             return unauthorized();
 
         // Ensure that the user requesting is an admin or is the same user as being requested.
-        User user = authService.getCurrentUser();
-        if (!user.isAdmin() && !user.getId().equals(id))
-            return noPermission();
+        User user = userRepository.find(id);
 
         // Add all usergroups in the hierarchy belonging to the user
         List<UserGroup> userGroupList = new ArrayList<>();
@@ -77,9 +78,7 @@ public class UserGroupController extends APIControllerAbstract {
             return unauthorized();
 
         // Ensure that the user requesting is an admin or is the same user as being requested.
-        User user = authService.getCurrentUser();
-        if (!user.isAdmin() && !user.getId().equals(id))
-            return noPermission();
+        User user = userRepository.find(id);
 
         // Add all usergroups in the hierarchy belonging to the user
         List<UserGroup> userGroupList = new ArrayList<>();

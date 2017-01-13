@@ -13,18 +13,6 @@ import {ReservationDecision} from "../../models/reservation-decision.model";
 export class ReservationService {
 
     private lastReservationMade: ReplaySubject<Reservation> = new ReplaySubject<Reservation>(1);
-    /*
-    private pendingReservationDetails: ReplaySubject<ReservationDetails[]> = new ReplaySubject<ReservationDetails[]>(1);
-    private pendingReservationResourceCategories: ReplaySubject<ReservationDetails[]> = new ReplaySubject<ReservationDetails[]>(1);
-
-
-    getPendingReservationDetailsList(): ReplaySubject<ReservationDetails[]>{
-        return this.pendingReservationDetails;
-    }
-
-    getPendingReservationResourceCategoriesList(){
-        return this.pendingReservationResourceCategories;
-    }*/
 
     constructor(private apiService: APIService) {
     }
@@ -40,7 +28,7 @@ export class ReservationService {
                 )
         });
     }
-//TODO: get rid of listener next, not used since replay subject, and get rid of observable
+
     public makeReservation(reservation: Reservation): Observable<Reservation> {
         return Observable.create(listener => {
             let body = JSON.stringify(reservation);
@@ -61,30 +49,24 @@ export class ReservationService {
         return Observable.create(listener => {
             if (user == undefined) {
                 listener.next(undefined);
-                console.log("user is error")
             }
             else {
                 this.apiService.get("reservations/pending/details/user/" + user.id).subscribe(
                     response => {
                         listener.next(<ReservationDetails[]>response);
-                        console.log("no error in service");
                     },
                     err => {
-                        console.log("error in service");
                         listener.next(undefined)
                     }
                 );
-                console.log("user is fine");
             }
         });
     }
 
     public getReservationDecisions(reservation: Reservation): Observable<ReservationDecision[]>{
-        console.log("in function");
         return Observable.create(listener =>{
             this.apiService.get("reservations/decisions/" + reservation.id).subscribe(
                 response =>{
-                    console.log("response is perfect");
                     listener.next(response);
                 },
                 err => listener.next(undefined)
@@ -97,20 +79,16 @@ export class ReservationService {
         return Observable.create(listener => {
             if (user == undefined) {
                 listener.next(undefined);
-                console.log("user is error")
             }
             else {
                 this.apiService.get("reservations/pending/user/" + user.id).subscribe(
                     response => {
                         listener.next(<ResourceCategory[]>response);
-                        console.log("no error in service");
                     },
                     err => {
-                        console.log("error in service");
                         listener.next(undefined)
                     }
                 );
-                console.log("user is fine");
             }
         });
     }
