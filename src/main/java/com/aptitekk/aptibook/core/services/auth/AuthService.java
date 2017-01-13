@@ -12,7 +12,7 @@ import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.CookieService;
 import com.aptitekk.aptibook.core.services.entity.PermissionService;
-import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
+import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,15 +26,15 @@ public class AuthService {
 
     private final HttpServletRequest request;
     private final CookieService cookieService;
-    private final TenantSessionService tenantSessionService;
+    private final TenantManagementService tenantManagementService;
     private final UserRepository userRepository;
     private final PermissionService permissionService;
 
     @Autowired
-    public AuthService(HttpServletRequest request, CookieService cookieService, TenantSessionService tenantSessionService, UserRepository userRepository, PermissionService permissionService) {
+    public AuthService(HttpServletRequest request, CookieService cookieService, TenantManagementService tenantManagementService, UserRepository userRepository, PermissionService permissionService) {
         this.request = request;
         this.cookieService = cookieService;
-        this.tenantSessionService = tenantSessionService;
+        this.tenantManagementService = tenantManagementService;
         this.userRepository = userRepository;
         this.permissionService = permissionService;
     }
@@ -46,7 +46,7 @@ public class AuthService {
      * @param response The servlet response to save the Cookie in.
      */
     public void setCurrentUser(User user, HttpServletResponse response) {
-        this.setUserOfTenant(user, tenantSessionService.getTenant(), response);
+        this.setUserOfTenant(user, tenantManagementService.getTenant(), response);
     }
 
     /**
@@ -94,7 +94,7 @@ public class AuthService {
      * @param response The HttpServletResponse to store the deletion cookie in.
      */
     public void signOutCurrentUser(HttpServletResponse response) {
-        this.signOutUserOfTenant(tenantSessionService.getTenant(), response);
+        this.signOutUserOfTenant(tenantManagementService.getTenant(), response);
     }
 
     /**

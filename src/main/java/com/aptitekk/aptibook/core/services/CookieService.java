@@ -115,7 +115,7 @@ public class CookieService {
         }
 
         cookie.setMaxAge(maxAgeSeconds);
-        cookie.setPath("/" + tenant.getSlug());
+        cookie.setPath("/api/" + tenant.getSlug());
         response.addCookie(cookie);
     }
 
@@ -142,7 +142,7 @@ public class CookieService {
         Cookie cookie = new Cookie(key, null);
 
         cookie.setMaxAge(0);
-        cookie.setPath("/" + tenant.getSlug());
+        cookie.setPath("/api/" + tenant.getSlug());
         response.addCookie(cookie);
     }
 
