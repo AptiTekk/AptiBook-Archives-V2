@@ -21,8 +21,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 @ControllerAdvice
 public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
+    private final ResourceLoader resourceLoader;
+
     @Autowired
-    private ResourceLoader resourceLoader;
+    public WebExceptionHandler(ResourceLoader resourceLoader) {
+        this.resourceLoader = resourceLoader;
+    }
 
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
@@ -40,5 +44,10 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
             // Send the resource.
             return new ResponseEntity<>(resource, HttpStatus.OK);
         }
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return new ResponseEntity<>(new RestError("An Internal Server Error occurred while processing your request. (500)"), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
