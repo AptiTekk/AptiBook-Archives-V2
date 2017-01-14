@@ -17,6 +17,7 @@ export class TreeNodeComponent {
     @ViewChildren(TreeNodeComponent) children: QueryList<TreeNodeComponent>;
 
     private nodeOverDropPoint: boolean = false;
+    private nodeOverNode: boolean = false;
 
     protected onNodeClick(event: MouseEvent) {
         if (this.tree.selectable)
@@ -32,6 +33,8 @@ export class TreeNodeComponent {
         return false;
     }
 
+    /* Dragging of This Node */
+
     protected onDragStart(event: DragEvent) {
         event.dataTransfer.effectAllowed = "move";
         this.tree.draggingNode = this;
@@ -41,12 +44,27 @@ export class TreeNodeComponent {
         this.tree.draggingNode = undefined;
     }
 
+    /* Dragging of Other Nodes */
+
+    /* -- Drop Point Events */
+
     protected onDragEnterDropPoint(event: DragEvent) {
-        if (this.tree.draggingNode && this.tree.draggingNode !== this) {
-            event.preventDefault();
-            event.dataTransfer.dropEffect = "move";
-            this.nodeOverDropPoint = true;
+        if (!this.tree.draggingNode)
+            return;
+
+        if (this.tree.draggingNode === this)
+            return;
+
+        // Ensure that the node being dragged is not a parent of this node.
+        let parentGroup: TreeNodeComponent = this;
+        while ((parentGroup = parentGroup.parent)) {
+            if (parentGroup === this.tree.draggingNode)
+                return;
         }
+
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        this.nodeOverDropPoint = true;
     }
 
     protected onDragLeaveDropPoint(event: DragEvent) {
@@ -56,8 +74,43 @@ export class TreeNodeComponent {
 
     protected onDropPointDrop(event: DragEvent) {
         if (this.tree.draggingNode && this.nodeOverDropPoint) {
-            console.log("Dropping " + this.tree.draggingNode.userGroup.name + " before " + this.userGroup.name);
+            this.tree.moveNode(this.tree.draggingNode, this.parent);
             this.nodeOverDropPoint = false;
+        }
+    }
+
+    /* -- Node Events */
+
+    protected onDragEnterNode(event: DragEvent) {
+        if (!this.tree.draggingNode)
+            return;
+
+        if (this.tree.draggingNode === this)
+            return;
+
+        // Ensure that the node being dragged is not a parent of this node, or this node's immediate child.
+        let parentGroup: TreeNodeComponent = this;
+        while ((parentGroup = parentGroup.parent)) {
+            if (parentGroup === this.tree.draggingNode)
+                return;
+        }
+        if (this.tree.draggingNode.parent === this)
+            return;
+
+        event.preventDefault();
+        event.dataTransfer.dropEffect = "move";
+        this.nodeOverNode = true;
+    }
+
+    protected onDragLeaveNode(event: DragEvent) {
+        event.dataTransfer.dropEffect = undefined;
+        this.nodeOverNode = false;
+    }
+
+    protected onNodeDrop(event: DragEvent) {
+        if (this.tree.draggingNode && this.nodeOverNode) {
+            this.tree.moveNode(this.tree.draggingNode, this);
+            this.nodeOverNode = false;
         }
     }
 

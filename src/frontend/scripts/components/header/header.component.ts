@@ -4,6 +4,7 @@ import {AuthService} from "../../services/singleton/auth.service";
 import {Router} from "@angular/router";
 import {NotificationService} from "../../services/singleton/notification.service";
 import {Notification} from "../../models/notification.model";
+import {NavigationLink} from "../navigation/navigation-link.model";
 
 @Component({
     selector: 'app-header',
@@ -19,21 +20,21 @@ export class HeaderComponent implements OnInit {
     protected user: User;
     protected unreadNotifications: Notification[] = [];
 
-    public static RESERVATION_MANAGEMENT_LINKS: [{ icon: string, label: string, path: string[] }] = [
+    public static RESERVATION_MANAGEMENT_LINKS: NavigationLink[] = [
         {icon: 'hourglass-half', label: 'Pending', path: ['', 'secure', 'management', 'pending']},
         {icon: 'calendar-check-o', label: 'Approved', path: ['', 'secure', 'management', 'approved']},
         {icon: 'calendar-times-o', label: 'Rejected', path: ['', 'secure', 'management', 'rejected']},
         {icon: 'calendar', label: 'Calendar', path: ['', 'secure', 'management', 'calendar']}
     ];
 
-    public static CONFIGURATION_LINKS: [{ icon: string, label: string, path: string[] }] = [
+    public static CONFIGURATION_LINKS: NavigationLink[] = [
         {icon: 'tags', label: 'Resources', path: ['', 'secure', 'configuration', 'resources']},
         {icon: 'user', label: 'Users', path: ['', 'secure', 'configuration', 'users']},
         {icon: 'unlock', label: 'Permissions', path: ['', 'secure', 'configuration', 'permissions']},
         {icon: 'cog', label: 'Properties', path: ['', 'secure', 'configuration', 'properties']}
     ];
 
-    public static MY_LINKS: [{ icon: string, label: string, path: string[] }] = [
+    public static MY_LINKS: NavigationLink[] = [
         {icon: 'pencil', label: 'My Account', path: ['', 'secure', 'my', 'account']},
         {icon: 'bell', label: 'My Notifications', path: ['', 'secure', 'my', 'notifications']}
     ];

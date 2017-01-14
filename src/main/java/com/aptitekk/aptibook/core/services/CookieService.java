@@ -104,18 +104,18 @@ public class CookieService {
         }
     }
 
-    public void storeEncryptedCookie(String key, String value, int maxAgeSeconds, Tenant tenant, HttpServletResponse response) {
+    public void storeEncryptedCookie(String key, String value, Tenant tenant, HttpServletResponse response) {
         if (key == null || value == null || tenant == null)
             return;
 
-        Cookie cookie = new Cookie(key, encryptCookieData(value, maxAgeSeconds));
+        Cookie cookie = new Cookie(key, encryptCookieData(value, 608400));
 
         if (springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
             cookie.setSecure(true);
         }
 
-        cookie.setMaxAge(maxAgeSeconds);
-        cookie.setPath("/" + tenant.getSlug());
+        cookie.setMaxAge(608400);
+        cookie.setPath("/api/" + tenant.getSlug());
         response.addCookie(cookie);
     }
 
@@ -142,7 +142,7 @@ public class CookieService {
         Cookie cookie = new Cookie(key, null);
 
         cookie.setMaxAge(0);
-        cookie.setPath("/" + tenant.getSlug());
+        cookie.setPath("/api/" + tenant.getSlug());
         response.addCookie(cookie);
     }
 

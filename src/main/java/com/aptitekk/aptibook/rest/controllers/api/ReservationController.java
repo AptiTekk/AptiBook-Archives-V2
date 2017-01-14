@@ -6,7 +6,10 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.Permission;
+import com.aptitekk.aptibook.core.domain.entities.Reservation;
+import com.aptitekk.aptibook.core.domain.entities.Resource;
+import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
@@ -16,7 +19,6 @@ import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDetailsDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
-import com.aptitekk.aptibook.core.util.ReservationDetails;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.time.DateUtils;
@@ -28,7 +30,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -37,15 +38,13 @@ import java.util.Map;
 public class ReservationController extends APIControllerAbstract {
 
     private final ReservationRepository reservationRepository;
-    private final TenantSessionService tenantSessionService;
     private final ResourceRepository resourceRepository;
     private final UserRepository userRepository;
     private final ReservationService reservationService;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository, TenantSessionService tenantSessionService, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService) {
+    public ReservationController(ReservationRepository reservationRepository, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService) {
         this.reservationRepository = reservationRepository;
-        this.tenantSessionService = tenantSessionService;
         this.resourceRepository = resourceRepository;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
@@ -155,13 +154,12 @@ public class ReservationController extends APIControllerAbstract {
         return unauthorized();
     }
 
-
     @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
         if (authService.isUserSignedIn()) {
             if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
                 Reservation reservation = new Reservation();
-                reservation.setTenant(tenantSessionService.getTenant());
+                reservation.setTenant(tenantManagementService.getTenant());
                 reservation.setUser(userRepository.findInCurrentTenant(id));
 
                 if (reservationDTO.title != null)

@@ -15,8 +15,9 @@ import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
 @RestController
-@RequestMapping("/api")
+@RequestMapping("/api/{tenant}")
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface APIController {
+
 }

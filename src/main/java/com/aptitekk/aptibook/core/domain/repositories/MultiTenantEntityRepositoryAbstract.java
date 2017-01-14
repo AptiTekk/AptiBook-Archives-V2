@@ -8,7 +8,7 @@ package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.domain.entities.MultiTenantEntity;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
+import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.persistence.NoResultException;
@@ -20,10 +20,10 @@ import java.util.List;
 public abstract class MultiTenantEntityRepositoryAbstract<T extends MultiTenantEntity> extends EntityRepositoryAbstract<T> {
 
     @Autowired
-    private TenantSessionService tenantSessionService;
+    private TenantManagementService tenantManagementService;
 
     public Tenant getTenant() {
-        return tenantSessionService.getTenant();
+        return tenantManagementService.getTenant();
     }
 
     @Override

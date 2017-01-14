@@ -24,7 +24,7 @@ public class ResourceDTO {
 
     public List<ReservationDTO.WithoutResource> reservations;
 
-    public UserGroupDTO.WithOnlyName owner;
+    public UserGroupDTO.WithoutParentOrChildren owner;
 
     //Tags
 

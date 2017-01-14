@@ -5,6 +5,7 @@
   -->
 
 <div class="tree-node-drop-point"
+	 *ngIf="!userGroup.root"
 	 [class.node-over]="nodeOverDropPoint"
 	 (dragenter)="onDragEnterDropPoint($event)"
 	 (dragover)="onDragEnterDropPoint($event)"
@@ -14,11 +15,16 @@
 <div class="tree-node"
 	 [class.node-selected]="isSelected()"
 	 [class.node-dragging]="tree.draggingNode === this"
+	 [class.node-over]="nodeOverNode"
 	 [style.cursor]="tree.selectable ? 'pointer' : 'default'"
 	 (click)="onNodeClick($event)"
 	 (dragstart)="onDragStart($event)"
 	 (dragend)="onDragEnd($event)"
-	 [draggable]="tree.dragAndDrop">
+	 (dragenter)="onDragEnterNode($event)"
+	 (dragover)="onDragEnterNode($event)"
+	 (dragleave)="onDragLeaveNode($event)"
+	 (drop)="onNodeDrop($event)"
+	 [draggable]="userGroup.root ? false : tree.dragAndDrop">
 	{{userGroup.name}}
 </div>
 
