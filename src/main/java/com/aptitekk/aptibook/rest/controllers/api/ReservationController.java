@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.repositories.ReservationDecisionRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
@@ -15,6 +16,7 @@ import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDetailsDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
+import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.time.DateUtils;
@@ -38,13 +40,17 @@ public class ReservationController extends APIControllerAbstract {
     private final ResourceRepository resourceRepository;
     private final UserRepository userRepository;
     private final ReservationService reservationService;
+    private final UserGroupService userGroupService;
+    private final ReservationDecisionRepository reservationDecisionRepository;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService) {
+    public ReservationController(ReservationRepository reservationRepository, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService, UserGroupService userGroupService, ReservationDecisionRepository reservationDecisionRepository) {
         this.reservationRepository = reservationRepository;
         this.resourceRepository = resourceRepository;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
+        this.userGroupService = userGroupService;
+        this.reservationDecisionRepository = reservationDecisionRepository;
     }
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
@@ -136,6 +142,59 @@ public class ReservationController extends APIControllerAbstract {
         return unauthorized();
     }
 
+    @RequestMapping(value = "/reservations/{id}/approve", method = RequestMethod.PATCH)
+    public ResponseEntity<?> approveReservation(@PathVariable Long id) {
+        if (id == null)
+            return badRequest("Missing Id");
+        if (authService.isUserSignedIn()) {
+            Reservation reservation = reservationRepository.find(id);
+            ReservationDecision reservationDecision = new ReservationDecision();
+            reservationDecision.setUser(authService.getCurrentUser());
+            reservationDecision.setApproved(true);
+            reservationDecision.setReservation(reservation);
+            reservationDecision.setTenant(tenantManagementService.getTenant());
+            List<UserGroup> userGroupList = new ArrayList<>();
+            userGroupList.addAll(this.userGroupService.getHierarchyUp(reservation.getResource().owner));
+            for (UserGroup userGroup : authService.getCurrentUser().userGroups) {
+                for (UserGroup userGroup1 : userGroupList) {
+                    if (userGroup == userGroup1) {
+                        reservationDecision.setUserGroup(userGroup);
+                    }
+                }
+            }
+            reservationDecision = reservationDecisionRepository.save(reservationDecision);
+            return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
+            }.getType()));
+        }
+        return unauthorized();
+    }
+
+    @RequestMapping(value = "/reservations/{id}/reject", method = RequestMethod.PATCH)
+    public ResponseEntity<?> rejectReservation(@PathVariable Long id) {
+        if (id == null)
+            return badRequest("Missing Id");
+        if (authService.isUserSignedIn()) {
+            Reservation reservation = reservationRepository.find(id);
+            ReservationDecision reservationDecision = new ReservationDecision();
+            reservationDecision.setUser(authService.getCurrentUser());
+            reservationDecision.setApproved(false);
+            reservationDecision.setReservation(reservation);
+            reservationDecision.setTenant(tenantManagementService.getTenant());
+            List<UserGroup> userGroupList = new ArrayList<>();
+            userGroupList.addAll(this.userGroupService.getHierarchyUp(reservation.getResource().owner));
+            for (UserGroup userGroup : authService.getCurrentUser().userGroups) {
+                for (UserGroup userGroup1 : userGroupList) {
+                    if (userGroup == userGroup1) {
+                        reservationDecision.setUserGroup(userGroup);
+                    }
+                }
+            }
+            reservationDecision = reservationDecisionRepository.save(reservationDecision);
+            return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
+            }.getType()));
+        }
+        return unauthorized();
+    }
 
     @RequestMapping(value = "/reservations/decisions/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getPendingReservationDecisions(@PathVariable Long id) {

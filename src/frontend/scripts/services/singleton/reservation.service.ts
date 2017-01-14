@@ -29,6 +29,17 @@ export class ReservationService {
         });
     }
 
+    public makeReservationDecision(approved: boolean, reservation: Reservation): Observable<boolean> {
+        return Observable.create(listener => {
+            this.apiService.patch("reservations/" + reservation.id + (approved ? "/approved" : "/rejected")).subscribe(
+                response => listener.next(true),
+                err => listener.next(false)
+            );
+        });
+
+    }
+
+
     public makeReservation(reservation: Reservation): Observable<Reservation> {
         return Observable.create(listener => {
             let body = JSON.stringify(reservation);
@@ -63,10 +74,10 @@ export class ReservationService {
         });
     }
 
-    public getReservationDecisions(reservation: Reservation): Observable<ReservationDecision[]>{
-        return Observable.create(listener =>{
+    public getReservationDecisions(reservation: Reservation): Observable<ReservationDecision[]> {
+        return Observable.create(listener => {
             this.apiService.get("reservations/decisions/" + reservation.id).subscribe(
-                response =>{
+                response => {
                     listener.next(response);
                 },
                 err => listener.next(undefined)

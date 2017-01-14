@@ -30,7 +30,7 @@ export class PendingPageComponent {
     lowerRejectionOverrides: UserGroup[] = [];
     reservationDecisions: ReservationDecision[][] = [];
 
-    constructor(private userGroupService: UserGroupService, private reservationService: ReservationService, authService: AuthService) {
+    constructor(private userGroupService: UserGroupService, private reservationService: ReservationService, private authService: AuthService) {
         authService.getUser().subscribe(user => this.user = user);
         reservationService.getPendingReservations(this.user).subscribe(reservations => {
             this.pendingReservations = reservations;
@@ -71,6 +71,15 @@ export class PendingPageComponent {
             });
         });
     }
+
+    makeDecision(approved: boolean, reservation: Reservation) {
+        this.reservationService.makeReservationDecision(approved, reservation).subscribe(response => {
+            this.reservationService.getPendingReservations(this.user).subscribe(reservations => {
+                this.pendingReservations = reservations;
+            })
+        });
+    }
+
     formatFriendly(date: string){
         return moment(date);
     }
