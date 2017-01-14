@@ -6,8 +6,10 @@
 
 :host /deep/ ul {
     list-style-type: none;
-    padding-left: 20px;
+    margin-left: 15px;
+    padding-left: 5px;
     border-left: 1px dashed #ddd;
+    margin-bottom: 0;
 }
 
 :host /deep/ .tree-node {
@@ -34,5 +36,10 @@
 }
 
 :host /deep/ .tree-node-drop-point.node-over {
+    background-color: #f1f1f1;
+}
+
+:host /deep/ .tree-node.node-over {
+    color: initial;
     background-color: #f1f1f1;
 }

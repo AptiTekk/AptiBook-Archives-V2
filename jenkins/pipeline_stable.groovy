@@ -59,6 +59,7 @@ def checkoutFromGit() {
 def runTests() {
     sh "npm i"
     sh "npm run-script heroku-postbuild"
+    sh "mvn clean install -P testing"
 }
 
 def changeVersion(buildNumber) {
@@ -78,7 +79,7 @@ def deployToProduction(herokuAppName, liveUrl, pingUrl) {
     def version = readFile "currentVersion"
 
     slackSend color: "good", message: "[Job ${env.BUILD_NUMBER}] ${herokuAppName} version ${version} has been deployed."
-    slackSend color: "#4272b7", message: "[Job ${env.BUILD_NUMBER}] Please disable Maintenance Mode when ready."
+    slackSend color: "#4272b7", message: "[Job ${env.BUILD_NUMBER}] Don't forget to disable maintenance mode."
 }
 
 boolean getDeploymentApproval(jenkinsUrl) {

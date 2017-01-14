@@ -1,4 +1,4 @@
-import {Component, Input, forwardRef} from "@angular/core";
+import {Component, Input, forwardRef, OnInit, EventEmitter, Output} from "@angular/core";
 import {UserGroup} from "../../models/user-group.model";
 import {TreeNodeComponent} from "./tree-node/tree-node.component";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
@@ -17,11 +17,12 @@ import * as Collections from "typescript-collections";
         }
     ]
 })
-export class TreeComponent implements ControlValueAccessor {
+export class TreeComponent implements OnInit, ControlValueAccessor {
 
     @Input() dragAndDrop: boolean = false;
 
     @Input() selectable: boolean = true;
+    @Output() selected: EventEmitter<UserGroup[]> = new EventEmitter<UserGroup[]>();
 
     @Input() selectMultiple: boolean = false;
 
@@ -35,8 +36,11 @@ export class TreeComponent implements ControlValueAccessor {
 
     draggingNode: TreeNodeComponent;
 
-    constructor(userGroupService: UserGroupService) {
-        userGroupService.getRootUserGroup().subscribe(root => this.rootGroup = root);
+    constructor(private userGroupService: UserGroupService) {
+    }
+
+    ngOnInit(): void {
+        this.userGroupService.getRootUserGroup().subscribe(root => this.rootGroup = root);
     }
 
     onNodeSelected(treeNode: TreeNodeComponent, ctrlDown: boolean = false) {
@@ -58,8 +62,14 @@ export class TreeComponent implements ControlValueAccessor {
             else
                 this.selectedUserGroups.splice(index, 1);
         } else {
-            // Clear the array and set the selected User Group to the one clicked.
-            this.selectedUserGroups = [treeNode.userGroup];
+
+            // If the group is already selected, deselect it.
+            if (this.selectedUserGroups.length > 0 && this.selectedUserGroups[0].id === treeNode.userGroup.id) {
+                this.selectedUserGroups = [];
+            } else {
+                // Otherwise, clear the array and set the selected User Group to the one clicked.
+                this.selectedUserGroups = [treeNode.userGroup];
+            }
         }
 
         // Check if multiple nodes are selected on the same branch,
@@ -74,6 +84,7 @@ export class TreeComponent implements ControlValueAccessor {
         }
 
         this.propagateChanges(this.selectedUserGroups);
+        this.selected.emit(this.selectedUserGroups);
     }
 
     /**
@@ -113,6 +124,23 @@ export class TreeComponent implements ControlValueAccessor {
             // Filter the node's User Group from the Selected User Groups.
             this.selectedUserGroups = this.selectedUserGroups.filter((userGroup: UserGroup) => userGroup.id !== childNode.userGroup.id);
         }
+    }
+
+    public moveNode(node: TreeNodeComponent, newParentNode: TreeNodeComponent) {
+        if (!node)
+            return;
+
+        if (node === newParentNode)
+            return;
+
+        if (node.userGroup.root)
+            return;
+
+        this.userGroupService
+            .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.rootGroup)
+            .subscribe(
+                success => this.userGroupService.fetchRootUserGroup()
+            );
     }
 
     writeValue(obj: UserGroup[]|UserGroup): void {

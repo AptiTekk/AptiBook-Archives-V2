@@ -1,4 +1,5 @@
 import {Component} from "@angular/core";
+import {NavigationLink} from "../../../../components/navigation/navigation-link.model";
 
 @Component({
     selector: 'users-page',
@@ -7,8 +8,8 @@ import {Component} from "@angular/core";
 })
 export class UsersPageComponent {
 
-    horizontalLinks: [{icon: string, label: string, path: string[]}] = [
-        {icon: 'user', label: 'All Users', path: ['', 'secure', 'configuration', 'users', 'all']},
+    sectionLinks: NavigationLink[] = [
+        {icon: 'user', label: 'All Users', path: ['', 'secure', 'configuration', 'users'], exact: true},
         {icon: 'sitemap', label: 'User Groups', path: ['', 'secure', 'configuration', 'users', 'groups']}
     ];
 

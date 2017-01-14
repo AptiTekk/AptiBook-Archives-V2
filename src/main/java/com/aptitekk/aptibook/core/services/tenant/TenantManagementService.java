@@ -6,37 +6,29 @@
 
 package com.aptitekk.aptibook.core.services.tenant;
 
-import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.PostConstruct;
-import java.time.ZoneId;
+import javax.servlet.http.HttpServletRequest;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
 @Service
-@Scope(BeanDefinition.SCOPE_SINGLETON)
 public class TenantManagementService {
 
     private final TenantRepository tenantRepository;
-
-    private final PropertiesRepository propertiesRepository;
+    private final HttpServletRequest request;
 
     private Map<String, Tenant> allowedTenants;
 
-    private Map<Tenant, ZoneId> zoneIdMap;
-
     @Autowired
-    public TenantManagementService(TenantRepository tenantRepository, PropertiesRepository propertiesRepository) {
+    public TenantManagementService(TenantRepository tenantRepository, HttpServletRequest request) {
         this.tenantRepository = tenantRepository;
-        this.propertiesRepository = propertiesRepository;
+        this.request = request;
     }
 
     @PostConstruct
@@ -46,7 +38,6 @@ public class TenantManagementService {
 
     public void refresh() {
         refreshAllowedTenants();
-        refreshDateTimeZones();
     }
 
     private void refreshAllowedTenants() {
@@ -55,20 +46,6 @@ public class TenantManagementService {
         for (Tenant tenant : tenantRepository.findAll()) {
             if (tenant.isActive())
                 allowedTenants.put(tenant.getSlug(), tenant);
-        }
-    }
-
-    private void refreshDateTimeZones() {
-        zoneIdMap = new HashMap<>();
-
-        for (Tenant tenant : tenantRepository.findAll()) {
-            Property dateTimeZoneKey = propertiesRepository.findPropertyByKey(Property.Key.DATE_TIME_TIMEZONE, tenant);
-            try {
-                ZoneId dateTimeZone = ZoneId.of(dateTimeZoneKey.getPropertyValue());
-                zoneIdMap.put(tenant, dateTimeZone);
-            } catch (Exception e) {
-                zoneIdMap.put(tenant, ZoneId.systemDefault());
-            }
         }
     }
 
@@ -90,12 +67,22 @@ public class TenantManagementService {
     }
 
     /**
-     * Returns the ZoneId for the specified tenant, as is set on the properties page by the administrator.
+     * Gets the Tenant from the HttpServletRequest's "tenant" attribute,
+     * which is populated by the TenantLoaderService
      *
-     * @param tenant The tenant to get the DateTimeZone of.
-     * @return The ZoneId of the tenant.
+     * @return The current Tenant of this request (if in a request, otherwise null)
      */
-    public ZoneId getZoneId(Tenant tenant) {
-        return zoneIdMap.get(tenant);
+    public Tenant getTenant() {
+        try {
+            if (request != null) {
+                Object attribute = request.getAttribute("tenant");
+                if (attribute != null && attribute instanceof Tenant)
+                    return (Tenant) attribute;
+            }
+        } catch (Exception ignored) {
+            //No request
+        }
+        return null;
     }
+
 }

@@ -93,6 +93,13 @@ public class DemoTenantBuilder {
      */
     @Scheduled(cron = "0 0 0 * * *")
     @Async
+    public void rebuildDemoTenantAsync() {
+        this.rebuildDemoTenant();
+    }
+
+    /**
+     * Deletes and re-builds the demo Tenant
+     */
     public void rebuildDemoTenant() {
         logService.logDebug(getClass(), "Rebuilding Demo Tenant...");
 
@@ -130,7 +137,6 @@ public class DemoTenantBuilder {
                 librariansUserGroup,
                 null
         );
-
 
 
         //Add Users
@@ -308,7 +314,10 @@ public class DemoTenantBuilder {
 
 
         tenantManagementService.refresh();
+
+        logService.logDebug(getClass(), "Demo Tenant Rebuilt");
     }
+
 
     /**
      * Creates a User Group

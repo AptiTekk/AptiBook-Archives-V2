@@ -16,23 +16,14 @@ public class UserGroupDTO {
 
     public String name;
 
+    public boolean root;
+
     public UserGroupDTO.WithoutChildren parent;
 
-    public List<UserDTO.WithoutUserGroups> users;
-
-    @JsonIgnoreProperties({"users"})
-    public static class WithoutUsers extends UserGroupDTO {
-        public List<UserGroupDTO.WithoutUsers> children;
-    }
+    public List<UserGroupDTO.WithoutParent> children;
 
     @JsonIgnoreProperties({"parent"})
     public static class WithoutParent extends UserGroupDTO {
-        public List<UserGroupDTO.WithoutParent> children;
-    }
-
-    @JsonIgnoreProperties({"parent", "users"})
-    public static class WithoutParentOrUsers extends UserGroupDTO {
-        public List<UserGroupDTO.WithoutParentOrUsers> children;
     }
 
     @JsonIgnoreProperties({"children"})
@@ -41,10 +32,6 @@ public class UserGroupDTO {
 
     @JsonIgnoreProperties({"parent", "children"})
     public static class WithoutParentOrChildren extends UserGroupDTO {
-    }
-
-    @JsonIgnoreProperties({"parent", "children", "users"})
-    public static class WithOnlyName extends UserGroupDTO {
     }
 
 }

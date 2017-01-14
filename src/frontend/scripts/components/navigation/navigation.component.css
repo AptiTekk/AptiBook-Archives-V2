@@ -1,0 +1,55 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+/* Vertical Nav */
+
+ul.nav-list {
+    font-family: "Roboto", sans-serif;
+    font-size: 12pt;
+}
+
+ul.nav-list > li {
+    margin-bottom: 10px;
+}
+
+ul.nav-list > li > a {
+    color: #777;
+    border-radius: 5px;
+}
+
+ul.nav-list > li.active > a,
+ul.nav-list > li.active > a:focus {
+    color: white;
+    background-color: #4272b7;
+}
+
+/* Horizontal Nav */
+
+ul.nav-tabs {
+    font-family: "Roboto", sans-serif;
+    font-size: 12pt;
+    margin-bottom: 20px;
+}
+
+ul.nav-tabs > li {
+    margin-right: 10px;
+    margin-bottom: 10px;
+}
+
+ul.nav-tabs > li > a {
+    color: #777;
+    border-radius: 5px;
+    border: none;
+}
+
+ul.nav-tabs > li > a:hover {
+    background-color: #f6f6f6;
+}
+
+ul.nav-tabs > li.active > a,
+ul.nav-tabs > li.active > a:focus {
+    background-color: #eeeeee;
+}

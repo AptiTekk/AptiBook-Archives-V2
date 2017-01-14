@@ -72,7 +72,7 @@ public class UserController extends APIControllerAbstract {
 
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchUser(@PathVariable long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
+    public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
         if (userDTO != null) {
             User currentUser = userRepository.findInCurrentTenant(id);
             if (currentUser != null &&
@@ -149,8 +149,8 @@ public class UserController extends APIControllerAbstract {
                             return badRequest("A User Group was not found.");
 
                         // Make sure the group is not root
-                        if (userGroup.isRoot())
-                            return badRequest("You may not assign a user to the root group.");
+                        if (userGroup.isRoot() && !currentUser.isAdmin())
+                            return badRequest("You may not assign a non-admin user to the root group.");
 
                         // Make sure there are not other groups being assigned on this same branch.
                         List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);

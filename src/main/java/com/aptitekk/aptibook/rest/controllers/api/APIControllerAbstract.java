@@ -9,7 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
-import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
+import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -34,8 +34,9 @@ public abstract class APIControllerAbstract {
     @Autowired
     LogService logService;
 
+    @SuppressWarnings("WeakerAccess")
     @Autowired
-    TenantSessionService tenantSessionService;
+    TenantManagementService tenantManagementService;
 
     APIControllerAbstract() {
         modelMapper.getConfiguration().setFieldMatchingEnabled(true);
@@ -56,8 +57,8 @@ public abstract class APIControllerAbstract {
             path = "/" + path;
 
         //Add on the tenant url
-        if (tenantSessionService.getTenant() != null)
-            path = "/" + tenantSessionService.getTenant().getSlug() + path;
+        if (tenantManagementService.getTenant() != null)
+            path = "/" + tenantManagementService.getTenant().getSlug() + path;
 
         String uriString = ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 
