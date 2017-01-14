@@ -161,6 +161,6 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
     },
     {
         path: '**',
-        redirectTo: 'sign-in'
+        redirectTo: ''
     }
 ]);

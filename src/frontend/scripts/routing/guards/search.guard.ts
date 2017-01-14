@@ -12,10 +12,10 @@ export class SearchGuard implements CanActivate {
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         return Observable.create(listener => {
             this.searchService.getSearchResults().take(1).subscribe(results => {
-                if (results != undefined) {
+                if (results) {
                     listener.next(true);
                 } else {
-                    this.router.navigateByUrl("/secure/");
+                    this.router.navigate(['', 'secure']);
                     listener.next(false);
                 }
             })

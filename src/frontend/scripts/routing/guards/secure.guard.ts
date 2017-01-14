@@ -19,7 +19,7 @@ export class SecureGuard implements CanActivate {
                         let urlSegments: UrlSegment[] = route.url;
                         for (let segment of urlSegments) {
                             if (segment.toString() === "secure") {
-                                this.router.navigateByUrl("/");
+                                this.router.navigate(['']);
                                 break;
                             }
                         }

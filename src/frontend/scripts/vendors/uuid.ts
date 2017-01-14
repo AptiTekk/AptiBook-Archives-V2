@@ -4,4 +4,4 @@
  * Proprietary and confidential.
  */
 
-import 'node-uuid';
+import 'uuid';
