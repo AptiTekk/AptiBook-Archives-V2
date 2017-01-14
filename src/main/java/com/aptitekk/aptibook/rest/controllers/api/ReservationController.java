@@ -6,10 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
-import com.aptitekk.aptibook.core.domain.entities.Reservation;
-import com.aptitekk.aptibook.core.domain.entities.Resource;
-import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
@@ -18,7 +15,6 @@ import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDetailsDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
-import com.aptitekk.aptibook.core.services.tenant.TenantSessionService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.time.DateUtils;
@@ -30,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Map;
@@ -122,7 +119,6 @@ public class ReservationController extends APIControllerAbstract {
     }*/
 
 
-
     @RequestMapping(value = "/reservations/pending/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getPendingReservations(@PathVariable Long id) {
         if (id == null)
@@ -132,7 +128,7 @@ public class ReservationController extends APIControllerAbstract {
             if (user.isAdmin() || user.getId().equals(id)) {
                 List<Reservation> reservationList = new ArrayList<>();
                 reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
-                return ok(modelMapper.map(reservationList,new TypeToken<ReservationDTO[]>() {
+                return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO[]>() {
                 }.getType()));
             }
             return noPermission();
@@ -149,7 +145,8 @@ public class ReservationController extends APIControllerAbstract {
             Reservation reservation = reservationRepository.find(id);
             List<ReservationDecision> decisionList = new ArrayList<>();
             decisionList = reservationService.generateReservationDecisions(reservation);
-            return ok(modelMapper.map(decisionList, new TypeToken<ReservationDecisionDTO[]>(){}.getType()));
+            return ok(modelMapper.map(decisionList, new TypeToken<ReservationDecisionDTO[]>() {
+            }.getType()));
         }
         return unauthorized();
     }
