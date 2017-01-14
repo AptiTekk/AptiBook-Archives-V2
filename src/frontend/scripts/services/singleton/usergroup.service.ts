@@ -50,18 +50,18 @@ export class UserGroupService {
         });
     }
 
-    public getUserGroupHierarchyDown(user: User): Observable<UserGroup[]> {
+    public getUserGroupHierarchyDown(userGroup: UserGroup): Observable<UserGroup[]> {
         return Observable.create(listener => {
-            this.apiService.get("userGroups/hierarchyDown/" + user.id).subscribe(
+            this.apiService.get("userGroups/hierarchyDown/" + userGroup.id).subscribe(
                 response => listener.next(response),
                 err => listener.next([])
             );
         });
     }
 
-    public getUserGroupHierarchyUp(user: User): Observable<UserGroup[]> {
+    public getUserGroupHierarchyUp(userGroup: UserGroup): Observable<UserGroup[]> {
         return Observable.create(listener => {
-            this.apiService.get("/userGroups/hierarchyUp/" + user.id).subscribe(
+            this.apiService.get("/userGroups/hierarchyUp/" + userGroup.id).subscribe(
                 response => listener.next(response),
                 err => listener.next([])
             );

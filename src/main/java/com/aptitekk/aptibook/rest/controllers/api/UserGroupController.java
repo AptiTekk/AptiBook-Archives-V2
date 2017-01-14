@@ -35,7 +35,7 @@ public class UserGroupController extends APIControllerAbstract {
     private final UserRepository userRepository;
 
     @Autowired
-    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService,UserRepository userRepository) {
+    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService, UserRepository userRepository) {
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.userRepository = userRepository;
@@ -180,16 +180,11 @@ public class UserGroupController extends APIControllerAbstract {
         if (!authService.isUserSignedIn())
             return unauthorized();
 
-        // Ensure that the user requesting is an admin or is the same user as being requested.
-        User user = userRepository.find(id);
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return badRequest("UserGroup not found.");
 
-        // Add all usergroups in the hierarchy belonging to the user
-        List<UserGroup> userGroupList = new ArrayList<>();
-        for (UserGroup userGroup : user.userGroups) {
-            userGroupList.addAll(userGroupService.getHierarchyDown(userGroup));
-        }
-
-        return ok(modelMapper.map(userGroupList, new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
+        return ok(modelMapper.map(userGroupService.getHierarchyDown(userGroup), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
         }.getType()));
     }
 
@@ -201,16 +196,11 @@ public class UserGroupController extends APIControllerAbstract {
         if (!authService.isUserSignedIn())
             return unauthorized();
 
-        // Ensure that the user requesting is an admin or is the same user as being requested.
-        User user = userRepository.find(id);
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return badRequest("UserGroup not found.");
 
-        // Add all usergroups in the hierarchy belonging to the user
-        List<UserGroup> userGroupList = new ArrayList<>();
-        for (UserGroup userGroup : user.userGroups) {
-            userGroupList.addAll(userGroupService.getHierarchyUp(userGroup));
-        }
-
-        return ok(modelMapper.map(userGroupList, new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
+        return ok(modelMapper.map(userGroupService.getHierarchyUp(userGroup), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
         }.getType()));
     }
 }

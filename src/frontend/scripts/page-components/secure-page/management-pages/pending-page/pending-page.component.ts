@@ -37,7 +37,7 @@ export class PendingPageComponent {
 
             this.pendingReservations.forEach(reservation => {
                 let hierarchyUp: UserGroup[] = [];
-                this.userGroupService.getUserGroupHierarchyUp(reservation.user).subscribe(userGroups => {
+                this.userGroupService.getUserGroupHierarchyUp(reservation.resource.owner).subscribe(userGroups => {
                     hierarchyUp = userGroups;
                     this.reservationService.getReservationDecisions(reservation).subscribe(decisions => {
 
