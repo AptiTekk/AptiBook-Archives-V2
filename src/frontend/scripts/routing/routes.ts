@@ -25,6 +25,7 @@ import {ConfigurationContainerComponent} from "../page-components/secure-page/co
 import {AllUsersSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/all-users-section/all-users-section.component";
 import {GroupsSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/groups-section/groups-section.component";
 import {MyContainerComponent} from "../page-components/secure-page/my-pages/my-container.component";
+import {InactiveTenantPageComponent} from "../page-components/inactive-tenant-page/inactive-tenant-page.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -139,6 +140,10 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             }
         ],
         canActivate: [SecureGuard]
+    },
+    {
+        path: 'inactive',
+        component: InactiveTenantPageComponent
     },
     {
         path: '',
