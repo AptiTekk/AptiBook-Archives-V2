@@ -33,7 +33,7 @@ node {
 
         stage "Deploy to Production"
         slackSend color: "#4272b7", message: "[Job ${env.BUILD_NUMBER}] Deploying AptiBook to Heroku..."
-        deployToProduction(herokuAppName, liveUrl, pingUrl)
+        deployToProduction(herokuAppName)
 
     } catch (err) {
         slackSend color: "danger", message: "[Job ${env.BUILD_NUMBER}] An Error occurred during the ${env.JOB_NAME} Pipeline."
