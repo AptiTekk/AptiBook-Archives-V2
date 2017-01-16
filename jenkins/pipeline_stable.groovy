@@ -70,15 +70,19 @@ def changeVersion(buildNumber) {
 
 def deployToProduction(herokuAppName) {
     // Remove all files except for what is needed by maven to build the jar. Web-packing will be done on the jenkins server.
-    sh "find . " +
-            "-type d " +
-            "-not -name src " +
-            "-not -name .git " +
-            "-not -name jenkins " +
-            "-or -type f " +
-            "-not -name pom.xml " +
-            "-not -name Procfile " +
-            "-not -name currentVersion " +
+    sh 'find . ' +
+            '-maxdepth 1 ' +
+            '-type d ' +
+            '-not -name src ' +
+            '-not -name .git ' +
+            '-not -name jenkins ' +
+            '-exec rm -irf {} \\;'
+    sh 'find . ' +
+            '-maxdepth 1 ' +
+            '-type f ' +
+            '-not -name pom.xml ' +
+            '-not -name Procfile ' +
+            '-not -name currentVersion ' +
             '-exec rm -irf {} \\;'
 
     // Force add all files, even if .gitignored
