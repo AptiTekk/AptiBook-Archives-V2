@@ -75,11 +75,11 @@ def deployToProduction(herokuAppName) {
             "-not -name src " +
             "-not -name .git " +
             "-not -name jenkins " +
-            "-or -type -f " +
+            "-or -type f " +
             "-not -name pom.xml " +
             "-not -name Procfile " +
             "-not -name currentVersion " +
-            "-exec rm -irf {} \\;"
+            '-exec rm -irf {} \\;'
 
     // Force add all files, even if .gitignored
     sh "git add src/main/webapp/packed/* -f"
