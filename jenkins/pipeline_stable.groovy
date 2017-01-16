@@ -68,16 +68,42 @@ def changeVersion(buildNumber) {
     sh "git commit -a -m 'Jenkins Automatic Version Change'"
 }
 
-def deployToProduction(herokuAppName, liveUrl, pingUrl) {
-    sh "mvn clean install -U"
-    sh "heroku maintenance:on --app ${herokuAppName}"
+def deployToProduction(herokuAppName) {
+    // Remove all files except for what is needed by maven to build the jar. Web-packing will be done on the jenkins server.
+    sh "find . " +
+            "-type d " +
+            "-not -name src " +
+            "-not -name .git " +
+            "-not -name jenkins " +
+            "-or -type -f " +
+            "-not -name pom.xml " +
+            "-not -name Procfile " +
+            "-not -name currentVersion " +
+            "-exec rm -irf {} \\;"
+
+    // Force add all files, even if .gitignored
+    sh "git add src/main/webapp/packed/* -f"
+
+    // Commit
+    sh "git commit -a -m 'Jenkins Automatic Add Packed'"
+
+    // Add the heroku git remote to the git repo
     sh "heroku git:remote --app ${herokuAppName}"
+
+    // Push to heroku
     sh "git push heroku HEAD:master -f"
+
+    // Enable heroku Maintenance Mode
+    sh "heroku maintenance:on --app ${herokuAppName}"
+
+    // Sleep for one minute to allow heroku to boot
     sleep 60
 
+    // Define the version variable based on what was pre-determined.
     sh 'mvn help:evaluate -Dexpression=project.version|grep -Ev \'(^\\[|Download\\w+:)\' > currentVersion'
     def version = readFile "currentVersion"
 
+    // Send Slack messages
     slackSend color: "good", message: "[Job ${env.BUILD_NUMBER}] ${herokuAppName} version ${version} has been deployed."
     slackSend color: "#4272b7", message: "[Job ${env.BUILD_NUMBER}] Don't forget to disable maintenance mode."
 }
