@@ -9,16 +9,20 @@ import moment = require("moment");
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {
-    constructor(){
+
+    constructor() {
         moment.updateLocale('en', {
-            calendar : {
-                lastDay : '[Yesterday at] LT',
-                sameDay : '[Today at] LT',
-                nextDay : '[Tomorrow at] LT',
-                lastWeek : '[Last] dddd [at] LT',
-                nextWeek : '[Next] dddd [at] LT',
-                sameElse : 'dddd, MMMM Do, YYYY [at] LT'
+            calendar: {
+                lastDay: '[Yesterday at] LT',
+                sameDay: '[Today at] LT',
+                nextDay: '[Tomorrow at] LT',
+                lastWeek: '[Last] dddd [at] LT',
+                nextWeek: '[Next] dddd [at] LT',
+                sameElse: 'dddd, MMMM Do, YYYY [at] LT'
             }
         });
     }
+
+
+
 }

@@ -10,8 +10,8 @@ export class TenantService {
 
     constructor(private apiService: APIService) {
         apiService.get("tenant").subscribe(
-            response => this.tenant.next(<Tenant>response),
-            err => this.tenant = undefined
+            response => this.tenant.next(response),
+            err => this.tenant.next(undefined)
         );
     }
 

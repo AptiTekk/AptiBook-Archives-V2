@@ -69,7 +69,7 @@ export class HeaderComponent implements OnInit {
         this.authService.signOut().subscribe(
             (value: boolean) => {
                 if (value)
-                    this.router.navigate(['sign-in']);
+                    this.router.navigate(['', 'sign-in']);
                 else
                     console.log("Could not sign out!")
             });

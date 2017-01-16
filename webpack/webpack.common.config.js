@@ -25,37 +25,37 @@ var config = {
             },
             {
                 test: /datatables\.net.*/,
-                loader: 'imports?define=>false'
+                loader: 'imports-loader?define=>false'
             },
             {
                 test: /\.json$/,
-                loader: 'json'
+                loader: 'json-loader'
             },
             {
                 test: /\.component\.html$/,
-                loader: "to-string!html?-minimize"
+                loader: "to-string-loader!html-loader?-minimize"
             },
             {
                 test: /\.html$/,
-                loader: "html?-minimize",
+                loader: "html-loader?-minimize",
                 exclude: [/\.component\.html$/]
             },
             {
                 test: /\.component\.css$/,
-                loader: "to-string!css"
+                loader: "to-string-loader!css-loader"
             },
             {
                 test: /\.css(\?v=[\d\.]+)?$/,
-                loader: "style!css",
+                loader: "style-loader!css-loader",
                 exclude: [/\.component\.css$/]
             },
             {
                 test: /\.(png|jpg|gif|svg)(\?v=[\d\.]+)?$/,
-                loader: "file?name=./packed/images/[hash].[ext]"
+                loader: "file-loader?name=./packed/images/[hash].[ext]"
             },
             {
                 test: /\.(ttf|eot|woff|woff2)(\?v=[\d\.]+)?$/,
-                loader: 'file?name=./packed/fonts/[hash].[ext]'
+                loader: 'file-loader?name=./packed/fonts/[hash].[ext]'
             }
         ]
     },
