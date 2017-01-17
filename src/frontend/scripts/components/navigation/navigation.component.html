@@ -4,7 +4,8 @@
   ~ Proprietary and confidential.
   -->
 
-<ul class="nav nav-{{horizontal ? 'tabs' : 'list'}}"
+<ul class="nav nav-pills"
+	[class.nav-stacked]="!horizontal"
 	*ngIf="links">
 	<li *ngFor="let link of links"
 		[routerLinkActive]="'active'"
@@ -16,7 +17,8 @@
 	</li>
 </ul>
 
-<ul class="nav nav-{{horizontal ? 'tabs' : 'list'}}"
+<ul class="nav nav-pills"
+	[class.nav-stacked]="!horizontal"
 	*ngIf="!links && navigationLinkComponents">
 	<li *ngFor="let linkComponent of navigationLinkComponents"
 		[class.active]="linkComponent.active">

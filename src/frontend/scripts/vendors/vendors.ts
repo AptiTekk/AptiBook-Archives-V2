@@ -5,5 +5,3 @@ import "./bootstrap";
 import "./datatables";
 import "./datetimepicker";
 import "./fullcalendar";
-
-require('!style!css!../../styles/style.css');

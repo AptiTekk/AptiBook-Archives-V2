@@ -4,4 +4,24 @@
   ~ Proprietary and confidential.
   -->
 
-<div #calendarContainer class="calendar" [ngClass]="{selectable: allowSelection}" style="height: 100%"></div>
+<div style="height: 100%">
+	<div id="header">
+		<div class="col-xs-4 col-xs-push-4">
+			<button id="prev"
+			   (click)="onPrev()">
+				<i class="fa fa-angle-left"></i>
+			</button>
+			<h1 class="no-select">{{getTitle()}}</h1>
+			<button id="next"
+			   (click)="onNext()">
+				<i class="fa fa-angle-right"></i>
+			</button>
+		</div>
+	</div>
+	<div id="body">
+		<div #calendarContainer
+			 class="calendar"
+			 [ngClass]="{selectable: allowEventSelection}"
+			 style="height: 100%"></div>
+	</div>
+</div>

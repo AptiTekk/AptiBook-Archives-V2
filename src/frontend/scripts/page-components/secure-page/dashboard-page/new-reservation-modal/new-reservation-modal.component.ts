@@ -1,18 +1,18 @@
-import {Component, Output, EventEmitter} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import * as moment from "moment";
 import {Router} from "@angular/router";
 import {SearchService} from "../../../../services/singleton/search.service";
+import {ModalComponent} from "../../../../components/modal/modal.component";
 import Moment = moment.Moment;
 
 @Component({
-    selector: 'new-reservation-panel',
-    templateUrl: 'new-reservation-panel.component.html',
-    styleUrls: ['new-reservation-panel.component.css'],
+    selector: 'new-reservation-modal',
+    templateUrl: 'new-reservation-modal.component.html',
+    styleUrls: ['new-reservation-modal.component.css'],
 })
-export class NewReservationPanelComponent {
+export class NewReservationModalComponent {
 
-    @Output()
-    cancelled: EventEmitter<void> = new EventEmitter<void>();
+    @ViewChild(ModalComponent) modal: ModalComponent;
 
     startDate: Moment = moment();
     endDate: Moment = moment();
@@ -25,13 +25,15 @@ export class NewReservationPanelComponent {
         return this.endDate.isBefore(this.startDate);
     }
 
-    onCancel() {
-        this.cancelled.next();
+    public display(date: Moment) {
+        this.startDate = date;
+        this.modal.openModal();
     }
 
     onSearch() {
         this.searchService.searchForResources(this.startDate, this.endDate);
-        this.router.navigateByUrl("/secure/search-results");
+        this.modal.closeModal();
+        this.router.navigate(['', 'secure', 'search-results']);
     }
 
 }

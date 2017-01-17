@@ -37,7 +37,7 @@ node {
 
     } catch (err) {
         slackSend color: "danger", message: "[Job ${env.BUILD_NUMBER}] An Error occurred during the ${env.JOB_NAME} Pipeline."
-        error err
+        error err.message
     }
 }
 

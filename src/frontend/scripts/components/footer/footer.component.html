@@ -7,46 +7,44 @@
 <div class="spacer"
 	 *ngIf="includeSpacer"></div>
 <div class="footer">
-	<div class="container-fluid">
-		<!-- Info Button & Copyright (Large Screens) -->
-		<div class="hidden-xs col-sm-6">
-			<p>
-                <span class="no-decoration">
-                    <a style="cursor: pointer;"
-					   (click)="infoModal.openModal()">
-                        <span><i class="fa fa-info-circle"></i></span>
-                    </a>
-                </span>
-				| Crafted with <span class="fa fa-heartbeat"></span> by
-				<a href="https://AptiTekk.com">AptiTekk, LLC.</a>
-			</p>
-		</div>
-		
-		<!-- Info Button & Copyright (Small Screens) -->
-		<div class="hidden-sm hidden-md hidden-lg col-xs-6">
-			<p>
-                <span class="no-decoration">
-                    <a (click)="infoModal.openModal()">
-                        <span><i class="fa fa-info-circle"></i></span>
-                    </a>
-                </span>
-				| <span class="fa fa-copyright"></span>
-				<a href="https://AptiTekk.com">AptiTekk, LLC.</a>
-			</p>
-		</div>
-		
-		<!-- Help Button -->
-		<div class="col-xs-6">
-			<p>
-                <span class="pull-right">
-                    <a style="cursor: pointer;"
-					   (click)="helpModal.openModal()">
-                        <span><i class="fa fa-question-circle"></i>
-                        </span> Need Help?
-                    </a>
-                </span>
-			</p>
-		</div>
+	<!-- Info Button & Copyright (Large Screens) -->
+	<div class="hidden-xs col-sm-6">
+		<p>
+			<span class="no-decoration">
+				<a style="cursor: pointer;"
+				   (click)="infoModal.openModal()">
+					<span><i class="fa fa-info-circle"></i></span>
+				</a>
+			</span>
+			| Crafted with <span class="fa fa-heartbeat"></span> by
+			<a href="https://AptiTekk.com">AptiTekk, LLC.</a>
+		</p>
+	</div>
+	
+	<!-- Info Button & Copyright (Small Screens) -->
+	<div class="hidden-sm hidden-md hidden-lg col-xs-6">
+		<p>
+			<span class="no-decoration">
+				<a (click)="infoModal.openModal()">
+					<span><i class="fa fa-info-circle"></i></span>
+				</a>
+			</span>
+			| <span class="fa fa-copyright"></span>
+			<a href="https://AptiTekk.com">AptiTekk, LLC.</a>
+		</p>
+	</div>
+	
+	<!-- Help Button -->
+	<div class="col-xs-6">
+		<p>
+			<span class="pull-right">
+				<a style="cursor: pointer;"
+				   (click)="helpModal.openModal()">
+					<span><i class="fa fa-question-circle"></i>
+					</span> Need Help?
+				</a>
+			</span>
+		</p>
 	</div>
 </div>
 
