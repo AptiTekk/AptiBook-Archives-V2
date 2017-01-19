@@ -1,3 +1,4 @@
+export * from './accordian-navigation';
 export * from './alert/alert.component';
 export * from './calendar';
 export * from './datatable';

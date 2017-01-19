@@ -27,6 +27,7 @@ export class NewReservationModalComponent {
 
     public display(date: Moment) {
         this.startDate = date;
+        this.endDate = date;
         this.modal.openModal();
     }
 

@@ -13,17 +13,62 @@
 		</a>
 	</div>
 	<div id="content">
-		<h4>Reservation Management</h4>
-		<navigation [links]="reservationManagementLinks">
-		</navigation>
-		<h4>AptiBook Configuration</h4>
-		<navigation [links]="configurationLinks">
-		</navigation>
-		<h4>Account</h4>
-		<navigation [links]="myLinks">
-		</navigation>
+		<accordian-navigation [canCollapse]="false">
+			<accordian-navigation [icon]="'calendar-check-o'"
+								  [label]="'Reservation Management'"
+								  [expanded]="true">
+				<accordian-navigation [link]="['', 'secure', 'management', 'pending']"
+									  [icon]="'hourglass-half'"
+									  [label]="'Pending'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'management', 'approved']"
+									  [icon]="'calendar-check-o'"
+									  [label]="'Approved'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'management', 'rejected']"
+									  [icon]="'calendar-times-o'"
+									  [label]="'Rejected'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'management', 'calendar']"
+									  [icon]="'calendar'"
+									  [label]="'Calendar'">
+				</accordian-navigation>
+			</accordian-navigation>
+			<accordian-navigation [icon]="'cogs'"
+								  [label]="'AptiBook Configuration'">
+				<accordian-navigation [link]="['', 'secure', 'configuration', 'resources']"
+									  [icon]="'tags'"
+									  [label]="'Resources'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'configuration', 'users']"
+									  [icon]="'user'"
+									  [label]="'Users'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'configuration', 'permissions']"
+									  [icon]="'unlock'"
+									  [label]="'Permissions'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'configuration', 'properties']"
+									  [icon]="'cog'"
+									  [label]="'Properties'">
+				</accordian-navigation>
+			</accordian-navigation>
+			<accordian-navigation [icon]="'user'"
+								  [label]="'Account'">
+				<accordian-navigation [link]="['', 'secure', 'my', 'account']"
+									  [icon]="'pencil'"
+									  [label]="'My Account'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'my', 'notifications']"
+									  [icon]="'bell'"
+									  [label]="'My Notifications'">
+				</accordian-navigation>
+			</accordian-navigation>
+		</accordian-navigation>
 	</div>
 	<div id="sign-out">
+		<i class="fa fa-user"
+		   aria-hidden="true"></i>
 		{{user?.fullName}}
 		<button (click)="onSignOut()"
 				class="btn-none">
