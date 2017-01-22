@@ -95,48 +95,6 @@ public class ReservationController extends APIControllerAbstract {
     }
 
 
-/*    private void init() {
-        reservations = new ArrayList<>();
-        for (UserGroup userGroup : authenticationController.getAuthenticatedUser().getUserGroups()) {
-            reservations.addAll(userGroupService.getHierarchyDownReservations(userGroup));
-        }
-
-        scheduleModel = new ReservationScheduleModel() {
-            @Override
-            public List<Reservation> getReservationsBetweenDates(ZonedDateTime start, ZonedDateTime end) {
-                ArrayList<Reservation> prunedReservations = new ArrayList<>(reservations);
-                Iterator<Reservation> iterator = prunedReservations.iterator();
-                while (iterator.hasNext()) {
-                    Reservation next = iterator.next();
-                    if (next.getStatus() == Reservation.Status.REJECTED)
-                        iterator.remove();
-                    else if (next.getEndTime().isBefore(start) || next.getStartTime().isAfter(end))
-                        iterator.remove();
-                }
-
-                return prunedReservations;
-            }
-        };
-
-        helpController.setCurrentTopic(HelpController.Topic.RESERVATION_MANAGEMENT_CALENDAR);
-    }*/
-
-/*
-    @RequestMapping(value = "/reservations/resourceOwner/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getResourceOwnerReservations(@PathVariable Long id,@RequestParam(value = "start", required = false) String start, @RequestParam(value = "end", required = false) String end){
-        if(authService.isUserSignedIn()){
-            User user = authService.getCurrentUser();
-            if (user.isAdmin() || user.getId().equals(id)) {
-                ArrayList<Reservation> reservations = new ArrayList<>();
-                for(UserGroup userGroup : user.userGroups){
-                   // reservations.addAll(us)
-                    //TODO: Implement getHierarchyDownReservations
-                }
-            }
-        }
-    }*/
-
-
     @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
         if (authService.isUserSignedIn()) {
