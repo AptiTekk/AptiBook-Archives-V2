@@ -36,11 +36,13 @@ export class RegisterComponent {
         console.log("Submitted.");
         this.loaderService.startLoading();
         this.registrationService.register(this.formGroup.controls['emailAddress'].value, this.formGroup.controls['firstName'].value, this.formGroup.controls['lastName'].value,
-            this.formGroup.controls['password'].value, this.formGroup.controls['confirmPassword'].value).subscribe(response => {
+            this.formGroup.controls['password'].value).subscribe(response => {
             if (response) {
                 this.authService.reloadUser();
-                this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
+                //send verification email
+                //this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
             } else {
+                console.log("error");
                 this.loaderService.startLoading();
             }
         });

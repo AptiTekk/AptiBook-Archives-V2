@@ -16,25 +16,18 @@ export class RegistrationService {
 
     }
 
-    register(emailAddress: string, firstName: string, lastName: string, password: string, confirmPassword: string) {
-        let user: User;
-        user.emailAddress = emailAddress;
-        user.firstName = firstName;
-        user.lastName = lastName;
-        user.newPassword = password;
-        user.confirmPassword = password;
+    register(emailAddress: string, firstName: string, lastName: string, password: string) {
         return Observable.create(listener => {
-            this.apiService.post("register", user).subscribe(
-                response => {
-                    if (response)
-                        listener.next(true);
-                    else
-                        listener.next(false);
-                },
-                err => {
-                    listener.next(false);
-                }
-            )
+            console.log("here");
+            let user: User;
+            user.emailAddress = emailAddress;
+            user.firstName = firstName;
+            user.lastName = lastName;
+            user.newPassword = password;
+            this.apiService.post("/register", user).subscribe(
+                response => listener.next(response),
+                err => listener.next(undefined)
+            );
         });
     }
 }
