@@ -24,6 +24,8 @@ public class UserDTO {
 
     public String location;
 
+    public boolean verified;
+
     public List<UserGroupDTO.WithoutParentOrChildren> userGroups;
 
     public String fullName;

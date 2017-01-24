@@ -15,7 +15,6 @@ export class RegistrationService {
     constructor(private apiService: APIService) {
 
     }
-
     register(user: User) {
         return Observable.create(listener => {
             console.log("here");

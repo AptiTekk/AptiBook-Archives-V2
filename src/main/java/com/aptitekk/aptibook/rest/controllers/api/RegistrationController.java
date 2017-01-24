@@ -34,6 +34,7 @@ public class RegistrationController extends APIControllerAbstract{
     public ResponseEntity<?> register(@RequestBody UserDTO.WithNewPassword userDTO) {
         System.out.println("Called register");
         User newUser = new User();
+        newUser.verified = userDTO.verified;
         newUser.emailAddress = userDTO.emailAddress;
         newUser.firstName = userDTO.firstName;
         newUser.lastName = userDTO.lastName;

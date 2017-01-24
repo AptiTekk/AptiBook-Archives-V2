@@ -20,6 +20,7 @@ export class RegisterComponent {
         firstName: null,
         lastName: null,
         fullName: null,
+        verified: null,
         phoneNumber: null,
         location: null,
         notifications: null,
@@ -58,16 +59,12 @@ export class RegisterComponent {
             this.user.firstName = this.formGroup.controls['firstName'].value;
             this.user.lastName = this.formGroup.controls['lastName'].value;
             this.user.newPassword = this.formGroup.controls['password'].value;
+            this.user.verified = false;
             this.registrationService.register(this.user).subscribe(response => {
-                if(response != undefined) {
-                    console.log("it works");
-                    this.authService.reloadUser();
-                    //send verification email
-                    //this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
-                } else {
-                    console.log("error");
-                    //this.loaderService.startLoading();
-                }
+               if(!response.verified){
+                   //send verification email
+
+               }
             });
         }
 
