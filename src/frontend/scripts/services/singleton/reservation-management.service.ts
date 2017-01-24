@@ -5,7 +5,7 @@
  */
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {ReservationWithDecisions} from "../../models/reservation.model";
+import {ReservationWithDecisions, Reservation} from "../../models/reservation.model";
 import {Observable, ReplaySubject} from "rxjs";
 import {UserGroupWithDecision} from "../../models/user-group.model";
 import {ReservationDecision} from "../../models/reservation-decision.model";
@@ -71,6 +71,11 @@ export class ReservationManagementService {
         return this.rejectedReservations;
     }
 
+    /**
+     * Organizes the decisions of the hierarchies of the passed in reservations.
+     * Determines who overrides who, which decisions belong to which groups, etc.
+     * @param reservations The reservations to organize.
+     */
     private organizeReservations(reservations: ReservationWithDecisions[]) {
         reservations.forEach(reservation => {
             // By zipping up these Observables, we save time, as they will be fetched at the same time.
@@ -108,9 +113,29 @@ export class ReservationManagementService {
                         }
                     }
 
-                    // We will reverse the array so that it shows up in the correct order on the webpage.
+                    // We will reverse the array so that it shows up in the correct order on the web-page.
                     reservation.hierarchy = userGroups.reverse();
                 });
+        });
+    }
+
+    /**
+     * Makes a decision on the provided reservation.
+     * @param approved If the decision is an approval or a rejection.
+     * @param reservation The reservation deciding upon.
+     * @returns The decision that was made, or undefined if one could not be made.
+     */
+    makeDecision(approved: boolean, reservation: Reservation): Observable<ReservationDecision> {
+        return Observable.create(listener => {
+            if (!reservation)
+                listener.next(undefined);
+            else
+                this.apiService
+                    .patch("/reservations/" + reservation.id + "/decide", approved)
+                    .subscribe(
+                        decision => listener.next(decision),
+                        err => listener.next(undefined)
+                    )
         });
     }
 

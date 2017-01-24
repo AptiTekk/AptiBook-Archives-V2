@@ -6,8 +6,7 @@
 import {Component, OnInit} from "@angular/core";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
-import {Reservation, ReservationWithDecisions} from "../../../../models/reservation.model";
-import {UserGroupService} from "../../../../services/singleton/usergroup.service";
+import {ReservationWithDecisions, Reservation} from "../../../../models/reservation.model";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
 import moment = require("moment");
 
@@ -42,12 +41,10 @@ export class PendingPageComponent implements OnInit {
             .subscribe(reservations => this.pendingReservations = reservations);
     }
 
-    /*makeDecision(approved: boolean, reservation: Reservation) {
-        this.reservationService.makeReservationDecision(approved, reservation).subscribe(response => {
-            this.reservationService.getPendingReservations(this.user).subscribe(reservations => {
-                this.pendingReservations = reservations;
-            })
-        });
-    }*/
+    makeDecision(approved: boolean, reservation: Reservation) {
+        this.reservationManagementService
+            .makeDecision(approved, reservation)
+            .subscribe(response => this.reservationManagementService.fetchPendingReservations());
+    }
 }
 

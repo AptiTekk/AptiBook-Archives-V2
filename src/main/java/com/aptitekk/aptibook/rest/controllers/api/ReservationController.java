@@ -25,7 +25,6 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -144,58 +143,43 @@ public class ReservationController extends APIControllerAbstract {
         }.getType()));
     }
 
-    @RequestMapping(value = "/reservations/{id}/approve", method = RequestMethod.PATCH)
-    public ResponseEntity<?> approveReservation(@PathVariable Long id) {
-        if (id == null)
-            return badRequest("Missing Id");
-        if (authService.isUserSignedIn()) {
-            Reservation reservation = reservationRepository.find(id);
-            ReservationDecision reservationDecision = new ReservationDecision();
-            reservationDecision.setUser(authService.getCurrentUser());
-            reservationDecision.setApproved(true);
-            reservationDecision.setReservation(reservation);
-            reservationDecision.setTenant(tenantManagementService.getTenant());
-            List<UserGroup> userGroupList = new ArrayList<>();
-            userGroupList.addAll(this.userGroupService.getHierarchyUp(reservation.getResource().owner));
-            for (UserGroup userGroup : authService.getCurrentUser().userGroups) {
-                for (UserGroup userGroup1 : userGroupList) {
-                    if (userGroup == userGroup1) {
-                        reservationDecision.setUserGroup(userGroup);
-                    }
-                }
-            }
-            reservationDecision = reservationDecisionRepository.save(reservationDecision);
-            return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
-            }.getType()));
-        }
-        return unauthorized();
-    }
+    @RequestMapping(value = "/reservations/{id}/decision", method = RequestMethod.PATCH)
+    public ResponseEntity<?> approveReservation(@PathVariable Long id, @RequestBody Boolean approved) {
+        if (!authService.isUserSignedIn())
+            return unauthorized();
 
-    @RequestMapping(value = "/reservations/{id}/reject", method = RequestMethod.PATCH)
-    public ResponseEntity<?> rejectReservation(@PathVariable Long id) {
-        if (id == null)
-            return badRequest("Missing Id");
-        if (authService.isUserSignedIn()) {
-            Reservation reservation = reservationRepository.find(id);
-            ReservationDecision reservationDecision = new ReservationDecision();
-            reservationDecision.setUser(authService.getCurrentUser());
-            reservationDecision.setApproved(false);
-            reservationDecision.setReservation(reservation);
-            reservationDecision.setTenant(tenantManagementService.getTenant());
-            List<UserGroup> userGroupList = new ArrayList<>();
-            userGroupList.addAll(this.userGroupService.getHierarchyUp(reservation.getResource().owner));
-            for (UserGroup userGroup : authService.getCurrentUser().userGroups) {
-                for (UserGroup userGroup1 : userGroupList) {
-                    if (userGroup == userGroup1) {
-                        reservationDecision.setUserGroup(userGroup);
-                    }
-                }
+        if (authService.getCurrentUser().userGroups.size() == 0)
+            return noPermission();
+
+        if (approved == null)
+            return badRequest("Please send only true (for approved) or false (for rejected).");
+
+        Reservation reservation = reservationRepository.find(id);
+        if (reservation == null)
+            return badRequest("Reservation not found.");
+
+        User currentUser = authService.getCurrentUser();
+
+        UserGroup decidingFor = null;
+        for (UserGroup userGroup : this.userGroupService.getHierarchyUp(reservation.getResource().owner)) {
+            if (currentUser.userGroups.contains(userGroup)) {
+                decidingFor = userGroup;
+                break;
             }
-            reservationDecision = reservationDecisionRepository.save(reservationDecision);
-            return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
-            }.getType()));
         }
-        return unauthorized();
+
+        if (decidingFor == null)
+            return noPermission("You are not allowed to decide upon this Reservation.");
+
+        ReservationDecision reservationDecision = new ReservationDecision();
+        reservationDecision.setUser(authService.getCurrentUser());
+        reservationDecision.setApproved(approved);
+        reservationDecision.setReservation(reservation);
+        reservationDecision.setUserGroup(decidingFor);
+
+        reservationDecision = reservationDecisionRepository.save(reservationDecision);
+        return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
+        }.getType()));
     }
 
     @RequestMapping(value = "/reservations/decisions/{id}", method = RequestMethod.GET)
