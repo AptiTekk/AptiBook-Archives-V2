@@ -72,16 +72,6 @@ public class ReservationService {
 
         }
         return hierarchyDecisions;
-
-    /*    ReservationDecision currentDecision = null;
-        for (ReservationDecision decision : reservation.getDecisions()) {
-            if (decision.getUserGroup().equals(behalfUserGroup)) {
-                currentDecision = decision;
-                break;
-            }
-        }
-
-        return new ReservationDetails(reservation, behalfUserGroup, currentDecision, hierarchyDecisions);*/
     }
 
     /**

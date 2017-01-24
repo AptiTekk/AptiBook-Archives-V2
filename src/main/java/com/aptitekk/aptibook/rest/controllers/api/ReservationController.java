@@ -13,12 +13,9 @@ import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
-import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDetailsDTO;
-import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
-import com.sun.org.apache.regexp.internal.RE;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +28,6 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Map;
 
 @APIController
 public class ReservationController extends APIControllerAbstract {
@@ -200,13 +196,15 @@ public class ReservationController extends APIControllerAbstract {
     public ResponseEntity<?> getPendingReservationDecisions(@PathVariable Long id) {
         if (id == null)
             return badRequest("Missing ID");
+
         if (authService.isUserSignedIn()) {
             Reservation reservation = reservationRepository.find(id);
-            List<ReservationDecision> decisionList = new ArrayList<>();
-            decisionList = reservationService.generateReservationDecisions(reservation);
-            return ok(modelMapper.map(decisionList, new TypeToken<ReservationDecisionDTO[]>() {
+            List<ReservationDecision> decisionList = reservationService.generateReservationDecisions(reservation);
+
+            return ok(modelMapper.map(decisionList, new TypeToken<List<ReservationDecisionDTO>>() {
             }.getType()));
         }
+
         return unauthorized();
     }
 

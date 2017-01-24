@@ -3,18 +3,16 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-
-import {Component} from '@angular/core';
+import {Component} from "@angular/core";
 import {ReservationService} from "../../../../services/singleton/reservation.service";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
-import {ReservationDetails} from "../../../../models/reservation-details.model";
 import {ResourceCategory} from "../../../../models/resource-category.model";
-import moment = require("moment");
 import {Reservation} from "../../../../models/reservation.model";
 import {ReservationDecision} from "../../../../models/reservation-decision.model";
 import {UserGroup} from "../../../../models/user-group.model";
 import {UserGroupService} from "../../../../services/singleton/usergroup.service";
+import moment = require("moment");
 
 @Component({
     selector: 'pending-page',
@@ -51,16 +49,23 @@ export class PendingPageComponent {
                                     userGroup['decision'] = item;
                                 }
                             });
-                            for (let i = 0; i < hierarchyUp.length - 1; i++) {
-                                if (hierarchyUp[i + 1]['decision']) {
-                                    if (!hierarchyUp[i]['decision']) {
-                                        hierarchyUp[i]['overriddenBy'] = hierarchyUp[i + 1];
-                                    }
-                                    else if (hierarchyUp[i + 1]['decision'].approved != hierarchyUp[i]['decision'].approved) {
-                                        hierarchyUp[i]['overriddenBy'] = hierarchyUp[i + 1];
-                                    }
+
+                            for (let i = hierarchyUp.length - 1; i >= 0; i--) {
+                                let thisGroup = hierarchyUp[i];
+                                let upperGroup = hierarchyUp[i + 1];
+
+                                if (upperGroup) { // If the upper group exists...
+                                    if (upperGroup['overriddenBy']) // If the upper group has been overridden by another group
+                                        thisGroup['overriddenBy'] = upperGroup['overriddenBy']; // then we are also overridden by that group.
+                                    else if (upperGroup['decision']) // If the upper group has NOT been overridden, check if the upper group has made a decision.
+                                        if (!thisGroup['decision']) // If they have a decision but we do NOT...
+                                            thisGroup['overriddenBy'] = upperGroup; // ... then we are overridden by the upper group.
+                                        else if (upperGroup['decision'].approved
+                                            != thisGroup['decision'].approved)  // If we DO have a decision, and it is NOT the same as the upper group's decision...
+                                            thisGroup['overriddenBy'] = upperGroup; // ... then we are overridden by the upper group.
                                 }
                             }
+
                             hierarchyUp.reverse();
                             reservation['hierarchyUp'] = hierarchyUp;
                             reservation['organizeDecisions'] = reservationDecisions;
@@ -78,10 +83,6 @@ export class PendingPageComponent {
                 this.pendingReservations = reservations;
             })
         });
-    }
-
-    formatFriendly(date: string){
-        return moment(date);
     }
 }
 
