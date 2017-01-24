@@ -2,6 +2,7 @@ import {Resource} from "./resource.model";
 import {User} from "./user.model";
 import moment = require("moment");
 import Moment = moment.Moment;
+import {ResourceCategory} from "./resource-category.model";
 export interface Reservation {
     id: number;
 

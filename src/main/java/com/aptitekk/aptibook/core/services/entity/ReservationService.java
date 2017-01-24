@@ -6,24 +6,82 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.Reservation;
-import com.aptitekk.aptibook.core.domain.entities.Resource;
+import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
+import com.aptitekk.aptibook.core.services.auth.AuthService;
+import com.aptitekk.aptibook.core.util.ReservationDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 @EntityService
 public class ReservationService {
 
     private final ResourceRepository resourceRepository;
+    private final AuthService authService;
+    private final UserGroupService userGroupService;
 
     @Autowired
-    public ReservationService(ResourceRepository resourceRepository) {
+    public ReservationService(ResourceRepository resourceRepository, AuthService authService, UserGroupService userGroupService) {
         this.resourceRepository = resourceRepository;
+        this.authService = authService;
+        this.userGroupService = userGroupService;
+    }
+
+
+    public ArrayList<Reservation> buildReservationList(Reservation.Status status) {
+       ArrayList<Reservation> reservationList = new ArrayList<>();
+
+        Queue<UserGroup> queue = new LinkedList<>();
+        queue.addAll(authService.getCurrentUser().userGroups);
+
+        //Traverse down the hierarchy and determine which reservations are approved.
+        //Then, build details about each reservation and store it in the reservationDetailsMap.
+        UserGroup currentGroup;
+        while ((currentGroup = queue.poll()) != null) {
+            queue.addAll(currentGroup.getChildren());
+
+            for (Resource resource : currentGroup.getResources()) {
+                for (Reservation reservation : resource.reservations) {
+                    if (reservation.getStatus() == status) {
+                       reservationList.add(reservation);
+                    }
+                }
+            }
+        }
+
+        return reservationList;
+    }
+
+    public List<ReservationDecision> generateReservationDecisions(Reservation reservation) {
+        //Traverse up the hierarchy and determine the decisions that have already been made.
+        List<ReservationDecision> hierarchyDecisions = new ArrayList<>();
+        List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(reservation.getResource().owner);
+
+        //This for loop descends to properly order the groups for display on the page.
+        for (int i = hierarchyUp.size() - 1; i >= 0; i--) {
+            UserGroup userGroup = hierarchyUp.get(i);
+            for (ReservationDecision decision : reservation.getDecisions()) {
+                if (decision.getUserGroup().equals(userGroup)) {
+                    hierarchyDecisions.add(decision);
+                }
+            }
+
+        }
+        return hierarchyDecisions;
+
+    /*    ReservationDecision currentDecision = null;
+        for (ReservationDecision decision : reservation.getDecisions()) {
+            if (decision.getUserGroup().equals(behalfUserGroup)) {
+                currentDecision = decision;
+                break;
+            }
+        }
+
+        return new ReservationDetails(reservation, behalfUserGroup, currentDecision, hierarchyDecisions);*/
     }
 
     /**
