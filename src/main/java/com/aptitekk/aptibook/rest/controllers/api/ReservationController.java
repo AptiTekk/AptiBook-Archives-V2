@@ -98,44 +98,50 @@ public class ReservationController extends APIControllerAbstract {
         }
         return unauthorized();
     }
-/*
-    @RequestMapping(value = "/reservations/pending/details/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPendingReservationDetails(@PathVariable Long id) {
-        if (id == null)
-            return badRequest("Missing ID");
-        if (authService.isUserSignedIn()) {
-            User user = authService.getCurrentUser();
-            if (user.isAdmin() || user.getId().equals(id)) {
-                Map<ResourceCategory, List<ReservationDetails>> reservationDetailsMap;
-                reservationDetailsMap = reservationService.buildReservationList(Reservation.Status.PENDING);
-                List<ReservationDetails> reservationDetails = new ArrayList<>();
-                for(Map.Entry<ResourceCategory, List<ReservationDetails>> entry : reservationDetailsMap.entrySet()){
-                    reservationDetails.addAll(entry.getValue());
-                }
-                return ok(modelMapper.map(reservationDetails,new TypeToken<List<ReservationDetailsDTO>>() {
-                }.getType()));
-            }
-            return noPermission();
-        }
-        return unauthorized();
-    }*/
 
+    @RequestMapping(value = "/reservations/pending", method = RequestMethod.GET)
+    public ResponseEntity<?> getPendingReservations() {
 
-    @RequestMapping(value = "/reservations/pending/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPendingReservations(@PathVariable Long id) {
-        if (id == null)
-            return badRequest("Missing ID");
-        if (authService.isUserSignedIn()) {
-            User user = authService.getCurrentUser();
-            if (user.isAdmin() || user.getId().equals(id)) {
-                List<Reservation> reservationList = new ArrayList<>();
-                reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
-                return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO[]>() {
-                }.getType()));
-            }
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (authService.getCurrentUser().userGroups.size() == 0)
             return noPermission();
-        }
-        return unauthorized();
+
+        List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
+
+        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO[]>() {
+        }.getType()));
+    }
+
+    @RequestMapping(value = "/reservations/approved", method = RequestMethod.GET)
+    public ResponseEntity<?> getApprovedReservations() {
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (authService.getCurrentUser().userGroups.size() == 0)
+            return noPermission();
+
+        List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.APPROVED);
+
+        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO[]>() {
+        }.getType()));
+    }
+
+    @RequestMapping(value = "/reservations/rejected", method = RequestMethod.GET)
+    public ResponseEntity<?> getRejectedReservations() {
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (authService.getCurrentUser().userGroups.size() == 0)
+            return noPermission();
+
+        List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.REJECTED);
+
+        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO[]>() {
+        }.getType()));
     }
 
     @RequestMapping(value = "/reservations/{id}/approve", method = RequestMethod.PATCH)

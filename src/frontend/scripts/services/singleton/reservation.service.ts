@@ -5,16 +5,16 @@ import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import * as moment from "moment";
 import {ResourceCategory} from "../../models/resource-category.model";
-import {ReservationDetails} from "../../models/reservation-details.model";
-import {Response} from "@angular/http";
 import {ReservationDecision} from "../../models/reservation-decision.model";
+import {AuthService} from "./auth.service";
 
 @Injectable()
 export class ReservationService {
 
     private lastReservationMade: ReplaySubject<Reservation> = new ReplaySubject<Reservation>(1);
 
-    constructor(private apiService: APIService) {
+    constructor(private apiService: APIService,
+                private authService: AuthService) {
     }
 
     public getUpcomingUserReservations(user: User): Observable<Reservation[]> {
@@ -39,7 +39,6 @@ export class ReservationService {
 
     }
 
-
     public makeReservation(reservation: Reservation): Observable<Reservation> {
         return Observable.create(listener => {
             let body = JSON.stringify(reservation);
@@ -55,22 +54,42 @@ export class ReservationService {
         });
     }
 
-
-    public getPendingReservationDetails(user: User): Observable<ReservationDetails[]> {
+    public getPendingReservations(): Observable<Reservation[]> {
         return Observable.create(listener => {
-            if (user == undefined) {
-                listener.next(undefined);
-            }
-            else {
-                this.apiService.get("reservations/pending/details/user/" + user.id).subscribe(
-                    response => {
-                        listener.next(<ReservationDetails[]>response);
-                    },
-                    err => {
-                        listener.next(undefined)
-                    }
-                );
-            }
+            this.apiService.get("reservations/pending").subscribe(
+                response => {
+                    listener.next(<ResourceCategory[]>response);
+                },
+                err => {
+                    listener.next(undefined)
+                }
+            );
+        });
+    }
+
+    public getApprovedReservations(): Observable<Reservation[]> {
+        return Observable.create(listener => {
+            this.apiService.get("reservations/approved").subscribe(
+                response => {
+                    listener.next(<ResourceCategory[]>response);
+                },
+                err => {
+                    listener.next(undefined)
+                }
+            );
+        });
+    }
+
+    public getRejectedReservations(): Observable<Reservation[]> {
+        return Observable.create(listener => {
+            this.apiService.get("reservations/rejected").subscribe(
+                response => {
+                    listener.next(<ResourceCategory[]>response);
+                },
+                err => {
+                    listener.next(undefined)
+                }
+            );
         });
     }
 
@@ -84,26 +103,6 @@ export class ReservationService {
             )
         })
     }
-
-
-    public getPendingReservations(user: User): Observable<Reservation[]> {
-        return Observable.create(listener => {
-            if (user == undefined) {
-                listener.next(undefined);
-            }
-            else {
-                this.apiService.get("reservations/pending/user/" + user.id).subscribe(
-                    response => {
-                        listener.next(<ResourceCategory[]>response);
-                    },
-                    err => {
-                        listener.next(undefined)
-                    }
-                );
-            }
-        });
-    }
-
 
     getLastReservationMade(): ReplaySubject<Reservation> {
         return this.lastReservationMade;
