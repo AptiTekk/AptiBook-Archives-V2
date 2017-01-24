@@ -1,9 +1,11 @@
 import {Resource} from "./resource.model";
 import {User} from "./user.model";
+import {UserGroupWithDecision} from "./user-group.model";
 import moment = require("moment");
 import Moment = moment.Moment;
-import {ResourceCategory} from "./resource-category.model";
+
 export interface Reservation {
+
     id: number;
 
     dateCreated: string;
@@ -16,11 +18,17 @@ export interface Reservation {
 
     resource: Resource;
     user: User;
-    decisions: number[];
     fieldEntries: number[];
 
     pending: boolean;
     approved: boolean;
     rejected: boolean;
     cancelled: boolean;
+
+}
+
+export interface ReservationWithDecisions extends Reservation {
+
+    hierarchy?: UserGroupWithDecision[];
+
 }

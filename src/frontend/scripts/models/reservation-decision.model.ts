@@ -1,11 +1,21 @@
 import {User} from "./user.model";
 import {UserGroup} from "./user-group.model";
 import {Reservation} from "./reservation.model";
-export interface ReservationDecision{
+
+export interface ReservationDecision {
+
     id: Number;
+
     user: User;
+
     userGroup: UserGroup;
+
     reservation: Reservation;
+
     approved: boolean;
+
+    rejected: boolean;
+
     comment: String;
+
 }
