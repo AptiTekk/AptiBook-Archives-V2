@@ -54,56 +54,6 @@ export class ReservationService {
         });
     }
 
-    public getPendingReservations(): Observable<Reservation[]> {
-        return Observable.create(listener => {
-            this.apiService.get("reservations/pending").subscribe(
-                response => {
-                    listener.next(<ResourceCategory[]>response);
-                },
-                err => {
-                    listener.next(undefined)
-                }
-            );
-        });
-    }
-
-    public getApprovedReservations(): Observable<Reservation[]> {
-        return Observable.create(listener => {
-            this.apiService.get("reservations/approved").subscribe(
-                response => {
-                    listener.next(<ResourceCategory[]>response);
-                },
-                err => {
-                    listener.next(undefined)
-                }
-            );
-        });
-    }
-
-    public getRejectedReservations(): Observable<Reservation[]> {
-        return Observable.create(listener => {
-            this.apiService.get("reservations/rejected").subscribe(
-                response => {
-                    listener.next(<ResourceCategory[]>response);
-                },
-                err => {
-                    listener.next(undefined)
-                }
-            );
-        });
-    }
-
-    public getReservationDecisions(reservation: Reservation): Observable<ReservationDecision[]> {
-        return Observable.create(listener => {
-            this.apiService.get("reservations/decisions/" + reservation.id).subscribe(
-                response => {
-                    listener.next(response);
-                },
-                err => listener.next(undefined)
-            )
-        })
-    }
-
     getLastReservationMade(): ReplaySubject<Reservation> {
         return this.lastReservationMade;
     }

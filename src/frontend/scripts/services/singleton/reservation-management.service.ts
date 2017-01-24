@@ -9,23 +9,30 @@ import {ReservationWithDecisions} from "../../models/reservation.model";
 import {Observable, ReplaySubject} from "rxjs";
 import {UserGroupWithDecision} from "../../models/user-group.model";
 import {ReservationDecision} from "../../models/reservation-decision.model";
-import {ReservationService} from "./reservation.service";
 import {UserGroupService} from "./usergroup.service";
 
+/**
+ * This class contains logic needed for the reservation management page;
+ * including getting pending/approved/rejected reservations, getting decisions, and making decisions.
+ */
 @Injectable()
 export class ReservationManagementService {
 
     private pendingReservations = new ReplaySubject<ReservationWithDecisions[]>(1);
+    private approvedReservations = new ReplaySubject<ReservationWithDecisions[]>(1);
+    private rejectedReservations = new ReplaySubject<ReservationWithDecisions[]>(1);
 
     constructor(private apiService: APIService,
-                private reservationService: ReservationService,
                 private userGroupService: UserGroupService) {
         this.fetchPendingReservations();
+        this.fetchApprovedReservations();
+        this.fetchRejectedReservations();
     }
 
     fetchPendingReservations(): void {
-        this.reservationService
-            .getPendingReservations()
+        this.apiService
+            .get("reservations/pending")
+            .take(1)
             .subscribe((reservations: ReservationWithDecisions[]) => {
                 this.organizeReservations(reservations);
                 this.pendingReservations.next(reservations);
@@ -36,12 +43,40 @@ export class ReservationManagementService {
         return this.pendingReservations;
     }
 
+    fetchApprovedReservations(): void {
+        this.apiService
+            .get("reservations/approved")
+            .take(1)
+            .subscribe((reservations: ReservationWithDecisions[]) => {
+                this.organizeReservations(reservations);
+                this.approvedReservations.next(reservations);
+            });
+    }
+
+    getApprovedReservations(): ReplaySubject<ReservationWithDecisions[]> {
+        return this.approvedReservations;
+    }
+
+    fetchRejectedReservations(): void {
+        this.apiService
+            .get("reservations/rejected")
+            .take(1)
+            .subscribe((reservations: ReservationWithDecisions[]) => {
+                this.organizeReservations(reservations);
+                this.rejectedReservations.next(reservations);
+            });
+    }
+
+    getRejectedReservations(): ReplaySubject<ReservationWithDecisions[]> {
+        return this.rejectedReservations;
+    }
+
     private organizeReservations(reservations: ReservationWithDecisions[]) {
         reservations.forEach(reservation => {
             // By zipping up these Observables, we save time, as they will be fetched at the same time.
             Observable.zip(
                 this.userGroupService.getUserGroupHierarchyUp(reservation.resource.owner).take(1),
-                this.reservationService.getReservationDecisions(reservation).take(1))
+                this.apiService.get("reservations/decisions/" + reservation.id).take(1))
                 .subscribe(value => {
                     let userGroups: UserGroupWithDecision[] = value[0];
                     let decisions: ReservationDecision[] = value[1];

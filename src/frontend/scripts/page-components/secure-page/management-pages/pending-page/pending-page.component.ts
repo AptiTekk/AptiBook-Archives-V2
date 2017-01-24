@@ -28,8 +28,7 @@ export class PendingPageComponent implements OnInit {
      */
     pendingReservations: ReservationWithDecisions[] = [];
 
-    constructor(private userGroupService: UserGroupService,
-                private reservationManagementService: ReservationManagementService,
+    constructor(private reservationManagementService: ReservationManagementService,
                 private authService: AuthService) {
     }
 
@@ -37,8 +36,6 @@ export class PendingPageComponent implements OnInit {
         this.authService
             .getUser()
             .subscribe(user => this.user = user);
-
-        this.reservationManagementService.fetchPendingReservations();
 
         this.reservationManagementService
             .getPendingReservations()
