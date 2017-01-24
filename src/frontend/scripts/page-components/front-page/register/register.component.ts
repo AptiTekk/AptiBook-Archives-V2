@@ -5,6 +5,7 @@ import {OAuthService} from "../../../services/stateful/oauth.service";
 import {AuthService} from "../../../services/singleton/auth.service";
 import {LoaderService} from "../../../services/singleton/loader.service";
 import {RegistrationService} from "../../../services/singleton/registration.service";
+import {User} from "../../../models/user.model";
 
 @Component({
     selector: 'register',
@@ -13,6 +14,23 @@ import {RegistrationService} from "../../../services/singleton/registration.serv
 export class RegisterComponent {
 
     formGroup: FormGroup;
+    user: User = {
+        id: null,
+        emailAddress: null,
+        firstName: null,
+        lastName: null,
+        fullName: null,
+        phoneNumber: null,
+        location: null,
+        notifications: null,
+        notificationTypeSettings: null,
+        permissions: null,
+        userGroups: null,
+        admin: null,
+        newPassword: null,
+        confirmPassword: null
+
+};
 
     constructor(formBuilder: FormBuilder,
                 private router: Router,
@@ -34,18 +52,26 @@ export class RegisterComponent {
 
     onSubmit() {
         console.log("Submitted.");
-        this.loaderService.startLoading();
-        this.registrationService.register(this.formGroup.controls['emailAddress'].value, this.formGroup.controls['firstName'].value, this.formGroup.controls['lastName'].value,
-            this.formGroup.controls['password'].value).subscribe(response => {
-            if (response) {
-                this.authService.reloadUser();
-                //send verification email
-                //this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
-            } else {
-                console.log("error");
-                this.loaderService.startLoading();
-            }
-        });
+        //this.loaderService.startLoading();
+        if(this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined){
+            this.user.emailAddress = this.formGroup.controls['emailAddress'].value;
+            this.user.firstName = this.formGroup.controls['firstName'].value;
+            this.user.lastName = this.formGroup.controls['lastName'].value;
+            this.user.newPassword = this.formGroup.controls['password'].value;
+            this.registrationService.register(this.user).subscribe(response => {
+                if(response != undefined) {
+                    console.log("it works");
+                    this.authService.reloadUser();
+                    //send verification email
+                    //this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
+                } else {
+                    console.log("error");
+                    //this.loaderService.startLoading();
+                }
+            });
+        }
+
+
     }
 
 }

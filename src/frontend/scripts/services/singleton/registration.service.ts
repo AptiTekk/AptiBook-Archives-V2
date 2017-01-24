@@ -16,18 +16,14 @@ export class RegistrationService {
 
     }
 
-    register(emailAddress: string, firstName: string, lastName: string, password: string) {
+    register(user: User) {
         return Observable.create(listener => {
             console.log("here");
-            let user: User;
-            user.emailAddress = emailAddress;
-            user.firstName = firstName;
-            user.lastName = lastName;
-            user.newPassword = password;
-            this.apiService.post("/register", user).subscribe(
-                response => listener.next(response),
-                err => listener.next(undefined)
-            );
-        });
+            let body = JSON.stringify(user);
+                this.apiService.post("register", body).subscribe(
+                    response => listener.next(response),
+                    err => listener.next(undefined)
+                );
+            });
     }
 }
