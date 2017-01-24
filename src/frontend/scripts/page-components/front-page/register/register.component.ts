@@ -62,7 +62,14 @@ export class RegisterComponent {
             this.user.verified = false;
             this.registrationService.register(this.user).subscribe(response => {
                if(!response.verified){
-                   //send verification email
+                   //TODO:
+                   // Add message stating to check email
+                   // Make Email Service,
+                   // Send User Id of response in an Email
+                   // Read active route param for id
+                   // match id with user and verified = true
+                   // authenticate normally
+                   // add method to match google user and normal user
 
                }
             });
