@@ -54,25 +54,28 @@ export class RegisterComponent {
     onSubmit() {
         console.log("Submitted.");
         //this.loaderService.startLoading();
-        if(this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined){
-            this.user.emailAddress = this.formGroup.controls['emailAddress'].value;
-            this.user.firstName = this.formGroup.controls['firstName'].value;
-            this.user.lastName = this.formGroup.controls['lastName'].value;
-            this.user.newPassword = this.formGroup.controls['password'].value;
-            this.user.verified = false;
-            this.registrationService.register(this.user).subscribe(response => {
-               if(!response.verified){
-                   //TODO:
-                   // Add message stating to check email
-                   // Make Email Service,
-                   // Send User Id of response in an Email
-                   // Read active route param for id
-                   // match id with user and verified = true
-                   // authenticate normally
-                   // add method to match google user and normal user
+        this.registrationService.getRegisteredUser().take(1).subscribe(user => this.user = user);
+        if(this.formGroup.controls['emailAddress'].value != this.user.emailAddress) {
+            if (this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined) {
+                this.user.emailAddress = this.formGroup.controls['emailAddress'].value;
+                this.user.firstName = this.formGroup.controls['firstName'].value;
+                this.user.lastName = this.formGroup.controls['lastName'].value;
+                this.user.newPassword = this.formGroup.controls['password'].value;
+                this.user.verified = false;
+                this.registrationService.register(this.user).subscribe(response => {
+                    if (!response.verified) {
+                        //TODO:
+                        // Add message stating to check email
+                        // Make Email Service,
+                        // Send User Id of response in an Email
+                        // Read active route param for id
+                        // match id with user and verified = true
+                        // authenticate normally
+                        // add method to match google user and normal user
 
-               }
-            });
+                    }
+                });
+            }
         }
 
 
