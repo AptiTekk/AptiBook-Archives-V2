@@ -51,10 +51,10 @@ public class RegistrationController extends APIControllerAbstract{
         //make unique code
         String code = PasswordGenerator.generateRandomPassword(16);
         newUser.verificationCode = code;
-        User finalUser = userRepository.save(newUser);
-        Notification notification = new Notification(finalUser, "Registration", "localhost:8080/verify?code=" + code); //add url with unique code here
+        newUser = userRepository.save(newUser);
+        Notification notification = new Notification(newUser, "Registration", "localhost:8080/verify?code=" + code); //add url with unique code here
         this.emailService.sendEmailNotification(notification);
-        return created(modelMapper.map(finalUser, UserDTO.class), "/register/");
+        return created(modelMapper.map(newUser, UserDTO.class), "/register/");
     }
 
 }
