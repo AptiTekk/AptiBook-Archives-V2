@@ -43,8 +43,6 @@ public class RegistrationController extends APIControllerAbstract{
         }catch (PasswordStorage.CannotPerformOperationException e){
             logService.logException(getClass(), e, "Could not save user's password");
         }
-        //TODO: Figure out how passwords work, with DTO and sending from Front end. Hash Password.
-        //newUser.hashedPassword = userDTO
         User finalUser = userRepository.save(newUser);
         return created(modelMapper.map(finalUser, UserDTO.class), "/register/");
     }
