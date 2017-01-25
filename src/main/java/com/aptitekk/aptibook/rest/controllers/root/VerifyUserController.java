@@ -33,13 +33,18 @@ public class VerifyUserController {
 
         if(code != null){
             User user = userRepository.findByVerificationCode(code);
-            user.verified = true;
-            user = userRepository.save(user);
-            //redirect to tenant slug
-            try {
-                httpServletResponse.sendRedirect("/" + user.getTenant());
-            } catch (IOException e) {
-                e.printStackTrace();
+            if(user != null) {
+                user.verified = true;
+                user = userRepository.save(user);
+
+                //redirect to tenant slug
+                try {
+                    httpServletResponse.sendRedirect("/" + user.getTenant().getSlug());
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                user.verificationCode = null;
+                userRepository.save(user);
             }
 
         }
