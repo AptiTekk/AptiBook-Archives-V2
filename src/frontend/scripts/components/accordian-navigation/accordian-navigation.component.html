@@ -9,8 +9,6 @@
 	 [class.collapsible]="canCollapse"
 	 [class.expanded]="expanded || !canCollapse"
 	 [class.collapsed]="!expanded && canCollapse"
-	 [routerLink]="link ? link : false"
-	 [routerLinkActive]="'active'"
 	 (click)="onClick()">
 	<i *ngIf="icon"
 	   class="fa fa-{{icon}}"></i> {{label ? label : ''}}
