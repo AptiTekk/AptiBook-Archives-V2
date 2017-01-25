@@ -13,6 +13,7 @@ import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.services.EmailService;
+import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.google.gson.reflect.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +47,12 @@ public class RegistrationController extends APIControllerAbstract{
         }catch (PasswordStorage.CannotPerformOperationException e){
             logService.logException(getClass(), e, "Could not save user's password");
         }
+
+        //make unique code
+        String code = PasswordGenerator.generateRandomPassword(16);
+        newUser.verificationCode = code;
         User finalUser = userRepository.save(newUser);
-        Notification notification = new Notification(finalUser, "Registration", "code"); //add url with unique code here
+        Notification notification = new Notification(finalUser, "Registration", "localhost:8080/verify?code=" + code); //add url with unique code here
         this.emailService.sendEmailNotification(notification);
         return created(modelMapper.map(finalUser, UserDTO.class), "/register/");
     }

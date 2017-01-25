@@ -54,8 +54,8 @@ export class RegisterComponent {
     onSubmit() {
         console.log("Submitted.");
         //this.loaderService.startLoading();
-        this.registrationService.getRegisteredUser().take(1).subscribe(user => this.user = user);
-        if(this.formGroup.controls['emailAddress'].value != this.user.emailAddress) {
+        //this.registrationService.getRegisteredUser().take(1).subscribe(user => this.user = user);
+
             if (this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined) {
                 this.user.emailAddress = this.formGroup.controls['emailAddress'].value;
                 this.user.firstName = this.formGroup.controls['firstName'].value;
@@ -63,6 +63,7 @@ export class RegisterComponent {
                 this.user.newPassword = this.formGroup.controls['password'].value;
                 this.user.verified = false;
                 this.registrationService.register(this.user).subscribe(response => {
+                    //redirect to success page
                     if (!response.verified) {
                         //TODO:
                         // Add message stating to check email
@@ -76,8 +77,6 @@ export class RegisterComponent {
                     }
                 });
             }
-        }
-
 
     }
 

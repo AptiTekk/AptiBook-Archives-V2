@@ -57,9 +57,12 @@ public class AuthController extends APIControllerAbstract {
                             if (user != null) {
 
                                 //TODO: Make sure user is verified here, dont set it if it's not.
+                                if(!user.verified){
+                                    authService.setCurrentUser(user, response);
+                                    return ok(modelMapper.map(user, UserDTO.class));
+                                }
+                                return unauthorized("User is not verified. Check Email for Confirmation Link.");
 
-                                authService.setCurrentUser(user, response);
-                                return ok(modelMapper.map(user, UserDTO.class));
                             }
 
                             return unauthorized("The Email Address or Password supplied was incorrect.");

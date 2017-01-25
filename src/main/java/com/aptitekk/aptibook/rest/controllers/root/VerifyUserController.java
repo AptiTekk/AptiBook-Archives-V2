@@ -6,6 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.root;
 
+import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -26,11 +27,17 @@ public class VerifyUserController {
     @RequestMapping("/verify")
     public void verifyUserEmail(@PathParam("code") String code) {
 
+
+        if(code != null){
+            User user = userRepository.findByVerificationCode(code);
+            user.verified = true;
+            userRepository.save(user);
+            //redirect to tenant slug
+
+        }
+
         System.out.println(code);
 
-        //Make sure code is not null
-
-        //Check for user in database with the code... if it exists, set verified, save, and redirect to the user's tenant's slug.
 
     }
 
