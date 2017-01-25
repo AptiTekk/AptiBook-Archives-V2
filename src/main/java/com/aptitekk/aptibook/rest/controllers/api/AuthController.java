@@ -55,6 +55,9 @@ public class AuthController extends APIControllerAbstract {
                             User user = userRepository.findUserWithCredentials(authSplit[0], authSplit[1]);
 
                             if (user != null) {
+
+                                //TODO: Make sure user is verified here, dont set it if it's not.
+
                                 authService.setCurrentUser(user, response);
                                 return ok(modelMapper.map(user, UserDTO.class));
                             }
