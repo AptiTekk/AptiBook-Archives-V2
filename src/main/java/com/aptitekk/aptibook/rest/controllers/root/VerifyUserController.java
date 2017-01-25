@@ -26,6 +26,8 @@ public class VerifyUserController {
     @RequestMapping("/verify")
     public void verifyUserEmail(@PathParam("code") String code) {
 
+        System.out.println(code);
+
         //Make sure code is not null
 
         //Check for user in database with the code... if it exists, set verified, save, and redirect to the user's tenant's slug.
