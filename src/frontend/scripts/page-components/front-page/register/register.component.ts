@@ -64,6 +64,7 @@ export class RegisterComponent {
                 this.user.verified = false;
                 this.registrationService.register(this.user).subscribe(response => {
                     //redirect to success page
+                    this.router.navigateByUrl('/success');
                     if (!response.verified) {
                         //TODO:
                         // Add message stating to check email
