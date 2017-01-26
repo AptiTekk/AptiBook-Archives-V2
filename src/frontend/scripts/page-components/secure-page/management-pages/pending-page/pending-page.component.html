@@ -4,17 +4,13 @@
   ~ Proprietary and confidential.
   -->
 
+<ol class="breadcrumb">
+	<li><a [routerLink]="['', 'secure']">Home</a></li>
+	<li class="active">Reservation Management</li>
+	<li class="active">Pending</li>
+</ol>
+
 <div class="container-fluid">
-	
-	<div class="row no-gutter">
-		<div class="col-xs-12">
-			<ol class="breadcrumb">
-				<li><a [routerLink]="['', 'secure']">Home</a></li>
-				<li class="active">Reservation Management</li>
-				<li class="active">Pending</li>
-			</ol>
-		</div>
-	</div>
 	
 	<div *ngIf="pendingReservations.length == 0">
 		<h4>

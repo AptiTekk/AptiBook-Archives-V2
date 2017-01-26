@@ -11,6 +11,21 @@
     padding-left: 0;
 }
 
+.container-fluid:not(.no-top-padding),
+.container:not(.no-top-padding) {
+    padding-top: 15px;
+}
+
+.container-fluid,
+.container {
+    padding-left: 30px;
+}
+
+.container-fluid.no-left-padding > .row,
+.container.no-left-padding > .row {
+    margin-left: -30px;
+}
+
 /* Link and Text Styling */
 
 .app a {

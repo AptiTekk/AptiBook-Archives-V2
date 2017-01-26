@@ -70,7 +70,7 @@ export class AccordianNavigationComponent implements OnInit, AfterViewInit {
             this.router.events.subscribe(
                 event => {
                     if (event instanceof NavigationEnd) {
-                        this.active = this.router.isActive(this.router.createUrlTree(this.link), true);
+                        this.active = this.router.isActive(this.router.createUrlTree(this.link), false);
                         if (this.active) {
                             this.expand()
                         }
