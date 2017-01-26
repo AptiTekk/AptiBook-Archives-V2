@@ -3,16 +3,23 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {HeaderComponent} from "../../../components/header/header.component";
+import {ReservationManagementService} from "../../../services/singleton/reservation-management.service";
 
 @Component({
     selector: 'management-container',
     templateUrl: 'management-container.component.html'
 })
-export class ManagementContainerComponent {
+export class ManagementContainerComponent implements OnInit {
 
-    //noinspection JSMethodCanBeStatic
+    constructor(private reservationManagementService: ReservationManagementService) {}
+
+    ngOnInit(): void {
+        this.reservationManagementService.fetchReservations();
+    }
+
+//noinspection JSMethodCanBeStatic
     get managementLinks() {
         return HeaderComponent.RESERVATION_MANAGEMENT_LINKS;
     }

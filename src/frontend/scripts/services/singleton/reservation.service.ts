@@ -4,13 +4,17 @@ import {Observable, ReplaySubject} from "rxjs";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import * as moment from "moment";
+import {ResourceCategory} from "../../models/resource-category.model";
+import {ReservationDecision} from "../../models/reservation-decision.model";
+import {AuthService} from "./auth.service";
 
 @Injectable()
 export class ReservationService {
 
     private lastReservationMade: ReplaySubject<Reservation> = new ReplaySubject<Reservation>(1);
 
-    constructor(private apiService: APIService) {
+    constructor(private apiService: APIService,
+                private authService: AuthService) {
     }
 
     public getUpcomingUserReservations(user: User): Observable<Reservation[]> {
@@ -23,6 +27,16 @@ export class ReservationService {
                     err => listener.next(undefined)
                 )
         });
+    }
+
+    public makeReservationDecision(approved: boolean, reservation: Reservation): Observable<boolean> {
+        return Observable.create(listener => {
+            this.apiService.patch("reservations/" + reservation.id + (approved ? "/approved" : "/rejected")).subscribe(
+                response => listener.next(true),
+                err => listener.next(false)
+            );
+        });
+
     }
 
     public makeReservation(reservation: Reservation): Observable<Reservation> {

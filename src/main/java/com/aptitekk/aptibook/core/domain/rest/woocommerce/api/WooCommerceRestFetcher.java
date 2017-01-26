@@ -12,6 +12,7 @@ import com.aptitekk.aptibook.core.services.LogService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.*;
 import org.springframework.web.util.UriComponents;
@@ -55,6 +56,8 @@ public class WooCommerceRestFetcher {
             logService.logError(getClass(), "Could not fetch from AptiTekk: " + e.getMessage());
         } catch (ResourceAccessException | UnknownHttpStatusCodeException e) {
             logService.logError(getClass(), "Could not connect to AptiTekk: " + e.getMessage());
+        } catch (HttpMessageNotReadableException e) {
+            logService.logError(getClass(), "Could not read response from AptiTekk: " + e.getMessage());
         }
         return null;
     }

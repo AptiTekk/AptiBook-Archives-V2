@@ -6,12 +6,14 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
+import com.aptitekk.aptibook.core.domain.entities.ReservationDecision;
 import com.aptitekk.aptibook.core.domain.entities.serializers.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public class ReservationDTO {
 
@@ -43,13 +45,13 @@ public class ReservationDTO {
 
     public boolean pending;
 
-    /*public List<ReservationDecision> decisions;
-
-    public List<ReservationFieldEntry> fieldEntries;*/
-
     @JsonIgnoreProperties({"resource"})
     public static class WithoutResource extends ReservationDTO {
 
+    }
+
+    public static class WithDecisions extends ReservationDTO {
+        public List<ReservationDecisionDTO.WithoutReservation> decisions;
     }
 
 }
