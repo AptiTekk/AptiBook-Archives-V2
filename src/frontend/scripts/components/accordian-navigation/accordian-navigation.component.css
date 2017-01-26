@@ -13,20 +13,22 @@
     margin-bottom: 5px;
 }
 
-.navigation-block.active {
+.navigation-block.link.active {
     background-color: #4272b7;
     color: white;
 }
 
-.navigation-block.collapsible {
+.navigation-block.group.collapsible,
+.navigation-block.link {
     cursor: pointer;
 }
 
-.navigation-block.collapsible:not(.active):hover {
+.navigation-block.group.collapsible:hover,
+.navigation-block.link:not(.active):hover {
     background-color: #eee;
 }
 
-.navigation-block.expanded {
+.navigation-block.group.expanded {
     background-color: #eee;
 }
 

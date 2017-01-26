@@ -6,9 +6,12 @@
 
 <div class="navigation-block"
 	 *ngIf="label || icon"
-	 [class.collapsible]="canCollapse"
-	 [class.expanded]="expanded || !canCollapse"
-	 [class.collapsed]="!expanded && canCollapse"
+	 [class.collapsible]="!link && canCollapse"
+	 [class.expanded]="!link && (expanded || !canCollapse)"
+	 [class.collapsed]="!link && (!expanded && canCollapse)"
+	 [class.link]="link"
+	 [class.group]="!link"
+	 [class.active]="link && active"
 	 (click)="onClick()">
 	<i *ngIf="icon"
 	   class="fa fa-{{icon}}"></i> {{label ? label : ''}}

@@ -14,9 +14,11 @@
 	</div>
 	<div id="content">
 		<accordian-navigation [canCollapse]="false">
+			<accordian-navigation [link]="['', 'secure', 'dashboard']"
+								  [icon]="'dashboard'"
+								  [label]="'Dashboard'"></accordian-navigation>
 			<accordian-navigation [icon]="'calendar-check-o'"
-								  [label]="'Reservation Management'"
-								  [expanded]="true">
+								  [label]="'Reservation Management'">
 				<accordian-navigation [link]="['', 'secure', 'management', 'pending']"
 									  [icon]="'hourglass-half'"
 									  [label]="'Pending'">
