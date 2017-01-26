@@ -45,7 +45,7 @@ export class SidebarComponent implements OnInit {
     /**
      * Contains the currently signed in user's unread notifications.
      */
-    private unreadNotifications: Notification[];
+    private unreadNotifications: Notification[] = [];
 
     constructor(private authService: AuthService,
                 private notificationService: NotificationService,

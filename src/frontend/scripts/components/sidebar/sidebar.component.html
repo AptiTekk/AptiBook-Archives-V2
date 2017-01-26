@@ -12,6 +12,17 @@
 			<img src="../../page-components/front-page/logo.svg"/>
 		</a>
 	</div>
+	
+	<div id="notifications"
+		 [class.unread]="unreadNotifications.length > 0"
+		 [routerLink]="['', 'secure', 'my', 'notifications']"
+		 [routerLinkActive]="'active'">
+		<i class="fa fa-bell"
+		   aria-hidden="true"></i>
+		{{(unreadNotifications.length > 0 ? unreadNotifications.length + ' Unread Notification' : '0 Unread Notification')
+		+ (unreadNotifications.length === 1 ? '' : 's')}}
+	</div>
+	
 	<div id="content">
 		<accordian-navigation [canCollapse]="false">
 			<accordian-navigation [link]="['', 'secure', 'dashboard']"
@@ -55,24 +66,19 @@
 									  [label]="'Properties'">
 				</accordian-navigation>
 			</accordian-navigation>
-			<accordian-navigation [icon]="'user'"
-								  [label]="'Account'">
-				<accordian-navigation [link]="['', 'secure', 'my', 'account']"
-									  [icon]="'pencil'"
-									  [label]="'My Account'">
-				</accordian-navigation>
-				<accordian-navigation [link]="['', 'secure', 'my', 'notifications']"
-									  [icon]="'bell'"
-									  [label]="'My Notifications'">
-				</accordian-navigation>
+			<accordian-navigation [link]="['', 'secure', 'my', 'account']"
+								  [icon]="'user'"
+								  [label]="'My Account'">
 			</accordian-navigation>
 		</accordian-navigation>
 	</div>
-	<div id="sign-out">
+	
+	<div id="user">
 		<i class="fa fa-user"
 		   aria-hidden="true"></i>
 		{{user?.fullName}}
-		<button (click)="onSignOut()"
+		<button id="sign-out-button"
+				(click)="onSignOut()"
 				class="btn-none">
 			<i class="fa fa-sign-out"
 			   aria-hidden="true"></i>
