@@ -83,7 +83,8 @@ var config = {
                 removeComments: true,
                 collapseWhitespace: true,
                 collapseInlineTagWhitespace: true
-            }
+            },
+            chunksSortMode: 'dependency'
         })
     ],
 
