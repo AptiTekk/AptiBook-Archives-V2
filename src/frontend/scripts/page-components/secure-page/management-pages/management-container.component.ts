@@ -19,9 +19,4 @@ export class ManagementContainerComponent implements OnInit {
         this.reservationManagementService.fetchReservations();
     }
 
-//noinspection JSMethodCanBeStatic
-    get managementLinks() {
-        return HeaderComponent.RESERVATION_MANAGEMENT_LINKS;
-    }
-
 }

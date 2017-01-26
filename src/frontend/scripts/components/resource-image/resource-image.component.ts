@@ -15,7 +15,7 @@ import {Observable} from "rxjs";
 })
 export class ResourceImageComponent {
 
-    noImageUrl: string = "/static/resource-no-image.svg";
+    noImageUrl: string = require("../../../resources/resource-no-image.svg");
 
     @Input() resource: Resource;
 
