@@ -7,11 +7,13 @@
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 public class ReservationDecisionDTO {
 
     public Long id;
 
-    public UserDTO user;
+    public UserDTO.WithoutUserGroups user;
 
     public UserGroupDTO.WithoutParentOrChildren userGroup;
 
@@ -20,5 +22,10 @@ public class ReservationDecisionDTO {
     public boolean approved;
 
     public String comment;
+
+    @JsonIgnoreProperties("reservation")
+    public static class WithoutReservation extends ReservationDecisionDTO {
+
+    }
 
 }

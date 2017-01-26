@@ -11,7 +11,7 @@ export interface UserGroup {
 
     users: User[];
 
-    parent: UserGroup[];
+    parent: UserGroup;
 
     children: UserGroup[];
 

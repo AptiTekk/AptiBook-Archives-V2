@@ -3,28 +3,30 @@ import {User} from "./user.model";
 import {UserGroupWithDecision} from "./user-group.model";
 import moment = require("moment");
 import Moment = moment.Moment;
+import {ReservationDecision} from "./reservation-decision.model";
 
 export interface Reservation {
 
     id: number;
 
-    dateCreated: string;
+    dateCreated?: string;
 
-    title: string;
-    status: string;
+    title?: string;
+    status?: string;
 
-    start: string;
-    end: string;
+    start?: string;
+    end?: string;
 
-    resource: Resource;
-    user: User;
-    fieldEntries: number[];
+    resource?: Resource;
+    user?: User;
+    fieldEntries?: number[];
 
-    pending: boolean;
-    approved: boolean;
-    rejected: boolean;
-    cancelled: boolean;
+    pending?: boolean;
+    approved?: boolean;
+    rejected?: boolean;
+    cancelled?: boolean;
 
+    decisions?: ReservationDecision[];
 }
 
 export interface ReservationWithDecisions extends Reservation {

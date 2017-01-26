@@ -16,9 +16,7 @@ export class ManagementContainerComponent implements OnInit {
     constructor(private reservationManagementService: ReservationManagementService) {}
 
     ngOnInit(): void {
-        this.reservationManagementService.fetchPendingReservations();
-        this.reservationManagementService.fetchApprovedReservations();
-        this.reservationManagementService.fetchRejectedReservations();
+        this.reservationManagementService.fetchReservations();
     }
 
 //noinspection JSMethodCanBeStatic
