@@ -253,6 +253,15 @@ public class DemoTenantBuilder {
                 15, 0
         );
 
+        Reservation libraryReservation2 = createReservation(
+                teacher,
+                "Essay Research",
+                Reservation.Status.PENDING,
+                library,
+                10, 10,
+                12, 0,
+                15, 30);
+
         Reservation cart1Reservation = createReservation(
                 teacher,
                 "Sage Testing",
@@ -261,15 +270,6 @@ public class DemoTenantBuilder {
                 5, 6,
                 13, 30,
                 16, 45);
-
-        Reservation cart2Reservation = createReservation(
-                teacher,
-                "Essay Research",
-                Reservation.Status.PENDING,
-                cart2,
-                10, 10,
-                12, 0,
-                15, 30);
 
         //Add reservation decisions
         createReservationDecision(
@@ -286,18 +286,19 @@ public class DemoTenantBuilder {
         );
 
         createReservationDecision(
-                cart1Reservation,
+                libraryReservation2,
                 administratorsUserGroup,
                 administrator,
                 true
         );
 
         createReservationDecision(
-                cart2Reservation,
+                cart1Reservation,
                 administratorsUserGroup,
                 administrator,
                 true
         );
+
         createReservationDecision(
                 teacherLaptopReservation,
                 teachersUserGroup,

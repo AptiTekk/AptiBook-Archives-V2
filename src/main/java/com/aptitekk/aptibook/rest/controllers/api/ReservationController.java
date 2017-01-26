@@ -6,15 +6,15 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
-import com.aptitekk.aptibook.core.domain.entities.Reservation;
-import com.aptitekk.aptibook.core.domain.entities.Resource;
-import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.repositories.ReservationDecisionRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
+import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
@@ -35,13 +35,17 @@ public class ReservationController extends APIControllerAbstract {
     private final ResourceRepository resourceRepository;
     private final UserRepository userRepository;
     private final ReservationService reservationService;
+    private final UserGroupService userGroupService;
+    private final ReservationDecisionRepository reservationDecisionRepository;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService) {
+    public ReservationController(ReservationRepository reservationRepository, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService, UserGroupService userGroupService, ReservationDecisionRepository reservationDecisionRepository) {
         this.reservationRepository = reservationRepository;
         this.resourceRepository = resourceRepository;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
+        this.userGroupService = userGroupService;
+        this.reservationDecisionRepository = reservationDecisionRepository;
     }
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
@@ -94,48 +98,105 @@ public class ReservationController extends APIControllerAbstract {
         return unauthorized();
     }
 
+    @RequestMapping(value = "/reservations/pending", method = RequestMethod.GET)
+    public ResponseEntity<?> getPendingReservations() {
 
-/*    private void init() {
-        reservations = new ArrayList<>();
-        for (UserGroup userGroup : authenticationController.getAuthenticatedUser().getUserGroups()) {
-            reservations.addAll(userGroupService.getHierarchyDownReservations(userGroup));
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (authService.getCurrentUser().userGroups.size() == 0)
+            return noPermission();
+
+        List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
+
+        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO.WithDecisions[]>() {
+        }.getType()));
+    }
+
+    @RequestMapping(value = "/reservations/approved", method = RequestMethod.GET)
+    public ResponseEntity<?> getApprovedReservations() {
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (authService.getCurrentUser().userGroups.size() == 0)
+            return noPermission();
+
+        List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.APPROVED);
+
+        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO.WithDecisions[]>() {
+        }.getType()));
+    }
+
+    @RequestMapping(value = "/reservations/rejected", method = RequestMethod.GET)
+    public ResponseEntity<?> getRejectedReservations() {
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (authService.getCurrentUser().userGroups.size() == 0)
+            return noPermission();
+
+        List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.REJECTED);
+
+        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO.WithDecisions[]>() {
+        }.getType()));
+    }
+
+    @RequestMapping(value = "/reservations/{id}/decision", method = RequestMethod.PATCH)
+    public ResponseEntity<?> approveReservation(@PathVariable Long id, @RequestBody Boolean approved) {
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (authService.getCurrentUser().userGroups.size() == 0)
+            return noPermission();
+
+        if (approved == null)
+            return badRequest("Please send only true (for approved) or false (for rejected).");
+
+        Reservation reservation = reservationRepository.find(id);
+        if (reservation == null)
+            return badRequest("Reservation not found.");
+
+        User currentUser = authService.getCurrentUser();
+
+        UserGroup decidingFor = null;
+        for (UserGroup userGroup : this.userGroupService.getHierarchyUp(reservation.getResource().owner)) {
+            if (currentUser.userGroups.contains(userGroup)) {
+                decidingFor = userGroup;
+                break;
+            }
         }
 
-        scheduleModel = new ReservationScheduleModel() {
-            @Override
-            public List<Reservation> getReservationsBetweenDates(ZonedDateTime start, ZonedDateTime end) {
-                ArrayList<Reservation> prunedReservations = new ArrayList<>(reservations);
-                Iterator<Reservation> iterator = prunedReservations.iterator();
-                while (iterator.hasNext()) {
-                    Reservation next = iterator.next();
-                    if (next.getStatus() == Reservation.Status.REJECTED)
-                        iterator.remove();
-                    else if (next.getEndTime().isBefore(start) || next.getStartTime().isAfter(end))
-                        iterator.remove();
-                }
+        if (decidingFor == null)
+            return noPermission("You are not allowed to decide upon this Reservation.");
 
-                return prunedReservations;
-            }
-        };
+        ReservationDecision reservationDecision = new ReservationDecision();
+        reservationDecision.setUser(authService.getCurrentUser());
+        reservationDecision.setApproved(approved);
+        reservationDecision.setReservation(reservation);
+        reservationDecision.setUserGroup(decidingFor);
 
-        helpController.setCurrentTopic(HelpController.Topic.RESERVATION_MANAGEMENT_CALENDAR);
-    }*/
+        reservationDecision = reservationDecisionRepository.save(reservationDecision);
+        return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
+        }.getType()));
+    }
 
-/*
-    @RequestMapping(value = "/reservations/resourceOwner/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getResourceOwnerReservations(@PathVariable Long id,@RequestParam(value = "start", required = false) String start, @RequestParam(value = "end", required = false) String end){
-        if(authService.isUserSignedIn()){
-            User user = authService.getCurrentUser();
-            if (user.isAdmin() || user.getId().equals(id)) {
-                ArrayList<Reservation> reservations = new ArrayList<>();
-                for(UserGroup userGroup : user.userGroups){
-                   // reservations.addAll(us)
-                    //TODO: Implement getHierarchyDownReservations
-                }
-            }
+    @RequestMapping(value = "/reservations/decisions/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getPendingReservationDecisions(@PathVariable Long id) {
+        if (id == null)
+            return badRequest("Missing ID");
+
+        if (authService.isUserSignedIn()) {
+            Reservation reservation = reservationRepository.find(id);
+            List<ReservationDecision> decisionList = reservationService.generateReservationDecisions(reservation);
+
+            return ok(modelMapper.map(decisionList, new TypeToken<List<ReservationDecisionDTO>>() {
+            }.getType()));
         }
-    }*/
 
+        return unauthorized();
+    }
 
     @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {

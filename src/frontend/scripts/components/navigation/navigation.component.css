@@ -4,52 +4,53 @@
  * Proprietary and confidential.
  */
 
-/* Vertical Nav */
-
-ul.nav-list {
-    font-family: "Roboto", sans-serif;
-    font-size: 12pt;
-}
-
-ul.nav-list > li {
-    margin-bottom: 10px;
-}
-
-ul.nav-list > li > a {
-    color: #777;
-    border-radius: 5px;
-}
-
-ul.nav-list > li.active > a,
-ul.nav-list > li.active > a:focus {
-    color: white;
-    background-color: #4272b7;
-}
-
 /* Horizontal Nav */
 
-ul.nav-tabs {
+ul.nav-pills {
     font-family: "Roboto", sans-serif;
     font-size: 12pt;
     margin-bottom: 20px;
 }
 
-ul.nav-tabs > li {
+ul.nav-pills > li {
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
-ul.nav-tabs > li > a {
+ul.nav-pills > li > a {
     color: #777;
     border-radius: 5px;
     border: none;
 }
 
-ul.nav-tabs > li > a:hover {
+ul.nav-pills > li > a:hover {
     background-color: #f6f6f6;
 }
 
-ul.nav-tabs > li.active > a,
-ul.nav-tabs > li.active > a:focus {
+ul.nav-pills > li.active > a,
+ul.nav-pills > li.active > a:focus {
     background-color: #eeeeee;
+}
+
+/* Vertical Nav */
+
+ul.nav-pills.nav-stacked {
+    font-family: "Roboto", sans-serif;
+    font-size: 12pt;
+}
+
+ul.nav-pills.nav-stacked > li {
+    margin-bottom: 10px;
+    margin-right: 0;
+}
+
+ul.nav-pills.nav-stacked > li > a {
+    color: #777;
+    border-radius: 5px;
+}
+
+ul.nav-pills.nav-stacked > li.active > a,
+ul.nav-pills.nav-stacked > li.active > a:focus {
+    color: white;
+    background-color: #4272b7;
 }

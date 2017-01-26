@@ -10,6 +10,7 @@ import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
@@ -31,11 +32,13 @@ public class UserGroupController extends APIControllerAbstract {
 
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
+    private final UserRepository userRepository;
 
     @Autowired
-    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService) {
+    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService, UserRepository userRepository) {
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
+        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "/userGroups", method = RequestMethod.GET)
@@ -177,18 +180,27 @@ public class UserGroupController extends APIControllerAbstract {
         if (!authService.isUserSignedIn())
             return unauthorized();
 
-        // Ensure that the user requesting is an admin or is the same user as being requested.
-        User user = authService.getCurrentUser();
-        if (!user.isAdmin() && !user.getId().equals(id))
-            return noPermission();
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return badRequest("UserGroup not found.");
 
-        // Add all usergroups in the hierarchy belonging to the user
-        List<UserGroup> userGroupList = new ArrayList<>();
-        for (UserGroup userGroup : user.userGroups) {
-            userGroupList.addAll(userGroupService.getHierarchyDown(userGroup));
-        }
+        return ok(modelMapper.map(userGroupService.getHierarchyDown(userGroup), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
+        }.getType()));
+    }
 
-        return ok(modelMapper.map(userGroupList, new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
+    @RequestMapping(value = "/userGroups/hierarchyUp/{id}", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserGroupsHierarchyUp(@PathVariable Long id) {
+        if (id == null)
+            return badRequest("Missing ID");
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return badRequest("UserGroup not found.");
+
+        return ok(modelMapper.map(userGroupService.getHierarchyUp(userGroup), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
         }.getType()));
     }
 }

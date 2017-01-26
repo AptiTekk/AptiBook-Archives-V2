@@ -4,12 +4,6 @@
  * Proprietary and confidential.
  */
 
-:host /deep/ .panel {
-    height: 100%;
-}
-
-:host /deep/ .panel-body {
-    height: calc(100% - 37px);
-    overflow-y: auto;
-    overflow-x: hidden;
+#content-container {
+    margin-left: 260px;
 }

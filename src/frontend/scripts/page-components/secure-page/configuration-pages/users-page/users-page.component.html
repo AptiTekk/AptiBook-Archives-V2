@@ -10,8 +10,10 @@
 	<li class="active">Users</li>
 </ol>
 
-<navigation [links]="sectionLinks"
-			[horizontal]="true">
-</navigation>
-
-<router-outlet></router-outlet>
+<div class="container-fluid">
+	<navigation [links]="sectionLinks"
+				[horizontal]="true">
+	</navigation>
+	
+	<router-outlet></router-outlet>
+</div>

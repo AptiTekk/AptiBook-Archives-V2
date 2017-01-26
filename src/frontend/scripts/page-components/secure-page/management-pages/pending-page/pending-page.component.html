@@ -4,4 +4,128 @@
   ~ Proprietary and confidential.
   -->
 
-Pending Page
+<ol class="breadcrumb">
+	<li><a [routerLink]="['', 'secure']">Home</a></li>
+	<li class="active">Reservation Management</li>
+	<li class="active">Pending</li>
+</ol>
+
+<div class="container-fluid">
+	
+	<div *ngIf="pendingReservations.length == 0">
+		<h4>
+			No Reservations are Pending Approval.
+		</h4>
+	</div>
+	
+	<div *ngFor="let pendingReservation of pendingReservations">
+		<div class="row">
+			<div class="col-xs-10 col-md-8 col-lg-10">
+				<panel title="{{pendingReservation.resource.name}}">
+					<panel-body>
+						<!-- Resource Image -->
+						<div class="col-xs-4 col-sm-2"
+							 style="width: 175px;">
+							<div class="form-group">
+								<resource-image [resource]="pendingReservation.resource"></resource-image>
+							</div>
+						</div>
+						<div class="col-xs-12 col-sm-10">
+							<div class="row">
+								<div class="col-xs-12 col-sm-5">
+									<div class="form-group">
+										<label>Reservation Title:</label>
+										<input type="text"
+											   readonly="readonly"
+											   value="{{pendingReservation.title}}"
+											   class="form-control">
+									</div>
+								</div>
+								
+								<div class="col-xs-12 col-sm-3">
+									<div class="form-group">
+										<label>Requested By:</label>
+										<input type="text"
+											   readonly="readonly"
+											   value="{{pendingReservation.user.fullName}}"
+											   class="form-control">
+									</div>
+								</div>
+								<div class="col-xs-12 col-sm-4">
+									<div class="form-group">
+										<label>Requested On:</label>
+										<input type="text"
+											   readonly="readonly"
+											   value="{{pendingReservation.dateCreated}}"
+											   class="form-control">
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-xs-12 col-xs-6">
+									<div class="form-group">
+										<label>Reservation Start Time:</label>
+										<input type="text"
+											   readonly="readonly"
+											   value="{{pendingReservation.start}}"
+											   class="form-control">
+									</div>
+								</div>
+								<div class="col-xs-12 col-xs-6">
+									<div class="form-group">
+										<label>Reservation End Time:</label>
+										<input type="text"
+											   readonly="readonly"
+											   value="{{pendingReservation.end}}"
+											   class="form-control">
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="row">
+							<div class="col-xs-12">
+								<div *ngFor="let userGroup of pendingReservation.hierarchy">
+									
+									<div *ngIf="!(userGroup.root && !userGroup.decision)">
+										<span style="font-weight: bold">{{userGroup.name}}</span>
+										<span *ngIf="userGroup.decision">
+										User
+										<span style="font-weight: bold">{{userGroup.decision.user.fullName}}</span>
+									</span>
+										has
+										<span class="label label-success"
+											  *ngIf="userGroup.decision?.approved">approved</span>
+										
+										<span class="label label-danger"
+											  *ngIf="userGroup.decision?.rejected">rejected</span>
+										
+										<span *ngIf="!userGroup.decision"
+											  style="font-weight: bold">
+										not yet decided upon
+									</span>
+										this Reservation.
+										
+										<span *ngIf="userGroup.overriddenBy">
+										(<span class="label label-info">Overridden</span>
+										by the decision of
+										<span style="font-weight: bold">{{userGroup.overriddenBy.decision.user.fullName}}</span>
+										to
+										<span class="label label-success"
+											  *ngIf="userGroup.overriddenBy.decision.approved">approve</span>
+										<span class="label label-danger"
+											  *ngIf="userGroup.overriddenBy.decision.rejected">reject</span>
+										on behalf of the
+										<span style="font-weight: bold">{{userGroup.overriddenBy.name}}</span>
+										User Group.)
+									</span>
+									</div>
+								</div>
+							</div>
+						</div>
+					</panel-body>
+				</panel>
+			</div>
+		</div>
+	</div>
+
+</div>

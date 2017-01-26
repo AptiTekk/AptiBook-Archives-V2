@@ -13,6 +13,8 @@ import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import {ResourceCategory} from "../../models/resource-category.model";
 import {UserGroup} from "../../models/user-group.model";
+import Moment = moment.Moment;
+import moment = require("moment");
 
 @Component({
     selector: 'calendar',
@@ -24,11 +26,13 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
     @ViewChild('calendarContainer')
     calendarContainer;
 
-    @Input() events: [{id: number, title: string, start: any, end: any, status: string}];
+    @Input() events: [{ id: number, title: string, start: any, end: any, status: string }];
 
     @Input() eventFeedUrl: string;
 
-    @Input() allowSelection: boolean = true;
+    @Input() allowEventSelection: boolean = true;
+
+    @Input() allowDaySelection: boolean = false;
 
     @Input() hiddenStatuses: string[];
 
@@ -42,7 +46,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     @Output() eventSelected: EventEmitter<any> = new EventEmitter<any>();
 
-    private calendarBuilt: boolean = false;
+    @Output() daySelected: EventEmitter<Moment> = new EventEmitter<Moment>();
 
     private calendar: any;
 
@@ -58,7 +62,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     ngOnChanges(changes: SimpleChanges): void {
-        if (!this.calendarBuilt)
+        if (!this.calendar)
             return;
 
         try {
@@ -75,7 +79,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
                                 this.getEventsToUse())
                         }
                         break;
-                    case 'allowSelection':
+                    case 'allowEventSelection':
+                    case 'allowDaySelection':
                     case 'title':
                     case 'hiddenStatuses':
                     case 'filterByUsers':
@@ -94,14 +99,10 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     private buildCalendar(): void {
-        this.calendar = $(this.calendarContainer.nativeElement);
-        this.calendar.fullCalendar({
+        let calendar: any = $(this.calendarContainer.nativeElement);
+        calendar.fullCalendar({
             height: 'parent',
-            header: {
-                left: 'title',
-                center: '',
-                right: 'today month,basicWeek,listWeek,basicDay prev,next'
-            },
+            header: false,
             fixedWeekCount: false,
             editable: false, //Drag and drop
             eventLimit: true, //"More" link below too many events on a day
@@ -138,19 +139,47 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
                 return false;
             },
             eventClick: (calEvent, jsEvent, view) => {
-                if (this.allowSelection)
+                if (this.allowEventSelection)
                     this.eventSelected.next(calEvent);
+            },
+            dayClick: (date, jsEvent, view) => {
+                if (this.allowDaySelection)
+                    this.daySelected.next(date);
             }
         });
 
-        if (this.title)
-            this.calendarContainer.nativeElement.getElementsByClassName('fc-center')[0].innerHTML = "<h3>" + this.title + "</h3>";
+        this.calendar = calendar;
+    }
 
-        this.calendarBuilt = true;
+    /**
+     * Gets the title of the calendar for the header.
+     * @returns The title as a string, or an empty string if one is not defined.
+     */
+    private getTitle(): string {
+        if (this.title)
+            return this.title;
+
+        if (this.calendar) {
+            let view = this.calendar.fullCalendar('getView');
+            if (view)
+                return view.title;
+        }
+
+        return '';
+    }
+
+    private onPrev() {
+        if (this.calendar)
+            this.calendar.fullCalendar('prev');
+    }
+
+    private onNext() {
+        if (this.calendar)
+            this.calendar.fullCalendar('next');
     }
 
     private refreshCalendar(refreshEvents: boolean = false): void {
-        if (this.calendarBuilt) {
+        if (this.calendar) {
             this.calendar.fullCalendar('render');
 
             if (refreshEvents)

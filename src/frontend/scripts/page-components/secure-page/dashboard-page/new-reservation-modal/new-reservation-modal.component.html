@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<modal [title]="'New Reservation'"
+	   [submitButtonLabel]="'Search'"
+	   [cancelButtonLabel]="'Cancel'"
+	   (onSubmit)="onSearch()">
+	<modal-body>
+		<p>Please select the start and end times for your reservation.</p>
+		
+		<div class="form-group">
+			<label for="startTimePicker">Start Time:</label>
+			<date-time-picker id="startTimePicker"
+							  [(ngModel)]="startDate"
+							  [inline]="false"
+							  [sideBySide]="true"></date-time-picker>
+		</div>
+		<div class="form-group">
+			<label for="endTimePicker">End Time:</label>
+			<date-time-picker id="endTimePicker"
+							  [(ngModel)]="endDate"
+							  [minDate]="startDate"
+							  [inline]="false"
+							  [sideBySide]="true"></date-time-picker>
+		</div>
+	</modal-body>
+</modal>

@@ -9,37 +9,41 @@
 	<li class="active">My Notifications</li>
 </ol>
 
-<!-- Unread Notifications Count Label -->
-<div *ngIf="unreadNotifications?.length > 0">
-	<h4>
-		{{unreadNotifications?.length}}
-		Unread
-		{{unreadNotifications?.length === 1 ? 'Notification' : 'Notifications'}}
-	</h4>
-</div>
-<div *ngIf="unreadNotifications?.length === 0">
-	<h4>No Unread Notifications</h4>
-</div>
+<div class="container">
+	
+	<!-- Unread Notifications Count Label -->
+	<div *ngIf="unreadNotifications?.length > 0">
+		<h4>
+			{{unreadNotifications?.length}}
+			Unread
+			{{unreadNotifications?.length === 1 ? 'Notification' : 'Notifications'}}
+		</h4>
+	</div>
+	<div *ngIf="unreadNotifications?.length === 0">
+		<h4>No Unread Notifications</h4>
+	</div>
+	
+	<h5 class="text-muted">Previously Read Notifications will be deleted after 3 days</h5>
+	
+	<!-- Notifications -->
+	<div *ngFor="let notification of notifications"
+		 class="notification"
+		 [ngClass]="{'read-notification': notification.read}">
+		<panel>
+			<panel-body>
+				<div class="notification-icon">
+					<i class="fa fa-{{notification.read ? 'envelope-open' : 'envelope'}}"></i>
+				</div>
+				<div class="notification-content">
+					<h4 style="margin-top: 0">{{notification.subject}}</h4>
+					<p>{{notification.body}}</p>
+				</div>
+			</panel-body>
+			<panel-footer>
+				<i style="color:#808080">{{getTimeAgo(notification)}}</i>
+			</panel-footer>
+		</panel>
+	</div>
 
-<h5 class="text-muted">Previously Read Notifications will be deleted after 3 days</h5>
-
-<!-- Notifications -->
-<div *ngFor="let notification of notifications"
-	 class="notification"
-	 [ngClass]="{'read-notification': notification.read}">
-	<panel>
-		<panel-body>
-			<div class="notification-icon">
-				<i class="fa fa-{{notification.read ? 'envelope-open' : 'envelope'}}"></i>
-			</div>
-			<div class="notification-content">
-				<h4 style="margin-top: 0">{{notification.subject}}</h4>
-				<p>{{notification.body}}</p>
-			</div>
-		</panel-body>
-		<panel-footer>
-			<i style="color:#808080">{{getTimeAgo(notification)}}</i>
-		</panel-footer>
-	</panel>
 </div>
 

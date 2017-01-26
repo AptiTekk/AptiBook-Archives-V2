@@ -1,5 +1,6 @@
+export * from './accordian-navigation';
 export * from './alert/alert.component';
-export * from './calendar/calendar.component';
+export * from './calendar';
 export * from './datatable';
 export * from './date-time-picker/date-time-picker.component';
 export * from './deletion-confirmation-modal/deletion-confirmation-modal.component';
@@ -13,6 +14,7 @@ export * from './navigation';
 export * from './panel';
 export * from './reservation-info-modal/reservation-info-modal.component';
 export * from './resource-image/resource-image.component';
+export * from './sidebar/sidebar.component';
 export * from './toggle-switch/toggle-switch.component';
 export * from './user-image/user-image.component';
 export * from './tree';
