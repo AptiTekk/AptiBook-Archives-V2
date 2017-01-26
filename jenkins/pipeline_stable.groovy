@@ -100,16 +100,13 @@ def deployToProduction(herokuAppName) {
     // Enable heroku Maintenance Mode
     sh "heroku maintenance:on --app ${herokuAppName}"
 
-    // Sleep for one minute to allow heroku to boot
-    sleep 60
-
     // Define the version variable based on what was pre-determined.
     sh 'mvn help:evaluate -Dexpression=project.version|grep -Ev \'(^\\[|Download\\w+:)\' > currentVersion'
     def version = readFile "currentVersion"
 
     // Send Slack messages
-    slackSend color: "good", message: "[Job ${env.BUILD_NUMBER}] ${herokuAppName} version ${version} has been deployed."
-    slackSend color: "#4272b7", message: "[Job ${env.BUILD_NUMBER}] Don't forget to disable maintenance mode."
+    slackSend color: "good", message: "[Job ${env.BUILD_NUMBER}] ${herokuAppName} version ${version} has been deployed and is booting."
+    slackSend color: "#4272b7", message: "[Job ${env.BUILD_NUMBER}] Remember to disable maintenance mode."
 }
 
 boolean getDeploymentApproval(jenkinsUrl) {
