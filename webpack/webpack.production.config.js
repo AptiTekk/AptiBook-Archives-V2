@@ -10,7 +10,7 @@ var path = require('path');
 
 config.output = {
     path: path.join(__dirname, '../src/main/webapp/'),
-    filename: './resources/scripts/[chunkhash].js',
+    filename: './resources/scripts/[name]-[chunkhash].js',
     chunkFilename: './resources/scripts/[id].chunk.js'
 };
 

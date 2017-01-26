@@ -44,7 +44,7 @@ export class PendingPageComponent implements OnInit {
     makeDecision(approved: boolean, reservation: Reservation) {
         this.reservationManagementService
             .makeDecision(approved, reservation)
-            .subscribe(response => this.reservationManagementService.fetchPendingReservations());
+            .subscribe(response => this.reservationManagementService.fetchReservations());
     }
 }
 
