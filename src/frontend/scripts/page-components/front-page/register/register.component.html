@@ -4,67 +4,76 @@
   ~ Proprietary and confidential.
   -->
 
-<form id="registerForm" [formGroup]="formGroup" (submit)="onSubmit()">
-    <div class="alert alert-danger" #alert *ngIf="alertMessage">{{alertMessage}}</div>
-
-    <form-group [control]="formGroup.controls['emailAddress']"
-                [label]="'Email Address'"
-                [faIconName]="'at'"
-                [autoFocus]="true"
-                [errorMessages]="
+<form id="registerForm"
+	  [formGroup]="formGroup"
+	  (submit)="onSubmit()">
+	<div class="alert alert-danger"
+		 #alert
+		 *ngIf="alertMessage">{{alertMessage}}
+	</div>
+	
+	<form-group [control]="formGroup.controls['emailAddress']"
+				[label]="'Email Address'"
+				[faIconName]="'at'"
+				[autoFocus]="true"
+				[errorMessages]="
                     {
                     required: 'This is required.',
                     pattern: 'These characters are not allowed:  < > ; =',
                     maxlength: 'This must be 100 characters or less.'
                     }">
-    </form-group>
-
-    <form-group [control]="formGroup.controls['firstName']"
-                [label]="'First Name'"
-                [errorMessages]="
+	</form-group>
+	
+	<form-group [control]="formGroup.controls['firstName']"
+				[label]="'First Name'"
+				[errorMessages]="
                     {
                     pattern: 'These characters are not allowed:  < > ; =',
                     maxlength: 'This must be 30 characters or less.'
                     }">
-    </form-group>
-
-    <form-group [control]="formGroup.controls['lastName']"
-                [label]="'Last Name'"
-                [errorMessages]="
+	</form-group>
+	
+	<form-group [control]="formGroup.controls['lastName']"
+				[label]="'Last Name'"
+				[errorMessages]="
                     {
                     pattern: 'These characters are not allowed:  < > ; =',
                     maxlength: 'This must be 30 characters or less.'
                     }">
-    </form-group>
-
-    <form-group [control]="formGroup.controls['password']"
-                [label]="'Password'"
-                [faIconName]="'asterisk'"
-                [inputType]="'password'"
-                [errorMessages]="
+	</form-group>
+	
+	<form-group [control]="formGroup.controls['password']"
+				[label]="'Password'"
+				[faIconName]="'asterisk'"
+				[inputType]="'password'"
+				[errorMessages]="
                     {
                     required: 'This is required.',
                     maxlength: 'This must be 50 characters or less.'
                     }">
-    </form-group>
-
-    <form-group [control]="formGroup.controls['confirmPassword']"
-                [label]="'Confirm Password'"
-                [faIconName]="'asterisk'"
-                [inputType]="'password'"
-                [errorMessages]="
+	</form-group>
+	
+	<form-group [control]="formGroup.controls['confirmPassword']"
+				[label]="'Confirm Password'"
+				[faIconName]="'asterisk'"
+				[inputType]="'password'"
+				[errorMessages]="
                     {
                     required: 'This is required.',
                     maxlength: 'This must be 50 characters or less.'
                     }">
-    </form-group>
+	</form-group>
+	
+	<button class="btn btn-primary btn-large btn-block"
+			[disabled]="formGroup.invalid">
+		Register
+	</button>
 
-    <button class="btn btn-primary btn-large btn-block"
-            [disabled]="formGroup.invalid">
-        Register
-    </button>
-
-    <hr/>
-
-    <button [routerLink]="['sign-in']" class="btn btn-default btn-block">Return to Sign In</button>
 </form>
+
+<hr/>
+
+<button [routerLink]="['', 'sign-in']"
+		class="btn btn-default btn-block">
+	Return to Sign In
+</button>

@@ -8,6 +8,8 @@ import {NavigationLink} from "../navigation/navigation-link.model";
 import {AuthService} from "../../services/singleton/auth.service";
 import {User} from "../../models/user.model";
 import {Router} from "@angular/router";
+import {NotificationService} from "../../services/singleton/notification.service";
+import {Notification} from "../../models/notification.model";
 
 @Component({
     selector: 'app-sidebar',
@@ -35,14 +37,32 @@ export class SidebarComponent implements OnInit {
         {icon: 'bell', label: 'My Notifications', path: ['', 'secure', 'my', 'notifications']}
     ];
 
+    /**
+     * The currently signed in user.
+     */
     private user: User;
 
+    /**
+     * Contains the currently signed in user's unread notifications.
+     */
+    private unreadNotifications: Notification[];
+
     constructor(private authService: AuthService,
+                private notificationService: NotificationService,
                 private router: Router) {
     }
 
     ngOnInit(): void {
-        this.authService.getUser().subscribe(user => this.user = user);
+
+        // Get the user and their unread notifications
+        this.authService.getUser().subscribe(user => {
+            if (user) {
+                this.user = user;
+                this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
+                    this.unreadNotifications = unreadNotifications;
+                });
+            }
+        });
     }
 
     onSignOut() {
