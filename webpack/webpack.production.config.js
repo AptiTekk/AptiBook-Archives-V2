@@ -10,8 +10,8 @@ var path = require('path');
 
 config.output = {
     path: path.join(__dirname, '../src/main/webapp/'),
-    filename: './packed/scripts/[name].bundle.js',
-    chunkFilename: './packed/scripts/[id].chunk.js'
+    filename: './resources/scripts/[hash].bundle.js',
+    chunkFilename: './resources/scripts/[id].chunk.js'
 };
 
 module.exports = config;

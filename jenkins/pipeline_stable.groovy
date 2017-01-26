@@ -85,8 +85,8 @@ def deployToProduction(herokuAppName) {
             '-not -name currentVersion ' +
             '-exec rm -irf {} \\;'
 
-    // Force add all files, even if .gitignored
-    sh "git add src/main/webapp/packed/* -f"
+    // Force add all web files, even if .gitignored
+    sh "git add src/main/webapp/* -f"
 
     // Commit
     sh "git commit -a -m 'Jenkins Automatic Add Packed'"

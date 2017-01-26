@@ -6,6 +6,7 @@
 
 var path = require('path');
 var webpack = require('webpack');
+var HtmlWebpackPlugin = require('html-webpack-plugin');
 
 var config = {
     cache: true,
@@ -51,11 +52,11 @@ var config = {
             },
             {
                 test: /\.(png|jpg|gif|svg)(\?v=[\d\.]+)?$/,
-                loader: "file-loader?name=./packed/images/[hash].[ext]"
+                loader: "file-loader?name=./resources/images/[hash].[ext]"
             },
             {
                 test: /\.(ttf|eot|woff|woff2)(\?v=[\d\.]+)?$/,
-                loader: 'file-loader?name=./packed/fonts/[hash].[ext]'
+                loader: 'file-loader?name=./resources/fonts/[hash].[ext]'
             }
         ]
     },
@@ -70,7 +71,20 @@ var config = {
             $: 'jquery',
             jquery: 'jquery'
         }),
-        new webpack.OldWatchingPlugin()
+        new webpack.OldWatchingPlugin(),
+        new HtmlWebpackPlugin({
+            template: path.join(__dirname, '../src/frontend/index.html.ejs'),
+            favicon: path.join(__dirname, '../src/frontend/resources/favicons/favicon.ico'),
+            filename: path.join(__dirname, '../src/main/webapp/index.html'),
+            inject: 'body',
+            minify: {
+                minifyCSS: true,
+                minifyJS: true,
+                removeComments: true,
+                collapseWhitespace: true,
+                collapseInlineTagWhitespace: true
+            }
+        })
     ],
 
     resolve: {
