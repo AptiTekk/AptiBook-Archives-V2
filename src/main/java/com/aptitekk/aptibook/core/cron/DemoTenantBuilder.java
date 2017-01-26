@@ -119,6 +119,16 @@ public class DemoTenantBuilder {
         demoTenant = tenantRepository.save(demoTenant);
         tenantIntegrityService.initializeNewTenant(demoTenant);
 
+        User adminUser = userRepository.findByEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS, demoTenant);
+        if (adminUser != null) {
+            try {
+                adminUser.hashedPassword = PasswordStorage.createHash("demo");
+                userRepository.save(adminUser);
+            } catch (PasswordStorage.CannotPerformOperationException e) {
+                logService.logException(getClass(), e, "Could not change admin password.");
+            }
+        }
+
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
                 "Administrators",
