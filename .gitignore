@@ -1,15 +1,22 @@
 .idea/inspectionProfiles/
 .idea/workspace.xml
 .idea/libraries
+
 target/
+
 /node_modules/
+
 /src/frontend/**/*.js
 /src/frontend/**/*.js.map
-/src/main/webapp/packed/
-/.idea/dataSources/
+
+/src/main/webapp/*
+
 /src/main/resources/application-development.properties
+
+/.idea/dataSources/
 /.idea/dataSources.local.xml
 /.idea/dataSources.xml
+
 npm-debug.log*
 Test Results*.html
 /tmp/
