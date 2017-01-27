@@ -8,9 +8,9 @@
     width: 100%;
     font-size: 16px;
     padding: 6px 10px;
-    border: 1px solid #ddd;
     border-radius: 5px;
     margin-bottom: 5px;
+    color: #666;
 }
 
 .navigation-block.link.active {

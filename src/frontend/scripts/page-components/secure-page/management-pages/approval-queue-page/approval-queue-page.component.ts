@@ -12,13 +12,14 @@ import {
 } from "../../../../models/reservation.model";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
 import moment = require("moment");
+import {LoaderService} from "../../../../services/singleton/loader.service";
 
 @Component({
-    selector: 'pending-page',
-    templateUrl: 'pending-page.component.html',
-    styleUrls: ['pending-page.component.css']
+    selector: 'approval-queue-page',
+    templateUrl: 'approval-queue-page.component.html',
+    styleUrls: ['approval-queue-page.component.css']
 })
-export class PendingPageComponent implements OnInit {
+export class ApprovalQueuePageComponent implements OnInit {
 
     /**
      * The currently signed in user.
@@ -39,10 +40,13 @@ export class PendingPageComponent implements OnInit {
     protected selectedReservation: ReservationWithOrganizedDecisions;
 
     constructor(private reservationManagementService: ReservationManagementService,
+                private loaderService: LoaderService,
                 private authService: AuthService) {
     }
 
     ngOnInit(): void {
+        this.loaderService.startLoading();
+
         this.authService
             .getUser()
             .subscribe(user => {
@@ -76,6 +80,8 @@ export class PendingPageComponent implements OnInit {
                             else
                                 this.reservationsAwaitingOthers.push(reservation);
                         });
+
+                        this.loaderService.stopLoading();
                     });
             });
     }

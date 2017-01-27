@@ -13,6 +13,11 @@
 	 [class.group]="!link"
 	 [class.active]="link && active"
 	 (click)="onClick()">
+	<i *ngIf="children?.length > 0"
+	   class="fa"
+	   style="width: 10px;"
+	   [class.fa-caret-down]="expanded"
+	   [class.fa-caret-right]="!expanded"></i>
 	<i *ngIf="icon"
 	   class="fa fa-{{icon}}"></i> {{label ? label : ''}}
 </div>

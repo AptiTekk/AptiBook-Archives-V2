@@ -13,7 +13,7 @@ import {FrontPageGuard, SecureGuard} from "./guards";
 import {SearchResultsPageComponent} from "../page-components/secure-page/search-results-page/search-results-page.component";
 import {SearchGuard} from "./guards/search.guard";
 import {CalendarPageComponent} from "../page-components/secure-page/management-pages/calendar-page/calendar-page.component";
-import {PendingPageComponent} from "../page-components/secure-page/management-pages/pending-page/pending-page.component";
+import {ApprovalQueuePageComponent} from "../page-components/secure-page/management-pages/approval-queue-page/approval-queue-page.component";
 import {ApprovedPageComponent} from "../page-components/secure-page/management-pages/approved-page/approved-page.component";
 import {RejectedPageComponent} from "../page-components/secure-page/management-pages/rejected-page/rejected-page.component";
 import {ManagementContainerComponent} from "../page-components/secure-page/management-pages/management-container.component";
@@ -56,7 +56,6 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'my',
-                component: MyContainerComponent,
                 children: [
                     {
                         path: 'account',
@@ -74,7 +73,6 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'configuration',
-                component: ConfigurationContainerComponent,
                 children: [
                     {
                         path: 'resources',
@@ -113,8 +111,8 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 component: ManagementContainerComponent,
                 children: [
                     {
-                        path: 'pending',
-                        component: PendingPageComponent
+                        path: 'queue',
+                        component: ApprovalQueuePageComponent
                     },
                     {
                         path: 'approved',
