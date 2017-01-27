@@ -7,7 +7,7 @@ import {ReservationDecision} from "./reservation-decision.model";
 
 export interface Reservation {
 
-    id: number;
+    id?: number;
 
     dateCreated?: string;
 

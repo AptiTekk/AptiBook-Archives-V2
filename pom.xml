@@ -74,20 +74,15 @@
                         </goals>
                         <configuration>
                             <outputDirectory>${basedir}/target/classes/static</outputDirectory>
+                            <nonFilteredFileExtensions>
+                                <nonFilteredFileExtension>ttf</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>woff2</nonFilteredFileExtension>
+                                <nonFilteredFileExtension>eot</nonFilteredFileExtension>
+                            </nonFilteredFileExtensions>
                             <resources>
                                 <resource>
                                     <directory>src/main/webapp</directory>
                                     <filtering>true</filtering>
-                                    <excludes>
-                                        <exclude>packed/fonts/**</exclude>
-                                    </excludes>
-                                </resource>
-                                <resource>
-                                    <directory>src/main/webapp</directory>
-                                    <filtering>false</filtering>
-                                    <includes>
-                                        <include>packed/fonts/**</include>
-                                    </includes>
                                 </resource>
                             </resources>
                         </configuration>

@@ -7,6 +7,7 @@
 var path = require('path');
 var webpack = require('webpack');
 var HtmlWebpackPlugin = require('html-webpack-plugin');
+var CleanWebpackPlugin = require('clean-webpack-plugin');
 
 var config = {
     cache: true,
@@ -85,6 +86,9 @@ var config = {
                 collapseInlineTagWhitespace: true
             },
             chunksSortMode: 'dependency'
+        }),
+        new CleanWebpackPlugin(['resources'], {
+            root: path.join(__dirname, '../src/main/webapp')
         })
     ],
 

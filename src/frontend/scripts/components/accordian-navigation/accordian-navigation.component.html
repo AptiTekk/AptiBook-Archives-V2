@@ -13,7 +13,7 @@
 	 [class.group]="!link"
 	 [class.active]="link && active"
 	 (click)="onClick()">
-	<i *ngIf="children?.length > 0"
+	<i *ngIf="children?.length > 0 && canCollapse"
 	   class="fa"
 	   style="width: 10px;"
 	   [class.fa-caret-down]="expanded"
