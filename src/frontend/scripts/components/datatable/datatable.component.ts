@@ -15,7 +15,7 @@ import {
     EventEmitter,
     Output
 } from "@angular/core";
-import {DataTableColumn} from "./datatable-column/datatable-column.component";
+import {DataTableColumnComponent} from "./datatable-column/datatable-column.component";
 import DataTable = DataTables.DataTable;
 
 @Component({
@@ -37,7 +37,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
     private datatable;
     private redrawOptions: { invalidateColumns: boolean };
 
-    @ContentChildren(DataTableColumn) columns: QueryList<DataTableColumn>;
+    @ContentChildren(DataTableColumnComponent) columns: QueryList<DataTableColumnComponent>;
 
     /**
      * Returns the number of rows needed for this table.
@@ -58,7 +58,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
      * @param column The column which contains the cells.
      * @param row The row of the cell.
      */
-    private static getCellContentFromColumnByRow(column: DataTableColumn, row: number): string {
+    private static getCellContentFromColumnByRow(column: DataTableColumnComponent, row: number): string {
         if (column && column.cells.length > row)
             return (<HTMLElement>column.cells.toArray()[row].viewRef.element.nativeElement).innerHTML;
 
@@ -96,7 +96,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
      * @returns {{title: string, orderable: boolean, width: string}[]}
      */
     private getColumnsData(): { title: string, orderable: boolean, width: string }[] {
-        return this.columns.map((column: DataTableColumn) => {
+        return this.columns.map((column: DataTableColumnComponent) => {
             return {
                 title: column.title,
                 orderable: column.orderable,
@@ -115,7 +115,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
 
         for (let i = 0; i < this.numRowsRequired; i++) {
             let rowData = [];
-            this.columns.forEach((column: DataTableColumn) => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
+            this.columns.forEach((column: DataTableColumnComponent) => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
             dataArray.push(rowData);
         }
 
@@ -159,6 +159,8 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
             if (this.selectedRow >= 0) {
                 this.datatable.row(this.selectedRow).select();
             }
+
+            this.datatable.columns.adjust();
         }
     }
 

@@ -25,11 +25,17 @@ export interface Reservation {
     approved?: boolean;
     rejected?: boolean;
     cancelled?: boolean;
-
-    decisions?: ReservationDecision[];
 }
 
-export interface ReservationWithDecisions extends Reservation {
+export interface ReservationWithUnorganizedDecisions extends Reservation {
+
+    decisions?: ReservationDecision[];
+
+}
+
+export interface ReservationWithOrganizedDecisions extends Reservation {
+
+    decisions?: ReservationDecision[];
 
     hierarchy?: UserGroupWithDecision[];
 
