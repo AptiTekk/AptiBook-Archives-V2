@@ -97,13 +97,13 @@ public class TenantSynchronizer {
                                     changeTenantActive(currentTenant, false);
                                 }
                             } else if (currentTenant != null) {
-                                if (!currentTenant.getSlug().equalsIgnoreCase(slug)) {
+                                if (!currentTenant.slug.equalsIgnoreCase(slug)) {
                                     changeTenantSlug(currentTenant, slug);
                                 }
                             }
 
                             //Change Tenant tier if needed.
-                            if (currentTenant != null && !tier.equals(currentTenant.getTier()))
+                            if (currentTenant != null && !tier.equals(currentTenant.tier))
                                 changeTenantTier(currentTenant, tier);
 
                             //Set Tenant Active or Inactive based on its subscriptions status.
@@ -122,7 +122,7 @@ public class TenantSynchronizer {
 
                             //Delete tenant if it has been inactive for 30 or more days.
                             if (currentTenant != null && !currentTenant.isActive()) {
-                                ZonedDateTime timeSetInactive = currentTenant.getTimeSetInactive();
+                                ZonedDateTime timeSetInactive = currentTenant.timeSetInactive;
                                 if (timeSetInactive != null) {
                                     if (Days.between(timeSetInactive, ZonedDateTime.now()).getAmount() > 30)
                                         deleteTenant(currentTenant);
@@ -136,11 +136,11 @@ public class TenantSynchronizer {
             }
 
             for (Tenant tenant : tenantRepository.findAll()) {
-                if (subscriptionIdsEncountered.contains(tenant.getSubscriptionId()))
+                if (subscriptionIdsEncountered.contains(tenant.subscriptionId))
                     continue;
 
                 //The demo tenant should not be set inactive.
-                if (tenant.getSlug().equals("demo"))
+                if (tenant.slug.equals("demo"))
                     continue;
 
                 changeTenantActive(tenant, false);
@@ -176,20 +176,20 @@ public class TenantSynchronizer {
      * @param newSlug The new slug.
      */
     private void changeTenantSlug(Tenant tenant, String newSlug) {
-        if (tenant.getSlug().equalsIgnoreCase(newSlug))
+        if (tenant.slug.equalsIgnoreCase(newSlug))
             return;
 
-        String previousSlug = tenant.getSlug();
+        String previousSlug = tenant.slug;
         if (tenantRepository.findTenantBySlug(newSlug) == null) {
-            tenant.setSlug(newSlug);
+            tenant.slug = newSlug;
             try {
                 tenant = tenantRepository.save(tenant);
-                logService.logInfo(getClass(), "Updated Slug For Tenant ID " + tenant.getId() + ". Previously: " + previousSlug + "; Now: " + newSlug);
+                logService.logInfo(getClass(), "Updated Slug For Tenant ID " + tenant.id + ". Previously: " + previousSlug + "; Now: " + newSlug);
             } catch (Exception e) {
-                logService.logException(getClass(), e, "Could not update slug for Tenant ID " + tenant.getId());
+                logService.logException(getClass(), e, "Could not update slug for Tenant ID " + tenant.id);
             }
         } else {
-            logService.logError(getClass(), "Could not update slug for Tenant ID " + tenant.getId() + ": A Tenant with this slug already exists.");
+            logService.logError(getClass(), "Could not update slug for Tenant ID " + tenant.id + ": A Tenant with this slug already exists.");
         }
     }
 
@@ -200,16 +200,16 @@ public class TenantSynchronizer {
      * @param newTier The new tier.
      */
     private void changeTenantTier(Tenant tenant, Tenant.Tier newTier) {
-        if (newTier.equals(tenant.getTier()))
+        if (newTier.equals(tenant.tier))
             return;
 
-        Tenant.Tier previousTier = tenant.getTier();
-        tenant.setTier(newTier);
+        Tenant.Tier previousTier = tenant.tier;
+        tenant.tier = newTier;
         try {
             tenant = tenantRepository.save(tenant);
-            logService.logInfo(getClass(), "Updated Tier For Tenant ID " + tenant.getId() + ". Previously: " + previousTier + "; Now: " + newTier);
+            logService.logInfo(getClass(), "Updated Tier For Tenant ID " + tenant.id + ". Previously: " + previousTier + "; Now: " + newTier);
         } catch (Exception e) {
-            logService.logException(getClass(), e, "Could not update slug for Tenant ID " + tenant.getId());
+            logService.logException(getClass(), e, "Could not update slug for Tenant ID " + tenant.id);
         }
     }
 
@@ -226,9 +226,9 @@ public class TenantSynchronizer {
         tenant.setActive(active);
         try {
             tenant = tenantRepository.save(tenant);
-            logService.logInfo(getClass(), "Set Tenant ID " + tenant.getId() + (active ? " Active." : " Inactive."));
+            logService.logInfo(getClass(), "Set Tenant ID " + tenant.id + (active ? " Active." : " Inactive."));
         } catch (Exception e) {
-            logService.logException(getClass(), e, "Could not set Tenant ID " + tenant.getId() + (active ? " Active" : " Inactive"));
+            logService.logException(getClass(), e, "Could not set Tenant ID " + tenant.id + (active ? " Active" : " Inactive"));
         }
     }
 
@@ -262,18 +262,18 @@ public class TenantSynchronizer {
 
         Tenant tenant = new Tenant();
         tenant.setActive(true);
-        tenant.setSlug(slug);
-        tenant.setSubscriptionId(subscriptionId);
-        tenant.setTier(tier);
-        tenant.setAdminEmail(adminEmail);
+        tenant.slug = slug;
+        tenant.subscriptionId = subscriptionId;
+        tenant.tier = tier;
+        tenant.adminEmail = adminEmail;
 
         try {
             tenant = tenantRepository.save(tenant);
             tenantIntegrityService.initializeNewTenant(tenant);
-            logService.logInfo(getClass(), "Created new Tenant for Subscription ID " + tenant.getSubscriptionId() + " with Slug " + tenant.getSlug() + " and Tier " + tier);
+            logService.logInfo(getClass(), "Created new Tenant for Subscription ID " + tenant.subscriptionId + " with Slug " + tenant.slug + " and Tier " + tier);
             return tenant;
         } catch (Exception e) {
-            logService.logException(getClass(), e, "Could not create Tenant for Subscription ID " + tenant.getSubscriptionId());
+            logService.logException(getClass(), e, "Could not create Tenant for Subscription ID " + tenant.subscriptionId);
             return null;
         }
     }
@@ -285,11 +285,11 @@ public class TenantSynchronizer {
      */
     private void deleteTenant(Tenant tenant) {
         try {
-            Long tenantId = tenant.getId();
+            Long tenantId = tenant.id;
             tenantRepository.delete(tenant);
             logService.logInfo(getClass(), "Deleted Tenant with ID " + tenantId + " due to being inactive for 30 days.");
         } catch (Exception e) {
-            logService.logException(getClass(), e, "Could not delete Tenant with ID " + tenant.getId());
+            logService.logException(getClass(), e, "Could not delete Tenant with ID " + tenant.id);
         }
     }
 

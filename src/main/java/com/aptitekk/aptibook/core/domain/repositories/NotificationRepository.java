@@ -16,13 +16,10 @@ import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 
 import javax.persistence.PersistenceException;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 @EntityRepository
-public class NotificationRepository extends MultiTenantEntityRepositoryAbstract<Notification>{
+public class NotificationRepository extends MultiTenantEntityRepositoryAbstract<Notification> {
 
     public void markAllAsReadForUser(User user) {
         try {
@@ -39,20 +36,13 @@ public class NotificationRepository extends MultiTenantEntityRepositoryAbstract<
             return null;
 
         try {
-            List<Notification> result = entityManager
-                    .createQuery("SELECT n FROM Notification n WHERE n.user = :user", Notification.class)
+            return entityManager
+                    .createQuery("SELECT n FROM Notification n WHERE n.user = :user ORDER BY n.creation", Notification.class)
                     .setParameter("user", user)
                     .getResultList();
-
-            Comparator<Notification> comparator = Comparator.comparing(Notification::getRead);
-            comparator = comparator.reversed();
-            comparator = comparator.thenComparing(Notification::getCreation);
-            comparator = comparator.reversed();
-            Stream<Notification> notificationStream = result.stream().sorted(comparator);
-
-            return notificationStream.collect(Collectors.toList());
         } catch (PersistenceException e) {
             return null;
         }
     }
+
 }

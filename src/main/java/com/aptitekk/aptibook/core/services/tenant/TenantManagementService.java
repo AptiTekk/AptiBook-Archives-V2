@@ -45,7 +45,7 @@ public class TenantManagementService {
 
         for (Tenant tenant : tenantRepository.findAll()) {
             if (tenant.isActive())
-                allowedTenants.put(tenant.getSlug(), tenant);
+                allowedTenants.put(tenant.slug, tenant);
         }
     }
 

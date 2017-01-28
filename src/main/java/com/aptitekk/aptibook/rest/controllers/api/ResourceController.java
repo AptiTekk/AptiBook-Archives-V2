@@ -68,8 +68,8 @@ public class ResourceController extends APIControllerAbstract {
             if (id != null) {
                 Resource resource = resourceRepository.findInCurrentTenant(id);
                 if (resource != null) {
-                    if (resource.image != null && resource.image.getData() != null) {
-                        return ok(resource.image.getData());
+                    if (resource.image != null && resource.image.data != null) {
+                        return ok(resource.image.data);
                     }
                 }
             }
@@ -113,7 +113,7 @@ public class ResourceController extends APIControllerAbstract {
 
                 // Save image to file entity.
                 File imageFile = new File();
-                imageFile.setData(parsedImage);
+                imageFile.data = parsedImage;
                 imageFile = fileRepository.save(imageFile);
 
                 if (imageFile == null)
@@ -131,7 +131,7 @@ public class ResourceController extends APIControllerAbstract {
                 }
 
                 // Return the image.
-                return ok(resource.image.getData());
+                return ok(resource.image.data);
             } catch (IOException e) {
                 return badRequest("Could not read image. It may be corrupt.");
             }

@@ -36,7 +36,7 @@ public class ReservationFieldEntryRepository extends MultiTenantEntityRepository
                     .createQuery("SELECT e FROM ReservationFieldEntry e WHERE e.reservation = :reservation AND e.field = :field", ReservationFieldEntry.class)
                     .setParameter("reservation", reservation)
                     .setParameter("field", reservationField)
-                    .getSingleResult().getContent();
+                    .getSingleResult().content;
         } catch (NoResultException e) {
             return null;
         }

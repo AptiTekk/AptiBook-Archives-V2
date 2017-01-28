@@ -21,105 +21,30 @@ public class UserGroup extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
-    private String name;
+    public String name;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
-    private List<Resource> resources;
+    public List<Resource> resources;
 
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany(mappedBy = "userGroups")
-    private List<User> users = new ArrayList<>();
+    public List<User> users = new ArrayList<>();
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY)
-    private UserGroup parent;
+    public UserGroup parent;
 
     @OneToMany(mappedBy = "parent")
     @OrderBy("name ASC")
-    private List<UserGroup> children = new ArrayList<>();
+    public List<UserGroup> children = new ArrayList<>();
 
     @ManyToMany(fetch = FetchType.EAGER)
-    private List<Permission> permissions;
+    public List<Permission> permissions;
 
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.REMOVE)
-    private List<ReservationDecision> reservationDecisions = new ArrayList<>();
-
-    public UserGroup() {
-    }
-
-    public UserGroup(String name) {
-        this.name = name;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<Resource> getResources() {
-        return this.resources;
-    }
-
-    public void setResources(List<Resource> rooms) {
-        this.resources = rooms;
-    }
-
-    public List<User> getUsers() {
-        return this.users;
-    }
-
-    public void setUsers(List<User> users) {
-        this.users = users;
-    }
-
-    public UserGroup getParent() {
-        return parent;
-    }
-
-    public void setParent(UserGroup parent) {
-        this.parent = parent;
-    }
-
-    public List<UserGroup> getChildren() {
-        return children;
-    }
-
-    public void setChildren(List<UserGroup> children) {
-        this.children = children;
-    }
-
-    public List<Permission> getPermissions() {
-        return permissions;
-    }
-
-    public void setPermissions(List<Permission> permissions) {
-        this.permissions = permissions;
-    }
-
-    public List<ReservationDecision> getReservationDecisions() {
-        return reservationDecisions;
-    }
-
-    public void setReservationDecisions(List<ReservationDecision> reservationDecisions) {
-        this.reservationDecisions = reservationDecisions;
-    }
-
-    public String toString() {
-        return this.getName();
-    }
+    public List<ReservationDecision> reservationDecisions = new ArrayList<>();
 
     public boolean isRoot() {
         return this.parent == null;
@@ -135,12 +60,12 @@ public class UserGroup extends MultiTenantEntity implements Serializable {
 
         UserGroup other = (UserGroup) o;
 
-        return EqualsHelper.areEquals(getName(), other.getName());
+        return EqualsHelper.areEquals(name, other.name);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getName());
+        return EqualsHelper.calculateHashCode(name);
     }
 
 }

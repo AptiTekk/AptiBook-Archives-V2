@@ -35,60 +35,40 @@ public class Reservation extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
-    private LocalDateTime dateCreated = LocalDateTime.now();
+    public LocalDateTime dateCreated = LocalDateTime.now();
 
-    private String title;
+    public String title;
 
     @Enumerated(EnumType.STRING)
-    private Status status = Status.PENDING;
+    public Status status = Status.PENDING;
 
     @Column(name="\"start\"")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
-    private LocalDateTime start;
+    public LocalDateTime start;
 
     @Column(name="\"end\"")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
-    private LocalDateTime end;
+    public LocalDateTime end;
 
     @ManyToOne
-    private Resource resource;
+    public Resource resource;
 
     @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
-    private User user;
+    public User user;
 
     @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
-    private List<ReservationDecision> decisions;
+    public List<ReservationDecision> decisions;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
-    private List<ReservationFieldEntry> fieldEntries;
-
-    public Long getId() {
-        return id;
-    }
-
-    public LocalDateTime getDateCreated() {
-        return dateCreated;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public Status getStatus() {
-        return status;
-    }
+    public List<ReservationFieldEntry> fieldEntries;
 
     public boolean isPending() {
         return status == Status.PENDING;
@@ -106,58 +86,6 @@ public class Reservation extends MultiTenantEntity implements Serializable {
         return status == Status.CANCELLED;
     }
 
-    public void setStatus(Status status) {
-        this.status = status;
-    }
-
-    public LocalDateTime getStart() {
-        return start;
-    }
-
-    public void setStart(LocalDateTime startTime) {
-        this.start = startTime;
-    }
-
-    public LocalDateTime getEnd() {
-        return end;
-    }
-
-    public void setEnd(LocalDateTime endTime) {
-        this.end = endTime;
-    }
-
-    public Resource getResource() {
-        return resource;
-    }
-
-    public void setResource(Resource resource) {
-        this.resource = resource;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public List<ReservationDecision> getDecisions() {
-        return decisions;
-    }
-
-    public void setDecisions(List<ReservationDecision> decisions) {
-        this.decisions = decisions;
-    }
-
-    public List<ReservationFieldEntry> getFieldEntries() {
-        return fieldEntries;
-    }
-
-    public void setFieldEntries(List<ReservationFieldEntry> fieldEntries) {
-        this.fieldEntries = fieldEntries;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -168,15 +96,15 @@ public class Reservation extends MultiTenantEntity implements Serializable {
 
         Reservation other = (Reservation) o;
 
-        return EqualsHelper.areEquals(getTitle(), other.getTitle())
-                && EqualsHelper.areEquals(getDateCreated(), other.getDateCreated())
-                && EqualsHelper.areEquals(getStatus(), other.getStatus())
-                && EqualsHelper.areEquals(getStart(), other.getStart())
-                && EqualsHelper.areEquals(getEnd(), other.getEnd());
+        return EqualsHelper.areEquals(title, other.title)
+                && EqualsHelper.areEquals(dateCreated, other.dateCreated)
+                && EqualsHelper.areEquals(status, other.status)
+                && EqualsHelper.areEquals(start, other.start)
+                && EqualsHelper.areEquals(end, other.end);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getTitle(), getDateCreated(), getStatus(), getStart(), getEnd());
+        return EqualsHelper.calculateHashCode(title, dateCreated, status, start, end);
     }
 }

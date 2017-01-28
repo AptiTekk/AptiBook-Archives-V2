@@ -161,7 +161,7 @@ public class ReservationController extends APIControllerAbstract {
         User currentUser = authService.getCurrentUser();
 
         UserGroup decidingFor = null;
-        for (UserGroup userGroup : this.userGroupService.getHierarchyUp(reservation.getResource().owner)) {
+        for (UserGroup userGroup : this.userGroupService.getHierarchyUp(reservation.resource.owner)) {
             if (currentUser.userGroups.contains(userGroup)) {
                 decidingFor = userGroup;
                 break;
@@ -172,10 +172,10 @@ public class ReservationController extends APIControllerAbstract {
             return noPermission("You are not allowed to decide upon this Reservation.");
 
         ReservationDecision reservationDecision = new ReservationDecision();
-        reservationDecision.setUser(authService.getCurrentUser());
-        reservationDecision.setApproved(approved);
-        reservationDecision.setReservation(reservation);
-        reservationDecision.setUserGroup(decidingFor);
+        reservationDecision.user = authService.getCurrentUser();
+        reservationDecision.approved = approved;
+        reservationDecision.reservation = reservation;
+        reservationDecision.userGroup = decidingFor;
 
         reservationDecision = reservationDecisionRepository.save(reservationDecision);
         return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
@@ -203,8 +203,8 @@ public class ReservationController extends APIControllerAbstract {
         if (authService.isUserSignedIn()) {
             if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
                 Reservation reservation = new Reservation();
-                reservation.setTenant(tenantManagementService.getTenant());
-                reservation.setUser(userRepository.findInCurrentTenant(id));
+                reservation.tenant = tenantManagementService.getTenant();
+                reservation.user = userRepository.findInCurrentTenant(id);
 
                 if (reservationDTO.title != null)
                     if (!reservationDTO.title.matches("[^<>;=]*"))
@@ -212,7 +212,7 @@ public class ReservationController extends APIControllerAbstract {
                     else if (reservationDTO.title.length() > 100)
                         return badRequest("The Title must be 100 characters or less.");
                     else
-                        reservation.setTitle(reservationDTO.title);
+                        reservation.title = reservationDTO.title;
 
                 Long resourceId = reservationDTO.resource.id;
                 Resource resource = resourceRepository.findInCurrentTenant(resourceId);
@@ -230,14 +230,14 @@ public class ReservationController extends APIControllerAbstract {
                 if (!available)
                     return badRequest("Resource is not available at specified times.");
 
-                reservation.setResource(resource);
-                reservation.setStart(reservationDTO.start);
-                reservation.setEnd(reservationDTO.end);
+                reservation.resource = resource;
+                reservation.start = reservationDTO.start;
+                reservation.end = reservationDTO.end;
 
                 if (resource.needsApproval) {
-                    reservation.setStatus(Reservation.Status.PENDING);
+                    reservation.status = Reservation.Status.PENDING;
                 } else {
-                    reservation.setStatus(Reservation.Status.APPROVED);
+                    reservation.status = Reservation.Status.APPROVED;
                 }
 
                 reservation = reservationRepository.save(reservation);

@@ -23,71 +23,20 @@ public class ResourceCategory extends MultiTenantEntity implements Serializable 
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
-    private String name;
-
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
-    @OrderBy(value = "name")
-    private List<Resource> resources = new ArrayList<>();
-
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
-    private List<ReservationField> reservationFields = new ArrayList<>();
+    public String name;
 
     @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
     @OrderBy(value = "name")
-    private List<Tag> tags = new ArrayList<>();
+    public List<Resource> resources = new ArrayList<>();
 
-    private static final long serialVersionUID = 1L;
+    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
+    public List<ReservationField> reservationFields = new ArrayList<>();
 
-    public ResourceCategory() {
-        super();
-    }
-
-    public ResourceCategory(String name) {
-        super();
-        this.name = name;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Resource> getResources() {
-        return resources;
-    }
-
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<ReservationField> getReservationFields() {
-        return reservationFields;
-    }
-
-    public void setReservationFields(List<ReservationField> reservationFields) {
-        this.reservationFields = reservationFields;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
+    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
+    @OrderBy(value = "name")
+    public List<Tag> tags = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -99,11 +48,11 @@ public class ResourceCategory extends MultiTenantEntity implements Serializable 
 
         ResourceCategory other = (ResourceCategory) o;
 
-        return EqualsHelper.areEquals(getName(), other.getName());
+        return EqualsHelper.areEquals(name, other.name);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getName());
+        return EqualsHelper.calculateHashCode(name);
     }
 }

@@ -27,13 +27,13 @@ public class PermissionService {
             return false;
 
         for (Permission permission : user.permissions) {
-            if (permission.getDescriptor() == descriptor)
+            if (permission.descriptor == descriptor)
                 return true;
         }
 
         for (UserGroup userGroup : user.userGroups) {
-            for (Permission permission : userGroup.getPermissions()) {
-                if (permission.getDescriptor() == descriptor)
+            for (Permission permission : userGroup.permissions) {
+                if (permission.descriptor == descriptor)
                     return true;
             }
         }
@@ -53,13 +53,13 @@ public class PermissionService {
             return false;
 
         for (Permission permission : user.permissions) {
-            if (permission.getDescriptor().getGroup() == group)
+            if (permission.descriptor.getGroup() == group)
                 return true;
         }
 
         for (UserGroup userGroup : user.userGroups) {
-            for (Permission permission : userGroup.getPermissions()) {
-                if (permission.getDescriptor().getGroup() == group)
+            for (Permission permission : userGroup.permissions) {
+                if (permission.descriptor.getGroup() == group)
                     return true;
             }
         }

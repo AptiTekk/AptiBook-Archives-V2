@@ -23,49 +23,17 @@ public class Tag extends MultiTenantEntity implements Comparable<Tag> {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
-    private String name;
+    public String name;
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    private ResourceCategory resourceCategory;
+    public ResourceCategory resourceCategory;
 
     @JsonIgnore
     @ManyToMany(mappedBy = "tags")
-    private List<Resource> resources = new ArrayList<>();
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long idTag) {
-        this.id = idTag;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public ResourceCategory getResourceCategory() {
-        return resourceCategory;
-    }
-
-    public void setResourceCategory(ResourceCategory resourceCategory) {
-        this.resourceCategory = resourceCategory;
-    }
-
-    public List<Resource> getResources() {
-        return resources;
-    }
-
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
-    }
+    public List<Resource> resources = new ArrayList<>();
 
     @Override
     public boolean equals(Object o) {
@@ -77,16 +45,17 @@ public class Tag extends MultiTenantEntity implements Comparable<Tag> {
 
         Tag other = (Tag) o;
 
-        return EqualsHelper.areEquals(getName(), other.getName()) && EqualsHelper.areEquals(getResourceCategory(), other.getResourceCategory());
+        return EqualsHelper.areEquals(name, other.name)
+                && EqualsHelper.areEquals(resourceCategory, other.resourceCategory);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getName(), getResourceCategory());
+        return EqualsHelper.calculateHashCode(name, resourceCategory);
     }
 
     @Override
     public int compareTo(Tag o) {
-        return name.compareTo(o.getName());
+        return name.compareTo(o.name);
     }
 }

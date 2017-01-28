@@ -52,37 +52,39 @@ export class ApprovalQueuePageComponent implements OnInit {
             .subscribe(user => {
                 this.user = user;
 
-                this.reservationManagementService
-                    .getPendingReservations()
-                    .subscribe(reservations => {
-                        this.reservations = reservations;
-                        this.reservationsAwaitingUser = [];
-                        this.reservationsAwaitingOthers = [];
+                if(user) {
+                    this.reservationManagementService
+                        .getPendingReservations()
+                        .subscribe(reservations => {
+                            this.reservations = reservations;
+                            this.reservationsAwaitingUser = [];
+                            this.reservationsAwaitingOthers = [];
 
-                        reservations.forEach(reservation => {
-                            let awaitingUsersDecision = true;
+                            reservations.forEach(reservation => {
+                                let awaitingUsersDecision = true;
 
-                            for (let decision of reservation.decisions) {
-                                for (let group of user.userGroups) {
-                                    if (decision.userGroup.id === group.id) {
-                                        awaitingUsersDecision = false;
-                                        reservation['usersDecision'] = decision;
-                                        break;
+                                for (let decision of reservation.decisions) {
+                                    for (let group of user.userGroups) {
+                                        if (decision.userGroup.id === group.id) {
+                                            awaitingUsersDecision = false;
+                                            reservation['usersDecision'] = decision;
+                                            break;
+                                        }
                                     }
+
+                                    if (!awaitingUsersDecision)
+                                        break;
                                 }
 
-                                if (!awaitingUsersDecision)
-                                    break;
-                            }
+                                if (awaitingUsersDecision)
+                                    this.reservationsAwaitingUser.push(reservation);
+                                else
+                                    this.reservationsAwaitingOthers.push(reservation);
+                            });
 
-                            if (awaitingUsersDecision)
-                                this.reservationsAwaitingUser.push(reservation);
-                            else
-                                this.reservationsAwaitingOthers.push(reservation);
+                            this.loaderService.stopLoading();
                         });
-
-                        this.loaderService.stopLoading();
-                    });
+                }
             });
     }
 

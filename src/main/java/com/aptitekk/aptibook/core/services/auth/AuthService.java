@@ -60,7 +60,7 @@ public class AuthService {
         if (user == null || tenant == null || response == null)
             return;
 
-        cookieService.storeEncryptedCookie(COOKIE_NAME, user.getId() + ":" + tenant.getId(), tenant, response);
+        cookieService.storeEncryptedCookie(COOKIE_NAME, user.getId() + ":" + tenant.id, tenant, response);
     }
 
     /**
@@ -83,7 +83,7 @@ public class AuthService {
             Long tenantId = Long.parseLong(dataSplit[1]);
 
             // Ensure that the cookie is for the same Tenant
-            if (tenantManagementService.getTenant().getId().equals(tenantId))
+            if (tenantManagementService.getTenant().id.equals(tenantId))
                 return userRepository.findInCurrentTenant(userId);
         } catch (NumberFormatException ignored) {
         }

@@ -58,7 +58,7 @@ public abstract class APIControllerAbstract {
 
         //Add on the tenant url
         if (tenantManagementService.getTenant() != null)
-            path = "/" + tenantManagementService.getTenant().getSlug() + path;
+            path = "/" + tenantManagementService.getTenant().slug + path;
 
         String uriString = ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
 

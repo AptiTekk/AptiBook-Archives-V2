@@ -6,14 +6,14 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {
-    ReservationWithUnorganizedDecisions, Reservation,
-    ReservationWithOrganizedDecisions
+    Reservation,
+    ReservationWithOrganizedDecisions,
+    ReservationWithUnorganizedDecisions
 } from "../../models/reservation.model";
 import {Observable, ReplaySubject} from "rxjs";
 import {UserGroup, UserGroupWithDecision} from "../../models/user-group.model";
 import {ReservationDecision} from "../../models/reservation-decision.model";
 import {UserGroupService} from "./usergroup.service";
-import {User} from "../../models/user.model";
 import PriorityQueue from "typescript-collections/dist/lib/PriorityQueue";
 
 /**
@@ -60,14 +60,26 @@ export class ReservationManagementService {
             });
     }
 
+    /**
+     * @returns {ReplaySubject<ReservationWithUnorganizedDecisions[]>} The ReplaySubject containing the Pending Reservations (whose decisions are not originally organized). <br/>
+     * Will be an empty array if an error occurs.
+     */
     public getPendingReservations(): ReplaySubject<ReservationWithUnorganizedDecisions[]> {
         return this.pendingReservations;
     }
 
+    /**
+     * @returns {ReplaySubject<ReservationWithUnorganizedDecisions[]>} The ReplaySubject containing the Approved Reservations (whose decisions are not originally organized). <br/>
+     * Will be an empty array if an error occurs.
+     */
     public getApprovedReservations(): ReplaySubject<ReservationWithUnorganizedDecisions[]> {
         return this.approvedReservations;
     }
 
+    /**
+     * @returns {ReplaySubject<ReservationWithUnorganizedDecisions[]>} The ReplaySubject containing the Rejected Reservations (whose decisions are not originally organized). <br/>
+     * Will be an empty array if an error occurs.
+     */
     public getRejectedReservations(): ReplaySubject<ReservationWithUnorganizedDecisions[]> {
         return this.rejectedReservations;
     }

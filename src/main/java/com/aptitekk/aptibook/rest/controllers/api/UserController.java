@@ -163,7 +163,7 @@ public class UserController extends APIControllerAbstract {
                     }
 
                     for (UserGroup userGroup : currentUser.userGroups) {
-                        userGroup.getUsers().remove(currentUser);
+                        userGroup.users.remove(currentUser);
                     }
 
                     currentUser.userGroups = newUserGroupList;

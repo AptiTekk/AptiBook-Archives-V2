@@ -24,64 +24,23 @@ public class ReservationDecision extends MultiTenantEntity implements Serializab
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
     @ManyToOne(optional = false)
-    private User user;
+    public User user;
 
     @ManyToOne(optional = false)
-    private UserGroup userGroup;
+    public UserGroup userGroup;
 
     @ManyToOne(optional = false)
-    private Reservation reservation;
+    public Reservation reservation;
 
-    private boolean approved;
+    public boolean approved;
 
-    private String comment;
-
-    public Long getId() {
-        return id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
-        this.user = user;
-    }
-
-    public UserGroup getUserGroup() {
-        return userGroup;
-    }
-
-    public void setUserGroup(UserGroup userGroup) {
-        this.userGroup = userGroup;
-    }
-
-    public Reservation getReservation() {
-        return reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
-    public boolean isApproved() {
-        return approved;
-    }
-
-    public void setApproved(boolean approved) {
-        this.approved = approved;
-    }
-
-    public String getComment() {
-        return comment;
-    }
-
-    public void setComment(String comment) {
-        this.comment = comment;
-    }
+    /**
+     * Not used yet
+     */
+    public String comment;
 
     @Override
     public boolean equals(Object o) {
@@ -93,16 +52,16 @@ public class ReservationDecision extends MultiTenantEntity implements Serializab
 
         ReservationDecision other = (ReservationDecision) o;
 
-        return EqualsHelper.areEquals(getUser(), other.getUser())
-                && EqualsHelper.areEquals(getUserGroup(), other.getUserGroup())
-                && EqualsHelper.areEquals(getReservation(), other.getReservation())
-                && EqualsHelper.areEquals(isApproved(), other.isApproved())
-                && EqualsHelper.areEquals(getComment(), other.getComment());
+        return EqualsHelper.areEquals(user, other.user)
+                && EqualsHelper.areEquals(userGroup, other.userGroup)
+                && EqualsHelper.areEquals(reservation, other.reservation)
+                && EqualsHelper.areEquals(approved, other.approved)
+                && EqualsHelper.areEquals(comment, other.comment);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getUser(), getUserGroup(), getReservation(), isApproved(), getComment());
+        return EqualsHelper.calculateHashCode(user, userGroup, reservation, approved, comment);
     }
 
 }

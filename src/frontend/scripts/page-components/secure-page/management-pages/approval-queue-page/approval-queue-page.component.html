@@ -18,8 +18,7 @@
 			<datatable #awaitingUserTable
 					   [selectableRows]="true"
 					   (rowSelected)="awaitingOthersTable.deselectRows(); onReservationSelected(reservationsAwaitingUser[$event])"
-					   (rowDeselected)="onReservationDeselected()"
-					   [bodyHeight]="'calc(100vh - 475px)'">
+					   (rowDeselected)="onReservationDeselected()">
 				<datatable-column [orderable]="false"
 								  [width]="'30px'">
 					<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
@@ -65,8 +64,7 @@
 			<datatable #awaitingOthersTable
 					   [selectableRows]="true"
 					   (rowSelected)="awaitingUserTable.deselectRows(); onReservationSelected(reservationsAwaitingOthers[$event]);"
-					   (rowDeselected)="onReservationDeselected()"
-					   [bodyHeight]="'calc(100vh - 475px)'">
+					   (rowDeselected)="onReservationDeselected()">
 				<datatable-column [orderable]="false"
 								  [width]="'30px'">
 					<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">

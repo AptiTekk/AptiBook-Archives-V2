@@ -22,25 +22,9 @@ public class File extends MultiTenantEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
-    private byte[] data;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long idTag) {
-        this.id = idTag;
-    }
-
-    public byte[] getData() {
-        return data;
-    }
-
-    public void setData(byte[] data) {
-        this.data = data;
-    }
+    public byte[] data;
 
     @Override
     public boolean equals(Object o) {
@@ -52,11 +36,11 @@ public class File extends MultiTenantEntity {
 
         File other = (File) o;
 
-        return EqualsHelper.areEquals(getData(), other.getData());
+        return EqualsHelper.areEquals(data, other.data);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(data);
+        return EqualsHelper.calculateHashCode((Object) data);
     }
 }

@@ -27,16 +27,16 @@ public class TenantControllerTest extends AbstractWebClientTest {
     @Test
     public void testGetTenant() throws Exception {
         Tenant tenant = new Tenant();
-        tenant.setSlug("testSlug");
-        tenant.setTier(Tenant.Tier.PLATINUM);
+        tenant.slug = "testSlug";
+        tenant.tier = Tenant.Tier.PLATINUM;
         tenant.setActive(true);
 
         tenant = this.tenantRepository.save(tenant);
         this.tenantManagementService.refresh();
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/" + tenant.getSlug() + "/tenant"))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/" + tenant.slug + "/tenant"))
                 .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.content().json("{id: " + tenant.getId() + ", slug: " + tenant.getSlug() + "}"));
+                .andExpect(MockMvcResultMatchers.content().json("{id: " + tenant.id + ", slug: " + tenant.slug + "}"));
     }
 
 }

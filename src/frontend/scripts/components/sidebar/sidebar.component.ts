@@ -10,6 +10,7 @@ import {User} from "../../models/user.model";
 import {Router} from "@angular/router";
 import {NotificationService} from "../../services/singleton/notification.service";
 import {Notification} from "../../models/notification.model";
+import {LoaderService} from "../../services/singleton/loader.service";
 
 @Component({
     selector: 'app-sidebar',
@@ -49,6 +50,7 @@ export class SidebarComponent implements OnInit {
 
     constructor(private authService: AuthService,
                 private notificationService: NotificationService,
+                private loaderService: LoaderService,
                 private router: Router) {
     }
 
@@ -66,8 +68,12 @@ export class SidebarComponent implements OnInit {
     }
 
     onSignOut() {
+        this.loaderService.startLoading();
         this.authService.signOut().subscribe(
-            success => this.router.navigate([''])
+            success => {
+                this.loaderService.stopLoading();
+                this.router.navigate(['', 'sign-in']);
+            }
         );
     }
 }

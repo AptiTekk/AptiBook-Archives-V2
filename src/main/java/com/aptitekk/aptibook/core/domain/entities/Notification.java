@@ -69,63 +69,27 @@ public class Notification extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
     @ManyToOne
-    private User user;
+    public User user;
 
-    private String subject;
+    public String subject;
 
-    private String body;
+    public String body;
 
-    private LocalDateTime creation = LocalDateTime.now();
+    public LocalDateTime creation = LocalDateTime.now();
 
-    private boolean notif_read = false;
+    public boolean notif_read = false;
 
     public Notification() {
         super();
     }
 
     public Notification(User user, String subject, String body) {
-        setUser(user);
-        setSubject(subject);
-        setBody(body);
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public User getUser() {
-        return user;
-    }
-
-    public void setUser(User user) {
         this.user = user;
-    }
-
-    public String getSubject() {
-        return subject;
-    }
-
-    public void setSubject(String subject) {
         this.subject = subject;
-    }
-
-    public String getBody() {
-        return body;
-    }
-
-    public void setBody(String body) {
         this.body = body;
-    }
-
-    public LocalDateTime getCreation() {
-        return creation;
     }
 
     public boolean getRead() {
@@ -146,15 +110,15 @@ public class Notification extends MultiTenantEntity implements Serializable {
 
         Notification other = (Notification) o;
 
-        return EqualsHelper.areEquals(getSubject(), other.getSubject())
-                && EqualsHelper.areEquals(getBody(), other.getBody())
-                && EqualsHelper.areEquals(getCreation(), other.getCreation())
-                && EqualsHelper.areEquals(getRead(), other.getRead());
+        return EqualsHelper.areEquals(subject, other.subject)
+                && EqualsHelper.areEquals(body, other.body)
+                && EqualsHelper.areEquals(creation, other.creation)
+                && EqualsHelper.areEquals(notif_read, other.notif_read);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getSubject(), getBody(), getCreation(), getRead());
+        return EqualsHelper.calculateHashCode(subject, body, creation, notif_read);
     }
 
 }

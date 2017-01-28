@@ -59,9 +59,9 @@ public class ResourceCategoryController extends APIControllerAbstract {
                 if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
                     return badRequest("The Name cannot contain these characters: < > ; =");
 
-                resourceCategory.setName(resourceCategoryDTO.name);
+                resourceCategory.name = resourceCategoryDTO.name;
                 resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
-                return created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/resourceCategories/" + resourceCategory.getId());
+                return created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/resourceCategories/" + resourceCategory.id);
             }
             return noPermission();
         }
@@ -99,7 +99,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
                         return badRequest("The Name must be 30 characters or less.");
                     if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
                         return badRequest("The Name cannot contain these characters: < > ; =");
-                    resourceCategory.setName(resourceCategoryDTO.name);
+                    resourceCategory.name = resourceCategoryDTO.name;
                 }
 
                 resourceCategory = this.resourceCategoryRepository.save(resourceCategory);

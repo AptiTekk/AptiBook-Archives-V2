@@ -30,7 +30,7 @@ public class PermissionRepository extends MultiTenantEntityRepositoryAbstract<Pe
 
             for (Permission permission : permissionsUserGroups) {
                 if (permissionsUsers.contains(permission))
-                    permissionsUsers.get(permissionsUsers.indexOf(permission)).setUserGroups(permission.getUserGroups());
+                    permissionsUsers.get(permissionsUsers.indexOf(permission)).userGroups = permission.userGroups;
             }
             return permissionsUsers;
         } catch (PersistenceException e) {
