@@ -34,22 +34,22 @@ var config = {
                 loader: 'json-loader'
             },
             {
-                test: /\.component\.html$/,
+                test: /\.(component|page)\.html$/,
                 loader: "to-string-loader!html-loader?-minimize"
             },
             {
                 test: /\.html$/,
                 loader: "html-loader?-minimize",
-                exclude: [/\.component\.html$/]
+                exclude: [/\.(component|page)\.html$/]
             },
             {
-                test: /\.component\.css$/,
+                test: /\.(component|page)\.css$/,
                 loader: "to-string-loader!css-loader"
             },
             {
                 test: /\.css(\?v=[\d\.]+)?$/,
                 loader: "style-loader!css-loader",
-                exclude: [/\.component\.css$/]
+                exclude: [/\.(component|page)\.css$/]
             },
             {
                 test: /\.(png|jpg|gif|svg)(\?v=[\d\.]+)?$/,
