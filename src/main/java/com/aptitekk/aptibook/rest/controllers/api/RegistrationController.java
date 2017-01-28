@@ -52,7 +52,10 @@ public class RegistrationController extends APIControllerAbstract{
         String code = PasswordGenerator.generateRandomPassword(16);
         newUser.verificationCode = code;
         newUser = userRepository.save(newUser);
-        Notification notification = new Notification(newUser, "Registration", "localhost:8080/verify?code=" + code); //add url with unique code here
+        Notification notification = new Notification(newUser, "Registration Verification", "<p>Hi! Someone (hopefully you) has registered an account with AptiBook using this email address. " +
+                "To cut down on spam, all we ask is that you click the link below to verify your account.</p>" +
+                "<p>If you did not intend to register with AptiBook, simply ignore this email and have a nice day!</p>" +
+                "<a href='" + "localhost:8080/" + newUser.getTenant().getSlug() + "'" + ">Verify Account</a>"); //add url with unique code here
         this.emailService.sendEmailNotification(notification);
         return created(modelMapper.map(newUser, UserDTO.class), "/register/");
     }
