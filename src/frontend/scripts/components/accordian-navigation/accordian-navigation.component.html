@@ -14,12 +14,13 @@
 	 [class.active]="link && active"
 	 (click)="onClick()">
 	<i *ngIf="children?.length > 0 && canCollapse"
-	   class="fa"
+	   class="navigation-block-caret fa"
 	   style="width: 10px;"
 	   [class.fa-caret-down]="expanded"
 	   [class.fa-caret-right]="!expanded"></i>
 	<i *ngIf="icon"
-	   class="fa fa-{{icon}}"></i> {{label ? label : ''}}
+	   class="navigation-block-icon fa fa-{{icon}}"></i>
+	<span class="navigation-block-label">{{label ? label : ''}}</span>
 </div>
 <div class="navigation-children"
 	 [class.expanded]="expanded || !canCollapse"

@@ -15,7 +15,7 @@ import {LoaderService} from "../../services/singleton/loader.service";
 @Component({
     selector: 'app-sidebar',
     templateUrl: 'sidebar.component.html',
-    styleUrls: ['sidebar.component.css']
+    styleUrls: ['sidebar.component.css', 'sidebar.mobile.component.css']
 })
 export class SidebarComponent implements OnInit {
 

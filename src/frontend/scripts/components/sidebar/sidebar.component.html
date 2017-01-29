@@ -9,7 +9,7 @@
 		<a href="#"
 		   [routerLink]="['', 'secure']"
 		   id="logo">
-			<img src="../../page-components/front-page/logo.svg"/>
+			<div id="logo-image"></div>
 		</a>
 	</div>
 	
@@ -19,8 +19,8 @@
 		 [routerLinkActive]="'active'">
 		<i class="fa fa-bell"
 		   aria-hidden="true"></i>
-		{{(unreadNotifications.length > 0 ? unreadNotifications.length + ' Unread Notification' : '0 Unread Notification')
-		+ (unreadNotifications.length === 1 ? '' : 's')}}
+		<span id="notifications-count-label">{{(unreadNotifications.length > 0 ? unreadNotifications.length + ' Unread Notification' : '0 Unread Notification')
+		+ (unreadNotifications.length === 1 ? '' : 's')}}</span>
 	</div>
 	
 	<div id="content">
@@ -77,7 +77,9 @@
 	<div id="user">
 		<i class="fa fa-user"
 		   aria-hidden="true"></i>
-		{{user?.fullName}}
+		
+		<span id="user-name">{{user?.fullName}}</span>
+		
 		<button id="sign-out-button"
 				(click)="onSignOut()"
 				class="btn-none">

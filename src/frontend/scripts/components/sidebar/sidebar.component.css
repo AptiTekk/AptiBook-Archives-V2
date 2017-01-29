@@ -23,10 +23,18 @@
     z-index: 1000;
 }
 
-#logo > img {
+#logo {
     width: 100%;
     padding: 10px;
     height: 70px;
+    display: block;
+}
+
+#logo-image {
+    width: 100%;
+    height: 100%;
+    background-size: contain;
+    background: url('../../page-components/front-page/logo.svg') no-repeat center center;
 }
 
 #notifications {
