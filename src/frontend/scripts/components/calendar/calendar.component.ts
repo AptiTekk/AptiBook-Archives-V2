@@ -29,6 +29,14 @@ import moment = require("moment");
 })
 export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
+    public static readonly VIEW_CALENDAR: string = "month";
+    public static readonly VIEW_WEEK: string = "basicWeek";
+    public static readonly VIEW_DAY: string = "basicDay";
+    public static readonly VIEW_AGENDA_WEEK: string = "agendaWeek";
+    public static readonly VIEW_AGENDA_DAY: string = "agendaDay";
+    public static readonly VIEW_LIST_MONTH: string = "listMonth";
+    public static readonly VIEW_LIST_WEEK: string = "listWeek";
+
     @ViewChild('calendarContainer')
     calendarContainer;
 
@@ -172,14 +180,19 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
         return '';
     }
 
-    private onPrev() {
+    public goPrevious() {
         if (this.calendar)
             this.calendar.fullCalendar('prev');
     }
 
-    private onNext() {
+    public goNext() {
         if (this.calendar)
             this.calendar.fullCalendar('next');
+    }
+
+    private setView(view: string) {
+        if (this.calendar)
+            this.calendar.fullCalendar('changeView', view);
     }
 
     private refreshCalendar(refreshEvents: boolean = false): void {

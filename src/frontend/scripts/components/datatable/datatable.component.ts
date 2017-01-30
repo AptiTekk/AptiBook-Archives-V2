@@ -4,16 +4,16 @@
  * Proprietary and confidential.
  */
 import {
-    Component,
-    ViewChild,
-    ElementRef,
-    ContentChildren,
-    QueryList,
-    AfterViewInit,
     AfterViewChecked,
-    Input,
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    ElementRef,
     EventEmitter,
-    Output
+    Input,
+    Output,
+    QueryList,
+    ViewChild
 } from "@angular/core";
 import {DataTableColumnComponent} from "./datatable-column/datatable-column.component";
 import DataTable = DataTables.DataTable;
@@ -39,32 +39,6 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
 
     @ContentChildren(DataTableColumnComponent) columns: QueryList<DataTableColumnComponent>;
 
-    /**
-     * Returns the number of rows needed for this table.
-     */
-    private get numRowsRequired(): number {
-        let numRows: number = 0;
-
-        this.columns.forEach(column => {
-            if (column.cells.length > numRows)
-                numRows = column.cells.length;
-        });
-
-        return numRows;
-    }
-
-    /**
-     * Returns the html content of the cell of the column for the current row, or an empty string if no cell exists.
-     * @param column The column which contains the cells.
-     * @param row The row of the cell.
-     */
-    private static getCellContentFromColumnByRow(column: DataTableColumnComponent, row: number): string {
-        if (column && column.cells.length > row)
-            return (<HTMLElement>column.cells.toArray()[row].viewRef.element.nativeElement).innerHTML;
-
-        return '';
-    }
-
     ngAfterViewInit(): void {
         // Initialize the table.
         this.initDataTable();
@@ -89,6 +63,74 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
         this.columns.changes.subscribe(() => this.scheduleRedraw(true));
 
         window.onresize = () => this.datatable.columns.adjust();
+    }
+
+    ngAfterViewChecked(): void {
+        // Re-draw the table if scheduled.
+        if (this.redrawOptions) {
+
+            // We must destroy the datatable to redraw any columns.
+            if (this.redrawOptions.invalidateColumns) {
+                this.datatable.destroy();
+                this.initDataTable();
+            } else { // Only need to clear data for redrawing only rows
+                this.datatable.clear();
+                this.datatable.rows.add(this.getRowsData());
+                this.datatable.draw();
+            }
+
+            this.redrawOptions = null;
+
+            if (this.selectedRow >= 0) {
+                this.datatable.row(this.selectedRow).select();
+            }
+
+            this.datatable.columns.adjust();
+        }
+    }
+
+    /**
+     * Initializes the DataTable
+     */
+    private initDataTable() {
+        this.datatable = $(this.dataTableContainer.nativeElement).DataTable(
+            <any>
+                {
+                    order: [],
+                    scrollY: this.bodyHeight,
+                    scrollCollapse: true,
+                    columns: this.getColumnsData(),
+                    data: this.getRowsData(),
+                    select: this.selectableRows ? 'single' : false,
+                    responsive: this.responsive
+                }
+        );
+    }
+
+    /**
+     * Returns the number of rows needed for this table.
+     */
+    private get numRowsRequired(): number {
+        let numRows: number = 0;
+
+        this.columns.forEach(column => {
+            if (column.cells.length > numRows)
+                numRows = column.cells.length;
+        });
+
+        return numRows;
+    }
+
+    /**
+     * Returns the html content of the cell of the column for the current row, or an empty string if no cell exists.
+     * @param column The column which contains the cells.
+     * @param row The row of the cell.
+     */
+    private static getCellContentFromColumnByRow(column: DataTableColumnComponent, row: number): string {
+        if (column && column.cells.length > row)
+            return (<HTMLElement>column.cells.toArray()[row].viewRef.element.nativeElement).innerHTML;
+
+        return '';
     }
 
     /**
@@ -120,48 +162,6 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
         }
 
         return dataArray;
-    }
-
-    /**
-     * Initializes the DataTable
-     */
-    private initDataTable() {
-        this.datatable = $(this.dataTableContainer.nativeElement).DataTable(
-            <any>
-                {
-                    order: [],
-                    scrollY: this.bodyHeight,
-                    scrollCollapse: true,
-                    columns: this.getColumnsData(),
-                    data: this.getRowsData(),
-                    select: this.selectableRows ? 'single' : false,
-                    responsive: this.responsive
-                }
-        );
-    }
-
-    ngAfterViewChecked(): void {
-        // Re-draw the table if scheduled.
-        if (this.redrawOptions) {
-
-            // We must destroy the datatable to redraw any columns.
-            if (this.redrawOptions.invalidateColumns) {
-                this.datatable.destroy();
-                this.initDataTable();
-            } else { // Only need to clear data for redrawing only rows
-                this.datatable.clear();
-                this.datatable.rows.add(this.getRowsData());
-                this.datatable.draw();
-            }
-
-            this.redrawOptions = null;
-
-            if (this.selectedRow >= 0) {
-                this.datatable.row(this.selectedRow).select();
-            }
-
-            this.datatable.columns.adjust();
-        }
     }
 
     /**
