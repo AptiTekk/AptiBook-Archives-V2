@@ -11,3 +11,4 @@ import "./bootstrap";
 import "./datatables";
 import "./datetimepicker";
 import "./fullcalendar";
+import "./hammerjs";

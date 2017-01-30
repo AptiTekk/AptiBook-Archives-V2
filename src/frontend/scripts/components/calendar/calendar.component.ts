@@ -5,15 +5,15 @@
  */
 
 import {
-    Component,
-    ViewChild,
     AfterViewInit,
-    Input,
-    Output,
+    Component,
     EventEmitter,
+    Input,
     OnChanges,
+    OnInit,
+    Output,
     SimpleChanges,
-    OnInit
+    ViewChild
 } from "@angular/core";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
@@ -58,9 +58,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     ngOnInit(): void {
         //Re-render and re-size calendar when window size is changed
-        window.onresize = (event) => {
-            this.refreshCalendar();
-        };
+        window.onresize = () => this.refreshCalendar();
     }
 
     ngAfterViewInit(): void {

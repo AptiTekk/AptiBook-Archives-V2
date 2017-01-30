@@ -6,50 +6,54 @@
 
 @media only screen and (max-width: 768px) {
 
-    #sidebar {
+    #sidebar.closed {
         width: 60px;
     }
 
-    #header {
+    #sidebar.closed #header {
         width: 75px;
     }
 
-    #logo-image {
+    #sidebar.closed #logo-image {
         background-image: url('../../../resources/splashscreen/logo.svg');
     }
 
-    #notifications {
+    #sidebar.closed #notifications {
         padding-left: 0;
     }
 
-    #notifications > .fa-bell {
+    #sidebar.closed #notifications > .fa-bell {
         width: 60px;
         text-align: center;
     }
 
-    #notifications-count-label {
+    #sidebar.closed #notifications-count-label {
         display: none;
     }
 
-    :host /deep/ #content accordian-navigation .navigation-block-label,
-    :host /deep/ #content accordian-navigation .navigation-block-caret {
+    :host /deep/ #sidebar.closed #content accordian-navigation .navigation-block-label,
+    :host /deep/ #sidebar.closed #content accordian-navigation .navigation-block-caret {
         display: none;
     }
 
     :host /deep/ #content accordian-navigation .navigation-block {
+        white-space: nowrap;
+    }
+
+    :host /deep/ #sidebar.closed #content accordian-navigation .navigation-block {
         padding-right: 0;
     }
 
-    #user {
+    #sidebar.closed #user {
         width: 60px;
     }
 
-    #user > .fa-user,
-    #user-name {
+    #sidebar.closed #user > .fa-user,
+    #sidebar.closed #user-name {
         display: none;
     }
 
-    #sign-out-button {
+    #sidebar.closed #sign-out-button {
         width: 60px;
     }
 

@@ -10,6 +10,8 @@
     position: fixed;
     z-index: 999;
     box-shadow: -5px 0 20px 0 #666;
+    background-color: #fff;
+    transition: width 0.1s ease-in-out;
 }
 
 #header {
@@ -47,6 +49,7 @@
     position: relative;
     z-index: 999;
     cursor: pointer;
+    white-space: nowrap;
 }
 
 #notifications.unread,
@@ -79,6 +82,8 @@
     bottom: 50px;
     left: 0;
     width: 260px;
+    transition: width 0.1s ease-in-out;
+    white-space: nowrap;
 }
 
 #sign-out-button {

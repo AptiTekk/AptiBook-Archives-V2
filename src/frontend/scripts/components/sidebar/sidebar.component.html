@@ -4,7 +4,10 @@
   ~ Proprietary and confidential.
   -->
 
-<div id="sidebar">
+<div id="sidebar"
+	 (swiperight)="onSwipeRight()"
+	 (swipeleft)="onSwipeLeft()"
+	 [class.closed]="!swipedOpen">
 	<div id="header">
 		<a href="#"
 		   [routerLink]="['', 'secure']"

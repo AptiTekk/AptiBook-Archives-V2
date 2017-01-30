@@ -86,9 +86,9 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
         });
 
         // Schedule a re-draw of the table any time the content changes.
-        this.columns.changes.subscribe(columns => {
-            this.scheduleRedraw(true)
-        });
+        this.columns.changes.subscribe(() => this.scheduleRedraw(true));
+
+        window.onresize = () => this.datatable.columns.adjust();
     }
 
     /**
