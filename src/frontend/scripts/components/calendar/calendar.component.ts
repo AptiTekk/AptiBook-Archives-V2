@@ -58,6 +58,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     @Input() title: string;
 
+    @Input() view: string;
+
     @Output() eventSelected: EventEmitter<any> = new EventEmitter<any>();
 
     @Output() daySelected: EventEmitter<Moment> = new EventEmitter<Moment>();
@@ -100,6 +102,10 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
                     case 'filterByUserGroupOwners':
                         this.refreshCalendar(true);
                         break;
+                    case 'view':
+                        this.setView(this.view);
+                        this.refreshCalendar(true);
+                        break;
                 }
             }
         } catch (ignored) {
@@ -120,6 +126,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             eventLimit: true, //"More" link below too many events on a day
             events: this.getEventsToUse(),
             timezone: 'local',
+            view: this.view ? this.view : CalendarComponent.VIEW_CALENDAR,
 
             eventRender: (event: Reservation, element) => {
                 if (event.status) {
@@ -190,9 +197,9 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             this.calendar.fullCalendar('next');
     }
 
-    private setView(view: string) {
+    public setView(view: string) {
         if (this.calendar)
-            this.calendar.fullCalendar('changeView', view);
+            this.calendar.fullCalendar('changeView', view ? view : CalendarComponent.VIEW_CALENDAR);
     }
 
     private refreshCalendar(refreshEvents: boolean = false): void {

@@ -43,6 +43,10 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 component: DashboardPageComponent
             },
             {
+                path: 'dashboard/:calendarView',
+                component: DashboardPageComponent
+            },
+            {
                 path: 'search-results',
                 canActivate: [SearchGuard],
                 children: [

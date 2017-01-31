@@ -7,10 +7,10 @@
 <div class="navigation-block"
 	 *ngIf="label || icon"
 	 [class.collapsible]="!link && canCollapse"
-	 [class.expanded]="!link && (expanded || !canCollapse)"
-	 [class.collapsed]="!link && (!expanded && canCollapse)"
+	 [class.expanded]="expanded || !canCollapse"
+	 [class.collapsed]="!expanded && canCollapse"
 	 [class.link]="link"
-	 [class.group]="!link"
+	 [class.group]="children?.length > 0"
 	 [class.active]="link && active"
 	 (click)="onClick()">
 	<i *ngIf="children?.length > 0 && canCollapse"

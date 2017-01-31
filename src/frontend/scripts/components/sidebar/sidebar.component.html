@@ -30,7 +30,20 @@
 		<accordian-navigation [canCollapse]="false">
 			<accordian-navigation [link]="['', 'secure', 'dashboard']"
 								  [icon]="'dashboard'"
-								  [label]="'Dashboard'">
+								  [label]="'Dashboard'"
+									[exactLinkMatching]="true">
+				<accordian-navigation [link]="['', 'secure', 'dashboard', 'basicWeek']"
+									  [icon]="'calendar'"
+									  [label]="'Week View'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'dashboard', 'basicDay']"
+									  [icon]="'calendar'"
+									  [label]="'Day View'">
+				</accordian-navigation>
+				<accordian-navigation [link]="['', 'secure', 'dashboard', 'agendaWeek']"
+									  [icon]="'calendar'"
+									  [label]="'Agenda View'">
+				</accordian-navigation>
 			</accordian-navigation>
 			<accordian-navigation [link]="['', 'secure', 'my', 'account']"
 								  [icon]="'user'"

@@ -35,6 +35,8 @@ export class AccordianNavigationComponent implements OnInit, AfterViewInit {
      */
     @Input() link: string[];
 
+    @Input() exactLinkMatching: boolean = false;
+
     /**
      * True if this link is active (and should be highlighted).
      * Updates automatically when the route changes.
@@ -70,7 +72,7 @@ export class AccordianNavigationComponent implements OnInit, AfterViewInit {
             this.router.events.subscribe(
                 event => {
                     if (event instanceof NavigationEnd) {
-                        this.active = this.router.isActive(this.router.createUrlTree(this.link), false);
+                        this.active = this.router.isActive(this.router.createUrlTree(this.link), this.exactLinkMatching);
                         if (this.active) {
                             this.expand()
                         }

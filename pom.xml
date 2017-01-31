@@ -15,23 +15,27 @@
     <version>dev-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <parent>
-        <groupId>org.springframework.boot</groupId>
-        <artifactId>spring-boot-starter-parent</artifactId>
-        <version>1.4.1.RELEASE</version>
-    </parent>
-
     <properties>
-        <spring-boot-version>1.2.5.RELEASE</spring-boot-version>
         <postgresql-version>9.4.1211</postgresql-version>
 
         <exec-maven-version>1.5.0</exec-maven-version>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
-
-        <!--suppress CheckTagEmptyBody -->
-        <script.extension></script.extension>
     </properties>
+
+    <repositories>
+        <repository>
+            <id>spring-libs-snapshot</id>
+            <name>Spring Snapshot Repository</name>
+            <url>http://repo.spring.io/libs-snapshot</url>
+        </repository>
+    </repositories>
+
+    <parent>
+        <groupId>org.springframework.boot</groupId>
+        <artifactId>spring-boot-starter-parent</artifactId>
+        <version>1.5.1.RELEASE</version>
+    </parent>
 
     <build>
         <finalName>aptibook</finalName>
@@ -52,10 +56,10 @@
                 <groupId>org.springframework.boot</groupId>
                 <artifactId>spring-boot-maven-plugin</artifactId>
                 <dependencies>
+                    <!-- Spring Loaded provides hot swapping capabilities -->
                     <dependency>
                         <groupId>org.springframework</groupId>
                         <artifactId>springloaded</artifactId>
-                        <version>${spring-boot-version}</version>
                     </dependency>
                 </dependencies>
             </plugin>

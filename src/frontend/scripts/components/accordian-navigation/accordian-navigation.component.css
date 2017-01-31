@@ -13,11 +13,6 @@
     color: #666;
 }
 
-.navigation-block.link.active {
-    background-color: #4272b7;
-    color: white;
-}
-
 .navigation-block.group.collapsible,
 .navigation-block.link {
     cursor: pointer;
@@ -30,6 +25,11 @@
 
 .navigation-block.group.expanded {
     background-color: #eee;
+}
+
+.navigation-block.link.active {
+    background-color: #4272b7;
+    color: white;
 }
 
 .navigation-children:not(.root) {

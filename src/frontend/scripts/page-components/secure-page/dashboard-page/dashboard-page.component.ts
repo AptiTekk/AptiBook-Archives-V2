@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component, trigger, state, style, transition, animate, ViewChild} from "@angular/core";
+import {Component, trigger, state, style, transition, animate, ViewChild, OnInit, AfterViewInit} from "@angular/core";
 import {Reservation} from "../../../models/reservation.model";
 import {APIService} from "../../../services/singleton/api.service";
 import {ReservationInfoModalComponent} from "../../../components/reservation-info-modal/reservation-info-modal.component";
@@ -12,24 +12,21 @@ import {AuthService} from "../../../services/singleton/auth.service";
 import {User} from "../../../models/user.model";
 import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
 import {ResourceCategory} from "../../../models/resource-category.model";
+import {ActivatedRoute} from "@angular/router";
+import {CalendarComponent} from "../../../components/calendar/calendar.component";
 
 @Component({
     selector: 'dashboard-page',
-    templateUrl: 'dashboard-page.component.html',
-    animations: [
-        trigger('sidebarDisplayStatus', [
-            state('visible', style({opacity: 1})),
-            state('hidden', style({overflow: 'hidden', opacity: 0, 'height': '0', 'pointer-events': 'none'})),
-            transition('* => *', animate('300ms'))
-        ])
-    ]
+    templateUrl: 'dashboard-page.component.html'
 })
-export class DashboardPageComponent {
+export class DashboardPageComponent implements OnInit, AfterViewInit {
 
     @ViewChild('reservationInfoModal')
     reservationInfoModal: ReservationInfoModalComponent;
 
-    makingNewReservation: boolean = false;
+    @ViewChild(CalendarComponent)
+    calendar: CalendarComponent;
+    calendarView: string;
 
     currentUser: User;
 
@@ -38,30 +35,49 @@ export class DashboardPageComponent {
 
     filterOnlyUsersEvents: boolean = false;
 
-    constructor(protected apiService: APIService, authService: AuthService, private resourceCategoryService: ResourceCategoryService) {
-        authService.getUser().subscribe(user => this.currentUser = user);
 
-        this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategory => {
-            this.resourceCategories = resourceCategory.map(category => {
+    constructor(protected apiService: APIService,
+                private authService: AuthService,
+                private resourceCategoryService: ResourceCategoryService,
+                private activatedRoute: ActivatedRoute) {
+    }
+
+    ngOnInit(): void {
+        // Get the currently signed in user.
+        this.authService.getUser().subscribe(user => this.currentUser = user);
+
+        // Get all the resource categories for the calendar filters.
+        this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategories => {
+            this.resourceCategories = resourceCategories.map(category => {
                 category['enabled'] = true;
                 return category;
             });
         });
     }
 
-    onCalendarEventClicked(event: Reservation) {
+    ngAfterViewInit(): void {
+        // Get the calendar view from the params (if there is one)
+        this.activatedRoute.params.subscribe(
+            params => {
+                if (params['calendarView']) {
+                    this.calendarView = params['calendarView'];
+                }
+            }
+        )
+    }
+
+    /**
+     * Called when an event on the calendar is clicked.
+     * @param event The reservation that was clicked.
+     */
+    onCalendarEventClicked(event: Reservation): void {
         this.reservationInfoModal.display(event);
     }
 
-    onNewReservationStart() {
-        this.makingNewReservation = true;
-    }
-
-    onCancelNewReservation() {
-        this.makingNewReservation = false;
-    }
-
-    updateEnabledResourceCategories() {
+    /**
+     * Ensures that the resource categories are never undefined, only an empty array.
+     */
+    updateEnabledResourceCategories(): void {
         this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
     }
 

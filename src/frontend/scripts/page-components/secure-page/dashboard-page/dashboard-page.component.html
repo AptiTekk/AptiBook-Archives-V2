@@ -19,6 +19,7 @@
 						  [hiddenStatuses]="['rejected', 'cancelled']"
 						  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
 						  [filterByResourceCategories]="enabledResourceCategories"
+						  [view]="calendarView"
 						  (eventSelected)="reservationInfoModal.display($event)"
 						  (daySelected)="newReservationModal.display($event)"></calendar>
 			</div>
