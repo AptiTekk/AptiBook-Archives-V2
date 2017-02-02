@@ -249,7 +249,7 @@ public class DemoTenantBuilder {
                 "Book Fair",
                 Reservation.Status.APPROVED,
                 library,
-                28, 30,
+                25, 28,
                 8, 30,
                 15, 0
         );

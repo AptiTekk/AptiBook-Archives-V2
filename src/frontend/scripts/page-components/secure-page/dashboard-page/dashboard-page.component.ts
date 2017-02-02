@@ -12,7 +12,7 @@ import {AuthService} from "../../../services/singleton/auth.service";
 import {User} from "../../../models/user.model";
 import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
 import {ResourceCategory} from "../../../models/resource-category.model";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, UrlSegment} from "@angular/router";
 import {CalendarComponent} from "../../../components/calendar/calendar.component";
 
 @Component({
@@ -56,14 +56,25 @@ export class DashboardPageComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        // Get the calendar view from the params (if there is one)
-        this.activatedRoute.params.subscribe(
-            params => {
-                if (params['calendarView']) {
-                    this.calendarView = params['calendarView'];
-                }
+        // Get the calendar view from the path.
+        this.activatedRoute.url.subscribe(
+            url => {
+                let lastSegment: UrlSegment = url.pop();
+
+                if (lastSegment)
+                    switch (lastSegment.path) {
+                        case 'week':
+                            this.calendarView = CalendarComponent.VIEW_WEEK;
+                            break;
+                        case 'day':
+                            this.calendarView = CalendarComponent.VIEW_DAY;
+                            break;
+                        case 'agenda':
+                            this.calendarView = CalendarComponent.VIEW_AGENDA_WEEK;
+                            break;
+                    }
             }
-        )
+        );
     }
 
     /**

@@ -43,7 +43,15 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 component: DashboardPageComponent
             },
             {
-                path: 'dashboard/:calendarView',
+                path: 'dashboard/day',
+                component: DashboardPageComponent
+            },
+            {
+                path: 'dashboard/week',
+                component: DashboardPageComponent
+            },
+            {
+                path: 'dashboard/agenda',
                 component: DashboardPageComponent
             },
             {
