@@ -105,19 +105,15 @@ export class AccordianNavigationComponent implements OnInit, AfterViewInit {
     }
 
     onClick(): void {
-        // This navigation is not a link.
-        if (!this.link) {
-            // If it's a link or it can't collapse, we don't want to do anything to it.
-            if (this.canCollapse) {
-                if (this.expanded)
-                    this.collapse();
-                else
-                    this.expand();
-            }
-        } else {
-            // This navigation is a link.
-            this.router.navigate(this.link);
+        if (this.canCollapse) {
+            if (this.expanded)
+                this.collapse();
+            else
+                this.expand();
         }
+
+        if (this.link)
+            this.router.navigate(this.link);
     }
 
     protected expand(): void {

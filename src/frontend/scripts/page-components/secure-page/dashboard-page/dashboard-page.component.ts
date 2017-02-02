@@ -19,14 +19,13 @@ import {CalendarComponent} from "../../../components/calendar/calendar.component
     selector: 'dashboard-page',
     templateUrl: 'dashboard-page.component.html'
 })
-export class DashboardPageComponent implements OnInit, AfterViewInit {
+export class DashboardPageComponent implements OnInit {
 
     @ViewChild('reservationInfoModal')
     reservationInfoModal: ReservationInfoModalComponent;
 
     @ViewChild(CalendarComponent)
     calendar: CalendarComponent;
-    calendarView: string;
 
     currentUser: User;
 
@@ -53,28 +52,6 @@ export class DashboardPageComponent implements OnInit, AfterViewInit {
                 return category;
             });
         });
-    }
-
-    ngAfterViewInit(): void {
-        // Get the calendar view from the path.
-        this.activatedRoute.url.subscribe(
-            url => {
-                let lastSegment: UrlSegment = url.pop();
-
-                if (lastSegment)
-                    switch (lastSegment.path) {
-                        case 'week':
-                            this.calendarView = CalendarComponent.VIEW_WEEK;
-                            break;
-                        case 'day':
-                            this.calendarView = CalendarComponent.VIEW_DAY;
-                            break;
-                        case 'agenda':
-                            this.calendarView = CalendarComponent.VIEW_AGENDA_WEEK;
-                            break;
-                    }
-            }
-        );
     }
 
     /**

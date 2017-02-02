@@ -40,19 +40,20 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
         children: [
             {
                 path: 'dashboard',
-                component: DashboardPageComponent
-            },
-            {
-                path: 'dashboard/day',
-                component: DashboardPageComponent
-            },
-            {
-                path: 'dashboard/week',
-                component: DashboardPageComponent
-            },
-            {
-                path: 'dashboard/agenda',
-                component: DashboardPageComponent
+                children: [
+                    {
+                        path: '',
+                        component: DashboardPageComponent
+                    },
+                    {
+                        path: 'upcoming',
+                        component: DashboardPageComponent //TODO: New component
+                    },
+                    {
+                        path: '**',
+                        redirectTo: ''
+                    }
+                ]
             },
             {
                 path: 'search-results',

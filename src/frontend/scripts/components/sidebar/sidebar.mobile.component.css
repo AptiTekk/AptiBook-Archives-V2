@@ -10,7 +10,8 @@
         width: 60px;
     }
 
-    #sidebar.closed #header {
+    #sidebar.closed #header,
+    #sidebar.closed #logo {
         width: 75px;
     }
 
