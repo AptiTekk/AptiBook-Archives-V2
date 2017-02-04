@@ -10,11 +10,13 @@ import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Reservation;
 import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.repositories.ReservationDecisionRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
+import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
@@ -39,7 +41,7 @@ public class ReservationController extends APIControllerAbstract {
     private final ReservationDecisionRepository reservationDecisionRepository;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService) {
+    public ReservationController(ReservationRepository reservationRepository, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService, UserGroupService userGroupService, ReservationDecisionRepository reservationDecisionRepository) {
         this.reservationRepository = reservationRepository;
         this.resourceRepository = resourceRepository;
         this.userRepository = userRepository;
@@ -98,8 +100,8 @@ public class ReservationController extends APIControllerAbstract {
         return unauthorized();
     }
 
-    @RequestMapping(value = "/reservations/pending", method = RequestMethod.GET)
-    public ResponseEntity<?> getPendingReservations() {
+    // @RequestMapping(value = "/reservations/pending", method = RequestMethod.GET)
+    //  public ResponseEntity<?> getPendingReservations() {
 
 /*    private void init() {
         reservations = new ArrayList<>();

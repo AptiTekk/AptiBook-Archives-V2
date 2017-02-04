@@ -55,7 +55,7 @@ public class RegistrationController extends APIControllerAbstract{
         Notification notification = new Notification(newUser, "Registration Verification", "<p>Hi! Someone (hopefully you) has registered an account with AptiBook using this email address. " +
                 "To cut down on spam, all we ask is that you click the link below to verify your account.</p>" +
                 "<p>If you did not intend to register with AptiBook, simply ignore this email and have a nice day!</p>" +
-                "<a href='" + "localhost:8080/" + newUser.getTenant().getSlug() + "'" + ">Verify Account</a>"); //add url with unique code here
+                "<p><a href='" + "localhost:8080/" + newUser.getTenant().getSlug() + "'" + ">Verify Account</a></p>"); //add url with unique code here
         this.emailService.sendEmailNotification(notification);
         return created(modelMapper.map(newUser, UserDTO.class), "/register/");
     }
