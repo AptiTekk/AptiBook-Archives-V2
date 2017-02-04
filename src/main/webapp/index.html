@@ -1,1 +1,126 @@
-<!DOCTYPE html><html><head><title>AptiBook</title><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script type="text/javascript">var pathSplit=window.location.pathname.split("/"),tenantSlug=pathSplit.length>=2?pathSplit[1]:"";document.write("<meta name='tenant' content='"+tenantSlug+"' />"),document.write("<base href='/"+tenantSlug+"' />")</script><link rel="apple-touch-icon" sizes="180x180" href="./resources/images/cd5608e5af461b5ff1068f88360b6524.png"><link rel="icon" type="image/png" href="./resources/images/bf03ee5091a4e42860c4d7df9c32e8d4.png" sizes="32x32"><link rel="icon" type="image/png" href="./resources/images/72a34bc8d12bfb760e9b25076b8668d6.png" sizes="194x194"><link rel="icon" type="image/png" href="./resources/images/fc83aa0487721906071662aaa6516e97.png" sizes="192x192"><link rel="icon" type="image/png" href="./resources/images/26dafc7188fd372dd713d5e24d5eefb9.png" sizes="16x16"><link rel="manifest" href="[object Object]"><link rel="mask-icon" href="./resources/images/19022f0778177ae206b5586c4b48c900.svg" color="#4272b7"><meta name="theme-color" content="#ffffff"><link href="https://fonts.googleapis.com/css?family=Droid+Sans|Roboto:300,400|Ubuntu" rel="stylesheet"><script type="text/javascript">!function(e,t,a,n,c,o,s){e.GoogleAnalyticsObject=c,e[c]=e[c]||function(){(e[c].q=e[c].q||[]).push(arguments)},e[c].l=1*new Date,o=t.createElement(a),s=t.getElementsByTagName(a)[0],o.async=1,o.src=n,s.parentNode.insertBefore(o,s)}(window,document,"script","https://www.google-analytics.com/analytics.js","ga"),ga("create","UA-46481658-2","auto"),ga("send","pageview")</script><style type="text/css">body>app:empty{background-color:rgba(66,114,183,.3)}#splashscreen{width:100%;height:100%;position:fixed;top:0;left:0;opacity:0;pointer-events:none;transition:opacity linear .5s}app:empty+#splashscreen{opacity:1}#splashscreen-background{width:100%;height:100%;position:fixed;top:0;left:0;background:url(./resources/images/aba73c2b147967b1cac9c7255b4bd1eb.jpg) no-repeat bottom center;background-size:cover;z-index:10000;animation:fadein 1s}#splashscreen-color-overlay{width:100%;height:100%;position:fixed;top:0;left:0;z-index:10001;background-color:rgba(66,114,183,.3)}#splashscreen-foreground{width:100%;height:100%;position:fixed;top:0;left:0;z-index:10002;background:url(./resources/images/80570fe6c3f0002db11f1e3499e8afee.svg) no-repeat center center;background-size:15%!important;animation:fadein 1s}@media (max-width:767px){#splashscreen-foreground{background-size:50%!important}}@keyframes fadein{from{opacity:0}to{opacity:1}}</style><link rel="shortcut icon" href="favicon.ico"></head><body><app></app><div id="splashscreen"><div id="splashscreen-background"></div><div id="splashscreen-color-overlay"></div><div id="splashscreen-foreground"></div></div><script type="text/javascript" src="./resources/scripts/polyfills-2d3b76ed5e6414df388f.js"></script><script type="text/javascript" src="./resources/scripts/vendor-07416ee2f8c39c4390ef.js"></script><script type="text/javascript" src="./resources/scripts/main-05ab424d484446fc2454.js"></script></body></html>
+<!DOCTYPE html>
+<html>
+<head><title>AptiBook</title>
+	<meta charset="UTF-8">
+	<meta name="viewport"
+		  content="width=device-width,initial-scale=1">
+	<script type="text/javascript">var pathSplit = window.location.pathname.split("/"), tenantSlug = pathSplit.length >= 2 ? pathSplit[1] : "";
+    document.write("<meta name='tenant' content='" + tenantSlug + "' />"), document.write("<base href='/" + tenantSlug + "' />")</script>
+	<link rel="apple-touch-icon"
+		  sizes="180x180"
+		  href="./resources/images/cd5608e5af461b5ff1068f88360b6524.png">
+	<link rel="icon"
+		  type="image/png"
+		  href="./resources/images/bf03ee5091a4e42860c4d7df9c32e8d4.png"
+		  sizes="32x32">
+	<link rel="icon"
+		  type="image/png"
+		  href="./resources/images/72a34bc8d12bfb760e9b25076b8668d6.png"
+		  sizes="194x194">
+	<link rel="icon"
+		  type="image/png"
+		  href="./resources/images/fc83aa0487721906071662aaa6516e97.png"
+		  sizes="192x192">
+	<link rel="icon"
+		  type="image/png"
+		  href="./resources/images/26dafc7188fd372dd713d5e24d5eefb9.png"
+		  sizes="16x16">
+	<link rel="manifest"
+		  href="[object Object]">
+	<link rel="mask-icon"
+		  href="./resources/images/19022f0778177ae206b5586c4b48c900.svg"
+		  color="#4272b7">
+	<meta name="theme-color"
+		  content="#ffffff">
+	<link href="https://fonts.googleapis.com/css?family=Droid+Sans|Roboto:300,400|Ubuntu"
+		  rel="stylesheet">
+	<script type="text/javascript">!function (e, t, a, n, c, o, s) {
+        e.GoogleAnalyticsObject = c, e[c] = e[c] || function () {
+                (e[c].q = e[c].q || []).push(arguments)
+            }, e[c].l = 1 * new Date, o = t.createElement(a), s = t.getElementsByTagName(a)[0], o.async = 1, o.src = n, s.parentNode.insertBefore(o, s)
+    }(window, document, "script", "https://www.google-analytics.com/analytics.js", "ga"), ga("create", "UA-46481658-2", "auto"), ga("send", "pageview")</script>
+	<style type="text/css">body > app:empty {
+		background-color: rgba(66, 114, 183, .3)
+	}
+	
+	#splashscreen {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		opacity: 0;
+		pointer-events: none;
+		transition: opacity linear .5s
+	}
+	
+	app:empty + #splashscreen {
+		opacity: 1
+	}
+	
+	#splashscreen-background {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		background: url(resources/images/aba73c2b147967b1cac9c7255b4bd1eb.jpg) no-repeat bottom center;
+		background-size: cover;
+		z-index: 10000;
+		animation: fadein 1s
+	}
+	
+	#splashscreen-color-overlay {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 10001;
+		background-color: rgba(66, 114, 183, .3)
+	}
+	
+	#splashscreen-foreground {
+		width: 100%;
+		height: 100%;
+		position: fixed;
+		top: 0;
+		left: 0;
+		z-index: 10002;
+		background: url(resources/images/80570fe6c3f0002db11f1e3499e8afee.svg) no-repeat center center;
+		background-size: 15% !important;
+		animation: fadein 1s
+	}
+	
+	@media (max-width: 767px) {
+		#splashscreen-foreground {
+			background-size: 50% !important
+		}
+	}
+	
+	@keyframes fadein {
+		from {
+			opacity: 0
+		}
+		to {
+			opacity: 1
+		}
+	}</style>
+	<link rel="shortcut icon"
+		  href="favicon.ico">
+</head>
+<body>
+<app></app>
+<div id="splashscreen">
+	<div id="splashscreen-background"></div>
+	<div id="splashscreen-color-overlay"></div>
+	<div id="splashscreen-foreground"></div>
+</div>
+<script type="text/javascript"
+		src="./resources/scripts/polyfills-67e8cd69b41a1d1d876d.js"></script>
+<script type="text/javascript"
+		src="./resources/scripts/vendor-81f70ef4f6a606472315.js"></script>
+<script type="text/javascript"
+		src="./resources/scripts/main-d2da55df68e27ac664db.js"></script>
+</body>
+</html>
