@@ -3,10 +3,9 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, ViewChild, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {UserGroupService} from "../../../../services/singleton/usergroup.service";
 import {UserGroup} from "../../../../models/user-group.model";
-import {APIService} from "../../../../services/singleton/api.service";
 import {ResourceCategoryService} from "../../../../services/singleton/resource-category.service";
 import {ReservationInfoModalComponent} from "../../../../components/reservation-info-modal/reservation-info-modal.component";
 import {User} from "../../../../models/user.model";
@@ -29,7 +28,6 @@ export class CalendarPageComponent implements OnInit {
     filterOnlyUsersEvents: boolean = false;
 
     constructor(private userGroupService: UserGroupService,
-                private apiService: APIService,
                 private resourceCategoryService: ResourceCategoryService,
                 private authService: AuthService) {
     }
@@ -39,19 +37,27 @@ export class CalendarPageComponent implements OnInit {
         // Get user and hierarchy down
         this.authService.getUser().subscribe(user => {
             this.currentUser = user;
+            this.userGroupOwnerFilter = [];
+
             if (user)
-                this.userGroupService.getUserGroupHierarchyDown(user).take(1).subscribe(
-                    response => this.userGroupOwnerFilter = response
-                );
+                user.userGroups.forEach(userGroup => {
+                    this.userGroupService.getUserGroupHierarchyDown(userGroup)
+                        .take(1)
+                        .subscribe(
+                            hierarchyGroups => this.userGroupOwnerFilter.push(...hierarchyGroups)
+                        );
+                });
         });
 
         // Get Resource Categories
-        this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategory => {
-            this.resourceCategories = resourceCategory.map(category => {
-                category['enabled'] = true;
-                return category;
+        this.resourceCategoryService.getResourceCategories()
+            .take(1)
+            .subscribe(resourceCategories => {
+                this.resourceCategories = resourceCategories.map(category => {
+                    category['enabled'] = true;
+                    return category;
+                });
             });
-        });
     }
 
     onCalendarEventClicked(event: Reservation) {

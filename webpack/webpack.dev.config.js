@@ -11,9 +11,9 @@ var path = require('path');
 config.devtool = 'source-map';
 config.output = {
     path: path.join(__dirname, '../src/main/webapp/'),
-    filename: './packed/scripts/[name].bundle.js',
-    sourceMapFilename: './packed/scripts/[name].map',
-    chunkFilename: './packed/scripts/[id].chunk.js'
+    filename: './resources/scripts/[name]-[chunkhash].js',
+    sourceMapFilename: './resources/scripts/[name]-[chunkhash].map',
+    chunkFilename: './resources/scripts/[id].chunk.js'
 };
 
 module.exports = config;

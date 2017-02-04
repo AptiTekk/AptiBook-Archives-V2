@@ -1,14 +1,14 @@
-import {Component, trigger, ViewEncapsulation} from "@angular/core";
+import {Component} from "@angular/core";
 import {Reservation} from "../../../../models/reservation.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {ReservationService} from "../../../../services/singleton/reservation.service";
 
 @Component({
-    selector: 'upcoming-reservations-panel',
-    templateUrl: 'upcoming-reservations-panel.component.html',
-    styleUrls: ['upcoming-reservations-panel.component.css']
+    selector: 'upcoming-reservations',
+    templateUrl: 'upcoming-reservations.component.html',
+    styleUrls: ['upcoming-reservations.component.css']
 })
-export class UpcomingReservationsPanelComponent {
+export class UpcomingReservationsComponent {
 
     reservations: Reservation[];
 

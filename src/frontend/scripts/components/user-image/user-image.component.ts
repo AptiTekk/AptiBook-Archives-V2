@@ -13,7 +13,7 @@ import {User} from "../../models/user.model";
 })
 export class UserImageComponent {
 
-    noImageUrl: string = "/static/user-no-image.svg";
+    noImageUrl: string = require("../../../resources/user-no-image.svg");
 
     @Input() user: User;
 

@@ -5,7 +5,7 @@
  */
 
 .spacer {
-    height: 70px;
+    height: 50px;
 }
 
 .footer {
@@ -14,9 +14,9 @@
     position: fixed;
     bottom: 0;
     font-family: "Droid Sans", sans-serif;
-    z-index: 999;
+    z-index: 1000;
     background-color: #4272b7;
-    padding-top: 8px;
+    padding: 8px 0;
     box-shadow: #aaa 0 10px 25px 0;
 }
 

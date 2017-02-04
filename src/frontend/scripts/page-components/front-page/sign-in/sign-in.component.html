@@ -4,32 +4,43 @@
   ~ Proprietary and confidential.
   -->
 
-<form id="loginForm" [formGroup]="signInFormGroup" (submit)="onSubmit()">
-    <alert #loginAlert [severity]="'danger'"></alert>
-
-    <form-group [control]="signInFormGroup.controls['emailAddress']"
-                [label]="'Email Address'"
-                [faIconName]="'at'"
-                [autoFocus]="true">
-    </form-group>
-
-    <form-group [control]="signInFormGroup.controls['password']"
-                [label]="'Password'"
-                [faIconName]="'asterisk'"
-                [inputType]="'password'">
-    </form-group>
-
-    <div class="form-group">
-        <button class="btn btn-primary btn-large btn-block" [disabled]="signInFormGroup.invalid">Sign In</button>
-    </div>
+<form id="loginForm"
+	  [formGroup]="signInFormGroup"
+	  (submit)="onSubmit()">
+	<alert #loginAlert
+		   [severity]="'danger'"></alert>
+	
+	<form-group [control]="signInFormGroup.controls['emailAddress']"
+				[label]="'Email Address'"
+				[faIconName]="'at'"
+				[autoFocus]="true">
+	</form-group>
+	
+	<form-group [control]="signInFormGroup.controls['password']"
+				[label]="'Password'"
+				[faIconName]="'asterisk'"
+				[inputType]="'password'">
+	</form-group>
+	
+	<div class="form-group">
+		<button class="btn btn-primary btn-large btn-block"
+				[disabled]="signInFormGroup.invalid">Sign In
+		</button>
+	</div>
 </form>
 
 <div class="form-group">
-    <button class="btn btn-default btn-block" *ngIf="googleSignInUrl" (click)="onGoogleSignIn()">
-        <img src="./google-sign-in.svg" height="18px"/>
-    </button>
+	<button class="btn btn-default btn-block"
+			*ngIf="googleSignInUrl"
+			(click)="onGoogleSignIn()">
+		<img src="./google-sign-in.svg"
+			 height="18px"/>
+	</button>
 </div>
 
 <hr/>
 
-<button [routerLink]="['/register']" class="btn btn-default btn-block">Register</button>
+<button [routerLink]="['', 'register']"
+		class="btn btn-default btn-block">
+	Register
+</button>

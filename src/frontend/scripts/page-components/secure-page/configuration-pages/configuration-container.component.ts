@@ -12,9 +12,4 @@ import {HeaderComponent} from "../../../components/header/header.component";
 })
 export class ConfigurationContainerComponent {
 
-    //noinspection JSMethodCanBeStatic
-    get configurationLinks() {
-        return HeaderComponent.CONFIGURATION_LINKS;
-    }
-
 }
