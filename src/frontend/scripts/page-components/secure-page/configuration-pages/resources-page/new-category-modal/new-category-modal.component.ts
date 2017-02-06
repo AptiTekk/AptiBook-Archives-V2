@@ -3,31 +3,52 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, ViewChild, Output, EventEmitter} from "@angular/core";
+import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ResourceCategoryService} from "../../../../../services/singleton/resource-category.service";
 import {LoaderService} from "../../../../../services/singleton/loader.service";
+import {ResourceCategory} from "../../../../../models/resource-category.model";
+import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
 
 @Component({
     selector: 'new-category-modal',
     templateUrl: 'new-category-modal.component.html'
 })
-export class NewCategoryModalComponent {
+export class NewCategoryModalComponent implements OnInit {
 
     @ViewChild('modal')
     modal: ModalComponent;
 
-    @Output() submitted: EventEmitter<{name: string}> = new EventEmitter<{name: string}>();
+    @Output() submitted: EventEmitter<{ name: string }> = new EventEmitter<{ name: string }>();
 
     formGroup: FormGroup;
 
-    constructor(formBuilder: FormBuilder,
+    constructor(private formBuilder: FormBuilder,
                 protected resourceCategoryService: ResourceCategoryService,
                 protected loaderService: LoaderService) {
-        this.formGroup = formBuilder.group({
-            name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
+
+    }
+
+    ngOnInit(): void {
+        this.formGroup = this.formBuilder.group({
+            name: null
         });
+
+        this.resourceCategoryService
+            .getResourceCategories()
+            .subscribe(
+                categories => {
+                    this.formGroup = this.formBuilder.group({
+                        name: [null, Validators.compose([
+                            Validators.required,
+                            Validators.maxLength(30),
+                            Validators.pattern("[^<>;=]*"),
+                            UniquenessValidator.isUnique(categories ? categories.map(category => category.name) : [])
+                        ])]
+                    });
+                }
+            );
     }
 
     public open() {
