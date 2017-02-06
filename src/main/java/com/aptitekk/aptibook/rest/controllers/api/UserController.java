@@ -70,7 +70,6 @@ public class UserController extends APIControllerAbstract {
         return noPermission();
     }
 
-
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
         if (userDTO != null) {

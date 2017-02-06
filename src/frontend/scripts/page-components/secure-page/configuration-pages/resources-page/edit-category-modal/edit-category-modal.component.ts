@@ -49,15 +49,19 @@ export class EditCategoryModalComponent implements OnInit {
 
     public open(category: ResourceCategory) {
         this.resourceCategory = category;
+        this.resetFormGroup();
+        this.modal.openModal();
+    }
+
+    private resetFormGroup() {
         this.formGroup = this.formBuilder.group({
-            name: [category.name, Validators.compose([
+            name: [this.resourceCategory.name, Validators.compose([
                 Validators.required,
                 Validators.maxLength(30),
                 Validators.pattern("[^<>;=]*"),
                 UniquenessValidator.isUnique(this.resourceCategories ? this.resourceCategories.filter(category => category.id !== this.resourceCategory.id).map(category => category.name) : [])
             ])]
         });
-        this.modal.openModal();
     }
 
     onCategorySubmitted() {

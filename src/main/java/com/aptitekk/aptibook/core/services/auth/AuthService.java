@@ -127,10 +127,7 @@ public class AuthService {
      */
     public boolean doesCurrentUserHavePermission(Permission.Descriptor descriptor) {
         User currentUser = getCurrentUser();
-        return currentUser != null &&
-                (currentUser.isAdmin()
-                        || permissionService.userHasPermission(currentUser, descriptor)
-                        || permissionService.userHasPermission(currentUser, Permission.Descriptor.GENERAL_FULL_PERMISSIONS));
+        return currentUser != null && permissionService.userHasPermission(currentUser, descriptor);
     }
 
     /**
@@ -141,10 +138,7 @@ public class AuthService {
      */
     public boolean doesCurrentUserHavePermissionOfGroup(Permission.Group group) {
         User currentUser = getCurrentUser();
-        return currentUser != null &&
-                (currentUser.isAdmin()
-                        || permissionService.userHasPermissionOfGroup(currentUser, group)
-                        || permissionService.userHasPermission(currentUser, Permission.Descriptor.GENERAL_FULL_PERMISSIONS));
+        return currentUser != null && permissionService.userHasPermissionOfGroup(currentUser, group);
     }
 
 }

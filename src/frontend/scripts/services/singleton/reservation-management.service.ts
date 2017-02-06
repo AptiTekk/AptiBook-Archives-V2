@@ -94,7 +94,7 @@ export class ReservationManagementService {
         let organizedReservation: ReservationWithOrganizedDecisions = reservation;
 
         // Start by cloning the root group. (Instead of making a bunch of unnecessary requests)
-        let rootGroup: UserGroupWithDecision = jQuery.extend(true, {}, this.rootUserGroup);
+        let rootGroup: UserGroupWithDecision = jQuery.extend({}, {}, this.rootUserGroup);
 
         // Add a queue. We will traverse down the tree.
         let userGroupTraversalQueue = new PriorityQueue<UserGroupWithDecision>();

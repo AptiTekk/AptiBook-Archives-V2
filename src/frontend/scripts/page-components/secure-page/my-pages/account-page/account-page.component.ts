@@ -4,12 +4,12 @@
  * Proprietary and confidential.
  */
 
-import {Component, ViewChild, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
 import {UserService} from "../../../../services/singleton/user.service";
 import {AlertComponent} from "../../../../components/alert/alert.component";
-import {FormGroup, FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 
 @Component({
     selector: 'my-account-page',
@@ -51,12 +51,16 @@ export class AccountPageComponent implements OnInit {
     }
 
     onPersonalInformationSubmit(changingPassword: boolean = false) {
-        this.user.firstName = this.personalInformation.controls['firstName'].value;
-        this.user.lastName = this.personalInformation.controls['lastName'].value;
-        this.user.phoneNumber = this.personalInformation.controls['phoneNumber'].value;
-        this.user.location = this.personalInformation.controls['location'].value;
 
-        this.userService.patchUser(this.user, changingPassword).take(1).subscribe(user => {
+        let updatedUser: User = jQuery.extend({}, {}, this.user);
+
+        updatedUser.firstName = this.personalInformation.controls['firstName'].value;
+        updatedUser.lastName = this.personalInformation.controls['lastName'].value;
+        updatedUser.phoneNumber = this.personalInformation.controls['phoneNumber'].value;
+        updatedUser.location = this.personalInformation.controls['location'].value;
+        updatedUser.userGroups = null;
+
+        this.userService.patchUser(updatedUser, changingPassword).take(1).subscribe(user => {
             if (user) {
                 this.authService.reloadUser();
                 if (!changingPassword)
@@ -67,7 +71,7 @@ export class AccountPageComponent implements OnInit {
             else {
                 this.errorAlert.display("Unfortunately, we could not update your Account Settings.");
             }
-        })
+        });
     }
 
     onChangePasswordSubmit() {

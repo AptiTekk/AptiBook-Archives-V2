@@ -6,159 +6,45 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.*;
-import com.aptitekk.aptibook.core.domain.repositories.FileRepository;
+import com.aptitekk.aptibook.core.domain.entities.Permission;
+import com.aptitekk.aptibook.core.domain.entities.Resource;
+import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
-import com.aptitekk.aptibook.core.services.entity.UserGroupService;
-import com.aptitekk.aptibook.core.util.ImageHelper;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
-import net.coobird.thumbnailator.geometry.Positions;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 
-import javax.imageio.ImageIO;
-import java.awt.image.BufferedImage;
-import java.io.IOException;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 @APIController
 public class ResourceController extends APIControllerAbstract {
 
-    private static final List<String> ACCEPTED_IMAGE_TYPES = Arrays.asList("image/jpeg", "image/pjpeg", "image/png");
-
     private final ResourceRepository resourceRepository;
     private final ResourceCategoryRepository resourceCategoryRepository;
-    private final FileRepository fileRepository;
     private final UserGroupRepository userGroupRepository;
-    private final UserGroupService userGroupService;
     private final ReservationService reservationService;
 
     @Autowired
     public ResourceController(ResourceRepository resourceRepository,
                               ResourceCategoryRepository resourceCategoryRepository,
-                              FileRepository fileRepository,
                               UserGroupRepository userGroupRepository,
-                              UserGroupService userGroupService,
                               ReservationService reservationService) {
         this.resourceRepository = resourceRepository;
         this.resourceCategoryRepository = resourceCategoryRepository;
-        this.fileRepository = fileRepository;
         this.userGroupRepository = userGroupRepository;
-        this.userGroupService = userGroupService;
         this.reservationService = reservationService;
-    }
-
-    @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<?> getImage(@PathVariable Long id) {
-        if (authService.isUserSignedIn()) {
-            if (id != null) {
-                Resource resource = resourceRepository.findInCurrentTenant(id);
-                if (resource != null) {
-                    if (resource.image != null && resource.image.data != null) {
-                        return ok(resource.image.data);
-                    }
-                }
-            }
-        }
-
-        return noContent();
-    }
-
-    @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<?> setImage(@PathVariable Long id, @RequestPart("file") MultipartFile multipartFile) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
-        Resource resource = resourceRepository.findInCurrentTenant(id);
-
-        if (!canUserEditResource(resource, authService.getCurrentUser()))
-            return noPermission();
-
-        if (multipartFile == null)
-            return badRequest("No image supplied.");
-        else if (multipartFile.getSize() > 5000000)
-            return badRequest("Image cannot be larger than 5MB.");
-        else if (!ACCEPTED_IMAGE_TYPES.contains(multipartFile.getContentType()))
-            return badRequest("Image type not supported.");
-        else {
-            try {
-                // Read the image
-                BufferedImage bufferedImage = ImageIO.read(multipartFile.getInputStream());
-
-                // Remove alpha
-                bufferedImage = ImageHelper.removeAlpha(bufferedImage);
-
-                // Make sure the image is at max 1024px wide or tall.
-                bufferedImage = ImageHelper.scaleDownImageToBounds(bufferedImage, 1024);
-
-                // Crop the image to a square
-                bufferedImage = ImageHelper.cropToSquare(bufferedImage, Positions.CENTER);
-
-                // Parse as a JPEG
-                byte[] parsedImage = ImageHelper.parseImageAsJPEG(bufferedImage);
-
-                // Save image to file entity.
-                File imageFile = new File();
-                imageFile.data = parsedImage;
-                imageFile = fileRepository.save(imageFile);
-
-                if (imageFile == null)
-                    return serverError("Could not save image.");
-
-                File oldImage = resource.image;
-
-                // Set and save new image
-                resource.image = imageFile;
-                resource = resourceRepository.save(resource);
-
-                // Delete old image
-                if (oldImage != null) {
-                    fileRepository.delete(oldImage);
-                }
-
-                // Return the image.
-                return ok(resource.image.data);
-            } catch (IOException e) {
-                return badRequest("Could not read image. It may be corrupt.");
-            }
-        }
-    }
-
-    @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteImage(@PathVariable Long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
-        Resource resource = resourceRepository.findInCurrentTenant(id);
-
-        if (resource == null)
-            return noPermission();
-
-        if (!canUserEditResource(resource, authService.getCurrentUser()))
-            return noPermission();
-
-        File imageFile = resource.image;
-
-        if (imageFile != null) {
-            resource.image = null;
-            fileRepository.delete(imageFile);
-        }
-
-        return noContent();
     }
 
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
@@ -184,47 +70,51 @@ public class ResourceController extends APIControllerAbstract {
     public ResponseEntity<?> addResource(@RequestBody ResourceDTO.WithoutReservations resourceDTO) {
         if (!authService.isUserSignedIn())
             return unauthorized();
-        else if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL))
+
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL))
             return noPermission();
+
+        Resource resource = new Resource();
+        ResourceCategory resourceCategory = null;
+
+        if (resourceDTO.resourceCategory == null)
+            return badRequest("Resource Category not supplied.");
         else {
-            Resource resource = new Resource();
-
-            if (resourceDTO.name == null)
-                return badRequest("Name not supplied.");
-            else if (resourceDTO.name.length() > 30)
-                return badRequest("Name must be 30 characters or less.");
-            else if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
-                return badRequest("Name includes invalid characters.");
+            resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
+            if (resourceCategory == null)
+                return badRequest("Category not found.");
             else
-                resource.name = resourceDTO.name;
-
-            if (resourceDTO.owner == null)
-                return badRequest("Owner not supplied.");
-            else {
-                UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
-                if (owner == null)
-                    return badRequest("Owner not found.");
-                else if (owner.isRoot())
-                    return badRequest("Owner cannot be root.");
-                else
-                    resource.owner = owner;
-            }
-
-            if (resourceDTO.resourceCategory == null)
-                return badRequest("Resource Category not supplied.");
-            else {
-                ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
-                if (resourceCategory == null)
-                    return badRequest("Category not found.");
-                else
-                    resource.resourceCategory = resourceCategory;
-            }
-
-            resource.needsApproval = resourceDTO.needsApproval != null ? resourceDTO.needsApproval : false;
-
-            resource = resourceRepository.save(resource);
-            return created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.id);
+                resource.resourceCategory = resourceCategory;
         }
+
+        if (resourceDTO.name == null)
+            return badRequest("Name not supplied.");
+        else if (resourceDTO.name.length() > 30)
+            return badRequest("Name must be 30 characters or less.");
+        else if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
+            return badRequest("Name includes invalid characters.");
+        else if (resourceRepository.findByName(resourceDTO.name, resourceCategory) != null)
+            return badRequest("A Resource by that name already exists!");
+        else
+            resource.name = resourceDTO.name;
+
+        if (resourceDTO.owner == null)
+            return badRequest("Owner not supplied.");
+        else {
+            UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
+            if (owner == null)
+                return badRequest("Owner not found.");
+            else if (owner.isRoot())
+                return badRequest("Owner cannot be root.");
+            else
+                resource.owner = owner;
+        }
+
+        resource.needsApproval = resourceDTO.needsApproval != null ? resourceDTO.needsApproval : false;
+
+        resource = resourceRepository.save(resource);
+        return created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.id);
+
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.PATCH)
@@ -233,20 +123,34 @@ public class ResourceController extends APIControllerAbstract {
             return unauthorized();
         else {
             Resource resource = resourceRepository.findInCurrentTenant(id);
+            ResourceCategory resourceCategory = null;
 
             if (resource == null)
                 return noPermission();
 
-            if (!canUserEditResource(resource, authService.getCurrentUser()))
+            if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
                 return noPermission();
+
+            if (resourceDTO.resourceCategory != null) {
+                resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
+                if (resourceCategory == null)
+                    return badRequest("Category not found.");
+                else
+                    resource.resourceCategory = resourceCategory;
+            }
 
             if (resourceDTO.name != null) {
                 if (resourceDTO.name.length() > 30)
                     return badRequest("Name must be 30 characters or less.");
-                else if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
+
+                if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
                     return badRequest("Name includes invalid characters.");
-                else
-                    resource.name = resourceDTO.name;
+
+                Resource existingResource = resourceRepository.findByName(resourceDTO.name, resourceCategory);
+                if (existingResource != null && !existingResource.id.equals(resourceDTO.id))
+                    return badRequest("A Resource by that name already exists!");
+
+                resource.name = resourceDTO.name;
             }
 
             if (resourceDTO.owner != null) {
@@ -257,14 +161,6 @@ public class ResourceController extends APIControllerAbstract {
                     return badRequest("Owner cannot be root.");
                 else
                     resource.owner = owner;
-            }
-
-            if (resourceDTO.resourceCategory != null) {
-                ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
-                if (resourceCategory == null)
-                    return badRequest("Category not found.");
-                else
-                    resource.resourceCategory = resourceCategory;
             }
 
             if (resourceDTO.needsApproval != null)
@@ -282,43 +178,11 @@ public class ResourceController extends APIControllerAbstract {
 
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
-        if (!canUserEditResource(resource, authService.getCurrentUser()))
+        if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
         resourceRepository.delete(resource);
         return noContent();
-    }
-
-    private boolean canUserEditResource(Resource resource, User user) {
-        // True if they can edit all resources
-        if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL))
-            return true;
-
-        // False if they have no other resource permissions
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_OWN)
-                && !authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY))
-            return false;
-
-        // Check every group the user belongs to.
-        for (UserGroup userGroup : user.userGroups) {
-
-            // True if the User belongs to the User Group that owns the resource.
-            if (resource.owner.equals(userGroup))
-                return true;
-
-            // Check every group below the user's own if they have permission.
-            if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY))
-
-                for (UserGroup hierarchyGroup : userGroupService.getHierarchyDown(userGroup))
-
-                    // True if the User has hierarchy over the User Group that owns the resource.
-                    if (resource.owner.equals(hierarchyGroup))
-                        return true;
-
-        }
-
-        // False otherwise.
-        return false;
     }
 
 }

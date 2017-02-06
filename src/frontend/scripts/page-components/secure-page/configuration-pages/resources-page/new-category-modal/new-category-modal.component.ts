@@ -8,7 +8,6 @@ import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ResourceCategoryService} from "../../../../../services/singleton/resource-category.service";
 import {LoaderService} from "../../../../../services/singleton/loader.service";
-import {ResourceCategory} from "../../../../../models/resource-category.model";
 import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
 
 @Component({

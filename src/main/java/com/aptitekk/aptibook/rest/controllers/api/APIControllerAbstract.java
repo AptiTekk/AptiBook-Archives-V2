@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
+import com.aptitekk.aptibook.core.services.entity.PermissionService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,6 +34,9 @@ public abstract class APIControllerAbstract {
 
     @Autowired
     LogService logService;
+
+    @Autowired
+    PermissionService permissionService;
 
     @SuppressWarnings("WeakerAccess")
     @Autowired

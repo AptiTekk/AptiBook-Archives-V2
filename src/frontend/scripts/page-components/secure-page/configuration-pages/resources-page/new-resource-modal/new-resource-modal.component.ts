@@ -3,7 +3,7 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, ViewChild, Output, EventEmitter} from "@angular/core";
+import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
@@ -13,14 +13,14 @@ import {ResourceCategory} from "../../../../../models/resource-category.model";
 import {APIService} from "../../../../../services/singleton/api.service";
 import {LoaderService} from "../../../../../services/singleton/loader.service";
 import {ResourceImageComponent} from "../../../../../components/resource-image/resource-image.component";
-import {Resource} from "../../../../../models/resource.model";
+import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
 
 @Component({
     selector: 'new-resource-modal',
     templateUrl: 'new-resource-modal.component.html',
     styleUrls: ['new-resource-modal.component.css']
 })
-export class NewResourceModalComponent {
+export class NewResourceModalComponent implements OnInit {
 
     @ViewChild('modal')
     modal: ModalComponent;
@@ -40,7 +40,10 @@ export class NewResourceModalComponent {
                 protected resourceService: ResourceService,
                 protected apiService: APIService,
                 protected loaderService: LoaderService) {
-        userGroupService.getRootUserGroup().subscribe(rootGroup => this.rootGroup = rootGroup);
+    }
+
+    ngOnInit(): void {
+        this.userGroupService.getRootUserGroup().subscribe(rootGroup => this.rootGroup = rootGroup);
         this.resetFormGroup();
     }
 
@@ -53,7 +56,12 @@ export class NewResourceModalComponent {
 
     private resetFormGroup() {
         this.formGroup = this.formBuilder.group({
-            name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+            name: [null, Validators.compose([
+                Validators.required,
+                Validators.maxLength(30),
+                Validators.pattern("[^<>;=]*"),
+                UniquenessValidator.isUnique(this.resourceCategory ? this.resourceCategory.resources.map(resource => resource.name) : [])
+            ])],
             needsApproval: true,
             owner: this.rootGroup ? this.rootGroup.children[0] : null
         });
