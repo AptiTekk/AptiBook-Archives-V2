@@ -23,23 +23,23 @@ public class Tenant extends GlobalEntity {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
     @JsonIgnore
     private boolean active;
 
     @JsonIgnore
-    private String adminEmail;
+    public String adminEmail;
 
     @JsonIgnore
-    private ZonedDateTime timeSetInactive;
+    public ZonedDateTime timeSetInactive;
 
     @JsonIgnore
     @Column(nullable = false, unique = true)
-    private int subscriptionId;
+    public int subscriptionId;
 
     @Column(nullable = false, unique = true)
-    private String slug;
+    public String slug;
 
     public enum Tier {
         BRONZE("aptibook-bronze", 25, 5, 50),
@@ -98,9 +98,9 @@ public class Tenant extends GlobalEntity {
 
     @JsonIgnore
     @Enumerated(EnumType.STRING)
-    private Tier tier;
+    public Tier tier;
 
-    // ----------------------------------------------------------- Tenant Dependent Entities
+    // ---- Tenant Dependent Entities ---- //
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
     private List<Resource> resources;
@@ -138,11 +138,7 @@ public class Tenant extends GlobalEntity {
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
     private List<UserGroup> userGroups;
 
-    // ----------------------------------------------------------- End Tenant Dependent Entities
-
-    public Long getId() {
-        return id;
-    }
+    // ---- End Tenant Dependent Entities ---- //
 
     public boolean isActive() {
         return active;
@@ -156,47 +152,6 @@ public class Tenant extends GlobalEntity {
             timeSetInactive = ZonedDateTime.now();
     }
 
-    /**
-     * This is the time when the Tenant active value was set to false. (In UTC).
-     *
-     * @return The time when the Tenant was set inactive if it is inactive, or null if it was active. The time will be in UTC.
-     */
-    public ZonedDateTime getTimeSetInactive() {
-        return timeSetInactive;
-    }
-
-    public int getSubscriptionId() {
-        return subscriptionId;
-    }
-
-    public void setSubscriptionId(int subscriptionId) {
-        this.subscriptionId = subscriptionId;
-    }
-
-    public String getSlug() {
-        return slug;
-    }
-
-    public void setSlug(String slug) {
-        this.slug = slug.toLowerCase();
-    }
-
-    public Tier getTier() {
-        return tier;
-    }
-
-    public void setTier(Tier tier) {
-        this.tier = tier;
-    }
-
-    public String getAdminEmail() {
-        return adminEmail;
-    }
-
-    public void setAdminEmail(String adminEmail) {
-        this.adminEmail = adminEmail;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -207,12 +162,15 @@ public class Tenant extends GlobalEntity {
 
         Tenant other = (Tenant) o;
 
-        return EqualsHelper.areEquals(isActive(), other.isActive()) && EqualsHelper.areEquals(getTimeSetInactive(), other.getTimeSetInactive()) && EqualsHelper.areEquals(getSubscriptionId(), other.getSubscriptionId())
-                && EqualsHelper.areEquals(getSlug(), other.getSlug()) && EqualsHelper.areEquals(getTier(), other.getTier());
+        return EqualsHelper.areEquals(active, other.active)
+                && EqualsHelper.areEquals(timeSetInactive, other.timeSetInactive)
+                && EqualsHelper.areEquals(subscriptionId, other.subscriptionId)
+                && EqualsHelper.areEquals(slug, other.slug)
+                && EqualsHelper.areEquals(tier, other.tier);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(isActive(), getTimeSetInactive(), getSubscriptionId(), getSlug(), getTier());
+        return EqualsHelper.calculateHashCode(active, timeSetInactive, subscriptionId, slug, tier);
     }
 }

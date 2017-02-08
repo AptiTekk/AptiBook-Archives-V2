@@ -40,7 +40,7 @@ public class NotificationService {
             return;
 
         for (UserGroup userGroup : userGroupList) {
-            for (User user : userGroup.getUsers()) {
+            for (User user : userGroup.users) {
                 sendNotification(type, subject, body, user);
             }
         }
@@ -69,28 +69,28 @@ public class NotificationService {
         if (reservation == null)
             return;
 
-        if (reservation.getResource().needsApproval) {
+        if (reservation.resource.needsApproval) {
             sendNotification(Notification.Type.TYPE_RESERVATION_REQUESTED,
                     "New Reservation Request",
                     "A new Reservation for <b>"
-                            + reservation.getResource().name
+                            + reservation.resource.name
                             + "</b> has been requested by "
                             + "<b>"
-                            + reservation.getUser().getFullName()
+                            + reservation.user.getFullName()
                             + "</b>"
                             + ".",
-                    userGroupService.getHierarchyUp(reservation.getResource().owner));
+                    userGroupService.getHierarchyUp(reservation.resource.owner));
         } else {
             sendNotification(Notification.Type.TYPE_RESERVATION_REQUESTED,
                     "New Reservation Approved",
                     "A new Reservation for <b>"
-                            + reservation.getResource().name
+                            + reservation.resource.name
                             + "</b> has been automatically <i>approved</i> for "
                             + "<b>"
-                            + reservation.getUser().getFullName()
+                            + reservation.user.getFullName()
                             + "</b>"
                             + ".",
-                    userGroupService.getHierarchyUp(reservation.getResource().owner));
+                    userGroupService.getHierarchyUp(reservation.resource.owner));
         }
     }
 
@@ -98,59 +98,59 @@ public class NotificationService {
         if (reservation == null)
             return;
 
-        if (reservation.getStatus() == Reservation.Status.APPROVED) {
+        if (reservation.status == Reservation.Status.APPROVED) {
             sendNotification(Notification.Type.TYPE_RESERVATION_APPROVED,
                     "Reservation Approved",
-                    "Your Reservation for <b>" + reservation.getResource().name
+                    "Your Reservation for <b>" + reservation.resource.name
                             + "</b> from <b>"
-                            + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.start.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> to <b>"
-                            + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.end.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> has been Approved!",
-                    reservation.getUser());
-        } else if (reservation.getStatus() == Reservation.Status.REJECTED) {
+                    reservation.user);
+        } else if (reservation.status == Reservation.Status.REJECTED) {
             sendNotification(Notification.Type.TYPE_RESERVATION_REJECTED,
                     "Reservation Rejected",
-                    "Your Reservation for <b>" + reservation.getResource().name
+                    "Your Reservation for <b>" + reservation.resource.name
                             + "</b> from <b>"
-                            + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.start.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> to <b>"
-                            + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.end.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> has been Rejected.",
-                    reservation.getUser());
+                    reservation.user);
         }
     }
 
     public void sendReservationCancelledNotifications(Reservation reservation) {
-        if (reservation == null || reservation.getStatus() != Reservation.Status.CANCELLED)
+        if (reservation == null || reservation.status != Reservation.Status.CANCELLED)
             return;
 
         sendNotification(Notification.Type.TYPE_RESERVATION_CANCELLED_USER_GROUPS, "Reservation Cancelled",
                 "The reservation of <b>"
-                        + reservation.getResource().name
+                        + reservation.resource.name
                         + "</b> for <b>"
-                        + reservation.getTitle()
+                        + reservation.title
                         + "</b>, which was requested by <b>"
-                        + reservation.getUser().getFullName()
+                        + reservation.user.getFullName()
                         + "</b> from <b>"
-                        + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.start.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> to <b>"
-                        + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.end.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b>, has been Cancelled.",
-                userGroupService.getHierarchyUp(reservation.getResource().owner)
+                userGroupService.getHierarchyUp(reservation.resource.owner)
         );
 
         sendNotification(Notification.Type.TYPE_RESERVATION_CANCELLED_USER, "Reservation Cancelled",
                 "Your reservation of <b>"
-                        + reservation.getResource().name
+                        + reservation.resource.name
                         + "</b> for <b>"
-                        + reservation.getTitle()
+                        + reservation.title
                         + "</b> from <b>"
-                        + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.start.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> to <b>"
-                        + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.end.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> has been Cancelled.",
-                reservation.getUser()
+                reservation.user
         );
     }
 }

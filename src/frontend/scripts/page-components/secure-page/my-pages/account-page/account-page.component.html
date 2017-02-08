@@ -5,16 +5,11 @@
   -->
 
 <ol class="breadcrumb">
-	<li><a [routerLink]="['', 'secure']">Home</a></li>
 	<li class="active">My Account</li>
 </ol>
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-xs-12 col-md-2"
-			 style="margin-bottom: 20px;">
-			<user-image [user]="user"></user-image>
-		</div>
 		<div class="col-xs-12 col-md-6">
 			<form [formGroup]="personalInformation"
 				  (submit)="onPersonalInformationSubmit()">

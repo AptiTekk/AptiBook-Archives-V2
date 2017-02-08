@@ -6,16 +6,20 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.Reservation;
+import com.aptitekk.aptibook.core.domain.entities.ReservationDecision;
+import com.aptitekk.aptibook.core.domain.entities.Resource;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
-import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
-import com.aptitekk.aptibook.core.util.ReservationDetails;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Queue;
 
 @EntityService
 public class ReservationService {
@@ -33,7 +37,7 @@ public class ReservationService {
 
 
     public ArrayList<Reservation> buildReservationList(Reservation.Status status) {
-       ArrayList<Reservation> reservationList = new ArrayList<>();
+        ArrayList<Reservation> reservationList = new ArrayList<>();
 
         Queue<UserGroup> queue = new LinkedList<>();
         queue.addAll(authService.getCurrentUser().userGroups);
@@ -42,12 +46,12 @@ public class ReservationService {
         //Then, build details about each reservation and store it in the reservationDetailsMap.
         UserGroup currentGroup;
         while ((currentGroup = queue.poll()) != null) {
-            queue.addAll(currentGroup.getChildren());
+            queue.addAll(currentGroup.children);
 
-            for (Resource resource : currentGroup.getResources()) {
+            for (Resource resource : currentGroup.resources) {
                 for (Reservation reservation : resource.reservations) {
-                    if (reservation.getStatus() == status) {
-                       reservationList.add(reservation);
+                    if (reservation.status == status) {
+                        reservationList.add(reservation);
                     }
                 }
             }
@@ -59,13 +63,13 @@ public class ReservationService {
     public List<ReservationDecision> generateReservationDecisions(Reservation reservation) {
         //Traverse up the hierarchy and determine the decisions that have already been made.
         List<ReservationDecision> hierarchyDecisions = new ArrayList<>();
-        List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(reservation.getResource().owner);
+        List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(reservation.resource.owner);
 
         //This for loop descends to properly order the groups for display on the page.
         for (int i = hierarchyUp.size() - 1; i >= 0; i--) {
             UserGroup userGroup = hierarchyUp.get(i);
-            for (ReservationDecision decision : reservation.getDecisions()) {
-                if (decision.getUserGroup().equals(userGroup)) {
+            for (ReservationDecision decision : reservation.decisions) {
+                if (decision.userGroup.equals(userGroup)) {
                     hierarchyDecisions.add(decision);
                 }
             }
@@ -108,18 +112,18 @@ public class ReservationService {
         //Iterate over all reservations of the resource and check for intersections
         for (Reservation reservation : resource.reservations) {
             //Ignore rejected reservations.
-            if (reservation.getStatus() == Reservation.Status.REJECTED)
+            if (reservation.status == Reservation.Status.REJECTED)
                 continue;
             //If user canceled reservation, allow resource to be reserved.
-            if (reservation.getStatus() == Reservation.Status.CANCELLED)
+            if (reservation.status == Reservation.Status.CANCELLED)
                 continue;
 
             //If the reservation's end time is before our start time, we're okay.
-            if (reservation.getEnd().isBefore(startTime))
+            if (reservation.end.isBefore(startTime))
                 continue;
 
             //If the reservation's start time is after our end time, we're okay.
-            if (reservation.getStart().isAfter(endTime))
+            if (reservation.start.isAfter(endTime))
                 continue;
 
             //All checks failed, there was a conflict.

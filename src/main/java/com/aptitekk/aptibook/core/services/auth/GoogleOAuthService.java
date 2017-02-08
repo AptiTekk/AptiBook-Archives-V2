@@ -46,7 +46,7 @@ public class GoogleOAuthService {
     }
 
     public String getSignInUrl(Tenant tenant) {
-        OAuth20Service oAuthService = buildService(tenant.getSlug());
+        OAuth20Service oAuthService = buildService(tenant.slug);
         final Map<String, String> additionalParams = new HashMap<>();
         additionalParams.put("access_type", "online");
         additionalParams.put("prompt", "consent");
@@ -54,7 +54,7 @@ public class GoogleOAuthService {
     }
 
     public User getUserFromCode(Tenant tenant, String code) {
-        OAuth20Service googleOAuthService = buildService(tenant.getSlug());
+        OAuth20Service googleOAuthService = buildService(tenant.slug);
 
         try {
             OAuth2AccessToken accessToken = googleOAuthService.getAccessToken(code);
@@ -78,7 +78,7 @@ public class GoogleOAuthService {
 
                     //Create user
                     user = new User();
-                    user.setTenant(tenant);
+                    user.tenant = tenant;
                     user.setEmailAddress(googleUserInfo.getEmailAddress());
                     user.firstName = googleUserInfo.getFirstName();
                     user.lastName = googleUserInfo.getLastName();

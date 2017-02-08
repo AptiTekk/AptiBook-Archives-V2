@@ -28,8 +28,8 @@ public abstract class MultiTenantEntityRepositoryAbstract<T extends MultiTenantE
 
     @Override
     public T save(T entity) {
-        if (entity.getTenant() == null)
-            entity.setTenant(getTenant());
+        if (entity.tenant == null)
+            entity.tenant = getTenant();
 
         return super.save(entity);
     }

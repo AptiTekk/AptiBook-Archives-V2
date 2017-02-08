@@ -12,6 +12,7 @@ import {User} from "../../../../models/user.model";
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import {Reservation} from "../../../../models/reservation.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
+import {APIService} from "../../../../services/singleton/api.service";
 
 @Component({
     selector: 'calendar-page',
@@ -28,6 +29,7 @@ export class CalendarPageComponent implements OnInit {
     filterOnlyUsersEvents: boolean = false;
 
     constructor(private userGroupService: UserGroupService,
+                protected apiService: APIService,
                 private resourceCategoryService: ResourceCategoryService,
                 private authService: AuthService) {
     }

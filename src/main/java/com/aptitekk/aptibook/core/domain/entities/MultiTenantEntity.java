@@ -17,13 +17,6 @@ public abstract class MultiTenantEntity {
 
     @JsonIgnore
     @ManyToOne(fetch = FetchType.EAGER, optional = false)
-    private Tenant tenant;
+    public Tenant tenant;
 
-    public Tenant getTenant() {
-        return tenant;
-    }
-
-    public void setTenant(Tenant tenant) {
-        this.tenant = tenant;
-    }
 }

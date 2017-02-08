@@ -9,12 +9,8 @@ package com.aptitekk.aptibook.core.domain.repositories;
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import java.io.Serializable;
 import java.util.Comparator;
 import java.util.List;
 
@@ -74,7 +70,7 @@ public class ResourceCategoryRepository extends MultiTenantEntityRepositoryAbstr
 
         @Override
         public int compare(ResourceCategory o1, ResourceCategory o2) {
-            return o1.getName().compareTo(o2.getName());
+            return o1.name.compareTo(o2.name);
         }
     }
 

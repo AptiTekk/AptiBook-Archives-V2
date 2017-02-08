@@ -10,7 +10,6 @@ import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DemoTenantBuilder {
@@ -33,8 +30,6 @@ public class DemoTenantBuilder {
 
     private final TenantManagementService tenantManagementService;
 
-    private final UserGroupService userGroupService;
-
     private final UserGroupRepository userGroupRepository;
 
     private final UserRepository userRepository;
@@ -44,8 +39,6 @@ public class DemoTenantBuilder {
     private final ResourceRepository resourceRepository;
 
     private final TagRepository tagRepository;
-
-    private final PermissionRepository permissionRepository;
 
     private final ReservationDecisionRepository reservationDecisionRepository;
 
@@ -60,13 +53,11 @@ public class DemoTenantBuilder {
     @Autowired
     public DemoTenantBuilder(TenantRepository tenantRepository,
                              TenantManagementService tenantManagementService,
-                             UserGroupService userGroupService,
                              UserGroupRepository userGroupRepository,
                              UserRepository userRepository,
                              ResourceCategoryRepository resourceCategoryRepository,
                              ResourceRepository resourceRepository,
                              TagRepository tagRepository,
-                             PermissionRepository permissionRepository,
                              ReservationDecisionRepository reservationDecisionRepository,
                              ReservationRepository reservationRepository,
                              TenantIntegrityService tenantIntegrityService,
@@ -74,13 +65,11 @@ public class DemoTenantBuilder {
                              LogService logService) {
         this.tenantRepository = tenantRepository;
         this.tenantManagementService = tenantManagementService;
-        this.userGroupService = userGroupService;
         this.userGroupRepository = userGroupRepository;
         this.userRepository = userRepository;
         this.resourceCategoryRepository = resourceCategoryRepository;
         this.resourceRepository = resourceRepository;
         this.tagRepository = tagRepository;
-        this.permissionRepository = permissionRepository;
         this.reservationDecisionRepository = reservationDecisionRepository;
         this.reservationRepository = reservationRepository;
         this.tenantIntegrityService = tenantIntegrityService;
@@ -111,11 +100,11 @@ public class DemoTenantBuilder {
 
         //Create new demo tenant
         demoTenant = new Tenant();
-        demoTenant.setSlug("demo");
-        demoTenant.setTier(Tenant.Tier.PLATINUM);
-        demoTenant.setSubscriptionId(-1);
+        demoTenant.slug = "demo";
+        demoTenant.tier = Tenant.Tier.PLATINUM;
+        demoTenant.subscriptionId = -1;
         demoTenant.setActive(true);
-        demoTenant.setAdminEmail(null);
+        demoTenant.adminEmail = null;
         demoTenant = tenantRepository.save(demoTenant);
         tenantIntegrityService.initializeNewTenant(demoTenant);
 
@@ -181,32 +170,32 @@ public class DemoTenantBuilder {
         List<Tag> cart2Tags = new ArrayList<>();
 
         Tag adobeTag = new Tag();
-        adobeTag.setName("adobe");
-        adobeTag.setTenant(demoTenant);
-        adobeTag.setResourceCategory(equipment);
+        adobeTag.name = "adobe";
+        adobeTag.tenant = demoTenant;
+        adobeTag.resourceCategory = equipment;
         adobeTag = tagRepository.save(adobeTag);
         cart1Tags.add(adobeTag);
 
         Tag officeTag = new Tag();
-        officeTag.setName("office");
-        officeTag.setTenant(demoTenant);
-        officeTag.setResourceCategory(equipment);
+        officeTag.name = "office";
+        officeTag.tenant = demoTenant;
+        officeTag.resourceCategory = equipment;
         officeTag = tagRepository.save(officeTag);
         cart1Tags.add(officeTag);
         cart2Tags.add(officeTag);
 
         Tag chromebookTag = new Tag();
-        chromebookTag.setName("chromebook");
-        chromebookTag.setTenant(demoTenant);
-        chromebookTag.setResourceCategory(equipment);
+        chromebookTag.name = "chromebook";
+        chromebookTag.tenant = demoTenant;
+        chromebookTag.resourceCategory = equipment;
         chromebookTag = tagRepository.save(chromebookTag);
         cart1Tags.add(chromebookTag);
 
-        List<Tag> availableTags = new ArrayList<>();
+        Set<Tag> availableTags = new HashSet<>();
         availableTags.add(adobeTag);
         availableTags.add(officeTag);
         availableTags.add(chromebookTag);
-        equipment.setTags(availableTags);
+        equipment.tags = availableTags;
         equipment = resourceCategoryRepository.save(equipment);
 
         //Add resources
@@ -258,7 +247,7 @@ public class DemoTenantBuilder {
                 "Book Fair",
                 Reservation.Status.APPROVED,
                 library,
-                28, 30,
+                25, 28,
                 8, 30,
                 15, 0
         );
@@ -318,7 +307,7 @@ public class DemoTenantBuilder {
 
         //Add Notifications
         Notification notification = new Notification(teacher, "Test Notification", "Lorem ipsum");
-        notification.setTenant(demoTenant);
+        notification.tenant = demoTenant;
         notification.setRead(false);
         //TODO: Make method in user repository to get admin user, set admin to get notifications.
         notification = notificationRepository.save(notification);
@@ -342,10 +331,10 @@ public class DemoTenantBuilder {
                                       UserGroup parent,
                                       List<Permission> permissions) {
         UserGroup userGroup = new UserGroup();
-        userGroup.setTenant(demoTenant);
-        userGroup.setName(name);
-        userGroup.setParent(parent);
-        userGroup.setPermissions(permissions);
+        userGroup.tenant = demoTenant;
+        userGroup.name = name;
+        userGroup.parent = parent;
+        userGroup.permissions = permissions;
 
         return userGroupRepository.save(userGroup);
     }
@@ -366,7 +355,7 @@ public class DemoTenantBuilder {
                             String password,
                             UserGroup... userGroups) {
         User user = new User();
-        user.setTenant(demoTenant);
+        user.tenant = demoTenant;
         user.setEmailAddress(emailAddress);
         user.firstName = firstName;
         user.lastName = lastName;
@@ -389,8 +378,8 @@ public class DemoTenantBuilder {
      */
     private ResourceCategory createResourceCategory(String name) {
         ResourceCategory resourceCategory = new ResourceCategory();
-        resourceCategory.setTenant(demoTenant);
-        resourceCategory.setName(name);
+        resourceCategory.tenant = demoTenant;
+        resourceCategory.name = name;
 
         return resourceCategoryRepository.save(resourceCategory);
     }
@@ -410,7 +399,7 @@ public class DemoTenantBuilder {
                                     boolean requiresApproval,
                                     List<Tag> tags) {
         Resource resource = new Resource();
-        resource.setTenant(demoTenant);
+        resource.tenant = demoTenant;
         resource.name = name;
         resource.resourceCategory = resourceCategory;
         resource.owner = ownerGroup;
@@ -442,11 +431,11 @@ public class DemoTenantBuilder {
                                           int startHour, int startMinute,
                                           int endHour, int endMinute) {
         Reservation reservation = new Reservation();
-        reservation.setTenant(demoTenant);
-        reservation.setUser(user);
-        reservation.setTitle(title);
-        reservation.setStatus(status);
-        reservation.setResource(resource);
+        reservation.tenant = demoTenant;
+        reservation.user = user;
+        reservation.title = title;
+        reservation.status = status;
+        reservation.resource = resource;
         ZonedDateTime start = ZonedDateTime.now(ZoneId.of("America/Denver"))
                 .withDayOfMonth(startDay)
                 .withHour(startHour)
@@ -459,8 +448,8 @@ public class DemoTenantBuilder {
                 .withMinute(endMinute)
                 .withSecond(0)
                 .withZoneSameInstant(ZoneId.systemDefault());
-        reservation.setStart(start.toLocalDateTime());
-        reservation.setEnd(end.toLocalDateTime());
+        reservation.start = start.toLocalDateTime();
+        reservation.end = end.toLocalDateTime();
         return reservationRepository.save(reservation);
     }
 
@@ -478,11 +467,11 @@ public class DemoTenantBuilder {
                                                           User user,
                                                           boolean approved) {
         ReservationDecision reservationDecision = new ReservationDecision();
-        reservationDecision.setTenant(demoTenant);
-        reservationDecision.setReservation(reservation);
-        reservationDecision.setUserGroup(userGroup);
-        reservationDecision.setUser(user);
-        reservationDecision.setApproved(approved);
+        reservationDecision.tenant = demoTenant;
+        reservationDecision.reservation = reservation;
+        reservationDecision.userGroup = userGroup;
+        reservationDecision.user = user;
+        reservationDecision.approved = approved;
         return reservationDecisionRepository.save(reservationDecision);
     }
 

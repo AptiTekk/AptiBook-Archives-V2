@@ -64,15 +64,15 @@ public class PropertiesController extends APIControllerAbstract {
                 if (currentProperty != null) {
 
                     //Check that the submitted value is valid
-                    PropertyValidator propertyValidator = currentProperty.getPropertyKey().getPropertyValidator();
+                    PropertyValidator propertyValidator = currentProperty.propertyKey.getPropertyValidator();
                     if (propertyValidator.isValid(property.propertyValue)) {
-                        currentProperty.setPropertyValue(property.propertyValue);
+                        currentProperty.propertyValue = property.propertyValue;
 
                         //Save Property
                         currentProperty = propertiesRepository.save(currentProperty);
 
                         //Notify Property Group Change Listeners
-                        currentProperty.getPropertyKey().getGroup().firePropertiesChangedEvent();
+                        currentProperty.propertyKey.getGroup().firePropertiesChangedEvent();
                         return ok(currentProperty);
                     } else {
                         //Validation failed

@@ -20,7 +20,7 @@ public class UserGroupRepository extends MultiTenantEntityRepositoryAbstract<Use
     public void delete(UserGroup userGroup) {
         if (userGroup != null) {
             //Remove user assignments
-            for (User user : userGroup.getUsers()) {
+            for (User user : userGroup.users) {
                 user.userGroups.remove(userGroup);
             }
         }

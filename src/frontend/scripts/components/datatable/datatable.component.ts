@@ -4,18 +4,18 @@
  * Proprietary and confidential.
  */
 import {
-    Component,
-    ViewChild,
-    ElementRef,
-    ContentChildren,
-    QueryList,
-    AfterViewInit,
     AfterViewChecked,
-    Input,
+    AfterViewInit,
+    Component,
+    ContentChildren,
+    ElementRef,
     EventEmitter,
-    Output
+    Input,
+    Output,
+    QueryList,
+    ViewChild
 } from "@angular/core";
-import {DataTableColumn} from "./datatable-column/datatable-column.component";
+import {DataTableColumnComponent} from "./datatable-column/datatable-column.component";
 import DataTable = DataTables.DataTable;
 
 @Component({
@@ -37,33 +37,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
     private datatable;
     private redrawOptions: { invalidateColumns: boolean };
 
-    @ContentChildren(DataTableColumn) columns: QueryList<DataTableColumn>;
-
-    /**
-     * Returns the number of rows needed for this table.
-     */
-    private get numRowsRequired(): number {
-        let numRows: number = 0;
-
-        this.columns.forEach(column => {
-            if (column.cells.length > numRows)
-                numRows = column.cells.length;
-        });
-
-        return numRows;
-    }
-
-    /**
-     * Returns the html content of the cell of the column for the current row, or an empty string if no cell exists.
-     * @param column The column which contains the cells.
-     * @param row The row of the cell.
-     */
-    private static getCellContentFromColumnByRow(column: DataTableColumn, row: number): string {
-        if (column && column.cells.length > row)
-            return (<HTMLElement>column.cells.toArray()[row].viewRef.element.nativeElement).innerHTML;
-
-        return '';
-    }
+    @ContentChildren(DataTableColumnComponent) columns: QueryList<DataTableColumnComponent>;
 
     ngAfterViewInit(): void {
         // Initialize the table.
@@ -86,58 +60,9 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
         });
 
         // Schedule a re-draw of the table any time the content changes.
-        this.columns.changes.subscribe(columns => {
-            this.scheduleRedraw(true)
-        });
-    }
+        this.columns.changes.subscribe(() => this.scheduleRedraw(true));
 
-    /**
-     * Generates and returns column data for the table, consisting of an array of column definitions.
-     * @returns {{title: string, orderable: boolean, width: string}[]}
-     */
-    private getColumnsData(): { title: string, orderable: boolean, width: string }[] {
-        return this.columns.map((column: DataTableColumn) => {
-            return {
-                title: column.title,
-                orderable: column.orderable,
-                width: column.width
-            }
-        });
-    }
-
-    /**
-     * Generates and returns row data for the table, consisting of an array of arrays of strings.
-     * The contents follow this structure: [ [ "Row 1 Col 1", "Row 1 Col 2" ], [ "Row 2 Col 1", "Row 2 Col 2" ] ]
-     * @returns {string[][]}
-     */
-    private getRowsData(): string[][] {
-        let dataArray: string[][] = [];
-
-        for (let i = 0; i < this.numRowsRequired; i++) {
-            let rowData = [];
-            this.columns.forEach((column: DataTableColumn) => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
-            dataArray.push(rowData);
-        }
-
-        return dataArray;
-    }
-
-    /**
-     * Initializes the DataTable
-     */
-    private initDataTable() {
-        this.datatable = $(this.dataTableContainer.nativeElement).DataTable(
-            <any>
-                {
-                    order: [],
-                    scrollY: this.bodyHeight,
-                    scrollCollapse: true,
-                    columns: this.getColumnsData(),
-                    data: this.getRowsData(),
-                    select: this.selectableRows ? 'single' : false,
-                    responsive: this.responsive
-                }
-        );
+        window.onresize = () => this.datatable.columns.adjust();
     }
 
     ngAfterViewChecked(): void {
@@ -159,7 +84,84 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
             if (this.selectedRow >= 0) {
                 this.datatable.row(this.selectedRow).select();
             }
+
+            this.datatable.columns.adjust();
         }
+    }
+
+    /**
+     * Initializes the DataTable
+     */
+    private initDataTable() {
+        this.datatable = $(this.dataTableContainer.nativeElement).DataTable(
+            <any>
+                {
+                    order: [],
+                    scrollY: this.bodyHeight,
+                    scrollCollapse: true,
+                    columns: this.getColumnsData(),
+                    data: this.getRowsData(),
+                    select: this.selectableRows ? 'single' : false,
+                    responsive: this.responsive
+                }
+        );
+    }
+
+    /**
+     * Returns the number of rows needed for this table.
+     */
+    private get numRowsRequired(): number {
+        let numRows: number = 0;
+
+        this.columns.forEach(column => {
+            if (column.cells.length > numRows)
+                numRows = column.cells.length;
+        });
+
+        return numRows;
+    }
+
+    /**
+     * Returns the html content of the cell of the column for the current row, or an empty string if no cell exists.
+     * @param column The column which contains the cells.
+     * @param row The row of the cell.
+     */
+    private static getCellContentFromColumnByRow(column: DataTableColumnComponent, row: number): string {
+        if (column && column.cells.length > row)
+            return (<HTMLElement>column.cells.toArray()[row].viewRef.element.nativeElement).innerHTML;
+
+        return '';
+    }
+
+    /**
+     * Generates and returns column data for the table, consisting of an array of column definitions.
+     * @returns {{title: string, orderable: boolean, width: string}[]}
+     */
+    private getColumnsData(): { title: string, orderable: boolean, width: string }[] {
+        return this.columns.map((column: DataTableColumnComponent) => {
+            return {
+                title: column.title,
+                orderable: column.orderable,
+                width: column.width
+            }
+        });
+    }
+
+    /**
+     * Generates and returns row data for the table, consisting of an array of arrays of strings.
+     * The contents follow this structure: [ [ "Row 1 Col 1", "Row 1 Col 2" ], [ "Row 2 Col 1", "Row 2 Col 2" ] ]
+     * @returns {string[][]}
+     */
+    private getRowsData(): string[][] {
+        let dataArray: string[][] = [];
+
+        for (let i = 0; i < this.numRowsRequired; i++) {
+            let rowData = [];
+            this.columns.forEach((column: DataTableColumnComponent) => rowData.push(DataTableComponent.getCellContentFromColumnByRow(column, i)));
+            dataArray.push(rowData);
+        }
+
+        return dataArray;
     }
 
     /**

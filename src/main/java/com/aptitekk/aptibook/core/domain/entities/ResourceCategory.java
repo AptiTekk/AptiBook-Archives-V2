@@ -7,87 +7,30 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class ResourceCategory extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
-    private String name;
+    public String name;
 
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @OrderBy(value = "name")
-    private List<Resource> resources = new ArrayList<>();
+    public Set<Resource> resources = new HashSet<>();
 
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
-    private List<ReservationField> reservationFields = new ArrayList<>();
+    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    public Set<ReservationField> reservationFields = new HashSet<>();
 
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
-    @OrderBy(value = "name")
-    private List<Tag> tags = new ArrayList<>();
-
-    private static final long serialVersionUID = 1L;
-
-    public ResourceCategory() {
-        super();
-    }
-
-    public ResourceCategory(String name) {
-        super();
-        this.name = name;
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public List<Resource> getResources() {
-        return resources;
-    }
-
-    public void setResources(List<Resource> resources) {
-        this.resources = resources;
-    }
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public List<ReservationField> getReservationFields() {
-        return reservationFields;
-    }
-
-    public void setReservationFields(List<ReservationField> reservationFields) {
-        this.reservationFields = reservationFields;
-    }
-
-    public List<Tag> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<Tag> tags) {
-        this.tags = tags;
-    }
+    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    public Set<Tag> tags = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -99,11 +42,11 @@ public class ResourceCategory extends MultiTenantEntity implements Serializable 
 
         ResourceCategory other = (ResourceCategory) o;
 
-        return EqualsHelper.areEquals(getName(), other.getName());
+        return EqualsHelper.areEquals(name, other.name);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getName());
+        return EqualsHelper.calculateHashCode(name);
     }
 }

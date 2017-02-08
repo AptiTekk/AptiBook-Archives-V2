@@ -152,48 +152,16 @@ public class Permission extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
     @Enumerated(value = EnumType.STRING)
-    private Descriptor descriptor;
+    public Descriptor descriptor;
 
     @ManyToMany(mappedBy = "permissions")
-    private Set<UserGroup> userGroups;
+    public Set<UserGroup> userGroups;
 
     @ManyToMany(mappedBy = "permissions")
-    private Set<User> users;
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Descriptor getDescriptor() {
-        return descriptor;
-    }
-
-    public void setDescriptor(Descriptor descriptor) {
-        this.descriptor = descriptor;
-    }
-
-    public Set<UserGroup> getUserGroups() {
-        return userGroups;
-    }
-
-    public void setUserGroups(Set<UserGroup> userGroups) {
-        this.userGroups = userGroups;
-    }
-
-    public Set<User> getUsers() {
-        return users;
-    }
-
-    public void setUsers(Set<User> users) {
-        this.users = users;
-    }
+    public Set<User> users;
 
     @Override
     public boolean equals(Object o) {
@@ -205,11 +173,11 @@ public class Permission extends MultiTenantEntity implements Serializable {
 
         Permission other = (Permission) o;
 
-        return EqualsHelper.areEquals(getDescriptor(), other.getDescriptor());
+        return EqualsHelper.areEquals(descriptor, other.descriptor);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getDescriptor());
+        return EqualsHelper.calculateHashCode(descriptor);
     }
 }

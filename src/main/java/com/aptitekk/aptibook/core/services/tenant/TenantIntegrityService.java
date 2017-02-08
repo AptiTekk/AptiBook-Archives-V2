@@ -59,8 +59,9 @@ public class TenantIntegrityService {
 
     private void checkForRootGroup(Tenant tenant) {
         if (userGroupRepository.findRootGroup(tenant) == null) {
-            UserGroup rootGroup = new UserGroup(UserGroupRepository.ROOT_GROUP_NAME);
-            rootGroup.setTenant(tenant);
+            UserGroup rootGroup = new UserGroup();
+            rootGroup.name = UserGroupRepository.ROOT_GROUP_NAME;
+            rootGroup.tenant = tenant;
             try {
                 userGroupRepository.save(rootGroup);
             } catch (Exception e) {
@@ -80,9 +81,9 @@ public class TenantIntegrityService {
                 if (springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
                     String password = PasswordGenerator.generateRandomPassword(10);
                     adminUser.hashedPassword = PasswordStorage.createHash(password);
-                    emailService.sendEmailNotification(tenant.getAdminEmail(), "AptiBook Registration", "<p>Thank you for registering with AptiBook! We are very excited to hear about how you and your team uses AptiBook.</p>"
+                    emailService.sendEmailNotification(tenant.adminEmail, "AptiBook Registration", "<p>Thank you for registering with AptiBook! We are very excited to hear about how you and your team uses AptiBook.</p>"
                             + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>admin</b> on the navigation bar and visiting <b>My Account</b>.<br>"
-                            + "https://aptibook.aptitekk.com/" + tenant.getSlug() + "</p>"
+                            + "https://aptibook.aptitekk.com/" + tenant.slug + "</p>"
                             + "<center>"
                             + "Username: <b>admin</b> <br>"
                             + "Password: <b>" + password + "</b>"
@@ -93,7 +94,7 @@ public class TenantIntegrityService {
                 }
                 adminUser.verified = true;
                 adminUser.userState = User.State.APPROVED;
-                adminUser.setTenant(tenant);
+                adminUser.tenant = tenant;
 
                 try {
                     userRepository.save(adminUser);
@@ -131,7 +132,7 @@ public class TenantIntegrityService {
             boolean foundProperty = false;
 
             for (Property property : currentProperties) {
-                if (property.getPropertyKey().equals(key)) {
+                if (property.propertyKey.equals(key)) {
                     foundProperty = true;
                     break;
                 }
@@ -139,9 +140,9 @@ public class TenantIntegrityService {
 
             if (!foundProperty) {
                 Property property = new Property();
-                property.setPropertyKey(key);
-                property.setPropertyValue(key.getDefaultValue());
-                property.setTenant(tenant);
+                property.propertyKey = key;
+                property.propertyValue = key.getDefaultValue();
+                property.tenant = tenant;
                 try {
                     propertiesRepository.save(property);
                 } catch (Exception e) {
@@ -158,7 +159,7 @@ public class TenantIntegrityService {
             boolean foundPermission = false;
 
             for (Permission permission : currentPermissions) {
-                if (permission.getDescriptor().equals(descriptor)) {
+                if (permission.descriptor.equals(descriptor)) {
                     foundPermission = true;
                     break;
                 }
@@ -166,8 +167,8 @@ public class TenantIntegrityService {
 
             if (!foundPermission) {
                 Permission permission = new Permission();
-                permission.setDescriptor(descriptor);
-                permission.setTenant(tenant);
+                permission.descriptor = descriptor;
+                permission.tenant = tenant;
                 try {
                     permissionRepository.save(permission);
                 } catch (Exception e) {
@@ -180,8 +181,9 @@ public class TenantIntegrityService {
     private void addDefaultResourceCategories(Tenant tenant) {
         if (resourceCategoryRepository.findAllForTenant(tenant).isEmpty()) {
             try {
-                ResourceCategory resourceCategory = new ResourceCategory("Rooms");
-                resourceCategory.setTenant(tenant);
+                ResourceCategory resourceCategory = new ResourceCategory();
+                resourceCategory.name = "Rooms";
+                resourceCategory.tenant = tenant;
                 resourceCategoryRepository.save(resourceCategory);
             } catch (Exception e) {
                 e.printStackTrace();

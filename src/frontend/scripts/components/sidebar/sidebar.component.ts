@@ -10,11 +10,12 @@ import {User} from "../../models/user.model";
 import {Router} from "@angular/router";
 import {NotificationService} from "../../services/singleton/notification.service";
 import {Notification} from "../../models/notification.model";
+import {LoaderService} from "../../services/singleton/loader.service";
 
 @Component({
     selector: 'app-sidebar',
     templateUrl: 'sidebar.component.html',
-    styleUrls: ['sidebar.component.css']
+    styleUrls: ['sidebar.component.css', 'sidebar.mobile.component.css']
 })
 export class SidebarComponent implements OnInit {
 
@@ -42,13 +43,20 @@ export class SidebarComponent implements OnInit {
      */
     private user: User;
 
+    //noinspection JSMismatchedCollectionQueryUpdate
     /**
      * Contains the currently signed in user's unread notifications.
      */
     private unreadNotifications: Notification[] = [];
 
+    /**
+     * This variable keeps track of when the user swipes the sidebar open or closed (on mobile devices)
+     */
+    private swipedOpen: boolean = false;
+
     constructor(private authService: AuthService,
                 private notificationService: NotificationService,
+                private loaderService: LoaderService,
                 private router: Router) {
     }
 
@@ -65,9 +73,21 @@ export class SidebarComponent implements OnInit {
         });
     }
 
+    onSwipeRight() {
+        this.swipedOpen = true;
+    }
+
+    onSwipeLeft() {
+        this.swipedOpen = false;
+    }
+
     onSignOut() {
+        this.loaderService.startLoading();
         this.authService.signOut().subscribe(
-            success => this.router.navigate([''])
+            success => {
+                this.loaderService.stopLoading();
+                this.router.navigate(['', 'sign-in']);
+            }
         );
     }
 }

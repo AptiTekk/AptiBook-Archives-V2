@@ -10,12 +10,8 @@ import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.Tag;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
-import java.io.Serializable;
 
 @EntityRepository
 public class TagRepository extends MultiTenantEntityRepositoryAbstract<Tag> {
@@ -38,7 +34,7 @@ public class TagRepository extends MultiTenantEntityRepositoryAbstract<Tag> {
     @Override
     public void delete(Tag tag) {
         if (tag != null) {
-            for (Resource resource : tag.getResources()) {
+            for (Resource resource : tag.resources) {
                 resource.tags.remove(tag);
             }
         }

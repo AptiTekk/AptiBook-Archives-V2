@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
 import {ModuleWithProviders} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {
@@ -13,7 +19,7 @@ import {FrontPageGuard, SecureGuard} from "./guards";
 import {SearchResultsPageComponent} from "../page-components/secure-page/search-results-page/search-results-page.component";
 import {SearchGuard} from "./guards/search.guard";
 import {CalendarPageComponent} from "../page-components/secure-page/management-pages/calendar-page/calendar-page.component";
-import {PendingPageComponent} from "../page-components/secure-page/management-pages/pending-page/pending-page.component";
+import {ApprovalQueuePageComponent} from "../page-components/secure-page/management-pages/approval-queue-page/approval-queue-page.component";
 import {ApprovedPageComponent} from "../page-components/secure-page/management-pages/approved-page/approved-page.component";
 import {RejectedPageComponent} from "../page-components/secure-page/management-pages/rejected-page/rejected-page.component";
 import {ManagementContainerComponent} from "../page-components/secure-page/management-pages/management-container.component";
@@ -25,7 +31,7 @@ import {ConfigurationContainerComponent} from "../page-components/secure-page/co
 import {AllUsersSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/all-users-section/all-users-section.component";
 import {GroupsSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/groups-section/groups-section.component";
 import {MyContainerComponent} from "../page-components/secure-page/my-pages/my-container.component";
-import {InactiveTenantPageComponent} from "../page-components/inactive-tenant-page/inactive-tenant-page.component";
+import {InactiveTenantPage} from "../page-components/inactive-tenant-page/inactive-tenant.page";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -34,7 +40,20 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
         children: [
             {
                 path: 'dashboard',
-                component: DashboardPageComponent
+                children: [
+                    {
+                        path: '',
+                        component: DashboardPageComponent
+                    },
+                    {
+                        path: 'upcoming',
+                        component: DashboardPageComponent //TODO: New component
+                    },
+                    {
+                        path: '**',
+                        redirectTo: ''
+                    }
+                ]
             },
             {
                 path: 'search-results',
@@ -56,7 +75,6 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'my',
-                component: MyContainerComponent,
                 children: [
                     {
                         path: 'account',
@@ -74,7 +92,6 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'configuration',
-                component: ConfigurationContainerComponent,
                 children: [
                     {
                         path: 'resources',
@@ -113,8 +130,8 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                 component: ManagementContainerComponent,
                 children: [
                     {
-                        path: 'pending',
-                        component: PendingPageComponent
+                        path: 'queue',
+                        component: ApprovalQueuePageComponent
                     },
                     {
                         path: 'approved',
@@ -143,7 +160,7 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
     },
     {
         path: 'inactive',
-        component: InactiveTenantPageComponent
+        component: InactiveTenantPage
     },
     {
         path: '',

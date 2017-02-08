@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
 import {Component} from "@angular/core";
 import {Resource} from "../../../../models/resource.model";
 import {ReservationDetailsService} from "../../../../services/singleton/reservation-details.service";
@@ -17,23 +23,6 @@ import moment = require("moment");
     styleUrls: ['reservation-details-page.component.css']
 })
 export class ReservationDetailsComponent {
-
-    reservation: Reservation = {
-        id: null,
-        dateCreated: null,
-        title: null,
-        status: null,
-        start: null,
-        end: null,
-        resource: null,
-        user: null,
-        decisions: null,
-        fieldEntries: null,
-        pending: null,
-        approved: null,
-        rejected: null,
-        cancelled: null
-    };
 
     resource: Resource;
     start: Moment;
@@ -65,14 +54,15 @@ export class ReservationDetailsComponent {
     }
 
     reserve() {
-        this.reservation.user = this.user;
-        this.reservation.title = this.formGroup.controls['title'].value;
-        this.reservation.start = this.start.toISOString();
-        this.reservation.end = this.end.toISOString();
-        this.reservation.resource = this.resource;
+        let reservation: Reservation = {};
+        reservation.user = this.user;
+        reservation.title = this.formGroup.controls['title'].value;
+        reservation.start = this.start.toISOString();
+        reservation.end = this.end.toISOString();
+        reservation.resource = this.resource;
 
-        this.reservationService.makeReservation(this.reservation).subscribe(reservation => {
-            if (reservation) {
+        this.reservationService.makeReservation(reservation).subscribe(newReservation => {
+            if (newReservation) {
                 this.router.navigateByUrl("/secure/search-results/success");
             }
         })

@@ -59,9 +59,12 @@ public class ResourceCategoryController extends APIControllerAbstract {
                 if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
                     return badRequest("The Name cannot contain these characters: < > ; =");
 
-                resourceCategory.setName(resourceCategoryDTO.name);
+                if (resourceCategoryRepository.findByName(resourceCategoryDTO.name) != null)
+                    return badRequest("A Category with that name already exists!");
+
+                resourceCategory.name = resourceCategoryDTO.name;
                 resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
-                return created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/resourceCategories/" + resourceCategory.getId());
+                return created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/resourceCategories/" + resourceCategory.id);
             }
             return noPermission();
         }
@@ -97,9 +100,15 @@ public class ResourceCategoryController extends APIControllerAbstract {
                 if (resourceCategoryDTO.name != null) {
                     if (resourceCategoryDTO.name.length() > 30)
                         return badRequest("The Name must be 30 characters or less.");
+
                     if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
                         return badRequest("The Name cannot contain these characters: < > ; =");
-                    resourceCategory.setName(resourceCategoryDTO.name);
+
+                    ResourceCategory existingCategory = resourceCategoryRepository.findByName(resourceCategoryDTO.name);
+                    if (existingCategory != null && !existingCategory.id.equals(id))
+                        return badRequest("A Category with that name already exists!");
+
+                    resourceCategory.name = resourceCategoryDTO.name;
                 }
 
                 resourceCategory = this.resourceCategoryRepository.save(resourceCategory);

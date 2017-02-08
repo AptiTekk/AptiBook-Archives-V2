@@ -78,7 +78,7 @@ public class UserGroupController extends APIControllerAbstract {
                 && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
-        return ok(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
+        return ok(modelMapper.map(userGroup.users, new TypeToken<List<UserDTO>>() {
         }.getType()));
     }
 
@@ -103,7 +103,7 @@ public class UserGroupController extends APIControllerAbstract {
             else if (!userGroupDTO.name.matches("[^<>;=]*"))
                 return badRequest("The Name cannot contain these characters: < > ; =");
             else
-                userGroup.setName(userGroupDTO.name);
+                userGroup.name = userGroupDTO.name;
 
         userGroup = userGroupRepository.save(userGroup);
         return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
@@ -128,15 +128,15 @@ public class UserGroupController extends APIControllerAbstract {
         if (id.equals(newParentId))
             return badRequest("This User Group and the New Parent User Group cannot be the same.");
 
-        if (userGroup.getParent().equals(newParentUserGroup))
+        if (userGroup.parent.equals(newParentUserGroup))
             return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
 
         List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
         if (hierarchyDown.contains(newParentUserGroup))
             return badRequest("The New Parent User Group cannot be below this User Group on the same branch.");
 
-        userGroup.getParent().getChildren().remove(userGroup);
-        userGroup.setParent(newParentUserGroup);
+        userGroup.parent.children.remove(userGroup);
+        userGroup.parent = newParentUserGroup;
         userGroup = userGroupRepository.save(userGroup);
         return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
     }
@@ -158,14 +158,14 @@ public class UserGroupController extends APIControllerAbstract {
             return badRequest("The Root Group cannot be deleted.");
 
         // Move children groups upwards.
-        userGroup.getParent().getChildren().addAll(userGroup.getChildren());
-        for (UserGroup child : userGroup.getChildren()) {
-            child.setParent(userGroup.getParent());
+        userGroup.parent.children.addAll(userGroup.children);
+        for (UserGroup child : userGroup.children) {
+            child.parent = userGroup.parent;
             userGroupRepository.save(child);
         }
 
-        userGroup.getParent().getChildren().remove(userGroup);
-        userGroup.getChildren().clear();
+        userGroup.parent.children.remove(userGroup);
+        userGroup.children.clear();
 
         userGroupRepository.delete(userGroup);
 

@@ -35,6 +35,8 @@ export class AccordianNavigationComponent implements OnInit, AfterViewInit {
      */
     @Input() link: string[];
 
+    @Input() exactLinkMatching: boolean = false;
+
     /**
      * True if this link is active (and should be highlighted).
      * Updates automatically when the route changes.
@@ -70,7 +72,7 @@ export class AccordianNavigationComponent implements OnInit, AfterViewInit {
             this.router.events.subscribe(
                 event => {
                     if (event instanceof NavigationEnd) {
-                        this.active = this.router.isActive(this.router.createUrlTree(this.link), false);
+                        this.active = this.router.isActive(this.router.createUrlTree(this.link), this.exactLinkMatching);
                         if (this.active) {
                             this.expand()
                         }
@@ -103,19 +105,15 @@ export class AccordianNavigationComponent implements OnInit, AfterViewInit {
     }
 
     onClick(): void {
-        // This navigation is not a link.
-        if (!this.link) {
-            // If it's a link or it can't collapse, we don't want to do anything to it.
-            if (this.canCollapse) {
-                if (this.expanded)
-                    this.collapse();
-                else
-                    this.expand();
-            }
-        } else {
-            // This navigation is a link.
-            this.router.navigate(this.link);
+        if (this.canCollapse) {
+            if (this.expanded)
+                this.collapse();
+            else
+                this.expand();
         }
+
+        if (this.link)
+            this.router.navigate(this.link);
     }
 
     protected expand(): void {

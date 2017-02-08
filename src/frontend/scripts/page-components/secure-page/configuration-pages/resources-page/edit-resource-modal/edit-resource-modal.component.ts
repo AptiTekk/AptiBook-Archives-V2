@@ -3,7 +3,7 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, ViewChild, Output, EventEmitter} from "@angular/core";
+import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
@@ -12,19 +12,22 @@ import {APIService} from "../../../../../services/singleton/api.service";
 import {Resource} from "../../../../../models/resource.model";
 import {LoaderService} from "../../../../../services/singleton/loader.service";
 import {ResourceImageComponent} from "../../../../../components/resource-image/resource-image.component";
+import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
+import {ResourceCategory} from "../../../../../models/resource-category.model";
 
 @Component({
     selector: 'edit-resource-modal',
     templateUrl: 'edit-resource-modal.component.html',
     styleUrls: ['edit-resource-modal.component.css']
 })
-export class EditResourceModalComponent {
+export class EditResourceModalComponent implements OnInit {
 
     @ViewChild(ModalComponent) modal: ModalComponent;
 
     formGroup: FormGroup;
 
-    resource: Resource;
+    private resourceCategory: ResourceCategory;
+    protected resource: Resource;
 
     @ViewChild(ResourceImageComponent) resourceImage: ResourceImageComponent;
 
@@ -35,10 +38,18 @@ export class EditResourceModalComponent {
                 protected resourceService: ResourceService,
                 protected apiService: APIService,
                 protected loaderService: LoaderService) {
-        this.resetFormGroup();
     }
 
-    public open(resource: Resource) {
+    ngOnInit(): void {
+        this.formGroup = this.formBuilder.group({
+            name: null,
+            needsApproval: false,
+            owner: null
+        })
+    }
+
+    public open(resourceCategory: ResourceCategory, resource: Resource) {
+        this.resourceCategory = resourceCategory;
         this.resource = resource;
         this.resetFormGroup();
         this.resourceImage.clearImage();
@@ -52,7 +63,12 @@ export class EditResourceModalComponent {
 
     private resetFormGroup() {
         this.formGroup = this.formBuilder.group({
-            name: [this.resource ? this.resource.name : null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
+            name: [this.resource ? this.resource.name : null, Validators.compose([
+                Validators.required,
+                Validators.maxLength(30),
+                Validators.pattern("[^<>;=]*"),
+                UniquenessValidator.isUnique(this.resourceCategory ? this.resourceCategory.resources.filter(resource => resource.id !== this.resource.id).map(resource => resource.name) : [])
+            ])],
             needsApproval: this.resource ? this.resource.needsApproval : true,
             owner: this.resource ? this.resource.owner : null
         });

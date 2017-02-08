@@ -70,7 +70,6 @@ public class UserController extends APIControllerAbstract {
         return noPermission();
     }
 
-
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
         if (userDTO != null) {
@@ -163,7 +162,7 @@ public class UserController extends APIControllerAbstract {
                     }
 
                     for (UserGroup userGroup : currentUser.userGroups) {
-                        userGroup.getUsers().remove(currentUser);
+                        userGroup.users.remove(currentUser);
                     }
 
                     currentUser.userGroups = newUserGroupList;
