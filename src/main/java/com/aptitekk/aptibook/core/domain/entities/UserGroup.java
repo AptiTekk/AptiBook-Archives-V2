@@ -14,8 +14,6 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class UserGroup extends MultiTenantEntity implements Serializable {
 
@@ -28,12 +26,10 @@ public class UserGroup extends MultiTenantEntity implements Serializable {
     @OneToMany(mappedBy = "owner", cascade = CascadeType.REMOVE)
     public List<Resource> resources;
 
-    @JsonIdentityReference(alwaysAsId = true)
     @ManyToMany(mappedBy = "userGroups")
     public List<User> users = new ArrayList<>();
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY)
+    @ManyToOne
     public UserGroup parent;
 
     @OneToMany(mappedBy = "parent")

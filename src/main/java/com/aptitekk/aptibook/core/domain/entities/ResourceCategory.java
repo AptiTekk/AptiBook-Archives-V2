@@ -7,17 +7,12 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class ResourceCategory extends MultiTenantEntity implements Serializable {
 
@@ -27,16 +22,15 @@ public class ResourceCategory extends MultiTenantEntity implements Serializable 
 
     public String name;
 
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @OrderBy(value = "name")
-    public List<Resource> resources = new ArrayList<>();
+    public Set<Resource> resources = new HashSet<>();
 
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
-    public List<ReservationField> reservationFields = new ArrayList<>();
+    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    public Set<ReservationField> reservationFields = new HashSet<>();
 
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE)
-    @OrderBy(value = "name")
-    public List<Tag> tags = new ArrayList<>();
+    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    public Set<Tag> tags = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

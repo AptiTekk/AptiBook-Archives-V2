@@ -19,9 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.time.ZoneId;
 import java.time.ZonedDateTime;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 @Service
 public class DemoTenantBuilder {
@@ -193,7 +191,7 @@ public class DemoTenantBuilder {
         chromebookTag = tagRepository.save(chromebookTag);
         cart1Tags.add(chromebookTag);
 
-        List<Tag> availableTags = new ArrayList<>();
+        Set<Tag> availableTags = new HashSet<>();
         availableTags.add(adobeTag);
         availableTags.add(officeTag);
         availableTags.add(chromebookTag);

@@ -14,10 +14,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class Tag extends MultiTenantEntity implements Comparable<Tag> {
 
@@ -27,13 +27,11 @@ public class Tag extends MultiTenantEntity implements Comparable<Tag> {
 
     public String name;
 
-    @JsonIgnore
-    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @ManyToOne(optional = false)
     public ResourceCategory resourceCategory;
 
-    @JsonIgnore
     @ManyToMany(mappedBy = "tags")
-    public List<Resource> resources = new ArrayList<>();
+    public Set<Resource> resources = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {

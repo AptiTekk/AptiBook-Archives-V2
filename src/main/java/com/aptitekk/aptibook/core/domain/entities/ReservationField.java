@@ -13,10 +13,10 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class ReservationField extends MultiTenantEntity implements Serializable {
 
@@ -36,7 +36,7 @@ public class ReservationField extends MultiTenantEntity implements Serializable 
     public boolean multiLine = false;
 
     @OneToMany(cascade = CascadeType.ALL)
-    public List<ReservationFieldEntry> reservationFieldEntries;
+    public Set<ReservationFieldEntry> reservationFieldEntries = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -59,11 +59,11 @@ public class ReservationField extends MultiTenantEntity implements Serializable 
         return EqualsHelper.calculateHashCode(title, description, required, multiLine);
     }
 
-    public List<ReservationFieldEntry> getReservationFieldEntries() {
+    public Set<ReservationFieldEntry> getReservationFieldEntries() {
         return reservationFieldEntries;
     }
 
-    public void setReservationFieldEntries(List<ReservationFieldEntry> reservationFieldEntries) {
+    public void setReservationFieldEntries(Set<ReservationFieldEntry> reservationFieldEntries) {
         this.reservationFieldEntries = reservationFieldEntries;
     }
 }
