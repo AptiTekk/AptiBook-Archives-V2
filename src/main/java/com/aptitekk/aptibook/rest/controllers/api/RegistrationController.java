@@ -36,10 +36,17 @@ public class RegistrationController extends APIControllerAbstract{
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
     public ResponseEntity<?> register(@RequestBody UserDTO.WithNewPassword userDTO) {
-        System.out.println("Called register");
+
+        if(userRepository.findByEmailAddress(userDTO.emailAddress) != null){
+            return badRequest("User with this email address already exists");
+
+        }
+        if(userDTO.firstName == null || userDTO.lastName == null){
+            return badRequest("An error has occurred. Please try again later.");
+        }
         User newUser = new User();
-        newUser.verified = userDTO.verified;
-        newUser.emailAddress = userDTO.emailAddress;
+        newUser.verified = false;
+        newUser.setEmailAddress(userDTO.emailAddress);
         newUser.firstName = userDTO.firstName;
         newUser.lastName = userDTO.lastName;
         try {
@@ -55,7 +62,8 @@ public class RegistrationController extends APIControllerAbstract{
         Notification notification = new Notification(newUser, "Registration Verification", "<p>Hi! Someone (hopefully you) has registered an account with AptiBook using this email address. " +
                 "To cut down on spam, all we ask is that you click the link below to verify your account.</p>" +
                 "<p>If you did not intend to register with AptiBook, simply ignore this email and have a nice day!</p>" +
-                "<a href='" + "localhost:8080/" + newUser.getTenant().getSlug() + "'" + ">Verify Account</a>"); //add url with unique code here
+                "<a href='" + "www.aptibook.aptitekk.com?" + "code" + "=" + code
+                + "'" + ">Verify Account</a>"); //add url with unique code here
         this.emailService.sendEmailNotification(notification);
         return created(modelMapper.map(newUser, UserDTO.class), "/register/");
     }

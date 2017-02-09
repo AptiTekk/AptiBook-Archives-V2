@@ -37,7 +37,7 @@ export class RegisterComponent {
         newPassword: null,
         confirmPassword: null
 
-};
+    };
 
     constructor(formBuilder: FormBuilder,
                 private router: Router,
@@ -52,39 +52,33 @@ export class RegisterComponent {
             firstName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             lastName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             password: [null, Validators.compose([Validators.required, Validators.maxLength(50)])],
-            confirmPassword: [null, Validators.compose([Validators.required, Validators.maxLength(50)])]
+            confirmPassword: [null, Validators.compose([Validators.required, Validators.maxLength(5)])]
+
         });
 
     }
 
     onSubmit() {
-        console.log("Submitted.");
-        //this.loaderService.startLoading();
-        //this.registrationService.getRegisteredUser().take(1).subscribe(user => this.user = user);
-
-            if (this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined) {
-                this.user.emailAddress = this.formGroup.controls['emailAddress'].value;
-                this.user.firstName = this.formGroup.controls['firstName'].value;
-                this.user.lastName = this.formGroup.controls['lastName'].value;
-                this.user.newPassword = this.formGroup.controls['password'].value;
-                this.user.verified = false;
-                this.registrationService.register(this.user).subscribe(response => {
-                    //redirect to success page
-                    this.router.navigateByUrl('/success');
-                    if (!response.verified) {
-                        //TODO:
-                        // Add message stating to check email
-                        // Make Email Service,
-                        // Send User Id of response in an Email
-                        // Read active route param for id
-                        // match id with user and verified = true
-                        // authenticate normally
-                        // add method to match google user and normal user
-
-                    }
-                });
-            }
+        if (this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined && this.formGroup.controls['confirmPassword'].value != undefined) {
+            this.user.emailAddress = this.formGroup.controls['emailAddress'].value;
+            this.user.firstName = this.formGroup.controls['firstName'].value;
+            this.user.lastName = this.formGroup.controls['lastName'].value;
+            this.user.newPassword = this.formGroup.controls['password'].value;
+            this.user.confirmPassword = this.formGroup.controls['confirmPassword'].value;
+            this.user.verified = false;
+            this.registrationService.register(this.user).subscribe(response => {
+                //redirect to success page
+                this.router.navigateByUrl('/success');
+            });
+        }
 
     }
+
+    doPasswordsMatch(): boolean {
+        if (this.formGroup.controls['confirmPassword'].pristine)
+            return true;
+        return this.formGroup.controls['password'].value === this.formGroup.controls['confirmPassword'].value;
+    }
+
 
 }

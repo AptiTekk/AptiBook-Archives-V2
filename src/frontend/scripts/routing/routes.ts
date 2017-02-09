@@ -32,6 +32,7 @@ import {AllUsersSectionComponent} from "../page-components/secure-page/configura
 import {GroupsSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/groups-section/groups-section.component";
 import {MyContainerComponent} from "../page-components/secure-page/my-pages/my-container.component";
 import {InactiveTenantPage} from "../page-components/inactive-tenant-page/inactive-tenant.page";
+import {SuccessRegisterPageComponent} from "../page-components/front-page/success-page/success-page.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -173,6 +174,10 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             {
                 path: 'register',
                 component: RegisterComponent
+            },
+            {
+                path: 'success',
+                component: SuccessRegisterPageComponent
             },
             {
                 path: '**',

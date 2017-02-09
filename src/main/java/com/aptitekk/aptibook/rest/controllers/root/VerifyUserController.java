@@ -39,7 +39,7 @@ public class VerifyUserController {
 
                 //redirect to tenant slug
                 try {
-                    httpServletResponse.sendRedirect("/" + user.getTenant().getSlug());
+                    httpServletResponse.sendRedirect("/" + user.tenant.slug);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

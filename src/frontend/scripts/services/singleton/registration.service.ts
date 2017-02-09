@@ -12,7 +12,6 @@ import {error} from "util";
 @Injectable()
 export class RegistrationService {
 
-    private registeredUser: ReplaySubject<User> = new ReplaySubject<User>(1);
 
 
     constructor(private apiService: APIService) {
@@ -20,20 +19,15 @@ export class RegistrationService {
     }
     register(user: User) {
         return Observable.create(listener => {
-            console.log("here");
             let body = JSON.stringify(user);
                 this.apiService.post("register", body).subscribe(
                     response => {
                         listener.next(response);
-                        this.registeredUser.next(user);
                     },
                     err => listener.next(undefined)
                 );
             });
     }
 
-    public getRegisteredUser(): ReplaySubject<User>{
-        return this.registeredUser;
-    }
 
 }
