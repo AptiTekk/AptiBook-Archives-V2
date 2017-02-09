@@ -4,12 +4,15 @@
   ~ Proprietary and confidential.
   -->
 
-<div id="sidebar">
+<div id="sidebar"
+	 (swiperight)="onSwipeRight()"
+	 (swipeleft)="onSwipeLeft()"
+	 [class.closed]="!swipedOpen">
 	<div id="header">
 		<a href="#"
-		   [routerLink]="['', 'secure']"
+		   [routerLink]="['', 'secure', 'dashboard']"
 		   id="logo">
-			<img src="../../page-components/front-page/logo.svg"/>
+			<div id="logo-image"></div>
 		</a>
 	</div>
 	
@@ -19,32 +22,42 @@
 		 [routerLinkActive]="'active'">
 		<i class="fa fa-bell"
 		   aria-hidden="true"></i>
-		{{(unreadNotifications.length > 0 ? unreadNotifications.length + ' Unread Notification' : '0 Unread Notification')
-		+ (unreadNotifications.length === 1 ? '' : 's')}}
+		<span id="notifications-count-label">{{(unreadNotifications.length > 0 ? unreadNotifications.length + ' Unread Notification' : '0 Unread Notification')
+		+ (unreadNotifications.length === 1 ? '' : 's')}}</span>
 	</div>
 	
 	<div id="content">
 		<accordian-navigation [canCollapse]="false">
 			<accordian-navigation [link]="['', 'secure', 'dashboard']"
 								  [icon]="'dashboard'"
-								  [label]="'Dashboard'"></accordian-navigation>
+								  [label]="'Dashboard'"
+									[exactLinkMatching]="true">
+				<accordian-navigation [link]="['', 'secure', 'dashboard', 'upcoming']"
+									  [icon]="'list'"
+									  [label]="'Upcoming Reservations'">
+				</accordian-navigation>
+			</accordian-navigation>
+			<accordian-navigation [link]="['', 'secure', 'my', 'account']"
+								  [icon]="'user'"
+								  [label]="'My Account'">
+			</accordian-navigation>
 			<accordian-navigation [icon]="'calendar-check-o'"
 								  [label]="'Reservation Management'">
-				<accordian-navigation [link]="['', 'secure', 'management', 'pending']"
+				<accordian-navigation [link]="['', 'secure', 'management', 'queue']"
 									  [icon]="'hourglass-half'"
-									  [label]="'Pending'">
+									  [label]="'Approval Queue'">
 				</accordian-navigation>
 				<accordian-navigation [link]="['', 'secure', 'management', 'approved']"
 									  [icon]="'calendar-check-o'"
-									  [label]="'Approved'">
+									  [label]="'Approved Reservations'">
 				</accordian-navigation>
 				<accordian-navigation [link]="['', 'secure', 'management', 'rejected']"
 									  [icon]="'calendar-times-o'"
-									  [label]="'Rejected'">
+									  [label]="'Rejected Reservations'">
 				</accordian-navigation>
 				<accordian-navigation [link]="['', 'secure', 'management', 'calendar']"
 									  [icon]="'calendar'"
-									  [label]="'Calendar'">
+									  [label]="'Reservation Calendar'">
 				</accordian-navigation>
 			</accordian-navigation>
 			<accordian-navigation [icon]="'cogs'"
@@ -66,17 +79,15 @@
 									  [label]="'Properties'">
 				</accordian-navigation>
 			</accordian-navigation>
-			<accordian-navigation [link]="['', 'secure', 'my', 'account']"
-								  [icon]="'user'"
-								  [label]="'My Account'">
-			</accordian-navigation>
 		</accordian-navigation>
 	</div>
 	
 	<div id="user">
 		<i class="fa fa-user"
 		   aria-hidden="true"></i>
-		{{user?.fullName}}
+		
+		<span id="user-name">{{user?.fullName}}</span>
+		
 		<button id="sign-out-button"
 				(click)="onSignOut()"
 				class="btn-none">

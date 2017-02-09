@@ -3,18 +3,19 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, ViewChild, Output, EventEmitter} from "@angular/core";
+import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ResourceCategory} from "../../../../../models/resource-category.model";
 import {ResourceCategoryService} from "../../../../../services/singleton/resource-category.service";
 import {LoaderService} from "../../../../../services/singleton/loader.service";
+import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
 
 @Component({
     selector: 'edit-category-modal',
     templateUrl: 'edit-category-modal.component.html'
 })
-export class EditCategoryModalComponent {
+export class EditCategoryModalComponent implements OnInit {
 
     @ViewChild('modal')
     modal: ModalComponent;
@@ -24,21 +25,43 @@ export class EditCategoryModalComponent {
 
     formGroup: FormGroup;
 
+    private resourceCategories: ResourceCategory[];
     resourceCategory: ResourceCategory;
 
-    constructor(formBuilder: FormBuilder,
+    constructor(private formBuilder: FormBuilder,
                 protected resourceCategoryService: ResourceCategoryService,
                 protected loaderService: LoaderService) {
-        this.formGroup = formBuilder.group({
-            name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
+    }
+
+    ngOnInit(): void {
+        this.formGroup = this.formBuilder.group({
+            name: null
         });
+
+        this.resourceCategoryService
+            .getResourceCategories()
+            .subscribe(
+                categories => {
+                    this.resourceCategories = categories;
+                }
+            );
     }
 
     public open(category: ResourceCategory) {
         this.resourceCategory = category;
-        this.formGroup.reset();
-        this.formGroup.controls['name'].setValue(category.name);
+        this.resetFormGroup();
         this.modal.openModal();
+    }
+
+    private resetFormGroup() {
+        this.formGroup = this.formBuilder.group({
+            name: [this.resourceCategory.name, Validators.compose([
+                Validators.required,
+                Validators.maxLength(30),
+                Validators.pattern("[^<>;=]*"),
+                UniquenessValidator.isUnique(this.resourceCategories ? this.resourceCategories.filter(category => category.id !== this.resourceCategory.id).map(category => category.name) : [])
+            ])]
+        });
     }
 
     onCategorySubmitted() {

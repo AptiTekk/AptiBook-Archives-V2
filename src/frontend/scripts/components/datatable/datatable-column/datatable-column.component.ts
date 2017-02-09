@@ -11,7 +11,7 @@ import {DataTableComponent} from "../datatable.component";
     selector: 'datatable-column',
     template: ''
 })
-export class DataTableColumn implements AfterViewInit {
+export class DataTableColumnComponent implements AfterViewInit {
 
     @Input() title: string;
     @Input() orderable: boolean = true;
@@ -24,5 +24,10 @@ export class DataTableColumn implements AfterViewInit {
 
     ngAfterViewInit(): void {
         this.cells.changes.subscribe(cells => this.datatable.scheduleRedraw());
+    }
+
+    scheduleRedraw() {
+        if (this.datatable)
+            this.datatable.scheduleRedraw();
     }
 }

@@ -1,3 +1,9 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
 import {Component, ViewChild} from "@angular/core";
 import * as moment from "moment";
 import {Router} from "@angular/router";
@@ -26,8 +32,8 @@ export class NewReservationModalComponent {
     }
 
     public display(date: Moment) {
-        this.startDate = date;
-        this.endDate = date;
+        this.startDate = moment(date.toISOString());
+        this.endDate = moment(this.startDate);
         this.modal.openModal();
     }
 

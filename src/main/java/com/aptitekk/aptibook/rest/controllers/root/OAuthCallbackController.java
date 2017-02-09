@@ -55,7 +55,7 @@ public class OAuthCallbackController {
 
                 //Make sure that google sign in is actually enabled
                 Property googleSignInProperty = propertiesRepository.findPropertyByKey(Property.Key.GOOGLE_SIGN_IN_ENABLED, tenant);
-                if (googleSignInProperty != null && Boolean.parseBoolean(googleSignInProperty.getPropertyValue())) {
+                if (googleSignInProperty != null && Boolean.parseBoolean(googleSignInProperty.propertyValue)) {
 
                     //Check for code and set the appropriate user if the code exists.
                     if (code != null && !code.isEmpty()) {

@@ -114,39 +114,13 @@ public class Property extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
     @JsonIgnore
     @Enumerated(EnumType.STRING)
-    private Key propertyKey;
+    public Key propertyKey;
 
-    private String propertyValue;
-
-    private static final long serialVersionUID = 1L;
-
-    public Key getPropertyKey() {
-        return this.propertyKey;
-    }
-
-    public void setPropertyKey(Key key) {
-        this.propertyKey = key;
-    }
-
-    public String getPropertyValue() {
-        return this.propertyValue;
-    }
-
-    public void setPropertyValue(String value) {
-        this.propertyValue = value;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
+    public String propertyValue;
 
     public String getFieldLabel() {
         return this.propertyKey.getFieldLabel();
@@ -162,12 +136,12 @@ public class Property extends MultiTenantEntity implements Serializable {
 
         Property other = (Property) o;
 
-        return EqualsHelper.areEquals(getPropertyKey(), other.getPropertyKey())
-                && EqualsHelper.areEquals(getPropertyValue(), other.getPropertyValue());
+        return EqualsHelper.areEquals(propertyKey, other.propertyKey)
+                && EqualsHelper.areEquals(propertyValue, other.propertyValue);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getPropertyKey(), getPropertyValue());
+        return EqualsHelper.calculateHashCode(propertyKey, propertyValue);
     }
 }

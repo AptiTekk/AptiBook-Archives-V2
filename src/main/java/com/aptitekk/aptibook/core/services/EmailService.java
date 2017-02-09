@@ -52,10 +52,10 @@ public class EmailService {
     }
 
     public boolean sendEmailNotification(Notification notification) {
-        if (notification.getUser() == null || notification.getUser().getEmailAddress() == null || notification.getUser().getEmailAddress().isEmpty())
+        if (notification.user == null || notification.user.getEmailAddress() == null || notification.user.getEmailAddress().isEmpty())
             return false;
 
-        return sendEmailNotification(notification.getUser().getEmailAddress(), notification.getSubject(), notification.getBody());
+        return sendEmailNotification(notification.user.getEmailAddress(), notification.subject, notification.body);
     }
 
     public boolean sendEmailNotification(String emailAddress, String subject, String body) {

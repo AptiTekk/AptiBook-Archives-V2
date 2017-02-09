@@ -8,8 +8,8 @@ import {Component} from '@angular/core';
 
 @Component({
     selector: 'inactive-tenant',
-    templateUrl: 'inactive-tenant-page.component.html'
+    templateUrl: 'inactive-tenant.page.html'
 })
-export class InactiveTenantPageComponent {
+export class InactiveTenantPage {
 
 }

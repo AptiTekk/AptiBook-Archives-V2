@@ -7,14 +7,20 @@
 <div class="navigation-block"
 	 *ngIf="label || icon"
 	 [class.collapsible]="!link && canCollapse"
-	 [class.expanded]="!link && (expanded || !canCollapse)"
-	 [class.collapsed]="!link && (!expanded && canCollapse)"
+	 [class.expanded]="expanded || !canCollapse"
+	 [class.collapsed]="!expanded && canCollapse"
 	 [class.link]="link"
-	 [class.group]="!link"
+	 [class.group]="children?.length > 0"
 	 [class.active]="link && active"
 	 (click)="onClick()">
+	<i *ngIf="children?.length > 0 && canCollapse"
+	   class="navigation-block-caret fa"
+	   style="width: 10px;"
+	   [class.fa-caret-down]="expanded"
+	   [class.fa-caret-right]="!expanded"></i>
 	<i *ngIf="icon"
-	   class="fa fa-{{icon}}"></i> {{label ? label : ''}}
+	   class="navigation-block-icon fa fa-{{icon}}"></i>
+	<span class="navigation-block-label">{{label ? label : ''}}</span>
 </div>
 <div class="navigation-children"
 	 [class.expanded]="expanded || !canCollapse"

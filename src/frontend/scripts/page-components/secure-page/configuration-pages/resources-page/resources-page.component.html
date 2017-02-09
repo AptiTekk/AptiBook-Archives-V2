@@ -6,7 +6,6 @@
 
 
 <ol class="breadcrumb">
-	<li><a [routerLink]="['', 'secure']">Home</a></li>
 	<li class="active">Configuration</li>
 	<li class="active">Resources</li>
 </ol>
@@ -102,7 +101,7 @@
 							
 							<!-- Edit Button -->
 							<button class="btn btn-default"
-									(click)="editResourceModal.open(resource)">Edit
+									(click)="editResourceModal.open(currentResourceCategory, resource)">Edit
 							</button>
 							
 							<!-- Delete Button -->

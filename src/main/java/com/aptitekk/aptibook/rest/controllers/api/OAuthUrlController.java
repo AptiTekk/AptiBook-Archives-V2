@@ -34,7 +34,7 @@ public class OAuthUrlController extends APIControllerAbstract {
     @RequestMapping("oauthUrl/google")
     public ResponseEntity<?> getGoogleUrl() {
         Property googleSignInProperty = propertiesRepository.findPropertyByKey(Property.Key.GOOGLE_SIGN_IN_ENABLED);
-        if (Boolean.parseBoolean(googleSignInProperty.getPropertyValue())) {
+        if (Boolean.parseBoolean(googleSignInProperty.propertyValue)) {
             String signInUrl = googleOAuthService.getSignInUrl(tenantManagementService1.getTenant());
             if (signInUrl != null)
                 return ok(new OAuthURL(signInUrl));

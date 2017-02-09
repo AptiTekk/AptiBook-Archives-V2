@@ -24,53 +24,15 @@ public class ReservationFieldEntry extends MultiTenantEntity implements Serializ
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
     @ManyToOne
-    private Reservation reservation;
+    public Reservation reservation;
 
     @ManyToOne
-    private ReservationField field;
+    public ReservationField field;
 
-    private String content;
-
-    private static final long serialVersionUID = 1L;
-
-    public ReservationFieldEntry() {
-        super();
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Reservation getReservation() {
-        return this.reservation;
-    }
-
-    public void setReservation(Reservation reservation) {
-        this.reservation = reservation;
-    }
-
-    public ReservationField getField() {
-        return this.field;
-    }
-
-    public void setField(ReservationField field) {
-        this.field = field;
-    }
-
-    public String getContent() {
-        return this.content;
-    }
-
-    public void setContent(String content) {
-        this.content = content;
-    }
+    public String content;
 
     @Override
     public boolean equals(Object o) {
@@ -82,11 +44,11 @@ public class ReservationFieldEntry extends MultiTenantEntity implements Serializ
 
         ReservationFieldEntry other = (ReservationFieldEntry) o;
 
-        return EqualsHelper.areEquals(getContent(), other.getContent());
+        return EqualsHelper.areEquals(content, other.content);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getContent());
+        return EqualsHelper.calculateHashCode(content);
     }
 }

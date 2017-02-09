@@ -28,7 +28,7 @@ public class User extends MultiTenantEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
-    public String emailAddress;
+    private String emailAddress;
 
     public String firstName;
 

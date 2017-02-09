@@ -13,82 +13,30 @@ import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import java.io.Serializable;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class ReservationField extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    private Long id;
+    public Long id;
 
-    private String title;
+    public String title;
 
-    private String description;
+    public String description;
 
-    private boolean required;
+    public boolean required;
 
     @ManyToOne
-    private ResourceCategory resourceCategory;
+    public ResourceCategory resourceCategory;
 
-    private boolean multiLine = false;
+    public boolean multiLine = false;
 
     @OneToMany(cascade = CascadeType.ALL)
-    private List<ReservationFieldEntry> reservationFieldEntries;
-
-    public ReservationField() {
-        super();
-    }
-
-    public Long getId() {
-        return this.id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getTitle() {
-        return this.title;
-    }
-
-    public void setTitle(String name) {
-        this.title = name;
-    }
-
-    public String getDescription() {
-        return this.description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public boolean isRequired() {
-        return required;
-    }
-
-    public void setRequired(boolean required) {
-        this.required = required;
-    }
-
-    public ResourceCategory getResourceCategory() {
-        return resourceCategory;
-    }
-
-    public void setResourceCategory(ResourceCategory resourceCategory) {
-        this.resourceCategory = resourceCategory;
-    }
-
-    public boolean isMultiLine() {
-        return multiLine;
-    }
-
-    public void setMultiLine(boolean multiLine) {
-        this.multiLine = multiLine;
-    }
+    public Set<ReservationFieldEntry> reservationFieldEntries = new HashSet<>();
 
     @Override
     public boolean equals(Object o) {
@@ -100,22 +48,22 @@ public class ReservationField extends MultiTenantEntity implements Serializable 
 
         ReservationField other = (ReservationField) o;
 
-        return EqualsHelper.areEquals(getTitle(), other.getTitle())
-                && EqualsHelper.areEquals(getDescription(), other.getDescription())
-                && EqualsHelper.areEquals(isRequired(), other.isRequired())
-                && EqualsHelper.areEquals(isMultiLine(), other.isMultiLine());
+        return EqualsHelper.areEquals(title, other.title)
+                && EqualsHelper.areEquals(description, other.description)
+                && EqualsHelper.areEquals(required, other.required)
+                && EqualsHelper.areEquals(multiLine, other.multiLine);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(getTitle(), getDescription(), isRequired(), isMultiLine());
+        return EqualsHelper.calculateHashCode(title, description, required, multiLine);
     }
 
-    public List<ReservationFieldEntry> getReservationFieldEntries() {
+    public Set<ReservationFieldEntry> getReservationFieldEntries() {
         return reservationFieldEntries;
     }
 
-    public void setReservationFieldEntries(List<ReservationFieldEntry> reservationFieldEntries) {
+    public void setReservationFieldEntries(Set<ReservationFieldEntry> reservationFieldEntries) {
         this.reservationFieldEntries = reservationFieldEntries;
     }
 }

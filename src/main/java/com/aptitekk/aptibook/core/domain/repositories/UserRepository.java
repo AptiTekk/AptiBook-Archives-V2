@@ -124,7 +124,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
                     .getResultList();
 
             for (UserGroup userGroup : groupsWithPermission) {
-                for (User user : userGroup.getUsers()) {
+                for (User user : userGroup.users) {
                     if (!usersWithPermission.contains(user))
                         usersWithPermission.add(user);
                 }

@@ -1,13 +1,19 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
 import {
-    Component,
-    ViewChild,
     AfterViewInit,
-    Input,
-    Output,
+    Component,
     EventEmitter,
+    Input,
     OnChanges,
+    OnInit,
+    Output,
     SimpleChanges,
-    OnInit
+    ViewChild
 } from "@angular/core";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
@@ -22,6 +28,14 @@ import moment = require("moment");
     styleUrls: ['calendar.component.css']
 })
 export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
+
+    public static readonly VIEW_CALENDAR: string = "month";
+    public static readonly VIEW_WEEK: string = "basicWeek";
+    public static readonly VIEW_DAY: string = "basicDay";
+    public static readonly VIEW_AGENDA_WEEK: string = "agendaWeek";
+    public static readonly VIEW_AGENDA_DAY: string = "agendaDay";
+    public static readonly VIEW_LIST_MONTH: string = "listMonth";
+    public static readonly VIEW_LIST_WEEK: string = "listWeek";
 
     @ViewChild('calendarContainer')
     calendarContainer;
@@ -44,6 +58,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     @Input() title: string;
 
+    @Input() view: string;
+
     @Output() eventSelected: EventEmitter<any> = new EventEmitter<any>();
 
     @Output() daySelected: EventEmitter<Moment> = new EventEmitter<Moment>();
@@ -52,9 +68,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     ngOnInit(): void {
         //Re-render and re-size calendar when window size is changed
-        window.onresize = (event) => {
-            this.refreshCalendar();
-        };
+        window.onresize = () => this.refreshCalendar();
     }
 
     ngAfterViewInit(): void {
@@ -88,6 +102,10 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
                     case 'filterByUserGroupOwners':
                         this.refreshCalendar(true);
                         break;
+                    case 'view':
+                        this.setView(this.view);
+                        this.refreshCalendar(true);
+                        break;
                 }
             }
         } catch (ignored) {
@@ -108,6 +126,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             eventLimit: true, //"More" link below too many events on a day
             events: this.getEventsToUse(),
             timezone: 'local',
+            view: this.view ? this.view : CalendarComponent.VIEW_CALENDAR,
 
             eventRender: (event: Reservation, element) => {
                 if (event.status) {
@@ -168,14 +187,19 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
         return '';
     }
 
-    private onPrev() {
+    public goPrevious() {
         if (this.calendar)
             this.calendar.fullCalendar('prev');
     }
 
-    private onNext() {
+    public goNext() {
         if (this.calendar)
             this.calendar.fullCalendar('next');
+    }
+
+    public setView(view: string) {
+        if (this.calendar)
+            this.calendar.fullCalendar('changeView', view ? view : CalendarComponent.VIEW_CALENDAR);
     }
 
     private refreshCalendar(refreshEvents: boolean = false): void {

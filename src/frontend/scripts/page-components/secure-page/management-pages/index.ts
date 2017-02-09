@@ -7,5 +7,5 @@
 export * from './management-container.component';
 export * from './approved-page/approved-page.component';
 export * from './calendar-page/calendar-page.component';
-export * from './pending-page/pending-page.component';
+export * from './approval-queue-page/approval-queue-page.component';
 export * from './rejected-page/rejected-page.component';
