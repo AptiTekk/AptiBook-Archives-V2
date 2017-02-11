@@ -9,17 +9,17 @@ import {ReservationDecision} from "./reservation-decision.model";
 
 export interface UserGroup {
 
-    id: number;
+    id?: number;
 
-    name: string;
+    name?: string;
 
-    root: boolean;
+    root?: boolean;
 
-    users: User[];
+    users?: User[];
 
-    parent: UserGroup;
+    parent?: UserGroup;
 
-    children: UserGroup[];
+    children?: UserGroup[];
 
 }
 
