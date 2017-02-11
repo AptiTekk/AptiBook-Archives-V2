@@ -45,14 +45,7 @@ public class RegistrationController extends APIControllerAbstract{
     public ResponseEntity<?> register(HttpServletResponse httpServletResponse, @RequestBody UserDTO.WithNewPassword userDTO) {
 
         if(userRepository.findByEmailAddress(userDTO.emailAddress) != null){
-            System.out.println("error has occurred");
-            redirectToTenantWithError(httpServletResponse, tenantManagementService.getTenant().slug, "user_exists");
             return badRequest("User with this email address already exists");
-
-        }
-        if(userDTO.firstName == null || userDTO.lastName == null){
-            redirectToTenantWithError(httpServletResponse, tenantManagementService.getTenant().slug, "null_fields");
-            return badRequest("An error has occurred. Please try again later.");
         }
         User newUser = new User();
         newUser.verified = false;
@@ -78,22 +71,6 @@ public class RegistrationController extends APIControllerAbstract{
         return created(modelMapper.map(newUser, UserDTO.class), "/register/");
     }
 
-    private void redirectToTenantWithError(HttpServletResponse httpServletResponse, String tenantSlug, String error) {
-        try {
-            httpServletResponse.sendRedirect("/" + tenantSlug + (error != null ? "?registerError=" + error : ""));
-        } catch (IOException e) {
-            logService.logException(getClass(), e, "Could not redirect to tenant root");
-            redirectToWebRoot(httpServletResponse);
-        }
-    }
-
-    private void redirectToWebRoot(HttpServletResponse httpServletResponse) {
-        try {
-            httpServletResponse.sendRedirect("/");
-        } catch (IOException e) {
-            logService.logException(getClass(), e, "Could not redirect to web root");
-        }
-    }
 
 }
 

@@ -62,22 +62,6 @@ export class RegisterComponent {
 
     }
 
-
-    ngAfterViewInit(): void {
-        //Check for errors in the parameters
-        this.activeRoute.queryParams.subscribe(
-            params => {
-                if (params['registerError']) {
-                    if (params['registerError'] === "user_exists")
-                        this.registerAlert.display("Unfortunately, a user with this email already exists.", false);
-                    else if (params['registerError'] === "null_fields")
-                        this.registerAlert.display("Unfortunately, an error has occurred.", false);
-                }
-            });
-
-        //Subscribe to auth messages
-        this.registrationService.getRegisterMessage().subscribe(message => this.registerAlert.display(message));
-    }
     onSubmit() {
         if (this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined && this.formGroup.controls['confirmPassword'].value != undefined) {
             this.user.emailAddress = this.formGroup.controls['emailAddress'].value;
@@ -87,9 +71,14 @@ export class RegisterComponent {
             this.user.confirmPassword = this.formGroup.controls['confirmPassword'].value;
             this.user.verified = false;
             this.registrationService.register(this.user).subscribe(response => {
-                //redirect to success page
-                this.router.navigateByUrl('/success');
-            });
+                    if (response) {
+                        this.router.navigateByUrl('/success');
+                    }else {
+                        //display error message
+                        this.registerAlert.display("A user with this email already exists", false);
+                    }
+                }
+            );
         }
 
     }

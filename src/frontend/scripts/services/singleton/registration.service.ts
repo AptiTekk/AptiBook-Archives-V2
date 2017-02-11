@@ -12,31 +12,18 @@ import {error} from "util";
 @Injectable()
 export class RegistrationService {
 
-
-    private registerMessage: ReplaySubject<string> = new ReplaySubject<string>(1);
-
-    /**
-     * @returns The registration message (a message that should be shown to users) ReplaySubject
-     */
-    public getRegisterMessage(): ReplaySubject<string> {
-        return this.registerMessage;
-    }
-
-
     constructor(private apiService: APIService) {
 
     }
-    register(user: User) {
+    register(user: User): Observable<boolean> {
         return Observable.create(listener => {
             let body = JSON.stringify(user);
                 this.apiService.post("register", body).subscribe(
                     response => {
-                        listener.next(response);
-                        this.registerMessage.next(undefined);
+                        listener.next(true);
                     },
                     err =>{
-                        listener.next(undefined);
-                        this.registerMessage.next(err.json.error());
+                        listener.next(false);
                     }
                 );
             });
