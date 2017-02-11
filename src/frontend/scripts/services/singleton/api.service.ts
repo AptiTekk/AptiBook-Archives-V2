@@ -5,8 +5,10 @@
  */
 
 import {Injectable} from "@angular/core";
-import {Http, Response, Headers, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestOptions, Response} from "@angular/http";
 import {Observable} from "rxjs";
+
+declare const JSOG: any;
 
 @Injectable()
 export class APIService {
@@ -28,7 +30,7 @@ export class APIService {
     private static checkForErrors(response: Response): any {
         if (response.status >= 200 && response.status < 300) {
             if (response.text().length > 0)
-                return response.json();
+                return JSOG.parse(response.text());
             return undefined;
         } else {
             let error = new Error(response.statusText);
