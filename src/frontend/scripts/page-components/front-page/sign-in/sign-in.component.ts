@@ -18,7 +18,7 @@ import {LoaderService} from "../../../services/singleton/loader.service";
 })
 export class SignInComponent implements AfterViewInit {
 
-    @ViewChild('loginAlert')
+    @ViewChild('registerAlert')
     loginAlert: AlertComponent;
 
     signInFormGroup: FormGroup;

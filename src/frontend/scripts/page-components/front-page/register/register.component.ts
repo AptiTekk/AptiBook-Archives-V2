@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component} from "@angular/core";
+import {Component, ViewChild} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {OAuthService} from "../../../services/stateful/oauth.service";
@@ -12,12 +12,16 @@ import {AuthService} from "../../../services/singleton/auth.service";
 import {LoaderService} from "../../../services/singleton/loader.service";
 import {RegistrationService} from "../../../services/singleton/registration.service";
 import {User} from "../../../models/user.model";
+import {AlertComponent} from "../../../components/alert/alert.component";
 
 @Component({
     selector: 'register',
     templateUrl: 'register.component.html'
 })
 export class RegisterComponent {
+
+    @ViewChild('registerAlert')
+    registerAlert: AlertComponent;
 
     formGroup: FormGroup;
     user: User = {
@@ -58,6 +62,22 @@ export class RegisterComponent {
 
     }
 
+
+    ngAfterViewInit(): void {
+        //Check for errors in the parameters
+        this.activeRoute.queryParams.subscribe(
+            params => {
+                if (params['registerError']) {
+                    if (params['registerError'] === "user_exists")
+                        this.registerAlert.display("Unfortunately, a user with this email already exists.", false);
+                    else if (params['registerError'] === "null_fields")
+                        this.registerAlert.display("Unfortunately, an error has occurred.", false);
+                }
+            });
+
+        //Subscribe to auth messages
+        this.registrationService.getRegisterMessage().subscribe(message => this.registerAlert.display(message));
+    }
     onSubmit() {
         if (this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined && this.formGroup.controls['confirmPassword'].value != undefined) {
             this.user.emailAddress = this.formGroup.controls['emailAddress'].value;

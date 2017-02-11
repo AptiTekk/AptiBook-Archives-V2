@@ -13,6 +13,15 @@ import {error} from "util";
 export class RegistrationService {
 
 
+    private registerMessage: ReplaySubject<string> = new ReplaySubject<string>(1);
+
+    /**
+     * @returns The registration message (a message that should be shown to users) ReplaySubject
+     */
+    public getRegisterMessage(): ReplaySubject<string> {
+        return this.registerMessage;
+    }
+
 
     constructor(private apiService: APIService) {
 
@@ -23,8 +32,12 @@ export class RegistrationService {
                 this.apiService.post("register", body).subscribe(
                     response => {
                         listener.next(response);
+                        this.registerMessage.next(undefined);
                     },
-                    err => listener.next(undefined)
+                    err =>{
+                        listener.next(undefined);
+                        this.registerMessage.next(err.json.error());
+                    }
                 );
             });
     }
