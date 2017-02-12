@@ -139,20 +139,25 @@ public class UserGroupController extends APIControllerAbstract {
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
+        // Make sure that the selected User Group exists.
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
             return badRequest("User Group not found.");
 
+        // Make sure that the new parent User Group exists.
         UserGroup newParentUserGroup = userGroupRepository.findInCurrentTenant(newParentId);
         if (newParentUserGroup == null)
             return badRequest("New Parent User Group not found.");
 
+        // Make sure that the selected and parent groups are not the same groups.
         if (id.equals(newParentId))
             return badRequest("This User Group and the New Parent User Group cannot be the same.");
 
+        // Check if they are already where they should be.
         if (userGroup.parent.equals(newParentUserGroup))
             return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
 
+        // Make sure we are not placing the selected User Group below itself on the same branch.
         List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
         if (hierarchyDown.contains(newParentUserGroup))
             return badRequest("The New Parent User Group cannot be below this User Group on the same branch.");
@@ -160,6 +165,9 @@ public class UserGroupController extends APIControllerAbstract {
         userGroup.parent.children.remove(userGroup);
         userGroup.parent = newParentUserGroup;
         userGroup = userGroupRepository.save(userGroup);
+
+        //TODO: Fix all users who now have more than one assigned group on the same branch.
+
         return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
     }
 
