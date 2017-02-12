@@ -12,9 +12,10 @@ import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
-import org.springframework.test.web.servlet.result.MockMvcResultHandlers;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
+
+import static org.hamcrest.Matchers.is;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
 public class TenantControllerTest extends AbstractWebClientTest {
 
@@ -34,9 +35,9 @@ public class TenantControllerTest extends AbstractWebClientTest {
         tenant = this.tenantRepository.save(tenant);
         this.tenantManagementService.refresh();
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/" + tenant.slug + "/tenant"))
-                .andDo(MockMvcResultHandlers.print())
-                .andExpect(MockMvcResultMatchers.content().json("{id: " + tenant.id + ", slug: " + tenant.slug + "}"));
+        this.mockMvc.perform(get("/api/" + tenant.slug + "/tenant"))
+                .andExpect(jsonPath("$.id", is(tenant.id.intValue())))
+                .andExpect(jsonPath("$.slug", is(tenant.slug)));
     }
 
 }

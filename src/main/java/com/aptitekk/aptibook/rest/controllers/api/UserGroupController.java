@@ -7,10 +7,8 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.Permission;
-import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
-import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
@@ -24,7 +22,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
 import java.util.List;
 
 @APIController
@@ -32,13 +29,11 @@ public class UserGroupController extends APIControllerAbstract {
 
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
-    private final UserRepository userRepository;
 
     @Autowired
-    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService, UserRepository userRepository) {
+    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService) {
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
-        this.userRepository = userRepository;
     }
 
     @RequestMapping(value = "/userGroups", method = RequestMethod.GET)
@@ -49,6 +44,33 @@ public class UserGroupController extends APIControllerAbstract {
         }
 
         return noPermission();
+    }
+
+    @RequestMapping(value = "/userGroups", method = RequestMethod.POST)
+    public ResponseEntity<?> addNewUserGroup(@RequestBody UserGroupDTO userGroupDTO) {
+
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
+            return noPermission();
+
+        if (userGroupDTO.name == null)
+            return badRequest("The User Group has no name.");
+
+        if (userGroupDTO.parent == null)
+            return badRequest("The User Group has no parent.");
+
+        UserGroup parentGroup = userGroupRepository.findByName(userGroupDTO.parent.name);
+        if (parentGroup == null)
+            return badRequest("The Parent User Group could not be found.");
+
+        UserGroup userGroup = new UserGroup();
+        userGroup.name = userGroupDTO.name;
+        userGroup.parent = parentGroup;
+
+        userGroup = userGroupRepository.save(userGroup);
+        return created(modelMapper.map(userGroup, UserGroupDTO.class), "/userGroups/" + userGroup.id);
     }
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.GET)

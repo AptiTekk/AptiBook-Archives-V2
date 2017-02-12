@@ -7,6 +7,9 @@
 package com.aptitekk;
 
 import com.gargoylesoftware.htmlunit.WebClient;
+import org.apache.commons.io.IOUtils;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.junit.Before;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
@@ -18,6 +21,10 @@ import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.htmlunit.webdriver.MockMvcHtmlUnitDriverBuilder;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.nio.charset.Charset;
 
 @SuppressWarnings("SpringJavaAutowiredMembersInspection")
 @RunWith(SpringRunner.class)
@@ -38,8 +45,42 @@ public abstract class AbstractWebClientTest {
     @Before
     public void setUp() throws Exception {
         this.webClient.getOptions().setThrowExceptionOnFailingStatusCode(false);
-
         this.webDriver = MockMvcHtmlUnitDriverBuilder.mockMvcSetup(mockMvc).build();
+    }
+
+    /**
+     * Retrieves the contents of a File from the resources directory.
+     *
+     * @param filePath The file path (from within resources).
+     * @return The contents of the file as a String.
+     */
+    protected String getFileContents(String filePath) {
+        InputStream stream = getClass().getClassLoader().getResourceAsStream(filePath);
+        if (stream == null) {
+            System.err.println("File not found. Could not get file contents for " + filePath);
+            return null;
+        }
+
+        try {
+            return IOUtils.toString(stream, Charset.defaultCharset());
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    protected JSONObject getJsonObjectFromFile(String filePath) {
+        String json = getFileContents(filePath);
+
+        if (json == null)
+            return null;
+
+        try {
+            return new JSONObject(json);
+        } catch (JSONException e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
 }
