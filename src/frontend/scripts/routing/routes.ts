@@ -7,13 +7,13 @@
 import {ModuleWithProviders} from "@angular/core";
 import {RouterModule} from "@angular/router";
 import {
+    AccountPageComponent,
+    DashboardPageComponent,
     FrontPageComponent,
-    SignInComponent,
+    NotificationsPageComponent,
     RegisterComponent,
     SecurePageComponent,
-    DashboardPageComponent,
-    AccountPageComponent,
-    NotificationsPageComponent
+    SignInComponent
 } from "../page-components";
 import {FrontPageGuard, SecureGuard} from "./guards";
 import {SearchResultsPageComponent} from "../page-components/secure-page/search-results-page/search-results-page.component";
@@ -27,11 +27,10 @@ import {ReservationDetailsComponent} from "../page-components/secure-page/search
 import {ResourcesPageComponent} from "../page-components/secure-page/configuration-pages/resources-page/resources-page.component";
 import {SuccessPageComponent} from "../page-components/secure-page/search-results-page/success-page/success-page.component";
 import {UsersPageComponent} from "../page-components/secure-page/configuration-pages/users-page/users-page.component";
-import {ConfigurationContainerComponent} from "../page-components/secure-page/configuration-pages/configuration-container.component";
 import {AllUsersSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/all-users-section/all-users-section.component";
 import {GroupsSectionComponent} from "../page-components/secure-page/configuration-pages/users-page/groups-section/groups-section.component";
-import {MyContainerComponent} from "../page-components/secure-page/my-pages/my-container.component";
 import {InactiveTenantPage} from "../page-components/inactive-tenant-page/inactive-tenant.page";
+import {RegisterSuccessComponent} from "../page-components/front-page/register/success/register-success.component";
 
 export const routes: ModuleWithProviders = RouterModule.forRoot([
     {
@@ -172,7 +171,11 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
             },
             {
                 path: 'register',
-                component: RegisterComponent
+                component: RegisterComponent,
+            },
+            {
+                path: 'register/success',
+                component: RegisterSuccessComponent
             },
             {
                 path: '**',

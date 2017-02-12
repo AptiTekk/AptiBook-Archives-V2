@@ -7,8 +7,9 @@
 <form id="loginForm"
 	  [formGroup]="signInFormGroup"
 	  (submit)="onSubmit()">
-	<alert #loginAlert
+	<alert #loginDangerAlert
 		   [severity]="'danger'"></alert>
+	<alert #loginInfoAlert></alert>
 	
 	<form-group [control]="signInFormGroup.controls['emailAddress']"
 				[label]="'Email Address'"

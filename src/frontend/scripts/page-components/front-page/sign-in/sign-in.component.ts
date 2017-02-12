@@ -4,8 +4,8 @@
  * Proprietary and confidential.
  */
 
-import {Component, ViewChild, AfterViewInit} from "@angular/core";
-import {Router, ActivatedRoute} from "@angular/router";
+import {AfterViewInit, Component, ViewChild} from "@angular/core";
+import {ActivatedRoute, Router} from "@angular/router";
 import {OAuthService} from "../../../services/stateful/oauth.service";
 import {AuthService} from "../../../services/singleton/auth.service";
 import {AlertComponent} from "../../../components/alert/alert.component";
@@ -18,8 +18,8 @@ import {LoaderService} from "../../../services/singleton/loader.service";
 })
 export class SignInComponent implements AfterViewInit {
 
-    @ViewChild('loginAlert')
-    loginAlert: AlertComponent;
+    @ViewChild('loginDangerAlert') loginDangerAlert: AlertComponent;
+    @ViewChild('loginInfoAlert') loginInfoAlert: AlertComponent;
 
     signInFormGroup: FormGroup;
 
@@ -47,14 +47,17 @@ export class SignInComponent implements AfterViewInit {
             params => {
                 if (params['googleError']) {
                     if (params['googleError'] === "access_denied")
-                        this.loginAlert.display("Unfortunately, Sign In with Google failed because access was denied.", false);
+                        this.loginDangerAlert.display("Unfortunately, Sign In with Google failed because access was denied.", false);
                     else if (params['googleError'] === "inactive")
-                        this.loginAlert.display("Unfortunately, Sign In with Google failed because it is not allowed.", false);
+                        this.loginDangerAlert.display("Unfortunately, Sign In with Google failed because it is not allowed.", false);
+
+                } else if (params['verified'] !== undefined) {
+                    if (params['verified'] === "true")
+                        this.loginInfoAlert.display("Your Email Address has been verified and you may now sign in.", false);
+                    else if (params['verified'] === "false")
+                        this.loginDangerAlert.display("Your Email Address could not be verified.", false);
                 }
             });
-
-        //Subscribe to auth messages
-        this.authService.getAuthMessage().subscribe(message => this.loginAlert.display(message));
     }
 
     onSubmit() {
@@ -62,12 +65,12 @@ export class SignInComponent implements AfterViewInit {
         this.authService
             .signIn(this.signInFormGroup.controls['emailAddress'].value, this.signInFormGroup.controls['password'].value)
             .subscribe(
-                successful => {
-                    if (successful)
-                        this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading());
-                    else
-                        this.loaderService.stopLoading();
-                });
+                user => this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading()),
+                err => {
+                    this.loginDangerAlert.display(err, true);
+                    this.loaderService.stopLoading();
+                }
+            );
     }
 
     onGoogleSignIn() {

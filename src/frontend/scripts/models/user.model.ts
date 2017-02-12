@@ -6,31 +6,32 @@
 
 import {UserGroup} from "./user-group.model";
 export interface User {
-    id: number;
+    id?: number;
 
-    emailAddress: string;
+    emailAddress?: string;
 
-    firstName: string;
-    lastName: string;
-    fullName: string;
+    firstName?: string;
+    lastName?: string;
+    fullName?: string;
+    verified?: boolean;
 
-    phoneNumber: string;
-    location: string;
+    phoneNumber?: string;
+    location?: string;
 
-    notifications: number[];
-    notificationTypeSettings;
+    notifications?: number[];
+    notificationTypeSettings?;
 
-    permissions;
-    userGroups: UserGroup[];
-    admin: boolean;
+    permissions?;
+    userGroups?: UserGroup[];
+    admin?: boolean;
 
     /**
      * New Password - not sent by server, but is accepted by server.
      */
-    newPassword: string;
+    newPassword?: string;
 
     /**
      * Confirmation password - for client use only, not sent or accepted by server.
      */
-    confirmPassword: string;
+    confirmPassword?: string;
 }

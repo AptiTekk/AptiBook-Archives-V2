@@ -14,7 +14,6 @@ import {User} from "../../models/user.model";
 export class AuthService {
 
     private user: ReplaySubject<User> = new ReplaySubject<User>(1);
-    private authMessage: ReplaySubject<string> = new ReplaySubject<string>(1);
 
     constructor(private apiService: APIService) {
         this.reloadUser();
@@ -37,56 +36,41 @@ export class AuthService {
     }
 
     /**
-     * @returns The auth message (a message that should be shown to users) ReplaySubject
-     */
-    public getAuthMessage(): ReplaySubject<string> {
-        return this.authMessage;
-    }
-
-    /**
      * Signs the user into AptiBook using the credentials provided.
      * @param emailAddress The email address of the user.
      * @param password The password of the user.
-     * @returns An observable that returns true if the sign in was successful, false otherwise.
+     * @returns An observable that contains the object of the signed in User.
      */
-    public signIn(emailAddress: String, password: String): Observable<boolean> {
+    public signIn(emailAddress: String, password: String): Observable<User> {
         return Observable.create(listener => {
             this.apiService.get("auth/sign-in", new Headers({
                 "Authorization": "Basic " + btoa(emailAddress + ":" + password)
             })).subscribe(
                 response => {
-                    if (response) {
-                        this.user.next(<User>response);
-                        this.authMessage.next(undefined);
-                        listener.next(true);
-                    } else {
-                        this.user.next(undefined);
-                        listener.next(false);
-                    }
+                    this.user.next(response);
+                    listener.next(response);
                 },
                 err => {
                     this.user.next(undefined);
-                    this.authMessage.next(err.json().error);
-                    listener.next(false);
-                })
+                    listener.error(err);
+                }
+            );
         });
     }
 
     /**
      * Signs the user out of AptiBook
-     * @returns An observable that returns true if the sign out was successful, false otherwise.
+     * @returns An observable with no data.
      */
-    public signOut(): Observable<boolean> {
+    public signOut(): Observable<void> {
         return Observable.create(listener => {
             this.apiService.get("auth/sign-out").subscribe(
                 response => {
                     this.user.next(undefined);
-                    this.authMessage.next(undefined);
-                    listener.next(true)
+                    listener.next()
                 },
                 err => {
-                    this.authMessage.next(undefined);
-                    listener.next(false);
+                    listener.error(err);
                 }
             );
         });

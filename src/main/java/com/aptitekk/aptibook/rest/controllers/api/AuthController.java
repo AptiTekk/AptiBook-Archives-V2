@@ -34,50 +34,56 @@ public class AuthController extends APIControllerAbstract {
         String authorizationHeader = request.getHeader("Authorization");
 
         //Make sure header exists
-        if (authorizationHeader != null && !authorizationHeader.isEmpty()) {
+        if (authorizationHeader == null || authorizationHeader.isEmpty()) {
 
-            //Split on space (Example header: "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==")
-            String[] splitAuthorizationHeader = authorizationHeader.split(" ");
-
-            //Check for two pieces ( ["Basic", "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="] )
-            if (splitAuthorizationHeader.length == 2) {
-
-                //Check for "Basic" auth type
-                switch (splitAuthorizationHeader[0]) {
-                    case "Basic":
-                        //Decode
-                        String decodedAuth = new String(Base64.decode(splitAuthorizationHeader[1]));
-
-                        //Split on colon (Example of decoded: "Aladdin:open sesame")
-                        String[] authSplit = decodedAuth.split(":");
-
-                        if (authSplit.length == 2) {
-                            User user = userRepository.findUserWithCredentials(authSplit[0], authSplit[1]);
-
-                            if (user != null) {
-                                authService.setCurrentUser(user, response);
-                                return ok(modelMapper.map(user, UserDTO.class));
-                            }
-
-                            return unauthorized("The Email Address or Password supplied was incorrect.");
-                        }
-
-                        return badRequest("Decoded data could not be parsed.");
-
-                    default:
-                        return badRequest("Authorization scheme '" + splitAuthorizationHeader[0] + "' not implemented.");
-                }
-
-            }
-
-            return badRequest("Malformed Authorization header.");
-        } else {
+            // If the header doesn't exist or is empty,
+            // then check if we already know who the user is, and send that data back.
             User currentUser = authService.getCurrentUser();
             if (currentUser != null) {
                 return ok(modelMapper.map(currentUser, UserDTO.class));
             }
 
             return badRequest("Authorization header was empty.");
+        }
+
+        //Split on whitespace (Example header: "Basic QWxhZGRpbjpvcGVuIHNlc2FtZQ==")
+        String[] splitAuthorizationHeader = authorizationHeader.split("\\s");
+
+        //Check for two pieces ( ["Basic", "QWxhZGRpbjpvcGVuIHNlc2FtZQ=="] )
+        if (splitAuthorizationHeader.length != 2) {
+            return badRequest("Malformed Authorization header.");
+        }
+
+        switch (splitAuthorizationHeader[0]) {
+            // Basic auth type.
+            case "Basic":
+                //Decode
+                String decodedAuth = new String(Base64.decode(splitAuthorizationHeader[1]));
+
+                //Split on colon (Example of decoded: "Aladdin:open sesame")
+                String[] authSplit = decodedAuth.split(":");
+
+                if (authSplit.length != 2) {
+                    return badRequest("Decoded data could not be parsed.");
+                }
+
+                User user = userRepository.findUserWithCredentials(authSplit[0], authSplit[1]);
+
+                // User does not exist; bad email/password.
+                if (user == null)
+                    return unauthorized("The Email Address or Password supplied was incorrect.");
+
+                // User is not verified.
+                if (!user.verified)
+                    return unauthorized("Your Email Address is not verified! Check your email for a link.");
+
+                // All is well, set the current user.
+                authService.setCurrentUser(user, response);
+                return ok(modelMapper.map(user, UserDTO.class));
+
+            // All other auth types.
+            default:
+                return badRequest("Authorization scheme '" + splitAuthorizationHeader[0] + "' not implemented.");
         }
     }
 

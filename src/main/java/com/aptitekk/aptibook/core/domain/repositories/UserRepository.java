@@ -22,31 +22,19 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
     public static final String ADMIN_EMAIL_ADDRESS = "admin";
 
     /**
-     * Finds User Entity by its email address, within the current Tenant.
+     * Finds User Entity by its verification code, within all tenants.
      *
      * @param verificationCode The verification code of the User to search for.
      * @return A User Entity with the specified registration code, or null if one does not exist.
      */
     public User findByVerificationCode(String verificationCode) {
-        return findByVerificationCode(verificationCode, getTenant());
-    }
-
-    /**
-     * Finds User Entity by its email address, within the current Tenant.
-     *
-     * @param verificationCode The verification code of the User to search for.
-     * @param tenant           The Tenant of the User to search for.
-     * @return A User Entity with the specified registration code, or null if one does not exist.
-     */
-    public User findByVerificationCode(String verificationCode, Tenant tenant) {
-        if (verificationCode == null || tenant == null) {
+        if (verificationCode == null) {
             return null;
         }
         try {
             return entityManager
-                    .createQuery("SELECT u FROM User u WHERE u.verificationCode = :verificationCode AND u.tenant = :tenant", User.class)
+                    .createQuery("SELECT u FROM User u WHERE u.verificationCode = :verificationCode", User.class)
                     .setParameter("verificationCode", verificationCode)
-                    .setParameter("tenant", tenant)
                     .getSingleResult();
         } catch (PersistenceException e) {
             return null;

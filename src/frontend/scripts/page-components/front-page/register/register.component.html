@@ -7,10 +7,8 @@
 <form id="registerForm"
 	  [formGroup]="formGroup"
 	  (submit)="onSubmit()">
-	<div class="alert alert-danger"
-		 #alert
-		 *ngIf="alertMessage">{{alertMessage}}
-	</div>
+	<alert #registerAlert
+		   [severity]="'danger'"></alert>
 	
 	<form-group [control]="formGroup.controls['emailAddress']"
 				[label]="'Email Address'"
@@ -49,7 +47,7 @@
 				[errorMessages]="
                     {
                     required: 'This is required.',
-                    maxlength: 'This must be 50 characters or less.'
+                    maxlength: 'This must be 30 characters or less.'
                     }">
 	</form-group>
 	
@@ -60,12 +58,15 @@
 				[errorMessages]="
                     {
                     required: 'This is required.',
-                    maxlength: 'This must be 50 characters or less.'
+                    maxlength: 'This must be 30 characters or less.'
                     }">
 	</form-group>
-	
+	<div *ngIf="!doPasswordsMatch()"
+		 style="display: inline-block; color: darkred">
+		The Passwords do not match!
+	</div>
 	<button class="btn btn-primary btn-large btn-block"
-			[disabled]="formGroup.invalid">
+			[disabled]="formGroup.invalid || !doPasswordsMatch()">
 		Register
 	</button>
 

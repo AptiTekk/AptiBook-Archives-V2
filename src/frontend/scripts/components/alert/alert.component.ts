@@ -4,8 +4,8 @@
  * Proprietary and confidential.
  */
 
-import {Component, Input, trigger, state, style, animate, transition, Output, EventEmitter} from "@angular/core";
-import {Subscription, Observable} from "rxjs";
+import {animate, Component, EventEmitter, Input, Output, state, style, transition, trigger} from "@angular/core";
+import {Observable, Subscription} from "rxjs";
 
 @Component({
     selector: 'alert',
@@ -25,17 +25,17 @@ export class AlertComponent {
 
     visibilityTimer: Subscription;
 
-    @Input()
-    displayed: boolean = false;
+    @Input() displayed: boolean = false;
 
-    @Input()
-    message: string;
+    @Input() message: string;
 
-    @Input()
-    severity: string = "info";
+    /**
+     * Determines the color of the alert. May be one of 'info', 'danger', 'warning', and 'success'.
+     * Defaults to 'info'.
+     */
+    @Input() severity: string = "info";
 
-    @Input()
-    autoCloseDelay: number = 2000;
+    @Input() autoCloseDelay: number = 2000;
 
     @Output()
     onAutoClose: EventEmitter<any> = new EventEmitter();
