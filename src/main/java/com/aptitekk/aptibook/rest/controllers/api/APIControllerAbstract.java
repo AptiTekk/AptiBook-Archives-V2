@@ -11,13 +11,13 @@ import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
 import com.aptitekk.aptibook.core.services.entity.PermissionService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.web.util.WebURIBuilderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.util.Collections;
 
@@ -42,6 +42,9 @@ public abstract class APIControllerAbstract {
     @Autowired
     TenantManagementService tenantManagementService;
 
+    @Autowired
+    WebURIBuilderService webURIBuilderService;
+
     APIControllerAbstract() {
         modelMapper.getConfiguration().setFieldMatchingEnabled(true);
     }
@@ -50,21 +53,10 @@ public abstract class APIControllerAbstract {
         return ResponseEntity.ok(entity);
     }
 
-    ResponseEntity<?> created(Object entity, String path) {
+    ResponseEntity<?> created(Object entity, String endpoint) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
-        //Ensure that the path starts with /api/*
-        if (!path.startsWith("/api") && !path.startsWith("api")) {
-            if (path.startsWith("/"))
-                path = "/api" + (path.startsWith("/") ? "" : "/") + path;
-        } else if (path.startsWith("api"))
-            path = "/" + path;
-
-        //Add on the tenant url
-        if (tenantManagementService.getTenant() != null)
-            path = "/" + tenantManagementService.getTenant().slug + path;
-
-        String uriString = ServletUriComponentsBuilder.fromCurrentContextPath().path(path).build().toUriString();
+        String uriString = webURIBuilderService.buildAPIURI(tenantManagementService.getTenant(), endpoint, null).toString();
 
         headers.put("Location", Collections.singletonList(uriString));
 

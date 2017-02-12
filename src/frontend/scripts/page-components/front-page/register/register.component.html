@@ -47,7 +47,7 @@
 				[errorMessages]="
                     {
                     required: 'This is required.',
-                    maxlength: 'This must be 50 characters or less.'
+                    maxlength: 'This must be 30 characters or less.'
                     }">
 	</form-group>
 	
@@ -55,11 +55,10 @@
 				[label]="'Confirm Password'"
 				[faIconName]="'asterisk'"
 				[inputType]="'password'"
-				
 				[errorMessages]="
                     {
                     required: 'This is required.',
-                    maxlength: 'This must be 50 characters or less.'
+                    maxlength: 'This must be 30 characters or less.'
                     }">
 	</form-group>
 	<div *ngIf="!doPasswordsMatch()"

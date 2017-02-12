@@ -7,40 +7,29 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {User} from "../../models/user.model";
-import {Observable, ReplaySubject} from "rxjs";
-import {error} from "util";
+import {Observable} from "rxjs";
+
 @Injectable()
 export class RegistrationService {
 
-
-    private registerMessage: ReplaySubject<string> = new ReplaySubject<string>(1);
+    constructor(private apiService: APIService) {
+    }
 
     /**
-     * @returns The registration message (a message that should be shown to users) ReplaySubject
+     * Registers a new user with the details provided in the User object.
+     * @param user The User containing the details of the new user.
+     * @returns The new User if it was created, or an error message.
      */
-    public getRegisterMessage(): ReplaySubject<string> {
-        return this.registerMessage;
-    }
-
-
-    constructor(private apiService: APIService) {
-
-    }
-    register(user: User) {
+    public register(user: User): Observable<any> {
         return Observable.create(listener => {
-            let body = JSON.stringify(user);
-                this.apiService.post("register", body).subscribe(
-                    response => {
-                        listener.next(response);
-                        this.registerMessage.next(undefined);
-                    },
-                    err =>{
-                        listener.next(undefined);
-                        this.registerMessage.next(err.json.error());
-                    }
-                );
-            });
+            this.apiService.post("register", user).subscribe(
+                user => {
+                    listener.next(user)
+                },
+                err => {
+                    listener.error(err)
+                }
+            );
+        });
     }
-
-
 }

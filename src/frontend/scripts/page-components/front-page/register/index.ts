@@ -4,6 +4,5 @@
  * Proprietary and confidential.
  */
 
-export * from './front-page.component'
-export * from './sign-in/sign-in.component';
-export * from './register';
+export * from './register.component';
+export * from './success/register-success.component';

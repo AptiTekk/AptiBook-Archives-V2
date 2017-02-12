@@ -7,12 +7,10 @@
 import {Component, ViewChild} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {OAuthService} from "../../../services/stateful/oauth.service";
-import {AuthService} from "../../../services/singleton/auth.service";
-import {LoaderService} from "../../../services/singleton/loader.service";
 import {RegistrationService} from "../../../services/singleton/registration.service";
 import {User} from "../../../models/user.model";
 import {AlertComponent} from "../../../components/alert/alert.component";
+import {LoaderService} from "../../../services/singleton/loader.service";
 
 @Component({
     selector: 'register',
@@ -24,40 +22,19 @@ export class RegisterComponent {
     registerAlert: AlertComponent;
 
     formGroup: FormGroup;
-    user: User = {
-        id: null,
-        emailAddress: null,
-        firstName: null,
-        lastName: null,
-        fullName: null,
-        verified: null,
-        phoneNumber: null,
-        location: null,
-        notifications: null,
-        notificationTypeSettings: null,
-        permissions: null,
-        userGroups: null,
-        admin: null,
-        newPassword: null,
-        confirmPassword: null
-
-    };
 
     constructor(formBuilder: FormBuilder,
                 private router: Router,
                 private activeRoute: ActivatedRoute,
-                private oAuthService: OAuthService,
-                private authService: AuthService,
-                private loaderService: LoaderService,
-                private registrationService: RegistrationService) {
+                private registrationService: RegistrationService,
+                private loaderService: LoaderService) {
 
         this.formGroup = formBuilder.group({
             emailAddress: [null, Validators.compose([Validators.required, Validators.maxLength(100), Validators.pattern("[^<>;=]*")])],
             firstName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             lastName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
-            password: [null, Validators.compose([Validators.required, Validators.maxLength(50)])],
-            confirmPassword: [null, Validators.compose([Validators.required, Validators.maxLength(5)])]
-
+            password: [null, Validators.compose([Validators.required, Validators.maxLength(30)])],
+            confirmPassword: [null, Validators.compose([Validators.required, Validators.maxLength(30)])]
         });
 
     }
@@ -74,24 +51,25 @@ export class RegisterComponent {
                         this.registerAlert.display("Unfortunately, an error has occurred.", false);
                 }
             });
-
-        //Subscribe to auth messages
-        this.registrationService.getRegisterMessage().subscribe(message => this.registerAlert.display(message));
     }
-    onSubmit() {
-        if (this.formGroup.controls['emailAddress'].value != undefined && this.formGroup.controls['firstName'].value != undefined && this.formGroup.controls['lastName'].value != undefined && this.formGroup.controls['password'].value != undefined && this.formGroup.controls['confirmPassword'].value != undefined) {
-            this.user.emailAddress = this.formGroup.controls['emailAddress'].value;
-            this.user.firstName = this.formGroup.controls['firstName'].value;
-            this.user.lastName = this.formGroup.controls['lastName'].value;
-            this.user.newPassword = this.formGroup.controls['password'].value;
-            this.user.confirmPassword = this.formGroup.controls['confirmPassword'].value;
-            this.user.verified = false;
-            this.registrationService.register(this.user).subscribe(response => {
-                //redirect to success page
-                this.router.navigateByUrl('/success');
-            });
-        }
 
+    onSubmit() {
+        let newUser: User = {
+            emailAddress: this.formGroup.controls['emailAddress'].value,
+            firstName: this.formGroup.controls['firstName'].value,
+            lastName: this.formGroup.controls['lastName'].value,
+            newPassword: this.formGroup.controls['password'].value,
+            verified: false
+        };
+
+        this.loaderService.startLoading();
+        this.registrationService.register(newUser).subscribe(
+            user => this.router.navigate(['', 'register', 'success']).then(() => this.loaderService.stopLoading()),
+            err => {
+                this.registerAlert.display(err, true);
+                this.loaderService.stopLoading();
+            }
+        );
     }
 
     doPasswordsMatch(): boolean {
