@@ -15,8 +15,6 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.Set;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class Permission extends MultiTenantEntity implements Serializable {
 

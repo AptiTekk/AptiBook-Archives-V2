@@ -6,15 +6,17 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
-import com.aptitekk.aptibook.core.domain.entities.ReservationDecision;
 import com.aptitekk.aptibook.core.domain.entities.serializers.LocalDateTimeSerializer;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ReservationDTO {
 
     public Long id;

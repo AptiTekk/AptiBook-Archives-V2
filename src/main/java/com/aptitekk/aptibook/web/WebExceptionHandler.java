@@ -7,6 +7,8 @@
 package com.aptitekk.aptibook.web;
 
 import com.aptitekk.aptibook.core.domain.rest.RestError;
+import com.aptitekk.aptibook.core.services.LogService;
+import org.hibernate.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
@@ -15,6 +17,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExceptionHandler;
@@ -23,10 +26,12 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final ResourceLoader resourceLoader;
+    private final LogService logService;
 
     @Autowired
-    public WebExceptionHandler(ResourceLoader resourceLoader) {
+    public WebExceptionHandler(ResourceLoader resourceLoader, LogService logService) {
         this.resourceLoader = resourceLoader;
+        this.logService = logService;
     }
 
     @Override
@@ -47,9 +52,21 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
         }
     }
 
+    @ExceptionHandler(MappingException.class)
+    protected ResponseEntity<Object> handleModelMappingException(MappingException ex) {
+        logService.logException(getClass(), ex, "An error occurred while mapping an object to a DTO.");
+        return new ResponseEntity<>(new RestError("An Internal Server Error occurred while processing your request. (500)"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+        logService.logException(getClass(), ex, "An error occurred while processing an endpoint request.");
+        return new ResponseEntity<>(new RestError("An Internal Server Error occurred while processing your request. (500)"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        if(ex instanceof HttpRequestMethodNotSupportedException) {
+        if (ex instanceof HttpRequestMethodNotSupportedException) {
             return new ResponseEntity<>(new RestError("The Request Method you have specified (" + ((HttpRequestMethodNotSupportedException) ex).getMethod() + ") is not valid. (405)"), HttpStatus.METHOD_NOT_ALLOWED);
         }
         return new ResponseEntity<>(new RestError("An Internal Server Error occurred while processing your request. (500)"), HttpStatus.INTERNAL_SERVER_ERROR);

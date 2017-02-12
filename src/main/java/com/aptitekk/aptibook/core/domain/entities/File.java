@@ -15,8 +15,6 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class File extends MultiTenantEntity {
 

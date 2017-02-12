@@ -15,7 +15,7 @@
 		<!-- Left Calendar Section -->
 		<div class="col-xs-12 col-lg-9">
 			<div class="full-height-breadcrumb">
-				<calendar [eventFeedUrl]="apiService.getApiUrlFromEndpoint('reservations')"
+				<calendar [eventFeedEndpoint]="'reservations'"
 						  [allowDaySelection]="true"
 						  [hiddenStatuses]="['rejected', 'cancelled']"
 						  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"

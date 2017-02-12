@@ -7,17 +7,11 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
-import java.time.ZonedDateTime;
+import java.time.LocalDateTime;
 import java.util.List;
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class Tenant extends GlobalEntity {
 
@@ -25,16 +19,12 @@ public class Tenant extends GlobalEntity {
     @GeneratedValue
     public Long id;
 
-    @JsonIgnore
     private boolean active;
 
-    @JsonIgnore
     public String adminEmail;
 
-    @JsonIgnore
-    public ZonedDateTime timeSetInactive;
+    public LocalDateTime timeSetInactive;
 
-    @JsonIgnore
     @Column(nullable = false, unique = true)
     public int subscriptionId;
 
@@ -96,7 +86,6 @@ public class Tenant extends GlobalEntity {
         }
     }
 
-    @JsonIgnore
     @Enumerated(EnumType.STRING)
     public Tier tier;
 
@@ -149,7 +138,7 @@ public class Tenant extends GlobalEntity {
         if (active)
             timeSetInactive = null;
         else
-            timeSetInactive = ZonedDateTime.now();
+            timeSetInactive = LocalDateTime.now();
     }
 
     @Override

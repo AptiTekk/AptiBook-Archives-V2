@@ -6,10 +6,13 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.util.List;
 
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class UserDTO {
 
     public Long id;
