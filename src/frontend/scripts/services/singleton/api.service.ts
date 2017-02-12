@@ -5,8 +5,10 @@
  */
 
 import {Injectable} from "@angular/core";
-import {Http, Response, Headers, RequestOptions} from "@angular/http";
+import {Headers, Http, RequestOptions, Response} from "@angular/http";
 import {Observable} from "rxjs";
+
+declare const JSOG: any;
 
 @Injectable()
 export class APIService {
@@ -28,7 +30,7 @@ export class APIService {
     private static checkForErrors(response: Response): any {
         if (response.status >= 200 && response.status < 300) {
             if (response.text().length > 0)
-                return response.json();
+                return JSOG.parse(response.text());
             return undefined;
         } else {
             let error = new Error(response.statusText);
@@ -60,21 +62,21 @@ export class APIService {
 
     public post(path: string, data: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
-        return this.http.post(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
+        return this.http.post(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, JSOG.stringify(data), options)
             .map(APIService.checkForErrors)
             .catch(e => Observable.throw(e));
     }
 
     public put(path: string, data: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
-        return this.http.put(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
+        return this.http.put(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, JSOG.stringify(data), options)
             .map(APIService.checkForErrors)
             .catch(e => Observable.throw(e));
     }
 
     public patch(path: string, data?: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
-        return this.http.patch(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data, options)
+        return this.http.patch(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data ? JSOG.stringify(data) : undefined, options)
             .map(APIService.checkForErrors)
             .catch(e => Observable.throw(e));
     }

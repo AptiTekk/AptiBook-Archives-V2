@@ -23,6 +23,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 import org.threeten.extra.Days;
 
+import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -122,9 +123,9 @@ public class TenantSynchronizer {
 
                             //Delete tenant if it has been inactive for 30 or more days.
                             if (currentTenant != null && !currentTenant.isActive()) {
-                                ZonedDateTime timeSetInactive = currentTenant.timeSetInactive;
+                                LocalDateTime timeSetInactive = currentTenant.timeSetInactive;
                                 if (timeSetInactive != null) {
-                                    if (Days.between(timeSetInactive, ZonedDateTime.now()).getAmount() > 30)
+                                    if (Days.between(timeSetInactive, LocalDateTime.now()).getAmount() > 30)
                                         deleteTenant(currentTenant);
                                 }
                             }

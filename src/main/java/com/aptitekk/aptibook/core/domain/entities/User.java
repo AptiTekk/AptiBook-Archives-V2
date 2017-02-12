@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.Map;
 
 
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "\"user\"")

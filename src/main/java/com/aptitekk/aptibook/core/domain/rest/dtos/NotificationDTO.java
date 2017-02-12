@@ -7,13 +7,16 @@
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
 import com.aptitekk.aptibook.core.domain.entities.serializers.LocalDateTimeSerializer;
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.time.LocalDateTime;
 
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class NotificationDTO {
 
     public Long id;

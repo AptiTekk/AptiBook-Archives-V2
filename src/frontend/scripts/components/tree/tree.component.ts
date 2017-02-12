@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component, Input, forwardRef, OnInit, EventEmitter, Output} from "@angular/core";
+import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from "@angular/core";
 import {UserGroup} from "../../models/user-group.model";
 import {TreeNodeComponent} from "./tree-node/tree-node.component";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
@@ -25,15 +25,38 @@ import * as Collections from "typescript-collections";
 })
 export class TreeComponent implements OnInit, ControlValueAccessor {
 
+    /**
+     * Determines if the Tree has drag-and-drop support. Defaults to false.
+     */
     @Input() dragAndDrop: boolean = false;
 
+    /**
+     * Determines if nodes on the Tree can be selected. Defaults to true.
+     */
     @Input() selectable: boolean = true;
+
+    /**
+     * Fired when a node on the tree is selected.
+     * {@link TreeComponent#selectable|selectable} must be enabled.
+     * The event contains the UserGroup of the selected node.
+     */
     @Output() selected: EventEmitter<UserGroup[]> = new EventEmitter<UserGroup[]>();
 
+    /**
+     * Determines if multiple nodes on the Tree can be selected. Defaults to false.
+     * {@link TreeComponent#selectable|selectable} must be enabled.
+     */
     @Input() selectMultiple: boolean = false;
 
+    /**
+     * Determines if only one node per branch can be selected at a time. Defaults to false.
+     * {@link TreeComponent#selectable|selectable} must be enabled.
+     */
     @Input() preventSameBranchSelection: boolean = false;
 
+    /**
+     * Determines if the root node will appear on the tree. Defaults to false.
+     */
     @Input() showRoot: boolean = false;
 
     rootGroup: UserGroup;
@@ -149,7 +172,11 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
             );
     }
 
-    writeValue(obj: UserGroup[]|UserGroup): void {
+    public getSelectedUserGroups(): UserGroup[] {
+        return this.selectedUserGroups;
+    }
+
+    writeValue(obj: UserGroup[] | UserGroup): void {
         this.selectedUserGroups = obj ? [].concat(obj) : [];
     }
 

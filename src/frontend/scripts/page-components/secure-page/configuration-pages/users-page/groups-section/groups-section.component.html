@@ -7,7 +7,7 @@
 <div class="row">
 	<div class="col-xs-12 col-md-3">
 		<div class="btn-toolbar">
-			<button class="btn btn-primary">
+			<button class="btn btn-primary" (click)="newGroupModal.open()">
 				Add New User Group
 			</button>
 		</div>
@@ -131,6 +131,7 @@
 	</div>
 </div>
 
+<new-group-modal #newGroupModal></new-group-modal>
 <deletion-confirmation-modal #userGroupDeleteConfirm
 							 [message]="'Are you sure you want to delete the \'' + selectedUserGroup?.name + '\' User Group?'"
 							 [warning]="'All associated decisions made on Reservations, and all associated Resources will be removed as well! (Children Groups will be moved up.)'"

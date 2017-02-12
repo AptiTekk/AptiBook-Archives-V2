@@ -6,17 +6,20 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.util.List;
 
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ResourceCategoryDTO {
 
     public Long id;
 
     public String name;
 
-    public List<ResourceDTO.WithoutResourceCategory> resources;
+    public List<ResourceDTO.WithoutReservations> resources;
 
     //Reservation Fields
 
