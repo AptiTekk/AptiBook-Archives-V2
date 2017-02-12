@@ -28,7 +28,11 @@ export class ReservationManagementService {
     private approvedReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
     private rejectedReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
 
-    constructor(private apiService: APIService) {
+    constructor(private apiService: APIService, private userGroupService: UserGroupService) {
+        userGroupService.getRootUserGroup().subscribe(root => {
+            if (root != undefined)
+                this.rootUserGroup = root;
+        });
     }
 
     public fetchReservations(): void {
