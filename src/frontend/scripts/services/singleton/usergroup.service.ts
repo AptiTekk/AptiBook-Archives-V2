@@ -26,7 +26,7 @@ export class UserGroupService {
         )
     }
 
-    public getRootUserGroup(): ReplaySubject < UserGroup > {
+    public getRootUserGroup(): ReplaySubject<UserGroup> {
         return this.rootUserGroup;
     }
 
@@ -71,6 +71,23 @@ export class UserGroupService {
                 response => listener.next(response),
                 err => listener.next([])
             );
+        });
+    }
+
+    /**
+     * Adds a new User Group with the details provided in the provided UserGroup object.
+     * @param userGroup The UserGroup containing the details of the new Group. ID is not required.
+     * @returns The new UserGroup if it was created successfully, undefined otherwise.
+     */
+    public addNewUserGroup(userGroup: UserGroup): Observable<UserGroup> {
+        return Observable.create(listener => {
+            if (!userGroup)
+                listener.next(false);
+            else {
+                this.apiService.post("userGroups", userGroup).subscribe(
+                    response => listener.next(response),
+                    err => listener.next(undefined));
+            }
         });
     }
 

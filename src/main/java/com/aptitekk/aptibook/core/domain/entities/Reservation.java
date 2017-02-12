@@ -21,8 +21,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @SuppressWarnings("JpaDataSourceORMInspection")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
 @Entity
 public class Reservation extends MultiTenantEntity implements Serializable {
     public enum Status {

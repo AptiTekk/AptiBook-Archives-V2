@@ -21,6 +21,7 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="Entities" />
+          <factory-entry name="entityManagerFactory" />
         </datasource-mapping>
       </configuration>
     </facet>
@@ -147,6 +148,7 @@
     <orderEntry type="library" name="Maven: com.github.scribejava:scribejava-apis:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.github.scribejava:scribejava-core:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: org.modelmapper:modelmapper:0.7.7" level="project" />
+    <orderEntry type="library" name="Maven: com.voodoodyne.jackson.jsog:jackson-jsog:1.1" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-test:1.5.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-test:1.5.1.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-test-autoconfigure:1.5.1.RELEASE" level="project" />

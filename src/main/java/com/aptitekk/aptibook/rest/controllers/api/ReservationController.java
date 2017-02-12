@@ -124,7 +124,7 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.APPROVED);
 
-        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO.WithDecisions[]>() {
+        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationDTO.WithDecisions>>() {
         }.getType()));
     }
 
@@ -139,7 +139,7 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.REJECTED);
 
-        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO.WithDecisions[]>() {
+        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationDTO.WithDecisions>>() {
         }.getType()));
     }
 

@@ -48,8 +48,8 @@ export class EditResourceModalComponent implements OnInit {
         })
     }
 
-    public open(resourceCategory: ResourceCategory, resource: Resource) {
-        this.resourceCategory = resourceCategory;
+    public open(resource: Resource) {
+        this.resourceCategory = resource.resourceCategory;
         this.resource = resource;
         this.resetFormGroup();
         this.resourceImage.clearImage();
@@ -77,12 +77,15 @@ export class EditResourceModalComponent implements OnInit {
     onSubmitted() {
         this.loaderService.startLoading();
 
-        this.resource.name = this.formGroup.controls['name'].value;
-        this.resource.needsApproval = this.formGroup.controls['needsApproval'].value;
-        this.resource.owner = [].concat(this.formGroup.controls['owner'].value)[0];
+        let resourcePatch: Resource = {
+            id: this.resource.id,
+            name: this.formGroup.controls['name'].value,
+            needsApproval: this.formGroup.controls['needsApproval'].value,
+            owner: [].concat(this.formGroup.controls['owner'].value)[0]
+        };
 
         this.resourceService
-            .patchResource(this.resource)
+            .patchResource(resourcePatch)
             .subscribe(
                 resource => {
                     if (resource) {

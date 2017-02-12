@@ -6,10 +6,13 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.util.List;
 
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class ResourceDTO {
 
     public Long id;
@@ -20,9 +23,9 @@ public class ResourceDTO {
 
     public Boolean hasImage;
 
-    public ResourceCategoryDTO.WithoutResources resourceCategory;
+    public ResourceCategoryDTO resourceCategory;
 
-    public List<ReservationDTO.WithoutResource> reservations;
+    public List<ReservationDTO> reservations;
 
     public UserGroupDTO.WithoutParentOrChildren owner;
 

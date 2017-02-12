@@ -6,6 +6,10 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.voodoodyne.jackson.jsog.JSOGGenerator;
+
+@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class TenantDTO {
 
     public Long id;

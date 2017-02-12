@@ -21,6 +21,7 @@ import {ResourceCategory} from "../../models/resource-category.model";
 import {UserGroup} from "../../models/user-group.model";
 import Moment = moment.Moment;
 import moment = require("moment");
+import {APIService} from "../../services/singleton/api.service";
 
 @Component({
     selector: 'calendar',
@@ -42,7 +43,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     @Input() events: [{ id: number, title: string, start: any, end: any, status: string }];
 
-    @Input() eventFeedUrl: string;
+    @Input() eventFeedEndpoint: string;
 
     @Input() allowEventSelection: boolean = true;
 
@@ -66,6 +67,9 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     private calendar: any;
 
+    constructor(private apiService: APIService) {
+    }
+
     ngOnInit(): void {
         //Re-render and re-size calendar when window size is changed
         window.onresize = () => this.refreshCalendar();
@@ -83,11 +87,11 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             for (let propName in changes) {
                 switch (propName) {
                     case 'events':
-                    case 'eventFeedUrl':
+                    case 'eventFeedEndpoint':
                         //Remove any existing event sources
                         this.calendar.fullCalendar('removeEventSources');
 
-                        if (this.events || this.eventFeedUrl) {
+                        if (this.events || this.eventFeedEndpoint) {
                             //Add the new event source
                             this.calendar.fullCalendar('addEventSource',
                                 this.getEventsToUse())
@@ -113,7 +117,17 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     private getEventsToUse(): any {
-        return this.events ? this.events : this.eventFeedUrl ? this.eventFeedUrl : [];
+        if(this.events)
+            return this.events;
+
+        if(this.eventFeedEndpoint)
+            return (start: Moment, end: Moment, timezone: string, callback) => {
+                this.apiService
+                    .get(`${this.eventFeedEndpoint}?start=${start.toISOString()}&end=${end.toISOString()}`)
+                    .subscribe(
+                        events => callback(events)
+                    );
+            };
     }
 
     private buildCalendar(): void {

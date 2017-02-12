@@ -1,0 +1,33 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<modal #modal
+	   [title]="'New User Group'"
+	   [cancelButtonLabel]="'Cancel'"
+	   [submitButtonLabel]="'Add User Group'"
+	   [submitButtonDisabled]="formGroup.invalid || tree.getSelectedUserGroups().length == 0"
+	   (onSubmit)="onGroupSubmitted()">
+	<modal-body>
+		<form [formGroup]="formGroup">
+			<form-group [control]="formGroup.controls['name']"
+						[label]="'Name'"
+						[errorMessages]="
+                            {
+                            required: 'This is required.',
+                            pattern: 'These characters are not allowed:  < > ; =',
+                            maxlength: 'This must be 30 characters or less.',
+                            isUnique: 'A User Group by this name already exists!'
+                            }">
+			</form-group>
+			
+			<label class="control-label">Parent User Group</label>
+			<tree #tree
+					formControlName="parent"
+				  [showRoot]="true">
+			</tree>
+		</form>
+	</modal-body>
+</modal>
