@@ -55,7 +55,6 @@ export class AllUsersSectionComponent implements OnInit {
             .subscribe(users => {
                 this.users = users.filter(user => !user.admin);
                 if (this.selectedUser) {
-                    console.log("Selecting Selected User");
                     this.selectRowByUser(this.selectedUser);
                     this.editingSelectedUser = false;
                 }
@@ -132,7 +131,7 @@ export class AllUsersSectionComponent implements OnInit {
             lastName: [this.selectedUser.lastName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             phoneNumber: [this.selectedUser.phoneNumber, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             location: [this.selectedUser.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])],
-            userGroups: this.selectedUser.userGroups
+            userGroups: [this.selectedUser.userGroups]
         });
 
         this.editingSelectedUser = false;

@@ -5,11 +5,12 @@
  */
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {UserGroup} from "../../../../../models/user-group.model";
-import {FormGroup, FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
 import {User} from "../../../../../models/user.model";
 import {AlertComponent} from "../../../../../components/alert/alert.component";
 import {UserService} from "../../../../../services/singleton/user.service";
+import {TreeComponent} from "../../../../../components/tree/tree.component";
 
 @Component({
     selector: 'groups-section',
@@ -18,6 +19,7 @@ import {UserService} from "../../../../../services/singleton/user.service";
 })
 export class GroupsSectionComponent implements OnInit {
 
+    @ViewChild(TreeComponent) private tree: TreeComponent;
     protected selectedUserGroups: UserGroup[];
     protected selectedUserGroup: UserGroup;
 
@@ -48,6 +50,13 @@ export class GroupsSectionComponent implements OnInit {
         return user.userGroups.map(userGroup => {
             return userGroup.name
         });
+    }
+
+    onAddNewUserGroup(newGroup: UserGroup) {
+        this.userGroupService.fetchRootUserGroup();
+
+        // Select the new group.
+        this.tree.selectUserGroup(newGroup);
     }
 
     onUserGroupSelected() {

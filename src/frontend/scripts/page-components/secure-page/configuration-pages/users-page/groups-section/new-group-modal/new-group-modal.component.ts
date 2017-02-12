@@ -37,12 +37,16 @@ export class NewGroupModalComponent implements OnInit {
         });
     }
 
-    public open() {
-        this.resetFormGroup();
+    /**
+     * Opens the modal, and optionally sets the selected User Group in the tree to the one provided.
+     * @param selectedUserGroup The User Group to select.
+     */
+    public open(selectedUserGroup?: UserGroup) {
+        this.resetFormGroup(selectedUserGroup);
         this.modal.openModal();
     }
 
-    private resetFormGroup() {
+    private resetFormGroup(selectedUserGroup?: UserGroup) {
         this.userGroupService
             .getRootUserGroup()
             .subscribe(
@@ -61,7 +65,7 @@ export class NewGroupModalComponent implements OnInit {
                                         Validators.pattern("[^<>;=]*"),
                                         UniquenessValidator.isUnique(groupNames)
                                     ])],
-                                    parent: rootGroup
+                                    parent: selectedUserGroup ? selectedUserGroup : rootGroup
                                 });
                             }
                         );
