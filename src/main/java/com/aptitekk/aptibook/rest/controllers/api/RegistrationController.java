@@ -15,6 +15,7 @@ import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -24,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 
 @APIController
 public class RegistrationController extends APIControllerAbstract {
@@ -153,11 +153,8 @@ public class RegistrationController extends APIControllerAbstract {
      * @param verified            If the verification succeeded or not.
      */
     private void redirectToSignIn(HttpServletResponse httpServletResponse, boolean verified) {
-        try {
-            httpServletResponse.sendRedirect("/" + this.tenantManagementService.getTenant().slug + "/sign-in?verified=" + verified);
-        } catch (IOException e) {
-            logService.logException(getClass(), e, "Could not redirect to sign-in");
-        }
+        httpServletResponse.setStatus(HttpStatus.TEMPORARY_REDIRECT.value());
+        httpServletResponse.setHeader("Location", "/" + this.tenantManagementService.getTenant().slug + "/sign-in?verified=" + verified);
     }
 
 }
