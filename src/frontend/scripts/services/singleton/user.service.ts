@@ -32,33 +32,36 @@ export class UserService {
         return this.users;
     }
 
+    public addNewUser(user: User): Observable<User> {
+        return Observable.create(listener => {
+            this.apiService
+                .post("users", user)
+                .subscribe(
+                    response => listener.next(response),
+                    err => listener.error(err)
+                );
+        });
+    }
+
     public patchUser(user: User, passwordOnly: boolean = false): Observable<User> {
         return Observable.create(listener => {
-            if (!user)
-                listener.next(false);
-            else {
-                this.apiService
-                    .patch("users/" + user.id + (passwordOnly ? "?passwordOnly=true" : ""), user)
-                    .subscribe(
-                        response => listener.next(response),
-                        err => listener.next(undefined)
-                    );
-            }
+            this.apiService
+                .patch("users/" + user.id + (passwordOnly ? "?passwordOnly=true" : ""), user)
+                .subscribe(
+                    response => listener.next(response),
+                    err => listener.error(err)
+                );
         });
     }
 
     public deleteUser(user: User): Observable<boolean> {
         return Observable.create(listener => {
-            if (!user)
-                listener.next(false);
-            else {
-                this.apiService
-                    .del("users/" + user.id)
-                    .subscribe(
-                        response => listener.next(true),
-                        err => listener.next(false)
-                    );
-            }
+            this.apiService
+                .del("users/" + user.id)
+                .subscribe(
+                    response => listener.next(true),
+                    err => listener.error(err)
+                );
         });
     }
 }
