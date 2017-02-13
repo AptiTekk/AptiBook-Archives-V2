@@ -4,3 +4,6 @@
  * Proprietary and confidential.
  */
 
+:host /deep/ #main-groups-panel .panel-body {
+    overflow-x: auto;
+}

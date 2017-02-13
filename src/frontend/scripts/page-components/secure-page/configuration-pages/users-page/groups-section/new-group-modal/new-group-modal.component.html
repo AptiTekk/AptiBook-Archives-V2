@@ -8,7 +8,7 @@
 	   [title]="'New User Group'"
 	   [cancelButtonLabel]="'Cancel'"
 	   [submitButtonLabel]="'Add User Group'"
-	   [submitButtonDisabled]="formGroup.invalid || tree.getSelectedUserGroups().length == 0"
+	   [submitButtonDisabled]="formGroup.invalid"
 	   (onSubmit)="onGroupSubmitted()">
 	<modal-body>
 		<form [formGroup]="formGroup">
@@ -25,8 +25,7 @@
 			
 			<label class="control-label">Parent User Group</label>
 			<tree #tree
-					formControlName="parent"
-				  [showRoot]="true">
+				  formControlName="parent">
 			</tree>
 		</form>
 	</modal-body>
