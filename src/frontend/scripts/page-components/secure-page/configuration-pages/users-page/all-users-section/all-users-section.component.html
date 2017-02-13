@@ -56,7 +56,7 @@
 								[width]="'130px'">
 					</user-image>
 					<div id="user-info">
-						<form-group [control]="selectedUserPersonalInformation?.controls.emailAddress"
+						<form-group [control]="selectedUserPersonalInformation?.controls['emailAddress']"
 									[label]="'Email Address'"
 									[faIconName]="'at'"
 									[readOnly]="!editingSelectedUser"
@@ -66,7 +66,7 @@
                                     }">
 						</form-group>
 						
-						<form-group [control]="selectedUserPersonalInformation?.controls.firstName"
+						<form-group [control]="selectedUserPersonalInformation?.controls['firstName']"
 									[label]="'First Name'"
 									[readOnly]="!editingSelectedUser"
 									[errorMessages]="
@@ -76,7 +76,7 @@
                                     }">
 						</form-group>
 						
-						<form-group [control]="selectedUserPersonalInformation?.controls.lastName"
+						<form-group [control]="selectedUserPersonalInformation?.controls['lastName']"
 									[label]="'Last Name'"
 									[readOnly]="!editingSelectedUser"
 									[errorMessages]="
@@ -86,7 +86,7 @@
 									}">
 						</form-group>
 						
-						<form-group [control]="selectedUserPersonalInformation?.controls.phoneNumber"
+						<form-group [control]="selectedUserPersonalInformation?.controls['phoneNumber']"
 									[label]="'Phone Number'"
 									[faIconName]="'phone'"
 									[readOnly]="!editingSelectedUser"
@@ -97,7 +97,7 @@
                                     }">
 						</form-group>
 						
-						<form-group [control]="selectedUserPersonalInformation?.controls.location"
+						<form-group [control]="selectedUserPersonalInformation?.controls['location']"
 									[label]="'Location'"
 									[faIconName]="'map-marker'"
 									[readOnly]="!editingSelectedUser"
@@ -112,7 +112,7 @@
 						<tree [selectable]="editingSelectedUser"
 							  [selectMultiple]="true"
 							  [preventSameBranchSelection]="true"
-							  [formControl]="selectedUserPersonalInformation?.controls.userGroups">
+							  formControlName="userGroups">
 						</tree>
 					
 					</div>

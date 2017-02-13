@@ -24,6 +24,8 @@ export class NewGroupModalComponent implements OnInit {
 
     formGroup: FormGroup;
 
+    private rootGroup: UserGroup;
+
     constructor(private formBuilder: FormBuilder,
                 protected userGroupService: UserGroupService,
                 protected loaderService: LoaderService) {
@@ -37,16 +39,21 @@ export class NewGroupModalComponent implements OnInit {
         });
     }
 
-    public open() {
-        this.resetFormGroup();
+    /**
+     * Opens the modal, and optionally sets the selected User Group in the tree to the one provided.
+     * @param selectedUserGroup The User Group to select.
+     */
+    public open(selectedUserGroup?: UserGroup) {
+        this.resetFormGroup(selectedUserGroup);
         this.modal.openModal();
     }
 
-    private resetFormGroup() {
+    private resetFormGroup(selectedUserGroup?: UserGroup) {
         this.userGroupService
             .getRootUserGroup()
             .subscribe(
                 rootGroup => {
+                    this.rootGroup = rootGroup;
                     this.userGroupService
                         .getUserGroupHierarchyDown(rootGroup)
                         .subscribe(
@@ -61,7 +68,7 @@ export class NewGroupModalComponent implements OnInit {
                                         Validators.pattern("[^<>;=]*"),
                                         UniquenessValidator.isUnique(groupNames)
                                     ])],
-                                    parent: rootGroup
+                                    parent: [selectedUserGroup ? [selectedUserGroup] : []]
                                 });
                             }
                         );
@@ -72,9 +79,15 @@ export class NewGroupModalComponent implements OnInit {
     onGroupSubmitted() {
         this.loaderService.startLoading();
 
+        let parentGroup: UserGroup;
+        if (this.formGroup.controls['parent'].value && this.formGroup.controls['parent'].value.length > 0)
+            parentGroup = [].concat(this.formGroup.controls['parent'].value)[0];
+        else
+            parentGroup = this.rootGroup;
+
         let newUserGroup: UserGroup = {
             name: this.formGroup.controls['name'].value,
-            parent: [].concat(this.formGroup.controls['parent'].value)[0]
+            parent: parentGroup
         };
 
         this.userGroupService

@@ -172,6 +172,12 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
             );
     }
 
+    public selectUserGroup(userGroup: UserGroup) {
+        this.selectedUserGroups = [userGroup];
+        this.propagateChanges(this.selectedUserGroups);
+        this.selected.emit(this.selectedUserGroups);
+    }
+
     public getSelectedUserGroups(): UserGroup[] {
         return this.selectedUserGroups;
     }
