@@ -20,7 +20,9 @@
 						[faIconName]="'at'"
 						[errorMessages]="
                                     {
-                                    maxlength: 'This must be 100 characters or less.',
+                                    required: 'This is required.',
+                    				pattern: 'These characters are not allowed:  < > ; =',
+                    				maxlength: 'This must be 100 characters or less.',
                                     isUnique: 'A User with this email address already exists!'
                                     }">
 			</form-group>
@@ -69,6 +71,10 @@
 				  [preventSameBranchSelection]="true"
 				  formControlName="userGroups">
 			</tree>
+			
+			<hr/>
+			
+			<p>Note: The User's password will be generated and emailed to them.</p>
 		</form>
 	</modal-body>
 </modal>

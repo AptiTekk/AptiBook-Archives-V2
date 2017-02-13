@@ -60,7 +60,7 @@ export class NewUserModalComponent implements OnInit {
                     let takenEmailAddresses: string[] = users.map(user => user.emailAddress);
 
                     this.formGroup = this.formBuilder.group({
-                        emailAddress: [null, Validators.compose([Validators.maxLength(100), UniquenessValidator.isUnique(takenEmailAddresses)])],
+                        emailAddress: [null, Validators.compose([Validators.required, Validators.maxLength(100), Validators.pattern("[^<>;=]*"), UniquenessValidator.isUnique(takenEmailAddresses)])],
                         firstName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
                         lastName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
                         phoneNumber: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
