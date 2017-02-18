@@ -6,7 +6,13 @@
 
 
 <div class="alert alert-success">
-	<h1>Thank you!</h1>
+	<h1 style="margin-top:0">Thank you!</h1>
+	<hr/>
 	<p>You have successfully registered an account with AptiBook, and must verify your account to continue.</p>
 	<p>Please check your email for a verification link. Make sure to check your spam folder if you do not see it.</p>
 </div>
+<hr/>
+<button [routerLink]="['', 'sign-in']"
+		class="btn btn-default btn-block">
+	Return to Sign In
+</button>

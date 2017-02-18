@@ -57,35 +57,35 @@ export class APIService {
         else options = new RequestOptions({headers: this.headers});
         return this.http.get(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
             .map(APIService.checkForErrors)
-            .catch(e => Observable.throw(e));
+            .catch(e => Observable.throw(e.json().error));
     }
 
     public post(path: string, data: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.post(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, JSOG.stringify(data), options)
             .map(APIService.checkForErrors)
-            .catch(e => Observable.throw(e));
+            .catch(e => Observable.throw(e.json().error));
     }
 
     public put(path: string, data: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.put(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, JSOG.stringify(data), options)
             .map(APIService.checkForErrors)
-            .catch(e => Observable.throw(e));
+            .catch(e => Observable.throw(e.json().error));
     }
 
     public patch(path: string, data?: any): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.patch(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data ? JSOG.stringify(data) : undefined, options)
             .map(APIService.checkForErrors)
-            .catch(e => Observable.throw(e));
+            .catch(e => Observable.throw(e.json().error));
     }
 
     public del(path: string): Observable<any> {
         let options = new RequestOptions({headers: this.headers});
         return this.http.delete(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
             .map(APIService.checkForErrors)
-            .catch(e => Observable.throw(e));
+            .catch(e => Observable.throw(e.json().error));
     }
 
 }

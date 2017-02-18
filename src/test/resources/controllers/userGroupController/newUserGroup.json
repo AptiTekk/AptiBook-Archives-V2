@@ -1,0 +1,6 @@
+{
+  "name": "New User Group",
+  "parent": {
+    "name": "root"
+  }
+}

@@ -7,12 +7,14 @@
 <div class="row">
 	<div class="col-xs-12 col-md-3">
 		<div class="btn-toolbar">
-			<button class="btn btn-primary" (click)="newGroupModal.open()">
+			<button class="btn btn-primary"
+					(click)="newGroupModal.open(selectedUserGroups ? selectedUserGroups[0] : undefined)">
 				Add New User Group
 			</button>
 		</div>
 		<hr/>
-		<panel [type]="'primary'"
+		<panel id="main-groups-panel"
+			   [type]="'primary'"
 			   [title]="'Select a User Group'">
 			<panel-body>
 				<tree [selectable]="true"
@@ -131,7 +133,8 @@
 	</div>
 </div>
 
-<new-group-modal #newGroupModal></new-group-modal>
+<new-group-modal #newGroupModal
+				 (submitted)="onAddNewUserGroup($event)"></new-group-modal>
 <deletion-confirmation-modal #userGroupDeleteConfirm
 							 [message]="'Are you sure you want to delete the \'' + selectedUserGroup?.name + '\' User Group?'"
 							 [warning]="'All associated decisions made on Reservations, and all associated Resources will be removed as well! (Children Groups will be moved up.)'"

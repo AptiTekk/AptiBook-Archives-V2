@@ -7,27 +7,29 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {User} from "../../models/user.model";
-import {Observable, ReplaySubject} from "rxjs";
-import {error} from "util";
+import {Observable} from "rxjs";
+
 @Injectable()
 export class RegistrationService {
 
     constructor(private apiService: APIService) {
-
     }
-    register(user: User): Observable<boolean> {
+
+    /**
+     * Registers a new user with the details provided in the User object.
+     * @param user The User containing the details of the new user.
+     * @returns The new User if it was created, or an error message.
+     */
+    public register(user: User): Observable<any> {
         return Observable.create(listener => {
-            let body = JSON.stringify(user);
-                this.apiService.post("register", body).subscribe(
-                    response => {
-                        listener.next(true);
-                    },
-                    err =>{
-                        listener.next(false);
-                    }
-                );
-            });
+            this.apiService.post("register", user).subscribe(
+                user => {
+                    listener.next(user)
+                },
+                err => {
+                    listener.error(err)
+                }
+            );
+        });
     }
-
-
 }
