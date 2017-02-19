@@ -13,7 +13,8 @@ import {ReservationManagementService} from "../../../../services/singleton/reser
 
 @Component({
     selector: 'approved-page',
-    templateUrl: 'approved-page.component.html'
+    templateUrl: 'approved-page.component.html',
+    styleUrls: ['approved-page.component.css']
 })
 export class ApprovedPageComponent {
     /**
@@ -22,7 +23,7 @@ export class ApprovedPageComponent {
     user: User;
 
     /**
-     * An array containing the pending reservations.
+     * An array containing the approved reservations.
      */
     reservations: Reservation[] = [];
 
@@ -35,7 +36,6 @@ export class ApprovedPageComponent {
                 private loaderService: LoaderService,
                 private authService: AuthService) {
     }
-
 
     ngOnInit(): void {
         this.loaderService.startLoading();

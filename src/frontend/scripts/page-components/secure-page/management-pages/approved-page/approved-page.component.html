@@ -21,7 +21,7 @@
 				<datatable-column [orderable]="false"
 								  [width]="'30px'">
 					<datatable-cell *ngFor="let reservation of reservations">
-						<span class="reservation-icon fa fa-2x"
+						<span class="reservation-icon fa"
 							  [class.fa-hourglass-half]="reservation.pending"
 							  [class.text-primary]="reservation.pending"
 							  [class.fa-check-circle]="reservation.approved"
