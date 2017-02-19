@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -27,6 +28,7 @@ public class User extends MultiTenantEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
+    @NotNull
     private String emailAddress;
 
     public String firstName;
@@ -37,6 +39,7 @@ public class User extends MultiTenantEntity implements Serializable {
 
     public String location;
 
+    @Column(nullable = false)
     public String hashedPassword;
 
     public String verificationCode;
