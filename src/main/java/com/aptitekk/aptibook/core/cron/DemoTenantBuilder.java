@@ -232,15 +232,7 @@ public class DemoTenantBuilder {
         );
 
         //Add reservations
-        Reservation teacherLaptopReservation = createReservation(
-                teacher,
-                "Test",
-                Reservation.Status.APPROVED,
-                teacherLaptop,
-                6, 7,
-                12, 33,
-                15, 0
-        );
+
 
         Reservation libraryReservation = createReservation(
                 teacher,
@@ -260,6 +252,16 @@ public class DemoTenantBuilder {
                 10, 10,
                 12, 0,
                 15, 30);
+
+        Reservation libraryReservation3 = createReservation(
+                teacher,
+                "Test",
+                Reservation.Status.APPROVED,
+                library,
+                6, 7,
+                12, 33,
+                15, 0
+        );
 
         Reservation cart1Reservation = createReservation(
                 teacher,
@@ -292,18 +294,20 @@ public class DemoTenantBuilder {
         );
 
         createReservationDecision(
-                cart1Reservation,
+                libraryReservation3,
                 administratorsUserGroup,
                 administrator,
                 true
         );
 
         createReservationDecision(
-                teacherLaptopReservation,
-                teachersUserGroup,
-                teacher,
+                cart1Reservation,
+                administratorsUserGroup,
+                administrator,
                 true
         );
+
+
 
         //Add Notifications
         Notification notification = new Notification(teacher, "Test Notification", "Lorem ipsum");

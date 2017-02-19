@@ -124,6 +124,10 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.APPROVED);
 
+        for(Reservation reservation: reservationList){
+            System.out.println(reservation.title);
+            System.out.println("Decisions size: " + reservation.decisions.size());
+        }
         return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationDTO.WithDecisions>>() {
         }.getType()));
     }

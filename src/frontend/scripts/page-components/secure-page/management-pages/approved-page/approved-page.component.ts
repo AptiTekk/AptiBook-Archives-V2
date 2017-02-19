@@ -12,10 +12,10 @@ import {LoaderService} from "../../../../services/singleton/loader.service";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
 
 @Component({
-    selector:'approved-page',
-    templateUrl:'approved-page.component.html'
+    selector: 'approved-page',
+    templateUrl: 'approved-page.component.html'
 })
-export class ApprovedPageComponent{
+export class ApprovedPageComponent {
     /**
      * The currently signed in user.
      */
@@ -44,11 +44,14 @@ export class ApprovedPageComponent{
             .subscribe(user => {
                 this.user = user;
 
-                if(user) {
+                if (user) {
                     this.reservationManagementService
                         .getApprovedReservations()
                         .subscribe(reservations => {
-                            this.reservations = reservations;
+                            reservations.forEach(reservation => {
+                                this.reservations.push(reservation);
+
+                            });
                             this.loaderService.stopLoading();
                         });
                 }
