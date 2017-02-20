@@ -144,28 +144,62 @@ public class UserValidator extends RestValidator {
      */
     public List<UserGroup> validateUserGroups(List<? extends UserGroupDTO> userGroupDTOs, @Nullable User existingUser) throws RestValidationException {
         List<UserGroup> userGroupList = new ArrayList<>();
-        for (UserGroupDTO userGroupDTO : userGroupDTOs) {
-            if (userGroupDTO.id == null)
-                throw new RestValidationException(badRequest("A User Group is missing an ID."));
 
-            UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTO.id);
+        // Determines if the current user (if one exists) is an admin.
+        boolean isAdmin = false;
+        if (existingUser != null)
+            if (existingUser.isAdmin())
+                isAdmin = true;
 
-            // Make sure the group exists.
-            if (userGroup == null)
-                throw new RestValidationException(badRequest("A User Group was not found."));
+        // The admin has special rules:
+        // 1. May only be assigned to the Root Group.
+        // 2. Must be assigned to the Root Group.
+        if (isAdmin) {
+            if (userGroupDTOs.isEmpty())
+                throw new RestValidationException(badRequest("The admin user must be assigned to the root group."));
+            else if (userGroupDTOs.size() > 1)
+                throw new RestValidationException(badRequest("The admin user may only be assigned to the root group."));
+            else {
+                UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTOs.get(0).id);
+                if (userGroup == null)
+                    throw new RestValidationException(badRequest("The User Group was not found."));
+                else if (!userGroup.isRoot())
+                    throw new RestValidationException(badRequest("The admin user may only be assigned to the root group."));
 
-            // Make sure the group is not root
-            if (userGroup.isRoot() && (existingUser == null || !existingUser.isAdmin()))
-                throw new RestValidationException(badRequest("You may not assign a non-admin user to the root group."));
-
-            // Make sure there are not other groups being assigned on this same branch.
-            List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
-            for (UserGroup otherGroup : userGroupList) {
-                if (hierarchyDown.contains(otherGroup))
-                    throw new RestValidationException(badRequest("You may not assign a user to two or more groups of the same branch."));
+                userGroupList.add(userGroup);
             }
+        } else {
+            // For all other users, check the user group structure.
+            for (UserGroupDTO userGroupDTO : userGroupDTOs) {
+                if (userGroupDTO.id == null)
+                    throw new RestValidationException(badRequest("A User Group is missing an ID."));
 
-            userGroupList.add(userGroup);
+                UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTO.id);
+
+                // Make sure the group exists.
+                if (userGroup == null)
+                    throw new RestValidationException(badRequest("A User Group was not found."));
+
+                // Make sure the group is not root, as normal users cannot be assigned to root.
+                if (userGroup.isRoot())
+                    throw new RestValidationException(badRequest("You may not assign a non-admin user to the root group."));
+
+                // Make sure there are not other groups being assigned on this same branch.
+                // Check below this group...
+                List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
+                for (UserGroup otherGroup : userGroupList) {
+                    if (hierarchyDown.contains(otherGroup))
+                        throw new RestValidationException(badRequest("You may not assign a user to two or more groups of the same branch."));
+                }
+                // And above this group...
+                List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(userGroup);
+                for (UserGroup otherGroup : userGroupList) {
+                    if (hierarchyUp.contains(otherGroup))
+                        throw new RestValidationException(badRequest("You may not assign a user to two or more groups of the same branch."));
+                }
+
+                userGroupList.add(userGroup);
+            }
         }
 
         return userGroupList;

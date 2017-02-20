@@ -36,6 +36,7 @@ public abstract class RestValidator implements RestOperations {
         private final ResponseEntity<?> responseEntity;
 
         public RestValidationException(ResponseEntity<?> responseEntity) {
+            super(responseEntity.toString());
             this.responseEntity = responseEntity;
         }
 
