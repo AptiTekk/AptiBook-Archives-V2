@@ -17,7 +17,7 @@ import {UserGroupService} from "./usergroup.service";
 import PriorityQueue from "typescript-collections/dist/lib/PriorityQueue";
 
 /**
- * This class contains logic needed for the reservation management page;
+ * This class contains logic needed for the reservation management page,
  * including getting pending/approved/rejected reservations, getting decisions, and making decisions.
  */
 @Injectable()
@@ -29,10 +29,10 @@ export class ReservationManagementService {
     private rejectedReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
 
     constructor(private apiService: APIService, private userGroupService: UserGroupService) {
-        userGroupService.getRootUserGroup().subscribe(root => {
-            if (root != undefined)
+        userGroupService.getRootUserGroup().subscribe(
+            root => {
                 this.rootUserGroup = root;
-        });
+            });
     }
 
     public fetchReservations(): void {
@@ -126,36 +126,40 @@ export class ReservationManagementService {
                 userGroupsOfReservation.push(currentGroup);
             }
 
-            // Take the Decisions, and assign them to the correct User Groups.
-            organizedReservation.decisions.forEach(decision => {
-                userGroupsOfReservation.forEach(userGroup => {
-                    if (decision.userGroup.id == userGroup.id) {
-                        userGroup.decision = decision;
-                    }
+            if (!organizedReservation.decisions) {
+                console.error("Could not find reservation decisions; cannot organize them.");
+            } else {
+                // Take the Decisions, and assign them to the correct User Groups.
+                organizedReservation.decisions.forEach(decision => {
+                    userGroupsOfReservation.forEach(userGroup => {
+                        if (decision.userGroup.id == userGroup.id) {
+                            userGroup.decision = decision;
+                        }
+                    });
                 });
-            });
 
-            // It's time to figure out who overrides who!
-            // We start at the top and work our way down.
-            for (let i = userGroupsOfReservation.length - 1; i >= 0; i--) {
-                let thisGroup = userGroupsOfReservation[i];
-                let upperGroup = userGroupsOfReservation[i + 1];
+                // It's time to figure out who overrides who!
+                // We start at the top and work our way down.
+                for (let i = userGroupsOfReservation.length - 1; i >= 0; i--) {
+                    let thisGroup = userGroupsOfReservation[i];
+                    let upperGroup = userGroupsOfReservation[i + 1];
 
-                if (upperGroup) { // If the upper group exists...
-                    if (upperGroup.overriddenBy) // If the upper group has been overridden by another group
-                        thisGroup.overriddenBy = upperGroup.overriddenBy; // then we are also overridden by that group.
-                    else if (upperGroup.decision) // If the upper group has NOT been overridden, check if the upper group has made a decision.
-                        if (!thisGroup.decision) // If they have a decision but we do NOT...
-                            thisGroup.overriddenBy = upperGroup; // ... then we are overridden by the upper group.
-                        else if (upperGroup.decision.approved
-                            != thisGroup.decision.approved)  // If we DO have a decision, and it is NOT the same as the upper group's decision...
-                            thisGroup.overriddenBy = upperGroup; // ... then we are overridden by the upper group.
+                    if (upperGroup) { // If the upper group exists...
+                        if (upperGroup.overriddenBy) // If the upper group has been overridden by another group
+                            thisGroup.overriddenBy = upperGroup.overriddenBy; // then we are also overridden by that group.
+                        else if (upperGroup.decision) // If the upper group has NOT been overridden, check if the upper group has made a decision.
+                            if (!thisGroup.decision) // If they have a decision but we do NOT...
+                                thisGroup.overriddenBy = upperGroup; // ... then we are overridden by the upper group.
+                            else if (upperGroup.decision.approved
+                                != thisGroup.decision.approved)  // If we DO have a decision, and it is NOT the same as the upper group's decision...
+                                thisGroup.overriddenBy = upperGroup; // ... then we are overridden by the upper group.
+                    }
                 }
-            }
 
-            // We will reverse the array so that it shows up in the correct order on the web-page.
-            organizedReservation.hierarchy = userGroupsOfReservation.reverse();
-            return organizedReservation;
+                // We will reverse the array so that it shows up in the correct order on the web-page.
+                organizedReservation.hierarchy = userGroupsOfReservation.reverse();
+                return organizedReservation;
+            }
         }
     }
 
