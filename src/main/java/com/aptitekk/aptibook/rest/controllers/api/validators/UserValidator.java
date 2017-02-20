@@ -7,21 +7,33 @@
 package com.aptitekk.aptibook.rest.controllers.api.validators;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
+import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
+import java.util.List;
 
 @Service
 public class UserValidator extends RestValidator {
 
     private final UserRepository userRepository;
+    private final UserGroupRepository userGroupRepository;
+    private final UserGroupService userGroupService;
 
     @Autowired
-    public UserValidator(UserRepository userRepository) {
+    public UserValidator(UserRepository userRepository,
+                         UserGroupRepository userGroupRepository,
+                         UserGroupService userGroupService) {
         this.userRepository = userRepository;
+        this.userGroupRepository = userGroupRepository;
+        this.userGroupService = userGroupService;
     }
 
     /**
@@ -38,36 +50,21 @@ public class UserValidator extends RestValidator {
     }
 
     /**
-     * Checks if an email address is valid (meets specifications and is not already in use) for an existing user.
+     * Checks if an email address is valid (meets specifications and is not already in use).
      *
      * @param emailAddress The email address to validate.
-     * @param existingUser The existing user (whose email address is being changed).
+     * @param existingUser The existing user (whose email address is being changed) if applicable.
      * @throws RestValidationException If the email address is invalid.
      */
-    public void validateEmailAddressForExistingUser(String emailAddress, User existingUser) throws RestValidationException {
-        if (emailAddress == null || emailAddress.isEmpty())
-            throw new RestValidationException(badRequest("The Email Address was not supplied."));
+    public void validateEmailAddress(String emailAddress, @Nullable User existingUser) throws RestValidationException {
+        if (emailAddress != null) {
+            if (existingUser != null && existingUser.isAdmin() && !emailAddress.equals("admin"))
+                throw new RestValidationException(badRequest("The admin user cannot change their Email Address."));
+            if (!EmailValidator.getInstance().isValid(emailAddress))
+                throw new RestValidationException(badRequest("The Email Address is invalid."));
 
-        if (!existingUser.isAdmin() && !EmailValidator.getInstance().isValid(emailAddress))
-            throw new RestValidationException(badRequest("The Email Address is invalid."));
-
-        checkIfEmailAddressIsInUse(emailAddress, existingUser.getId());
-    }
-
-    /**
-     * Checks if an email address is valid (meets specifications and is not already in use) for a new user.
-     *
-     * @param emailAddress The email address to validate.
-     * @throws RestValidationException If the email address is invalid.
-     */
-    public void validateEmailAddressForNewUser(String emailAddress) throws RestValidationException {
-        if (emailAddress == null || emailAddress.isEmpty())
-            throw new RestValidationException(badRequest("The Email Address was not supplied."));
-
-        if (!EmailValidator.getInstance().isValid(emailAddress))
-            throw new RestValidationException(badRequest("The Email Address is invalid."));
-
-        checkIfEmailAddressIsInUse(emailAddress, null);
+            checkIfEmailAddressIsInUse(emailAddress, existingUser != null ? existingUser.getId() : null);
+        }
     }
 
     /**
@@ -124,6 +121,54 @@ public class UserValidator extends RestValidator {
                 throw new RestValidationException(badRequest("The Location cannot contain these characters: < > ; ="));
             else if (location.length() > 250)
                 throw new RestValidationException(badRequest("The Location must be 250 characters or less."));
+    }
+
+    /**
+     * Checks if a password is valid for a user.
+     *
+     * @param password The password.
+     * @throws RestValidationException If the password is invalid.
+     */
+    public void validatePassword(String password) throws RestValidationException {
+        if (password != null)
+            if (password.length() > 30)
+                throw new RestValidationException(badRequest("The Password must be 30 characters or less."));
+    }
+
+    /**
+     * Checks that the provided User Groups exist and are in a valid structure.
+     *
+     * @param userGroupDTOs The User Group DTOs from the client.
+     * @param existingUser  The User whose groups are being changed, if applicable.
+     * @return A List of User Groups that can be assigned to the user.
+     */
+    public List<UserGroup> validateUserGroups(List<? extends UserGroupDTO> userGroupDTOs, @Nullable User existingUser) throws RestValidationException {
+        List<UserGroup> userGroupList = new ArrayList<>();
+        for (UserGroupDTO userGroupDTO : userGroupDTOs) {
+            if (userGroupDTO.id == null)
+                throw new RestValidationException(badRequest("A User Group is missing an ID."));
+
+            UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTO.id);
+
+            // Make sure the group exists.
+            if (userGroup == null)
+                throw new RestValidationException(badRequest("A User Group was not found."));
+
+            // Make sure the group is not root
+            if (userGroup.isRoot() && (existingUser == null || !existingUser.isAdmin()))
+                throw new RestValidationException(badRequest("You may not assign a non-admin user to the root group."));
+
+            // Make sure there are not other groups being assigned on this same branch.
+            List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
+            for (UserGroup otherGroup : userGroupList) {
+                if (hierarchyDown.contains(otherGroup))
+                    throw new RestValidationException(badRequest("You may not assign a user to two or more groups of the same branch."));
+            }
+
+            userGroupList.add(userGroup);
+        }
+
+        return userGroupList;
     }
 
 }

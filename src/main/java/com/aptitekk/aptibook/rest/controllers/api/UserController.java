@@ -13,14 +13,12 @@ import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
-import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.entity.NotificationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
-import org.apache.commons.validator.routines.EmailValidator;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -30,7 +28,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.websocket.server.PathParam;
-import java.util.ArrayList;
 import java.util.List;
 
 @APIController
@@ -86,7 +83,10 @@ public class UserController extends APIControllerAbstract {
 
         User newUser = new User();
 
-        userValidator.validateEmailAddressForNewUser(userDTO.emailAddress);
+        if (userDTO.emailAddress == null)
+            return badRequest("The Email Address was not supplied.");
+
+        userValidator.validateEmailAddress(userDTO.emailAddress, null);
         newUser.setEmailAddress(userDTO.emailAddress);
 
         if (userDTO.firstName != null) {
@@ -107,6 +107,10 @@ public class UserController extends APIControllerAbstract {
         if (userDTO.location != null) {
             userValidator.validateLocation(userDTO.location);
             newUser.location = userDTO.location;
+        }
+
+        if (userDTO.userGroups != null) {
+            newUser.userGroups = userValidator.validateUserGroups(userDTO.userGroups, null);
         }
 
         String newPassword = PasswordGenerator.generateRandomPassword(10);
@@ -170,94 +174,54 @@ public class UserController extends APIControllerAbstract {
 
         // If Password Only is true, then we do not need to worry about updating this data.
         if (!passwordOnly) {
-            User otherUser = userRepository.findByEmailAddress(userDTO.emailAddress);
-            if (otherUser != null && !otherUser.getId().equals(id))
-                return badRequest("The Email Address is already in use.");
+            if (userDTO.emailAddress != null) {
+                userValidator.validateEmailAddress(userDTO.emailAddress, currentUser);
+                currentUser.setEmailAddress(userDTO.emailAddress);
+            }
 
-            if (userDTO.emailAddress != null)
-                if (!currentUser.isAdmin() && !EmailValidator.getInstance().isValid(userDTO.emailAddress))
-                    return badRequest("The Email Address is invalid.");
-                else
-                    currentUser.setEmailAddress(userDTO.emailAddress);
+            if (userDTO.firstName != null) {
+                userValidator.validateFirstName(userDTO.firstName);
+                currentUser.firstName = userDTO.firstName;
+            }
 
-            if (userDTO.firstName != null)
-                if (!userDTO.firstName.matches("[^<>;=]*"))
-                    return badRequest("The First Name cannot contain these characters: < > ; =");
-                else if (userDTO.firstName.length() > 30)
-                    return badRequest("The First Name must be 30 characters or less.");
-                else
-                    currentUser.firstName = userDTO.firstName;
+            if (userDTO.lastName != null) {
+                userValidator.validateLastName(userDTO.lastName);
+                currentUser.lastName = userDTO.lastName;
+            }
 
-            if (userDTO.lastName != null)
-                if (!userDTO.lastName.matches("[^<>;=]*"))
-                    return badRequest("The Last Name cannot contain these characters: < > ; =");
-                else if (userDTO.lastName.length() > 30)
-                    return badRequest("The Last Name must be 30 characters or less.");
-                else
-                    currentUser.lastName = userDTO.lastName;
+            if (userDTO.phoneNumber != null) {
+                userValidator.validatePhoneNumber(userDTO.phoneNumber);
+                currentUser.phoneNumber = userDTO.phoneNumber;
+            }
 
-            if (userDTO.phoneNumber != null)
-                if (!userDTO.phoneNumber.matches("[^<>;=]*"))
-                    return badRequest("The Phone Number cannot contain these characters: < > ; =");
-                else if (userDTO.phoneNumber.length() > 30)
-                    return badRequest("The Phone Number must be 30 characters or less.");
-                else
-                    currentUser.phoneNumber = userDTO.phoneNumber;
-
-            if (userDTO.location != null)
-                if (!userDTO.location.matches("[^<>;=]*"))
-                    return badRequest("The Location cannot contain these characters: < > ; =");
-                else if (userDTO.location.length() > 250)
-                    return badRequest("The Location must be 250 characters or less.");
-                else
-                    currentUser.location = userDTO.location;
+            if (userDTO.location != null) {
+                userValidator.validateLocation(userDTO.location);
+                currentUser.location = userDTO.location;
+            }
         }
 
-        if (userDTO.newPassword != null)
-            if (userDTO.newPassword.length() > 30)
-                return badRequest("The Password must be 30 characters or less.");
-            else
-                try {
-                    currentUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
-                } catch (PasswordStorage.CannotPerformOperationException e) {
-                    logService.logException(getClass(), e, "Could not hash password from PATCH.");
-                    return serverError("Could not save new password.");
-                }
+        if (userDTO.newPassword != null) {
+            userValidator.validatePassword(userDTO.newPassword);
+
+            try {
+                currentUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
+            } catch (PasswordStorage.CannotPerformOperationException e) {
+                logService.logException(getClass(), e, "Could not hash password from PATCH.");
+                return serverError("Could not save new password.");
+            }
+        }
 
         if (userDTO.userGroups != null) {
             if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
                 return noPermission("You may not modify User Groups.");
 
-            List<UserGroup> newUserGroupList = new ArrayList<>();
-            for (UserGroupDTO userGroupDTO : userDTO.userGroups) {
-                if (userGroupDTO.id == null)
-                    return badRequest("A User Group is missing an ID.");
-
-                UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTO.id);
-
-                // Make sure the group exists.
-                if (userGroup == null)
-                    return badRequest("A User Group was not found.");
-
-                // Make sure the group is not root
-                if (userGroup.isRoot() && !currentUser.isAdmin())
-                    return badRequest("You may not assign a non-admin user to the root group.");
-
-                // Make sure there are not other groups being assigned on this same branch.
-                List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
-                for (UserGroup otherGroup : newUserGroupList) {
-                    if (hierarchyDown.contains(otherGroup))
-                        return badRequest("You may not assign a user to two or more groups of the same branch.");
-                }
-
-                newUserGroupList.add(userGroup);
-            }
+            List<UserGroup> userGroupList = userValidator.validateUserGroups(userDTO.userGroups, currentUser);
 
             for (UserGroup userGroup : currentUser.userGroups) {
                 userGroup.users.remove(currentUser);
             }
 
-            currentUser.userGroups = newUserGroupList;
+            currentUser.userGroups = userGroupList;
         }
 
         userRepository.save(currentUser);
