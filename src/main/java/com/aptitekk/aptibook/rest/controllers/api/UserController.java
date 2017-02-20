@@ -89,33 +89,25 @@ public class UserController extends APIControllerAbstract {
         userValidator.validateEmailAddressForNewUser(userDTO.emailAddress);
         newUser.setEmailAddress(userDTO.emailAddress);
 
-        userValidator.validateFirstName(userDTO.firstName);
-        newUser.firstName = userDTO.firstName;
+        if (userDTO.firstName != null) {
+            userValidator.validateFirstName(userDTO.firstName);
+            newUser.firstName = userDTO.firstName;
+        }
 
-        if (userDTO.lastName != null)
-            if (!userDTO.lastName.matches("[^<>;=]*"))
-                return badRequest("The Last Name cannot contain these characters: < > ; =");
-            else if (userDTO.lastName.length() > 30)
-                return badRequest("The Last Name must be 30 characters or less.");
-            else
-                newUser.lastName = userDTO.lastName;
+        if (userDTO.lastName != null) {
+            userValidator.validateLastName(userDTO.lastName);
+            newUser.lastName = userDTO.lastName;
+        }
 
-        if (userDTO.phoneNumber != null)
-            if (!userDTO.phoneNumber.matches("[^<>;=]*"))
-                return badRequest("The Phone Number cannot contain these characters: < > ; =");
-            else if (userDTO.phoneNumber.length() > 30)
-                return badRequest("The Phone Number must be 30 characters or less.");
-            else
-                newUser.phoneNumber = userDTO.phoneNumber;
+        if (userDTO.phoneNumber != null) {
+            userValidator.validatePhoneNumber(userDTO.phoneNumber);
+            newUser.phoneNumber = userDTO.phoneNumber;
+        }
 
-        if (userDTO.location != null)
-            if (!userDTO.location.matches("[^<>;=]*"))
-                return badRequest("The Location cannot contain these characters: < > ; =");
-            else if (userDTO.location.length() > 250)
-                return badRequest("The Location must be 250 characters or less.");
-            else
-                newUser.location = userDTO.location;
-
+        if (userDTO.location != null) {
+            userValidator.validateLocation(userDTO.location);
+            newUser.location = userDTO.location;
+        }
 
         String newPassword = PasswordGenerator.generateRandomPassword(10);
         try {

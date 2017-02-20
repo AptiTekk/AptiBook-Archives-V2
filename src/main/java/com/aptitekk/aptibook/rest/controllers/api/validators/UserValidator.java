@@ -84,4 +84,46 @@ public class UserValidator extends RestValidator {
                 throw new RestValidationException(badRequest("The First Name must be 30 characters or less."));
     }
 
+    /**
+     * Checks if a last name is valid for a user.
+     *
+     * @param lastName The last name.
+     * @throws RestValidationException If the last name is invalid.
+     */
+    public void validateLastName(String lastName) throws RestValidationException {
+        if (lastName != null)
+            if (!lastName.matches("[^<>;=]*"))
+                throw new RestValidationException(badRequest("The Last Name cannot contain these characters: < > ; ="));
+            else if (lastName.length() > 30)
+                throw new RestValidationException(badRequest("The Last Name must be 30 characters or less."));
+    }
+
+    /**
+     * Checks if a phone number is valid for a user.
+     *
+     * @param phoneNumber The phone number.
+     * @throws RestValidationException If the phone number is invalid.
+     */
+    public void validatePhoneNumber(String phoneNumber) throws RestValidationException {
+        if (phoneNumber != null)
+            if (!phoneNumber.matches("[^<>;=]*"))
+                throw new RestValidationException(badRequest("The Phone Number cannot contain these characters: < > ; ="));
+            else if (phoneNumber.length() > 30)
+                throw new RestValidationException(badRequest("The Phone Number must be 30 characters or less."));
+    }
+
+    /**
+     * Checks if a location is valid for a user.
+     *
+     * @param location The location.
+     * @throws RestValidationException If the location is invalid.
+     */
+    public void validateLocation(String location) throws RestValidationException {
+        if (location != null)
+            if (!location.matches("[^<>;=]*"))
+                throw new RestValidationException(badRequest("The Location cannot contain these characters: < > ; ="));
+            else if (location.length() > 250)
+                throw new RestValidationException(badRequest("The Location must be 250 characters or less."));
+    }
+
 }
