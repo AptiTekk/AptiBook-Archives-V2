@@ -247,7 +247,7 @@ public class DemoTenantBuilder {
         Reservation libraryReservation2 = createReservation(
                 teacher,
                 "Essay Research",
-                Reservation.Status.PENDING,
+                Reservation.Status.REJECTED,
                 library,
                 10, 10,
                 12, 0,
@@ -290,7 +290,7 @@ public class DemoTenantBuilder {
                 libraryReservation2,
                 administratorsUserGroup,
                 administrator,
-                true
+                false
         );
 
         createReservationDecision(
@@ -411,7 +411,10 @@ public class DemoTenantBuilder {
         resource.tags = tags;
 
         return resourceRepository.save(resource);
+
     }
+
+
 
     /**
      * Creates a Reservation.
