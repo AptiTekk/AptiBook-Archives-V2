@@ -47,11 +47,9 @@ export class ApprovedPageComponent {
                 if (user) {
                     this.reservationManagementService
                         .getApprovedReservations()
+                        .take(1)
                         .subscribe(reservations => {
-                            reservations.forEach(reservation => {
-                                this.reservations.push(reservation);
-
-                            });
+                            this.reservations = reservations;
                             this.loaderService.stopLoading();
                         });
                 }
