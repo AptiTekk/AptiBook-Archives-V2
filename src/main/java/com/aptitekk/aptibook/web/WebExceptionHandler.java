@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.web;
 
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
+import com.aptitekk.aptibook.rest.controllers.api.validators.RestValidator;
 import org.hibernate.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -62,6 +63,11 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
     protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
         logService.logException(getClass(), ex, "An error occurred while processing an endpoint request.");
         return new ResponseEntity<>(new RestError("An Internal Server Error occurred while processing your request. (500)"), HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+
+    @ExceptionHandler(RestValidator.RestValidationException.class)
+    protected ResponseEntity<?> handleRestValidationException(RestValidator.RestValidationException ex) {
+        return ex.getResponseEntity();
     }
 
     @Override

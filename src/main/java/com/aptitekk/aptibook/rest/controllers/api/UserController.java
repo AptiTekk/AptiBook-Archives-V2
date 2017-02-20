@@ -19,6 +19,7 @@ import com.aptitekk.aptibook.core.services.entity.NotificationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
+import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +32,12 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import javax.websocket.server.PathParam;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.logging.LogManager;
 
 @APIController
 public class UserController extends APIControllerAbstract {
 
     private final UserRepository userRepository;
+    private final UserValidator userValidator;
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
     private final EmailService emailService;
@@ -45,11 +46,13 @@ public class UserController extends APIControllerAbstract {
     @Autowired
     public UserController(
             UserRepository userRepository,
+            UserValidator userValidator,
             UserGroupRepository userGroupRepository,
             UserGroupService userGroupService,
             EmailService emailService,
             NotificationService notificationService) {
         this.userRepository = userRepository;
+        this.userValidator = userValidator;
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.emailService = emailService;
@@ -83,23 +86,11 @@ public class UserController extends APIControllerAbstract {
 
         User newUser = new User();
 
-        if (userDTO.emailAddress == null)
-            return badRequest("The Email Address was not supplied.");
-        if (!EmailValidator.getInstance().isValid(userDTO.emailAddress))
-            return badRequest("The Email Address is invalid.");
-        User existingUser = userRepository.findByEmailAddress(userDTO.emailAddress);
-        if (existingUser != null)
-            return badRequest("The Email Address is already in use.");
-
+        userValidator.validateEmailAddressForNewUser(userDTO.emailAddress);
         newUser.setEmailAddress(userDTO.emailAddress);
 
-        if (userDTO.firstName != null)
-            if (!userDTO.firstName.matches("[^<>;=]*"))
-                return badRequest("The First Name cannot contain these characters: < > ; =");
-            else if (userDTO.firstName.length() > 30)
-                return badRequest("The First Name must be 30 characters or less.");
-            else
-                newUser.firstName = userDTO.firstName;
+        userValidator.validateFirstName(userDTO.firstName);
+        newUser.firstName = userDTO.firstName;
 
         if (userDTO.lastName != null)
             if (!userDTO.lastName.matches("[^<>;=]*"))
@@ -125,6 +116,7 @@ public class UserController extends APIControllerAbstract {
             else
                 newUser.location = userDTO.location;
 
+
         String newPassword = PasswordGenerator.generateRandomPassword(10);
         try {
             newUser.hashedPassword = PasswordStorage.createHash(newPassword);
@@ -140,7 +132,7 @@ public class UserController extends APIControllerAbstract {
         emailService.sendEmailNotification(newUser.getEmailAddress(),
                 "Welcome to AptiBook!",
                 "Hello! An account has been created for you on AptiBook."
-                        + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>admin</b> on the navigation bar and visiting <b>My Account</b>.<br>"
+                        + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>My Account</b> on the navigation bar.<br>"
                         + webURIBuilderService.buildURI("/" + newUser.tenant.slug, null) + "</p>"
                         + "<center>"
                         + "Email Address: <b>" + newUser.getEmailAddress() + "</b> <br>"
