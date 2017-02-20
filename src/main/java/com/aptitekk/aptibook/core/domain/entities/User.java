@@ -7,8 +7,6 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
