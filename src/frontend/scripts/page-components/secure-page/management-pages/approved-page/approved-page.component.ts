@@ -43,7 +43,6 @@ export class ApprovedPageComponent {
             .getUser()
             .subscribe(user => {
                 this.user = user;
-
                 if (user) {
                     this.reservationManagementService
                         .getApprovedReservations()
@@ -65,7 +64,6 @@ export class ApprovedPageComponent {
         if (!reservation['hierarchy']) {
             this.reservationManagementService.organizeReservation(reservation);
         }
-
         this.selectedReservation = reservation;
     }
 

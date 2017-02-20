@@ -42,14 +42,12 @@ export class RejectedPageComponent{
             .getUser()
             .subscribe(user => {
                 this.user = user;
-
                 if (user) {
                     this.reservationManagementService
                         .getRejectedReservations()
                         .subscribe(reservations => {
                             reservations.forEach(reservation => {
                                 this.reservations.push(reservation);
-
                             });
                             this.loaderService.stopLoading();
                         });
@@ -66,7 +64,6 @@ export class RejectedPageComponent{
         if (!reservation['hierarchy']) {
             this.reservationManagementService.organizeReservation(reservation);
         }
-
         this.selectedReservation = reservation;
     }
 
