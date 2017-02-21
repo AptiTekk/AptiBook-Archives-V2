@@ -12,6 +12,7 @@ import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
+import com.aptitekk.aptibook.web.util.WebURIBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -33,9 +34,17 @@ public class TenantIntegrityService {
     private final EmailService emailService;
 
     private final SpringProfileService springProfileService;
+    private WebURIBuilderService webURIBuilderService;
 
     @Autowired
-    public TenantIntegrityService(UserGroupRepository userGroupRepository, UserRepository userRepository, ResourceCategoryRepository resourceCategoryRepository, PropertiesRepository propertiesRepository, PermissionRepository permissionRepository, EmailService emailService, SpringProfileService springProfileService) {
+    public TenantIntegrityService(UserGroupRepository userGroupRepository,
+                                  UserRepository userRepository,
+                                  ResourceCategoryRepository resourceCategoryRepository,
+                                  PropertiesRepository propertiesRepository,
+                                  PermissionRepository permissionRepository,
+                                  EmailService emailService,
+                                  SpringProfileService springProfileService,
+                                  WebURIBuilderService webURIBuilderService) {
         this.userGroupRepository = userGroupRepository;
         this.userRepository = userRepository;
         this.resourceCategoryRepository = resourceCategoryRepository;
@@ -43,6 +52,7 @@ public class TenantIntegrityService {
         this.permissionRepository = permissionRepository;
         this.emailService = emailService;
         this.springProfileService = springProfileService;
+        this.webURIBuilderService = webURIBuilderService;
     }
 
     public void initializeNewTenant(Tenant tenant) {
@@ -83,12 +93,12 @@ public class TenantIntegrityService {
                     adminUser.hashedPassword = PasswordStorage.createHash(password);
                     emailService.sendEmailNotification(tenant.adminEmail, "AptiBook Registration", "<p>Thank you for registering with AptiBook! We are very excited to hear about how you and your team uses AptiBook.</p>"
                             + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>admin</b> on the navigation bar and visiting <b>My Account</b>.<br>"
-                            + "https://aptibook.aptitekk.com/" + tenant.slug + "</p>"
+                            + webURIBuilderService.buildURI("/" + tenant.slug, null) + "</p>"
                             + "<center>"
                             + "Username: <b>admin</b> <br>"
                             + "Password: <b>" + password + "</b>"
                             + "</center>"
-                            + "<p>Please let us know of any way we can be of assistance, and be sure to check out our knowledge base at https://support.aptitekk.com/. Enjoy!</p>");
+                            + "<p>Please let us know of any way we can be of assistance, and be sure to check out our knowledge base at https://support.aptitekk.com/.</p>");
                 } else {
                     adminUser.hashedPassword = PasswordStorage.createHash("admin");
                 }

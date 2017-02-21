@@ -7,3 +7,5 @@ databaseChangeLog:
       file: db/changelog/changeSets/3__Add_Tenant_Admin_Email.xml
   - include:
       file: db/changelog/changeSets/4__Rename_Reservation_Columns.xml
+  - include:
+      file: db/changelog/changeSets/5__Remove_TimeZone_Property.xml

@@ -37,4 +37,8 @@ public class RestError {
         return error != null ? error.hashCode() : 0;
     }
 
+    @Override
+    public String toString() {
+        return "RestError: " + this.error;
+    }
 }

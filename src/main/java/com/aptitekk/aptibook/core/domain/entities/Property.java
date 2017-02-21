@@ -11,12 +11,8 @@ import com.aptitekk.aptibook.ApplicationContextProvider;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.BooleanPropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.MaxLengthPropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
-import com.aptitekk.aptibook.core.domain.entities.propertyValidators.TimeZonePropertyValidator;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import org.springframework.context.ApplicationContext;
 
 import javax.persistence.*;
@@ -31,8 +27,7 @@ public class Property extends MultiTenantEntity implements Serializable {
 
         PERSONALIZATION("Personalization", null),
         REGISTRATION("Registration", null),
-        GOOGLE_SIGN_IN("Google Sign In", null),
-        DATE_TIME("Date And Time", null);
+        GOOGLE_SIGN_IN("Google Sign In", null);
 
         private String friendlyName;
         private Class<? extends ChangeListener> propertyGroupChangeListenerClass;
@@ -77,9 +72,7 @@ public class Property extends MultiTenantEntity implements Serializable {
         REGISTRATION_ENABLED("User Registration Enabled", "true", Group.REGISTRATION, new BooleanPropertyValidator()),
 
         GOOGLE_SIGN_IN_ENABLED("Google Sign-In Enabled", "false", Group.GOOGLE_SIGN_IN, new BooleanPropertyValidator()),
-        GOOGLE_SIGN_IN_WHITELIST("Allowed Google Sign-In Domain Names (Comma Separated)", "gmail.com, example.org", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256)),
-
-        DATE_TIME_TIMEZONE("Timezone", "America/Denver", Group.DATE_TIME, new TimeZonePropertyValidator());
+        GOOGLE_SIGN_IN_WHITELIST("Allowed Google Sign-In Domain Names (Comma Separated)", "gmail.com, example.org", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256));
 
         private String fieldLabel;
         private final String defaultValue;

@@ -8,7 +8,7 @@
 	<div class="col-xs-12 col-md-8">
 		<div class="btn-toolbar">
 			<button class="btn btn-primary"
-					(click)="onAddNewUser()">Add New User
+					(click)="newUserModal.open()">Add New User
 			</button>
 		</div>
 		<hr/>
@@ -150,6 +150,9 @@
 		</form>
 	</div>
 </div>
+
+<new-user-modal #newUserModal
+				(submitted)="onAddNewUser()"></new-user-modal>
 
 <deletion-confirmation-modal #userDeleteModal
 							 [message]="'Are you sure you want to delete the User \'' + selectedUser?.emailAddress + '\'?'"
