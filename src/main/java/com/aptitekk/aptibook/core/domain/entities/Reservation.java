@@ -60,7 +60,7 @@ public class Reservation extends MultiTenantEntity implements Serializable {
     @ManyToOne
     public User user;
 
-    @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
     public List<ReservationDecision> decisions;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
