@@ -13,6 +13,7 @@ import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationWithDecisionsDTO;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
@@ -109,7 +110,7 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
 
-        return ok(modelMapper.map(reservationList, new TypeToken<ReservationDTO.WithDecisions[]>() {
+        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 
@@ -124,7 +125,7 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.APPROVED);
 
-        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationDTO.WithDecisions>>() {
+        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 
@@ -139,7 +140,7 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.REJECTED);
 
-        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationDTO.WithDecisions>>() {
+        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 

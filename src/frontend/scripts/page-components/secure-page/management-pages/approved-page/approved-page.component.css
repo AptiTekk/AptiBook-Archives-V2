@@ -1,0 +1,16 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+.reservation-icon {
+    font-size: 30px;
+    text-align: center;
+    width: 30px;
+}
+
+/* Turn the reservation icon white if the row is selected */
+:host /deep/ datatable tr.selected .reservation-icon {
+    color: white;
+}

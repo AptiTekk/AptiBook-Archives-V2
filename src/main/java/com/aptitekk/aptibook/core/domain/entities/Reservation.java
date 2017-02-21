@@ -57,11 +57,9 @@ public class Reservation extends MultiTenantEntity implements Serializable {
     @ManyToOne
     public Resource resource;
 
-    @JsonIdentityReference(alwaysAsId = true)
     @ManyToOne
     public User user;
 
-    @JsonIdentityReference(alwaysAsId = true)
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
     public List<ReservationDecision> decisions;
 

@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
 import java.util.List;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class ReservationDTO {
+public class ReservationWithDecisionsDTO {
 
     public Long id;
 
@@ -41,15 +41,12 @@ public class ReservationDTO {
 
     public UserDTO.WithoutUserGroups user;
 
+    public List<ReservationDecisionDTO> decisions;
+
     public boolean approved;
 
     public boolean rejected;
 
     public boolean pending;
-
-    @JsonIgnoreProperties({"resource"})
-    public static class WithoutResource extends ReservationDTO {
-
-    }
 
 }

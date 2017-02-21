@@ -232,15 +232,7 @@ public class DemoTenantBuilder {
         );
 
         //Add reservations
-        Reservation teacherLaptopReservation = createReservation(
-                teacher,
-                "Test",
-                Reservation.Status.APPROVED,
-                teacherLaptop,
-                6, 7,
-                12, 33,
-                15, 0
-        );
+
 
         Reservation libraryReservation = createReservation(
                 teacher,
@@ -255,11 +247,21 @@ public class DemoTenantBuilder {
         Reservation libraryReservation2 = createReservation(
                 teacher,
                 "Essay Research",
-                Reservation.Status.PENDING,
+                Reservation.Status.REJECTED,
                 library,
                 10, 10,
                 12, 0,
                 15, 30);
+
+        Reservation libraryReservation3 = createReservation(
+                teacher,
+                "Test",
+                Reservation.Status.APPROVED,
+                library,
+                6, 7,
+                12, 33,
+                15, 0
+        );
 
         Reservation cart1Reservation = createReservation(
                 teacher,
@@ -288,6 +290,13 @@ public class DemoTenantBuilder {
                 libraryReservation2,
                 administratorsUserGroup,
                 administrator,
+                false
+        );
+
+        createReservationDecision(
+                libraryReservation3,
+                administratorsUserGroup,
+                administrator,
                 true
         );
 
@@ -298,12 +307,7 @@ public class DemoTenantBuilder {
                 true
         );
 
-        createReservationDecision(
-                teacherLaptopReservation,
-                teachersUserGroup,
-                teacher,
-                true
-        );
+
 
         //Add Notifications
         Notification notification = new Notification(teacher, "Test Notification", "Lorem ipsum");
@@ -407,7 +411,10 @@ public class DemoTenantBuilder {
         resource.tags = tags;
 
         return resourceRepository.save(resource);
+
     }
+
+
 
     /**
      * Creates a Reservation.
