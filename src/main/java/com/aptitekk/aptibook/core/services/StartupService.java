@@ -12,6 +12,7 @@ import com.aptitekk.aptibook.core.cron.TenantSynchronizer;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
+import com.aptitekk.aptibook.web.util.WebURIBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.annotation.Scope;
