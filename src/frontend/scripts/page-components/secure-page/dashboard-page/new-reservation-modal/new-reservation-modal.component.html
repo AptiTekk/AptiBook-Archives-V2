@@ -7,7 +7,8 @@
 <modal [title]="'New Reservation'"
 	   [submitButtonLabel]="'Search'"
 	   [cancelButtonLabel]="'Cancel'"
-	   (onSubmit)="onSearch()">
+	   (onSubmit)="onSearch()"
+		[closeOnOutsideClick]="false">
 	<modal-body>
 		<p>Please select the start and end times for your reservation.</p>
 		

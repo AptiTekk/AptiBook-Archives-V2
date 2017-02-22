@@ -12,14 +12,14 @@
 	<div id="search-settings"
 		 class="row"
 		 *ngIf="start && end">
-		<div class="col-xs-12 col-sm-5 col-md-4">
+		<div class="col-xs-12 col-md-5">
 			<label for="startTimePicker">Start Time:</label>
 			<date-time-picker id="startTimePicker"
 							  [(ngModel)]="start"
 							  [inline]="false"
 							  [sideBySide]="true"></date-time-picker>
 		</div>
-		<div class="col-xs-12 col-sm-5 col-md-4">
+		<div class="col-xs-12 col-md-5">
 			<label for="startTimePicker">End Time:</label>
 			<date-time-picker id="endTimePicker"
 							  [(ngModel)]="end"
@@ -27,7 +27,7 @@
 							  [inline]="false"
 							  [sideBySide]="true"></date-time-picker>
 		</div>
-		<div class="col-xs-12 col-sm-2 col-md-4">
+		<div class="col-xs-12 col-md-2">
 			<div class="hidden-xs col-sm-12">
 				<label for="search-button">&nbsp;</label>
 			</div>
