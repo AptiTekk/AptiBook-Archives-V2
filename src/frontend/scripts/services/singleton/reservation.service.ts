@@ -10,8 +10,6 @@ import {Observable, ReplaySubject} from "rxjs";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation.model";
 import * as moment from "moment";
-import {ResourceCategory} from "../../models/resource-category.model";
-import {ReservationDecision} from "../../models/reservation-decision.model";
 import {AuthService} from "./auth.service";
 
 @Injectable()
@@ -47,8 +45,7 @@ export class ReservationService {
 
     public makeReservation(reservation: Reservation): Observable<Reservation> {
         return Observable.create(listener => {
-            let body = JSON.stringify(reservation);
-            this.apiService.post("reservations/user/" + reservation.user.id, body).subscribe(
+            this.apiService.post("reservations/user/" + reservation.user.id, reservation).subscribe(
                 response => {
                     let reservation: Reservation = <Reservation>response;
                     listener.next(reservation);

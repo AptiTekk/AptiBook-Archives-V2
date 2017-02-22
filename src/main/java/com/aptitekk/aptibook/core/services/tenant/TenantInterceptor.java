@@ -21,10 +21,13 @@ import java.util.Map;
 public class TenantInterceptor extends HandlerInterceptorAdapter {
 
     private final TenantRepository tenantRepository;
+    private final TenantManagementService tenantManagementService;
 
     @Autowired
-    public TenantInterceptor(TenantRepository tenantRepository) {
+    public TenantInterceptor(TenantRepository tenantRepository,
+                             TenantManagementService tenantManagementService) {
         this.tenantRepository = tenantRepository;
+        this.tenantManagementService = tenantManagementService;
     }
 
     @Override
@@ -36,7 +39,8 @@ public class TenantInterceptor extends HandlerInterceptorAdapter {
             String tenantSlug = mappingVars.get("tenant");
 
             if (tenantSlug != null)
-                request.setAttribute("tenant", tenantRepository.findTenantBySlug(tenantSlug));
+                if (tenantManagementService.getAllowedTenantSlugs().contains(tenantSlug))
+                    request.setAttribute("tenant", tenantRepository.findTenantBySlug(tenantSlug));
         }
 
         return super.preHandle(request, response, handler);
