@@ -7,3 +7,4 @@
 export * from './configuration-container.component';
 export * from './resources-page';
 export * from './users-page';
+export * from './properties-page/properties-page.component';
