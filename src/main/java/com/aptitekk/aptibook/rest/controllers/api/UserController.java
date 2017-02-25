@@ -217,7 +217,7 @@ public class UserController extends APIControllerAbstract {
             List<UserGroup> userGroupList = userValidator.validateUserGroups(userDTO.userGroups, currentUser);
 
             for (UserGroup userGroup : currentUser.userGroups) {
-                userGroup.users.remove(currentUser);
+                userGroup.getUsers().remove(currentUser);
             }
 
             currentUser.userGroups = userGroupList;

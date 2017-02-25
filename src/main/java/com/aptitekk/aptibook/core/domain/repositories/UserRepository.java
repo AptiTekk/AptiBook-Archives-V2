@@ -53,6 +53,8 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
 
     /**
      * Finds User Entity by its email address, within the specified Tenant.
+     * <p>
+     * The search is case-insensitive.
      *
      * @param emailAddress The email address of the User to search for.
      * @param tenant       The Tenant of the User to search for.
@@ -64,7 +66,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
         }
         try {
             return entityManager
-                    .createQuery("SELECT u FROM User u WHERE u.emailAddress = :emailAddress AND u.tenant = :tenant", User.class)
+                    .createQuery("SELECT u FROM User u WHERE LOWER(u.emailAddress) = :emailAddress AND u.tenant = :tenant", User.class)
                     .setParameter("emailAddress", emailAddress.toLowerCase())
                     .setParameter("tenant", tenant)
                     .getSingleResult();
@@ -87,7 +89,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
 
         try {
             User user = entityManager
-                    .createQuery("SELECT u FROM User u WHERE u.emailAddress = :emailAddress AND u.tenant = :tenant", User.class)
+                    .createQuery("SELECT u FROM User u WHERE LOWER(u.emailAddress) = :emailAddress AND u.tenant = :tenant", User.class)
                     .setParameter("emailAddress", emailAddress.toLowerCase())
                     .setParameter("tenant", getTenant())
                     .getSingleResult();
@@ -124,7 +126,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
                     .getResultList();
 
             for (UserGroup userGroup : groupsWithPermission) {
-                for (User user : userGroup.users) {
+                for (User user : userGroup.getUsers()) {
                     if (!usersWithPermission.contains(user))
                         usersWithPermission.add(user);
                 }

@@ -51,7 +51,7 @@ public class UserGroupValidatorTest extends AbstractWebClientTest {
     @Test
     public void testCheckIfRootNameIsInUseExcludingRoot() {
         UserGroup rootGroup = userGroupRepository.findRootGroup();
-        userGroupValidator.checkIfNameIsInUse("root", rootGroup.id);
+        userGroupValidator.checkIfNameIsInUse("root", rootGroup.getId());
     }
 
     @Test

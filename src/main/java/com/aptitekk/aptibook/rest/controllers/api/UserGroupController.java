@@ -65,7 +65,7 @@ public class UserGroupController extends APIControllerAbstract {
             return badRequest("The group name was not supplied.");
 
         userGroupValidator.validateName(userGroupDTO.name, null);
-        userGroup.name = userGroupDTO.name;
+        userGroup.setName(userGroupDTO.name);
 
         if (userGroupDTO.parent == null)
             return badRequest("The group parent was not supplied.");
@@ -74,10 +74,10 @@ public class UserGroupController extends APIControllerAbstract {
         if (parentGroup == null)
             return badRequest("The group parent could not be found.");
 
-        userGroup.parent = parentGroup;
+        userGroup.setParent(parentGroup);
 
         userGroup = userGroupRepository.save(userGroup);
-        return created(modelMapper.map(userGroup, UserGroupDTO.class), "/userGroups/" + userGroup.id);
+        return created(modelMapper.map(userGroup, UserGroupDTO.class), "/userGroups/" + userGroup.getId());
     }
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.GET)
@@ -105,7 +105,7 @@ public class UserGroupController extends APIControllerAbstract {
                 && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
-        return ok(modelMapper.map(userGroup.users, new TypeToken<List<UserDTO>>() {
+        return ok(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
         }.getType()));
     }
 
@@ -123,7 +123,7 @@ public class UserGroupController extends APIControllerAbstract {
 
         if (userGroupDTO.name != null) {
             userGroupValidator.validateName(userGroupDTO.name, userGroup);
-            userGroup.name = userGroupDTO.name;
+            userGroup.setName(userGroupDTO.name);
         }
 
         userGroup = userGroupRepository.save(userGroup);
@@ -153,7 +153,7 @@ public class UserGroupController extends APIControllerAbstract {
             return badRequest("This group and the new parent group must be different.");
 
         // Check if they are already where they should be.
-        if (userGroup.parent.equals(newParentUserGroup))
+        if (userGroup.getParent().equals(newParentUserGroup))
             return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
 
         // Make sure we are not placing the selected User Group below itself on the same branch.
@@ -161,8 +161,8 @@ public class UserGroupController extends APIControllerAbstract {
         if (hierarchyDown.contains(newParentUserGroup))
             return badRequest("The new parent group is below this user group on the same branch.");
 
-        userGroup.parent.children.remove(userGroup);
-        userGroup.parent = newParentUserGroup;
+        userGroup.getParent().getChildren().remove(userGroup);
+        userGroup.setParent(newParentUserGroup);
         userGroup = userGroupRepository.save(userGroup);
 
         //FIXME: Fix all users who now have more than one assigned group on the same branch.
@@ -187,14 +187,14 @@ public class UserGroupController extends APIControllerAbstract {
             return badRequest("The Root Group cannot be deleted.");
 
         // Move children groups upwards.
-        userGroup.parent.children.addAll(userGroup.children);
-        for (UserGroup child : userGroup.children) {
-            child.parent = userGroup.parent;
+        userGroup.getParent().getChildren().addAll(userGroup.getChildren());
+        for (UserGroup child : userGroup.getChildren()) {
+            child.setParent(userGroup.getParent());
             userGroupRepository.save(child);
         }
 
-        userGroup.parent.children.remove(userGroup);
-        userGroup.children.clear();
+        userGroup.getParent().getChildren().remove(userGroup);
+        userGroup.getChildren().clear();
 
         userGroupRepository.delete(userGroup);
 

@@ -90,14 +90,16 @@ export class GroupsSectionComponent implements OnInit {
         this.selectedUserGroup.name = this.userGroupDetailsFormGroup.controls['name'].value;
         this.userGroupService
             .patchUserGroup(this.selectedUserGroup)
-            .subscribe(success => {
-                if (success)
+            .subscribe(() => {
                     this.detailsInfoAlert.display("Details Updated.");
-                else
-                    this.detailsDangerAlert.display("Could not update Details due to an Internal Server Error.");
-                this.userGroupService.fetchRootUserGroup();
-                this.onUserGroupSelected();
-            });
+                    this.userGroupService.fetchRootUserGroup();
+                    this.onUserGroupSelected();
+                },
+                err => {
+                    this.detailsDangerAlert.display(err);
+                    this.onUserGroupSelected();
+                }
+            );
     }
 
     onCancelUserGroupDetails() {

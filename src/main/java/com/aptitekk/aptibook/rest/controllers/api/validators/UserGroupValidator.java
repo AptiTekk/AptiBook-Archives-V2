@@ -36,7 +36,7 @@ public class UserGroupValidator extends RestValidator {
      */
     void checkIfNameIsInUse(String name, @Nullable Long excludedUserGroupId) throws RestValidationException {
         UserGroup otherUserGroup = userGroupRepository.findByName(name);
-        if (otherUserGroup != null && !otherUserGroup.id.equals(excludedUserGroupId))
+        if (otherUserGroup != null && !otherUserGroup.getId().equals(excludedUserGroupId))
             throw new RestValidationException(badRequest("A User Group with this name already exists."));
     }
 
@@ -62,7 +62,7 @@ public class UserGroupValidator extends RestValidator {
             else if (name.length() > 30)
                 throw new RestValidationException(badRequest("The Name must be 30 characters or less."));
 
-            checkIfNameIsInUse(name, existingUserGroup != null ? existingUserGroup.id : null);
+            checkIfNameIsInUse(name, existingUserGroup != null ? existingUserGroup.getId() : null);
         }
     }
 

@@ -46,9 +46,9 @@ public class ReservationService {
         //Then, build details about each reservation and store it in the reservationDetailsMap.
         UserGroup currentGroup;
         while ((currentGroup = queue.poll()) != null) {
-            queue.addAll(currentGroup.children);
+            queue.addAll(currentGroup.getChildren());
 
-            for (Resource resource : currentGroup.resources) {
+            for (Resource resource : currentGroup.getResources()) {
                 for (Reservation reservation : resource.reservations) {
                     if (reservation.status == status) {
                         reservationList.add(reservation);

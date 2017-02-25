@@ -336,9 +336,9 @@ public class DemoTenantBuilder {
                                       List<Permission> permissions) {
         UserGroup userGroup = new UserGroup();
         userGroup.tenant = demoTenant;
-        userGroup.name = name;
-        userGroup.parent = parent;
-        userGroup.permissions = permissions;
+        userGroup.setName(name);
+        userGroup.setParent(parent);
+        userGroup.setPermissions(permissions);
 
         return userGroupRepository.save(userGroup);
     }

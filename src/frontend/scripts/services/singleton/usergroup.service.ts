@@ -91,14 +91,14 @@ export class UserGroupService {
         });
     }
 
-    public patchUserGroup(userGroup: UserGroup): Observable<boolean> {
+    public patchUserGroup(userGroup: UserGroup): Observable<void> {
         return Observable.create(listener => {
             if (!userGroup)
-                listener.next(false);
+                listener.error("User group was null.");
             else {
                 this.apiService.patch("userGroups/" + userGroup.id, userGroup).subscribe(
-                    response => listener.next(true),
-                    err => listener.next(false));
+                    response => listener.next(),
+                    err => listener.error(err));
             }
         });
     }
