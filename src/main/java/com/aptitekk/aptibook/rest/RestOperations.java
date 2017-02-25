@@ -40,6 +40,14 @@ public interface RestOperations {
         return ResponseEntity.noContent().build();
     }
 
+    default ResponseEntity<Object> notFound() {
+        return badRequest("");
+    }
+
+    default ResponseEntity<Object> notFound(String message) {
+        return createErrorResponseEntity(message, HttpStatus.NOT_FOUND);
+    }
+
     default ResponseEntity<Object> badRequest() {
         return badRequest("");
     }

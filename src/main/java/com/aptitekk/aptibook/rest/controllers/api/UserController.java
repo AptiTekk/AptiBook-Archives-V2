@@ -145,9 +145,8 @@ public class UserController extends APIControllerAbstract {
             return unauthorized();
 
         User user = userRepository.findInCurrentTenant(id);
-
         if (user == null)
-            return badRequest("The User was not found.");
+            return notFound("No users were found with the ID: " + id);
 
         if (!user.equals(authService.getCurrentUser()))
             if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
@@ -166,7 +165,7 @@ public class UserController extends APIControllerAbstract {
 
         User currentUser = userRepository.findInCurrentTenant(id);
         if (currentUser == null)
-            return badRequest("The User was not found.");
+            return notFound("No users were found with the ID: " + id);
 
         if (!currentUser.equals(authService.getCurrentUser()))
             if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
@@ -235,9 +234,8 @@ public class UserController extends APIControllerAbstract {
             return unauthorized();
 
         User user = userRepository.findInCurrentTenant(id);
-
         if (user == null)
-            return badRequest("User not found.");
+            return notFound("No users were found with the ID: " + id);
 
         if (user.isAdmin())
             return badRequest("The admin user cannot be deleted.");

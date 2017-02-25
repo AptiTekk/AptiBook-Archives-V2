@@ -80,7 +80,7 @@ public class UserValidatorTest extends AbstractWebClientTest {
      * Ensures that the admin email address is invalid when not updating the admin.
      */
     @Test(expected = RestValidator.RestValidationException.class)
-    public void testAdminEmailIsInvalidForAdmin() {
+    public void testAdminEmailIsInvalidForNonAdmin() {
         userValidator.validateEmailAddress("admin", null);
     }
 
