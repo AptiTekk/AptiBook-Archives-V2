@@ -28,21 +28,6 @@ public class UserGroupValidatorTest extends AbstractWebClientTest {
     @Autowired
     private UserGroupRepository userGroupRepository;
 
-    @Autowired
-    private TenantRepository tenantRepository;
-
-    @MockBean
-    private TenantManagementService tenantManagementService;
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-
-        Tenant demoTenant = tenantRepository.findTenantBySlug("demo");
-        given(this.tenantManagementService.getTenant()).willReturn(demoTenant);
-    }
-
     @Test(expected = RestValidator.RestValidationException.class)
     public void testCheckIfRootNameIsInUse() {
         userGroupValidator.checkIfNameIsInUse("root", null);

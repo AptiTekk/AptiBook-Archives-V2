@@ -35,21 +35,6 @@ public class UserValidatorTest extends AbstractWebClientTest {
     @Autowired
     private UserGroupRepository userGroupRepository;
 
-    @Autowired
-    private TenantRepository tenantRepository;
-
-    @MockBean
-    private TenantManagementService tenantManagementService;
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-
-        Tenant demoTenant = tenantRepository.findTenantBySlug("demo");
-        given(this.tenantManagementService.getTenant()).willReturn(demoTenant);
-    }
-
     /**
      * This test makes sure that an exception is thrown if we try to check if the "admin" email address is in use for a new user.
      */

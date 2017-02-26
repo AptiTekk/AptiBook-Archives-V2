@@ -40,7 +40,7 @@ public class TenantInterceptor extends HandlerInterceptorAdapter {
 
             if (tenantSlug != null)
                 if (tenantManagementService.getAllowedTenantSlugs().contains(tenantSlug))
-                    request.setAttribute("tenant", tenantRepository.findTenantBySlug(tenantSlug));
+                    request.setAttribute("tenant", tenantManagementService.getTenantBySlug(tenantSlug));
         }
 
         return super.preHandle(request, response, handler);
