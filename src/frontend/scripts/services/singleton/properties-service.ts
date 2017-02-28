@@ -3,6 +3,7 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {Observable} from "rxjs";
+import {Property} from "../../models/properties.model";
 @Injectable()
 export class PropertiesService{
     constructor(private apiService: APIService){
@@ -16,5 +17,16 @@ export class PropertiesService{
                 err => listener.err(err)
             )
         });
+    }
+
+    public patchProperty(property: Property){
+        console.log("id" + property.id)
+        console.log("value" + property.propertyValue);
+        return Observable.create(listener =>{
+            this.apiService.patch("properties/" + property.id, property).subscribe(
+                response => listener.next(response),
+                err => listener.error(err)
+            )
+        })
     }
 }

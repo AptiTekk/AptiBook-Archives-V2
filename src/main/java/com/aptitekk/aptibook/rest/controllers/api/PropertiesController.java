@@ -76,13 +76,14 @@ public class PropertiesController extends APIControllerAbstract {
                         return ok(currentProperty);
                     } else {
                         //Validation failed
+                        System.out.println("validation failed");
                         return badRequest(propertyValidator.getValidationFailedMessage());
                     }
                 }
             }
             return noPermission();
         }
-
+        System.out.println("missing stuff");
         return badRequest("ID or Property was invalid / missing");
     }
 
