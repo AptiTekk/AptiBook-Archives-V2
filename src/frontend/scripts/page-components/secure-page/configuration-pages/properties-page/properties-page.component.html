@@ -4,102 +4,63 @@
   ~ Proprietary and confidential.
   -->
 <div class="container-fluid">
-	<div class="row">
+	<div *ngIf="properties != undefined">
 		<div class="col-lg-3 col-xs-5">
-			<form id="registerForm"
-				  [formGroup]="formGroup"
-				  (submit)="onSubmit()">
-				<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
-							[label]="'Personalized Organization Name'"
-							[placeholder]="'Bingham High School'"
-							[autoFocus]="true">
-				
-				</form-group>
-			
-				<button class="btn btn-primary">
-					Submit Changes
-				</button>
-			</form>
-		</div>
+		<form id="registerForm"
+			  [formGroup]="formGroup"
+			  (submit)="onSubmit()">
+			<alert #changeAlert
+				   [severity]="'info'"></alert>
+				<div class="row">
+					<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
+								[label]="properties[0].fieldLabel"
+								[placeholder]="'Bingham High School'"
+								[autoFocus]="true">
+					</form-group>
+				</div>
+				<div class="row">
+					<div class="from-group">
+						<label>{{properties[1].fieldLabel}}</label>
+						<br/>
+						<toggle-switch
+								[(ngModel)]="formGroup.controls['REGISTRATION_ENABLED'].value"
+								[onText]="'Yes'"
+								[offText]="'No'"
+								style="margin-right: 10px"
+								formControlName="REGISTRATION_ENABLED"></toggle-switch>
+				</div>
+			</div>
+				<div class="row">
+					<div class="from-group">
+						<label>{{properties[2].fieldLabel}}</label>
+						<br/>
+						<toggle-switch [onText]="'Yes'"
+									   [offText]="'No'"
+									   style="margin-right: 10px"
+									   formControlName="GOOGLE_SIGN_IN_ENABLED"></toggle-switch>
+					</div>
+			</div>
+				<div class="row">
+					<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
+								[label]="properties[3].fieldLabel"
+								[value]="properties[3].propertyValue"
+								[autoFocus]="true">
+					
+					</form-group>
+				</div>
+				<div class="row">
+					<form-group [control]="formGroup.controls['DATE_TIME_TIMEZONE']"
+								[label]="properties[4].fieldLabel"
+								[value]="properties[4].propertyValue"
+								[autoFocus]="true">
+					
+					</form-group>
+				</div>
+			<button class="btn btn-primary">
+				Submit Changes
+			</button>
+		
+		</form>
 	</div>
-
 </div>
-
-
-
-<!--
-<form id="registerForm"
-	  [formGroup]="formGroup"
-	  (submit)="onSubmit()">
-	<alert #registerAlert
-		   [severity]="'danger'"></alert>
-	
-	<form-group [control]="formGroup.controls['emailAddress']"
-				[label]="'Email Address'"
-				[faIconName]="'at'"
-				[autoFocus]="true"
-				[errorMessages]="
-                    {
-                    required: 'This is required.',
-                    pattern: 'These characters are not allowed:  < > ; =',
-                    maxlength: 'This must be 100 characters or less.'
-                    }">
-	</form-group>
-	
-	<form-group [control]="formGroup.controls['firstName']"
-				[label]="'First Name'"
-				[errorMessages]="
-                    {
-                    pattern: 'These characters are not allowed:  < > ; =',
-                    maxlength: 'This must be 30 characters or less.'
-                    }">
-	</form-group>
-	
-	<form-group [control]="formGroup.controls['lastName']"
-				[label]="'Last Name'"
-				[errorMessages]="
-                    {
-                    pattern: 'These characters are not allowed:  < > ; =',
-                    maxlength: 'This must be 30 characters or less.'
-                    }">
-	</form-group>
-	
-	<form-group [control]="formGroup.controls['password']"
-				[label]="'Password'"
-				[faIconName]="'asterisk'"
-				[inputType]="'password'"
-				[errorMessages]="
-                    {
-                    required: 'This is required.',
-                    maxlength: 'This must be 30 characters or less.'
-                    }">
-	</form-group>
-	
-	<form-group [control]="formGroup.controls['confirmPassword']"
-				[label]="'Confirm Password'"
-				[faIconName]="'asterisk'"
-				[inputType]="'password'"
-				[errorMessages]="
-                    {
-                    required: 'This is required.',
-                    maxlength: 'This must be 30 characters or less.'
-                    }">
-	</form-group>
-	<div *ngIf="!doPasswordsMatch()"
-		 style="display: inline-block; color: darkred">
-		The Passwords do not match!
-	</div>
-	<button class="btn btn-primary btn-large btn-block"
-			[disabled]="formGroup.invalid || !doPasswordsMatch()">
-		Register
-	</button>
-
-</form>
-
-<hr/>
-
-<button [routerLink]="['', 'sign-in']"
-		class="btn btn-default btn-block">
-	Return to Sign In
-</button>
--->
+</div>
