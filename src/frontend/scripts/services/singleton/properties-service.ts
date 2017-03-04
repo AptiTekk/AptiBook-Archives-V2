@@ -20,8 +20,6 @@ export class PropertiesService{
     }
 
     public patchProperty(property: Property){
-        console.log("id" + property.id)
-        console.log("value" + property.propertyValue);
         return Observable.create(listener =>{
             this.apiService.patch("properties/" + property.id, property).subscribe(
                 response => listener.next(response),

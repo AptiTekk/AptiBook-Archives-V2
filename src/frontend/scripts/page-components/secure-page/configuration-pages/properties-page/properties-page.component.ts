@@ -12,16 +12,25 @@ import {AlertComponent} from "../../../../components/alert/alert.component";
 })
 export class PropertiesPageComponent {
 
+    @ViewChild('successAlert')
+    successAlert: AlertComponent;
 
-    @ViewChild('changeAlert')
-    changeAlert: AlertComponent;
+    @ViewChild('warnAlert')
+    warnAlert: AlertComponent;
 
     public properties: Property[];
     formGroup: FormGroup;
+    stateToggle: boolean;
 
     constructor(private propertiesService: PropertiesService, formBuilder: FormBuilder) {
         propertiesService.getAllProperties().subscribe(properties => {
             this.properties = properties;
+            if(this.properties[2].propertyValue == 'true'){
+                this.stateToggle = true;
+            }else{
+                this.stateToggle = false;
+            }
+
             this.formGroup = formBuilder.group({
                 PERSONALIZATION_ORGANIZATION_NAME: [this.properties[0].propertyValue],
                 REGISTRATION_ENABLED: [(this.properties[1].propertyValue == 'true')],
@@ -34,26 +43,35 @@ export class PropertiesPageComponent {
         });
 
     }
+    public reset(){
+        //TODO: Get default properties from Property enum. Make endpoint for it.
+        this.successAlert.display("Properties have been reset!");
+    }
+
+    googleToggle(state: boolean){
+        this.stateToggle = state;
+    }
 
     onSubmit() {
         let i = 0;
+        let madeChange = false;
         for(let controlName in this.formGroup.controls)
         {
             if (this.formGroup.controls[controlName].dirty) {
+                madeChange = true;
                 this.properties[i].propertyValue = this.formGroup.controls[controlName].value;
                 this.propertiesService.patchProperty(this.properties[i]).subscribe(
-                    response => {
-                        this.changeAlert.display("Changes have been saved.");
-                    },
-                    err => {
-                        console.log("broken");
-                    }
+                    response => response
                 )
             }
             i++;
         }
-
-
+        if(madeChange){
+            this.successAlert.display("Changes have been saved!");
+        }else{
+            this.warnAlert.display("No changes detected.");
+        }
+        madeChange = false;
 
     }
 

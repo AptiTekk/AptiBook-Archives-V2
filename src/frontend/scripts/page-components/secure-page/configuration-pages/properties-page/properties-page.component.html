@@ -3,22 +3,65 @@
   ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
   ~ Proprietary and confidential.
   -->
+
+<ol class="breadcrumb">
+	<li class="active">Configuration</li>
+	<li class="active">Properties</li>
+</ol>
 <div class="container-fluid">
 	<div *ngIf="properties != undefined">
-		<div class="col-lg-3 col-xs-5">
-		<form id="registerForm"
-			  [formGroup]="formGroup"
-			  (submit)="onSubmit()">
-			<alert #changeAlert
-				   [severity]="'info'"></alert>
+		<div class="col-xs-12 col-md-7 col-lg-9">
+			<form id="registerForm"
+				  [formGroup]="formGroup"
+				  (submit)="onSubmit()">
+				<alert #successAlert
+					   [severity]="'success'"></alert>
+				<alert #warnAlert
+					   [severity]="'warning'"></alert>
 				<div class="row">
+					<h4>Personalization</h4>
 					<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
 								[label]="properties[0].fieldLabel"
 								[placeholder]="'Bingham High School'"
 								[autoFocus]="true">
 					</form-group>
+					<hr/>
 				</div>
 				<div class="row">
+					<h4>Google Sign In</h4>
+					<div class="from-group">
+						<label>{{properties[2].fieldLabel}}</label>
+						<br/>
+						<toggle-switch [onText]="'Yes'"
+									   [offText]="'No'"
+									   (onToggle)="googleToggle($event)"
+									   style="margin-right: 10px"
+									   formControlName="GOOGLE_SIGN_IN_ENABLED"></toggle-switch>
+					</div>
+				</div>
+				<br/>
+				<div class="row">
+					<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
+								[label]="properties[3].fieldLabel"
+								[value]="properties[3].propertyValue"
+								[readOnly]="!stateToggle"
+								[autoFocus]="true">
+					
+					</form-group>
+					<hr/>
+				</div>
+				<div class="row">
+					<h4>Date and Time</h4>
+					<form-group [control]="formGroup.controls['DATE_TIME_TIMEZONE']"
+								[label]="properties[4].fieldLabel"
+								[value]="properties[4].propertyValue"
+								[autoFocus]="true">
+					
+					</form-group>
+					<hr/>
+				</div>
+				<div class="row">
+					<h4>Registration</h4>
 					<div class="from-group">
 						<label>{{properties[1].fieldLabel}}</label>
 						<br/>
@@ -28,39 +71,31 @@
 								[offText]="'No'"
 								style="margin-right: 10px"
 								formControlName="REGISTRATION_ENABLED"></toggle-switch>
-				</div>
-			</div>
-				<div class="row">
-					<div class="from-group">
-						<label>{{properties[2].fieldLabel}}</label>
-						<br/>
-						<toggle-switch [onText]="'Yes'"
-									   [offText]="'No'"
-									   style="margin-right: 10px"
-									   formControlName="GOOGLE_SIGN_IN_ENABLED"></toggle-switch>
 					</div>
-			</div>
-				<div class="row">
-					<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
-								[label]="properties[3].fieldLabel"
-								[value]="properties[3].propertyValue"
-								[autoFocus]="true">
-					
-					</form-group>
+					<hr/>
 				</div>
-				<div class="row">
-					<form-group [control]="formGroup.controls['DATE_TIME_TIMEZONE']"
-								[label]="properties[4].fieldLabel"
-								[value]="properties[4].propertyValue"
-								[autoFocus]="true">
-					
-					</form-group>
+				
+				<div class="btn-toolbar">
+					<button class="btn btn-primary">
+						Submit Changes
+					</button>
+					<button class="btn btn-default "
+							type="button"
+							(click)="confirmationModal.open()"
+					>
+						Reset Properties
+					</button>
 				</div>
-			<button class="btn btn-primary">
-				Submit Changes
-			</button>
-		
-		</form>
+			
+			
+			</form>
+		</div>
 	</div>
 </div>
-</div>
+<properties-confirm-modal
+		#confirmationModal
+		[message]="'Are you sure you want to reset all properties?'"
+		(confirm)="reset()"
+>
+
+</properties-confirm-modal>

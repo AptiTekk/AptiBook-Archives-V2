@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
+import java.util.LinkedList;
 import java.util.List;
 
 @APIController
@@ -35,7 +36,7 @@ public class PropertiesController extends APIControllerAbstract {
     @RequestMapping(value = "properties", method = RequestMethod.GET)
     public ResponseEntity<?> getProperties() {
         if (authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL)) {
-            return ok(modelMapper.map(propertiesRepository.findAll(), new TypeToken<List<PropertyDTO>>() {
+            return ok(modelMapper.map(propertiesRepository.findAll(), new TypeToken<LinkedList<PropertyDTO>>() {
             }.getType()));
         } else
             return noPermission();
