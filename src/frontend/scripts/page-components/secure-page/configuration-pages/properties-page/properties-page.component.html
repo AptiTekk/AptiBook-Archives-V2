@@ -8,6 +8,7 @@
 	<li class="active">Configuration</li>
 	<li class="active">Properties</li>
 </ol>
+
 <div class="container-fluid">
 	<div *ngIf="properties != undefined">
 		<div class="col-xs-12 col-md-7 col-lg-9">
@@ -21,7 +22,7 @@
 				<div class="row">
 					<h4>Personalization</h4>
 					<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
-								[label]="properties[0].fieldLabel"
+								[label]="'Organization Name'"
 								[placeholder]="'Bingham High School'"
 								[autoFocus]="true">
 					</form-group>
@@ -30,40 +31,28 @@
 				<div class="row">
 					<h4>Google Sign In</h4>
 					<div class="from-group">
-						<label>{{properties[2].fieldLabel}}</label>
+						<label>Google Sign-In Enabled</label>
 						<br/>
-						<toggle-switch [onText]="'Yes'"
+						<toggle-switch #googleSignInEnabledSwitch
+								[onText]="'Yes'"
 									   [offText]="'No'"
-									   (onToggle)="googleToggle($event)"
 									   style="margin-right: 10px"
-									   formControlName="GOOGLE_SIGN_IN_ENABLED"></toggle-switch>
+									   formControlName="GOOGLE_SIGN_IN_ENABLED">
+						</toggle-switch>
 					</div>
 				</div>
 				<br/>
 				<div class="row">
 					<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
-								[label]="properties[3].fieldLabel"
-								[value]="properties[3].propertyValue"
-								[readOnly]="!stateToggle"
-								[autoFocus]="true">
-					
-					</form-group>
-					<hr/>
-				</div>
-				<div class="row">
-					<h4>Date and Time</h4>
-					<form-group [control]="formGroup.controls['DATE_TIME_TIMEZONE']"
-								[label]="properties[4].fieldLabel"
-								[value]="properties[4].propertyValue"
-								[autoFocus]="true">
-					
+								[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
+								[readOnly]="!googleSignInEnabledSwitch.isOn()">
 					</form-group>
 					<hr/>
 				</div>
 				<div class="row">
 					<h4>Registration</h4>
 					<div class="from-group">
-						<label>{{properties[1].fieldLabel}}</label>
+						<label>Registration Enabled</label>
 						<br/>
 						<toggle-switch
 								[(ngModel)]="formGroup.controls['REGISTRATION_ENABLED'].value"
@@ -81,21 +70,18 @@
 					</button>
 					<button class="btn btn-default "
 							type="button"
-							(click)="confirmationModal.open()"
-					>
+							(click)="confirmationModal.open()">
 						Reset Properties
 					</button>
 				</div>
-			
 			
 			</form>
 		</div>
 	</div>
 </div>
+
 <properties-confirm-modal
 		#confirmationModal
 		[message]="'Are you sure you want to reset all properties?'"
-		(confirm)="reset()"
->
-
+		(confirm)="reset()">
 </properties-confirm-modal>

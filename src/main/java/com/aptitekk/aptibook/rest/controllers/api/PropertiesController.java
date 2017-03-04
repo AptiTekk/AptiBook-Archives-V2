@@ -21,7 +21,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import java.util.LinkedList;
-import java.util.List;
 
 @APIController
 public class PropertiesController extends APIControllerAbstract {
@@ -42,39 +41,37 @@ public class PropertiesController extends APIControllerAbstract {
             return noPermission();
     }
 
-    @RequestMapping(value = "properties/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getProperty(@PathVariable Long id) {
-        if (id != null) {
-            if (authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL)) {
-                Property property = propertiesRepository.findInCurrentTenant(id);
-                if (property != null) {
-                    return ok(modelMapper.map(property, PropertyDTO.class));
-                }
+    @RequestMapping(value = "properties/{keyName}", method = RequestMethod.GET)
+    public ResponseEntity<?> getProperty(@PathVariable String keyName) {
+
+        if (authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL)) {
+            Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf(keyName));
+            if (property != null) {
+                return ok(modelMapper.map(property, PropertyDTO.class));
             }
-            return noPermission();
         }
 
-        return badRequest();
+        return noPermission();
     }
 
-    @RequestMapping(value = "properties/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> setPropertyValue(@PathVariable Long id, @RequestBody PropertyDTO property) {
-        if (id != null && property != null && property.propertyValue != null) {
+    @RequestMapping(value = "properties/{keyName}", method = RequestMethod.PATCH)
+    public ResponseEntity<?> setPropertyValue(@PathVariable String keyName, @RequestBody PropertyDTO propertyDTO) {
+        if (propertyDTO != null && propertyDTO.propertyValue != null) {
             if (authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL)) {
-                Property currentProperty = propertiesRepository.findInCurrentTenant(id);
-                if (currentProperty != null) {
+                Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf(keyName));
+                if (property != null) {
 
                     //Check that the submitted value is valid
-                    PropertyValidator propertyValidator = currentProperty.propertyKey.getPropertyValidator();
-                    if (propertyValidator.isValid(property.propertyValue)) {
-                        currentProperty.propertyValue = property.propertyValue;
+                    PropertyValidator propertyValidator = property.propertyKey.getPropertyValidator();
+                    if (propertyValidator.isValid(propertyDTO.propertyValue)) {
+                        property.propertyValue = propertyDTO.propertyValue;
 
                         //Save Property
-                        currentProperty = propertiesRepository.save(currentProperty);
+                        property = propertiesRepository.save(property);
 
                         //Notify Property Group Change Listeners
-                        currentProperty.propertyKey.getGroup().firePropertiesChangedEvent();
-                        return ok(currentProperty);
+                        property.propertyKey.getGroup().firePropertiesChangedEvent();
+                        return ok(property);
                     } else {
                         //Validation failed
                         System.out.println("validation failed");
@@ -84,7 +81,6 @@ public class PropertiesController extends APIControllerAbstract {
             }
             return noPermission();
         }
-        System.out.println("missing stuff");
         return badRequest("ID or Property was invalid / missing");
     }
 

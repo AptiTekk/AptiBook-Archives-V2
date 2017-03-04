@@ -1,7 +1,11 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
 
-export interface Property{
-    id: number;
-    fieldLabel: string;
-    propertyValue: string;
-    defaultValue: string;
+export interface Property {
+    propertyValue?: string;
+    defaultValue?: string;
+    keyName?: string;
 }
