@@ -120,6 +120,10 @@ public class Property extends MultiTenantEntity implements Serializable {
 
     public String propertyValue;
 
+    public String getDefaultValue(){
+        return this.propertyKey.getDefaultValue();
+    }
+
     public String getFieldLabel() {
         return this.propertyKey.getFieldLabel();
     }

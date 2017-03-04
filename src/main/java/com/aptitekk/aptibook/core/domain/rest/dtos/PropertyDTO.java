@@ -16,6 +16,8 @@ public class PropertyDTO {
 
     public String fieldLabel;
 
+    public String defaultValue;
+
     public String propertyValue;
 
 }

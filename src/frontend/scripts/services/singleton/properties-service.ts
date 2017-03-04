@@ -3,7 +3,7 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {Observable} from "rxjs";
-import {Property} from "../../models/properties.model";
+import {Property} from "../../models/property.model";
 @Injectable()
 export class PropertiesService{
     constructor(private apiService: APIService){
