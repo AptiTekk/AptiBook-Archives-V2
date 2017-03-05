@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.web.util.UriComponentsBuilder;
 
 import javax.annotation.Nullable;
 import javax.servlet.http.HttpServletRequest;
@@ -26,7 +27,9 @@ public class WebURIBuilderService {
     private final LogService logService;
 
     @Autowired
-    public WebURIBuilderService(HttpServletRequest httpServletRequest, SpringProfileService springProfileService, LogService logService) {
+    public WebURIBuilderService(HttpServletRequest httpServletRequest,
+                                SpringProfileService springProfileService,
+                                LogService logService) {
         this.httpServletRequest = httpServletRequest;
         this.springProfileService = springProfileService;
         this.logService = logService;
@@ -65,7 +68,14 @@ public class WebURIBuilderService {
      * @return Built URI, or null if an exception occurred.
      */
     public URI buildURI(@Nullable String pathFromRoot, @Nullable MultiValueMap<String, String> queryParams) {
-        ServletUriComponentsBuilder builder = ServletUriComponentsBuilder.fromCurrentContextPath();
+        UriComponentsBuilder builder;
+
+        // Try to get the builder from the current request, otherwise just use a default URL.
+        try {
+            builder = ServletUriComponentsBuilder.fromCurrentContextPath();
+        } catch (IllegalStateException e) {
+            builder = UriComponentsBuilder.fromHttpUrl("https://aptibook.aptitekk.com/");
+        }
 
         // Set the path
         builder.path(pathFromRoot != null ? pathFromRoot : "/");

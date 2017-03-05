@@ -60,18 +60,17 @@ export class AccountPageComponent implements OnInit {
         updatedUser.location = this.personalInformation.controls['location'].value;
         updatedUser.userGroups = null;
 
-        this.userService.patchUser(updatedUser, changingPassword).take(1).subscribe(user => {
-            if (user) {
+        this.userService.patchUser(updatedUser, changingPassword).take(1).subscribe(
+            user => {
                 this.authService.reloadUser();
                 if (!changingPassword)
                     this.personalInfoAlert.display("Personal Information updated successfully.");
                 else
                     this.passwordsInfoAlert.display("Password updated successfully.");
-            }
-            else {
-                this.errorAlert.display("Unfortunately, we could not update your Account Settings.");
-            }
-        });
+            },
+            err => {
+                this.errorAlert.display(err);
+            });
     }
 
     onChangePasswordSubmit() {

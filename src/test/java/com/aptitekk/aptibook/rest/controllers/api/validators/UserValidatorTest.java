@@ -68,6 +68,23 @@ public class UserValidatorTest extends AbstractWebClientTest {
     }
 
     /**
+     * Ensures that the admin email address is valid when updating the admin.
+     */
+    @Test
+    public void testAdminEmailIsValidForAdmin() {
+        User adminUser = userRepository.findByEmailAddress("admin");
+        userValidator.validateEmailAddress("admin", adminUser);
+    }
+
+    /**
+     * Ensures that the admin email address is invalid when not updating the admin.
+     */
+    @Test(expected = RestValidator.RestValidationException.class)
+    public void testAdminEmailIsInvalidForAdmin() {
+        userValidator.validateEmailAddress("admin", null);
+    }
+
+    /**
      * Tests to make sure an exception is thrown when the first name is too long.
      */
     @Test(expected = RestValidator.RestValidationException.class)
