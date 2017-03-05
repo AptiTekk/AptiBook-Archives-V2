@@ -111,12 +111,17 @@ export class PropertiesPageComponent implements OnInit, AfterViewInit {
     }
 
     reset() {
+        let patches: Observable<Property>[] = [];
+
         this.properties.forEach(property => {
             property.propertyValue = property.defaultValue;
-            this.propertiesService.patchProperty(property).subscribe(
-                response => this.propertiesService.fetchProperties()
-            );
+            patches.push(this.propertiesService.patchProperty(property));
         });
+
+        // Run all the patches at the same time.
+        Observable.zip(...patches, () => null).subscribe(
+            response => this.propertiesService.fetchProperties()
+        );
 
         this.successAlert.display("Properties have been reset!");
     }
