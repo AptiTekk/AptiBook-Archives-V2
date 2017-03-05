@@ -11,7 +11,6 @@ import com.aptitekk.aptibook.ApplicationContextProvider;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.BooleanPropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.MaxLengthPropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
-import com.aptitekk.aptibook.core.domain.entities.propertyValidators.TimeZonePropertyValidator;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.context.ApplicationContext;
@@ -28,8 +27,7 @@ public class Property extends MultiTenantEntity implements Serializable {
 
         PERSONALIZATION(null),
         REGISTRATION(null),
-        GOOGLE_SIGN_IN(null),
-        DATE_TIME(null);
+        GOOGLE_SIGN_IN(null);
 
         private Class<? extends ChangeListener> propertyGroupChangeListenerClass;
 
@@ -68,9 +66,7 @@ public class Property extends MultiTenantEntity implements Serializable {
         REGISTRATION_ENABLED("true", Group.REGISTRATION, new BooleanPropertyValidator()),
 
         GOOGLE_SIGN_IN_ENABLED("false", Group.GOOGLE_SIGN_IN, new BooleanPropertyValidator()),
-        GOOGLE_SIGN_IN_WHITELIST("gmail.com, example.org", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256)),
-
-        DATE_TIME_TIMEZONE("America/Denver", Group.DATE_TIME, new TimeZonePropertyValidator());
+        GOOGLE_SIGN_IN_WHITELIST("gmail.com, example.org", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256));
 
         private final String defaultValue;
         private final Group group;

@@ -10,5 +10,52 @@
 </ol>
 
 <div class="container-fluid">
-
+	<div class="row">
+		<div class="col-xs-12">
+			<h3>Approved Reservations</h3>
+			<hr/>
+			<datatable #userTable
+					   [selectableRows]="true"
+					   (rowSelected)="onReservationSelected(reservations[$event])"
+					   (rowDeselected)="onReservationDeselected()">
+				<datatable-column [orderable]="false"
+								  [width]="'30px'">
+					<datatable-cell *ngFor="let reservation of reservations">
+						<span class="reservation-icon fa"
+							  [class.fa-hourglass-half]="reservation.pending"
+							  [class.text-primary]="reservation.pending"
+							  [class.fa-check-circle]="reservation.approved"
+							  [class.text-success]="reservation.approved"
+							  [class.fa-times-circle]="reservation.rejected"
+							  [class.text-danger]="reservation.rejected"></span>
+					</datatable-cell>
+				</datatable-column>
+				<datatable-column [title]="'Requested On'">
+					<datatable-cell *ngFor="let reservation of reservations">
+						{{reservation.dateCreated | date:'EEEE, MMM d, yyyy, h:mm a'}}
+					</datatable-cell>
+				</datatable-column>
+				<datatable-column [title]="'Requested By'">
+					<datatable-cell *ngFor="let reservation of reservations">
+						{{reservation.user.fullName}}
+					</datatable-cell>
+				</datatable-column>
+				<datatable-column [title]="'Title'">
+					<datatable-cell *ngFor="let reservation of reservations">
+						{{reservation.title}}
+					</datatable-cell>
+				</datatable-column>
+				<datatable-column [title]="'Start Time'">
+					<datatable-cell *ngFor="let reservation of reservations">
+						{{reservation.start | date:'EEEE, MMM d, yyyy, h:mm a'}}
+					</datatable-cell>
+				</datatable-column>
+				<datatable-column [title]="'End Time'">
+					<datatable-cell *ngFor="let reservation of reservations">
+						{{reservation.end | date:'EEEE, MMM d, yyyy, h:mm a'}}
+					</datatable-cell>
+				</datatable-column>
+			</datatable>
+		</div>
+	</div>
 </div>

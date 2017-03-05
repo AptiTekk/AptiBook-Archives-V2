@@ -13,7 +13,7 @@ import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
-import org.apache.commons.validator.routines.EmailValidator;
+import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -30,11 +30,15 @@ import javax.servlet.http.HttpServletResponse;
 public class RegistrationController extends APIControllerAbstract {
 
     private UserRepository userRepository;
+    private final UserValidator userValidator;
     private EmailService emailService;
 
     @Autowired
-    RegistrationController(UserRepository userRepository, EmailService emailService) {
+    RegistrationController(UserRepository userRepository,
+                           UserValidator userValidator,
+                           EmailService emailService) {
         this.userRepository = userRepository;
+        this.userValidator = userValidator;
         this.emailService = emailService;
     }
 
@@ -43,70 +47,55 @@ public class RegistrationController extends APIControllerAbstract {
 
         User newUser = new User();
 
-        if (userDTO.emailAddress != null)
-            if (!EmailValidator.getInstance().isValid(userDTO.emailAddress))
-                return badRequest("The Email Address is invalid.");
-            else
-                newUser.setEmailAddress(userDTO.emailAddress);
+        if (userDTO.emailAddress == null)
+            return badRequest("The Email Address was not supplied.");
 
-        User otherUser = userRepository.findByEmailAddress(userDTO.emailAddress);
-        if (otherUser != null)
-            return badRequest("The Email Address is already in use.");
+        userValidator.validateEmailAddress(userDTO.emailAddress, null);
+        newUser.setEmailAddress(userDTO.emailAddress);
 
-        if (userDTO.firstName != null)
-            if (!userDTO.firstName.matches("[^<>;=]*"))
-                return badRequest("The First Name cannot contain these characters: < > ; =");
-            else if (userDTO.firstName.length() > 30)
-                return badRequest("The First Name must be 30 characters or less.");
-            else
-                newUser.firstName = userDTO.firstName;
+        if (userDTO.firstName != null) {
+            userValidator.validateFirstName(userDTO.firstName);
+            newUser.firstName = userDTO.firstName;
+        }
 
-        if (userDTO.lastName != null)
-            if (!userDTO.lastName.matches("[^<>;=]*"))
-                return badRequest("The Last Name cannot contain these characters: < > ; =");
-            else if (userDTO.lastName.length() > 30)
-                return badRequest("The Last Name must be 30 characters or less.");
-            else
-                newUser.lastName = userDTO.lastName;
+        if (userDTO.lastName != null) {
+            userValidator.validateLastName(userDTO.lastName);
+            newUser.lastName = userDTO.lastName;
+        }
 
-        if (userDTO.phoneNumber != null)
-            if (!userDTO.phoneNumber.matches("[^<>;=]*"))
-                return badRequest("The Phone Number cannot contain these characters: < > ; =");
-            else if (userDTO.phoneNumber.length() > 30)
-                return badRequest("The Phone Number must be 30 characters or less.");
-            else
-                newUser.phoneNumber = userDTO.phoneNumber;
+        if (userDTO.phoneNumber != null) {
+            userValidator.validatePhoneNumber(userDTO.phoneNumber);
+            newUser.phoneNumber = userDTO.phoneNumber;
+        }
 
-        if (userDTO.location != null)
-            if (!userDTO.location.matches("[^<>;=]*"))
-                return badRequest("The Location cannot contain these characters: < > ; =");
-            else if (userDTO.location.length() > 250)
-                return badRequest("The Location must be 250 characters or less.");
-            else
-                newUser.location = userDTO.location;
+        if (userDTO.location != null) {
+            userValidator.validateLocation(userDTO.location);
+            newUser.location = userDTO.location;
+        }
 
-        if (userDTO.newPassword != null)
-            if (userDTO.newPassword.length() > 30)
-                return badRequest("The Password must be 30 characters or less.");
-            else
-                try {
-                    newUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
-                } catch (PasswordStorage.CannotPerformOperationException e) {
-                    logService.logException(getClass(), e, "Could not hash password.");
-                    return serverError("Could not save new password.");
-                }
+        if (userDTO.newPassword == null)
+            return badRequest("The New Password was not supplied.");
+
+        userValidator.validatePassword(userDTO.newPassword);
+        try {
+            newUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
+        } catch (PasswordStorage.CannotPerformOperationException e) {
+            logService.logException(getClass(), e, "Could not hash password.");
+            return serverError("Could not save new password.");
+        }
 
         // Create the verification code.
-        String code = PasswordGenerator.generateRandomPassword(16);
-        newUser.verificationCode = code;
+        String verificationCode = PasswordGenerator.generateRandomPassword(16);
+        newUser.verificationCode = verificationCode;
 
         // Save the user to the database.
         newUser = userRepository.save(newUser);
 
+        // Create query parameters for the url in the email.
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
-        queryParams.add("code", code);
+        queryParams.add("code", verificationCode);
 
-        // Send off a notification.
+        // Send off an email telling the user to verify their email.
         this.emailService.sendEmailNotification(
                 newUser.getEmailAddress(),
                 "Verify Your Email",
