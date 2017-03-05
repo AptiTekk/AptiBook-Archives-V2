@@ -7,9 +7,6 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -20,9 +17,25 @@ public class File extends MultiTenantEntity {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
-    public byte[] data;
+    private byte[] data;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public byte[] getData() {
+        return this.data;
+    }
+
+    public void setData(byte[] data) {
+        this.data = data;
+    }
 
     @Override
     public boolean equals(Object o) {
@@ -34,11 +47,11 @@ public class File extends MultiTenantEntity {
 
         File other = (File) o;
 
-        return EqualsHelper.areEquals(data, other.data);
+        return EqualsHelper.areEquals(getData(), other.getData());
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode((Object) data);
+        return EqualsHelper.calculateHashCode((Object) getData());
     }
 }

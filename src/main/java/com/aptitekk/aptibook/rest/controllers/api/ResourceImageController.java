@@ -45,18 +45,20 @@ public class ResourceImageController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<?> getImage(@PathVariable Long id) {
-        if (authService.isUserSignedIn()) {
-            if (id != null) {
-                Resource resource = resourceRepository.findInCurrentTenant(id);
-                if (resource != null) {
-                    if (resource.image != null && resource.image.data != null) {
-                        return ok(resource.image.data);
-                    }
-                }
-            }
-        }
+        if (!authService.isUserSignedIn())
+            return unauthorized();
 
-        return noContent();
+        if (id == null)
+            return badRequest("No ID Supplied.");
+
+        Resource resource = resourceRepository.findInCurrentTenant(id);
+        if (resource == null)
+            return badRequest("Resource not found.");
+
+        if (resource.image == null || resource.image.getData() == null)
+            return noContent();
+
+        return ok(resource.image.getData());
     }
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -94,7 +96,7 @@ public class ResourceImageController extends APIControllerAbstract {
 
                 // Save image to file entity.
                 File imageFile = new File();
-                imageFile.data = parsedImage;
+                imageFile.setData(parsedImage);
                 imageFile = fileRepository.save(imageFile);
 
                 if (imageFile == null)
@@ -112,7 +114,7 @@ public class ResourceImageController extends APIControllerAbstract {
                 }
 
                 // Return the image.
-                return ok(resource.image.data);
+                return ok(resource.image.getData());
             } catch (IOException e) {
                 return badRequest("Could not read image. It may be corrupt.");
             }

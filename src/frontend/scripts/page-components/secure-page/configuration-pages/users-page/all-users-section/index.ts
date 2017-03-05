@@ -4,6 +4,5 @@
  * Proprietary and confidential.
  */
 
-export * from './users-page.component';
-export * from './all-users-section';
-export * from './groups-section';
+export * from './all-users-section.component';
+export * from './new-user-modal/new-user-modal.component';

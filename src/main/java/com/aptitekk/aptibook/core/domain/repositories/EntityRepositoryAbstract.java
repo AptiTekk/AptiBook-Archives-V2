@@ -35,6 +35,13 @@ public abstract class EntityRepositoryAbstract<T> {
     @PersistenceContext
     EntityManager entityManager;
 
+    /**
+     * Saves the entity to the database. If data for the entity does not exist in the database, it will be inserted.
+     * Otherwise, it will be updated.
+     *
+     * @param entity The entity to save.
+     * @return The saved version of the entity.
+     */
     public T save(T entity) {
         return this.entityManager.merge(entity);
     }

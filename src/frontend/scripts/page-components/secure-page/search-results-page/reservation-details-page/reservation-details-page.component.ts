@@ -14,7 +14,7 @@ import {Reservation} from "../../../../models/reservation.model";
 import {ReservationService} from "../../../../services/singleton/reservation.service";
 import {Router} from "@angular/router";
 import {APIService} from "../../../../services/singleton/api.service";
-import {FormGroup, FormBuilder, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import Moment = moment.Moment;
 import moment = require("moment");
 @Component({
@@ -55,15 +55,15 @@ export class ReservationDetailsComponent {
 
     reserve() {
         let reservation: Reservation = {};
-        reservation.user = this.user;
+        reservation.user = {id: this.user.id};
         reservation.title = this.formGroup.controls['title'].value;
         reservation.start = this.start.toISOString();
         reservation.end = this.end.toISOString();
-        reservation.resource = this.resource;
+        reservation.resource = {id: this.resource.id};
 
         this.reservationService.makeReservation(reservation).subscribe(newReservation => {
             if (newReservation) {
-                this.router.navigateByUrl("/secure/search-results/success");
+                this.router.navigate(['', 'secure', 'search-results', 'success']);
             }
         })
     }
