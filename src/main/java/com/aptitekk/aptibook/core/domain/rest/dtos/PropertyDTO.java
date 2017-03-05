@@ -12,10 +12,10 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class PropertyDTO {
 
-    public Long id;
-
-    public String fieldLabel;
+    public String defaultValue;
 
     public String propertyValue;
+
+    public String keyName;
 
 }

@@ -27,7 +27,7 @@ export class RegistrationService {
                     listener.next(user)
                 },
                 err => {
-                    listener.error(err)
+                    listener.err(err)
                 }
             );
         });

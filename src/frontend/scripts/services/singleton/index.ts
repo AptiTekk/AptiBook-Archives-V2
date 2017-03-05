@@ -19,4 +19,5 @@ export * from "./tenant.service";
 export * from "./user.service";
 export * from "./usergroup.service";
 export * from "./registration.service";
+export * from "./properties-service"
 

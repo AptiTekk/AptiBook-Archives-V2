@@ -4,8 +4,8 @@
  * Proprietary and confidential.
  */
 
-import {Component, Input, forwardRef, Output, EventEmitter, AfterViewInit} from "@angular/core";
-import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
+import {AfterViewInit, Component, EventEmitter, forwardRef, Input, Output} from "@angular/core";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 
 @Component({
     selector: 'toggle-switch',
@@ -21,21 +21,21 @@ import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
 })
 export class ToggleSwitchComponent implements AfterViewInit, ControlValueAccessor {
 
-    @Input() onText: string = "On";
-    @Input() offText: string = "Off";
+    @Input() protected onText: string = "On";
+    @Input() protected offText: string = "Off";
 
-    switchWidth: number = 0;
+    protected switchWidth: number = 0;
 
     @Output()
-    onToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+    protected onToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    on: boolean;
+    protected on: boolean;
 
     ngAfterViewInit(): void {
         this.calculateSwitchWidth();
     }
 
-    calculateSwitchWidth() {
+    private calculateSwitchWidth() {
         let maxLabelLength = this.onText.length;
 
         if (this.offText.length > maxLabelLength)
@@ -44,14 +44,23 @@ export class ToggleSwitchComponent implements AfterViewInit, ControlValueAccesso
         this.switchWidth = (maxLabelLength * 13);
     }
 
-    toggle() {
+    protected toggle() {
         this.on = !this.on;
         this.propagateChange(this.on);
         this.onToggle.next(this.on);
     }
 
+    public isOn(): boolean {
+        return this.on;
+    }
+
     writeValue(obj: any): void {
-        this.on = obj;
+
+        // Allows for strings to be passed in as values.
+        if (typeof obj === "string")
+            this.on = obj == "true";
+        else
+            this.on = obj;
     }
 
     propagateChange = (value: boolean) => {
