@@ -34,54 +34,63 @@ public class PropertiesController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties", method = RequestMethod.GET)
     public ResponseEntity<?> getProperties() {
-        if (authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL)) {
-            return ok(modelMapper.map(propertiesRepository.findAll(), new TypeToken<LinkedList<PropertyDTO>>() {
-            }.getType()));
-        } else
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
+
+        return ok(modelMapper.map(propertiesRepository.findAll(), new TypeToken<LinkedList<PropertyDTO>>() {
+        }.getType()));
     }
 
     @RequestMapping(value = "properties/{keyName}", method = RequestMethod.GET)
     public ResponseEntity<?> getProperty(@PathVariable String keyName) {
 
-        if (authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL)) {
-            Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf(keyName));
-            if (property != null) {
-                return ok(modelMapper.map(property, PropertyDTO.class));
-            }
-        }
+        if (!authService.isUserSignedIn())
+            return unauthorized();
 
-        return noPermission();
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+            return noPermission();
+
+        Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf(keyName));
+
+        if (property == null)
+            return badRequest("No property exists with the key name: " + keyName);
+
+        return ok(modelMapper.map(property, PropertyDTO.class));
     }
 
     @RequestMapping(value = "properties/{keyName}", method = RequestMethod.PATCH)
     public ResponseEntity<?> setPropertyValue(@PathVariable String keyName, @RequestBody PropertyDTO propertyDTO) {
-        if (propertyDTO != null && propertyDTO.propertyValue != null) {
-            if (authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL)) {
-                Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf(keyName));
-                if (property != null) {
 
-                    //Check that the submitted value is valid
-                    PropertyValidator propertyValidator = property.propertyKey.getPropertyValidator();
-                    if (propertyValidator.isValid(propertyDTO.propertyValue)) {
-                        property.propertyValue = propertyDTO.propertyValue;
+        if (!authService.isUserSignedIn())
+            return unauthorized();
 
-                        //Save Property
-                        property = propertiesRepository.save(property);
-
-                        //Notify Property Group Change Listeners
-                        property.propertyKey.getGroup().firePropertiesChangedEvent();
-                        return ok(property);
-                    } else {
-                        //Validation failed
-                        System.out.println("validation failed");
-                        return badRequest(propertyValidator.getValidationFailedMessage());
-                    }
-                }
-            }
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
+
+        Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf(keyName));
+
+        if (property == null)
+            return badRequest("No property exists with the key name: " + keyName);
+
+        //Check that the submitted value is valid
+        PropertyValidator propertyValidator = property.propertyKey.getPropertyValidator();
+        if (!propertyValidator.isValid(propertyDTO.propertyValue)) {
+            return badRequest(propertyValidator.getValidationFailedMessage());
         }
-        return badRequest("ID or Property was invalid / missing");
+
+        // Update the property value
+        property.propertyValue = propertyDTO.propertyValue;
+
+        // Save the property
+        property = propertiesRepository.save(property);
+
+        // Notify change listeners of a change.
+        property.propertyKey.getGroup().firePropertiesChangedEvent();
+
+        return ok(modelMapper.map(property, PropertyDTO.class));
     }
 
 }
