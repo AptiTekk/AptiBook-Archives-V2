@@ -6,23 +6,26 @@
 
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {Observable} from "rxjs";
+import { Observable, ReplaySubject } from "rxjs";
 import {Property} from "../../models/property.model";
 
 @Injectable()
 export class PropertiesService {
 
-    constructor(private apiService: APIService) {
+    private properties = new ReplaySubject<Property[]>(1);
 
+    constructor(private apiService: APIService) {
     }
 
-    public getAllProperties() {
-        return Observable.create(listener => {
-            this.apiService.get("properties").subscribe(
-                response => listener.next(response),
-                err => listener.err(err)
-            )
-        });
+    public fetchProperties(): void {
+        this.apiService.get("properties").subscribe(
+                response => this.properties.next(response),
+                err => this.properties.next([])
+            );
+    }
+
+    public getProperties(): ReplaySubject<Property[]> {
+        return this.properties;
     }
 
     public patchProperty(property: Property) {

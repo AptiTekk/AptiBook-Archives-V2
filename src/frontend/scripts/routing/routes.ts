@@ -120,8 +120,12 @@ export const routes: ModuleWithProviders = RouterModule.forRoot([
                         ]
                     },
                     {
+                        path: 'properties/:section',
+                        component: PropertiesPageComponent,
+                    },
+                    {
                         path: 'properties',
-                        component: PropertiesPageComponent
+                        redirectTo: 'properties/personalization'
                     },
                     {
                         path: '**',
