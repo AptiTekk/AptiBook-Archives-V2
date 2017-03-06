@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
@@ -87,7 +88,7 @@ public class UserGroupController extends APIControllerAbstract {
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return notFound("No user groups were found with the ID: "+id);
+            return notFound("No user groups were found with the ID: " + id);
 
         return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
     }
@@ -99,13 +100,30 @@ public class UserGroupController extends APIControllerAbstract {
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return notFound("No user groups were found with the ID: "+id);
+            return notFound("No user groups were found with the ID: " + id);
 
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)
                 && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
         return ok(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
+        }.getType()));
+    }
+
+    @RequestMapping(value = "/userGroups/{id}/resources", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserGroupResources(@PathVariable Long id) {
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return notFound("No user groups were found with the ID: " + id);
+
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)
+                && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
+            return noPermission();
+
+        return ok(modelMapper.map(userGroup.getResources(), new TypeToken<List<ResourceDTO.WithoutReservations>>() {
         }.getType()));
     }
 

@@ -11,6 +11,8 @@ import {User} from "../../../../../models/user.model";
 import {AlertComponent} from "../../../../../components/alert/alert.component";
 import {UserService} from "../../../../../services/singleton/user.service";
 import {TreeComponent} from "../../../../../components/tree/tree.component";
+import {Observable} from "rxjs";
+import {Resource} from "../../../../../models/resource.model";
 
 @Component({
     selector: 'groups-section',
@@ -20,6 +22,8 @@ import {TreeComponent} from "../../../../../components/tree/tree.component";
 export class GroupsSectionComponent implements OnInit {
 
     @ViewChild(TreeComponent) private tree: TreeComponent;
+    protected rootGroup: UserGroup;
+
     protected selectedUserGroups: UserGroup[];
     protected selectedUserGroup: UserGroup;
 
@@ -39,6 +43,8 @@ export class GroupsSectionComponent implements OnInit {
         this.userGroupDetailsFormGroup = this.formBuilder.group({
             name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
         });
+
+        this.userGroupService.getRootUserGroup().subscribe(group => this.rootGroup = group);
     }
 
     //noinspection JSMethodCanBeStatic
@@ -64,16 +70,24 @@ export class GroupsSectionComponent implements OnInit {
 
         if (this.selectedUserGroups)
             if (this.selectedUserGroups.length > 0) {
-                this.userGroupService
-                    .getUsersByGroup(this.selectedUserGroups[0])
-                    .subscribe(users => {
-                        if (users) {
+
+                Observable.forkJoin(this.userGroupService.getUsersByGroup(this.selectedUserGroups[0]),
+                    this.userGroupService.getResourcesByGroup(this.selectedUserGroups[0]))
+                    .subscribe(
+                        response => {
                             this.selectedUserGroup = this.selectedUserGroups[0];
-                            this.selectedUserGroup.users = users;
+
+                            // Users
+                            this.selectedUserGroup.users = response[0];
+
+                            // Resources
+                            this.selectedUserGroup.resources = response[1];
+
+                            // Form Reset
                             this.userGroupDetailsFormGroup.reset();
                             this.userGroupDetailsFormGroup.controls['name'].setValue(this.selectedUserGroup.name)
-                        }
-                    });
+                        });
+
                 return;
             }
 
@@ -106,17 +120,31 @@ export class GroupsSectionComponent implements OnInit {
         this.onUserGroupSelected();
     }
 
+    onUserSelected(user: User) {
+        //TODO Called when a user is selected in the user group's assigned users table
+    }
+
+    onUserDeselected() {
+        //TODO Called when a user is deselected from the user group's assigned users table.
+    }
+
+    onResourceSelected(resource: Resource) {
+        //TODO Called when a resource is selected in the user group's assigned resources table
+    }
+
+    onResourceDeselected() {
+        //TODO Called when a resource is deselected from the user group's assigned resources table.
+    }
+
     onDeleteUserGroup() {
         this.userGroupService
             .deleteUserGroup(this.selectedUserGroup)
             .subscribe(
-                success => {
-                    if (success) {
-                        this.selectedUserGroups = [];
-                        this.userGroupService.fetchRootUserGroup();
-                        this.userService.fetchUsers();
-                        this.onUserGroupSelected();
-                    }
+                response => {
+                    this.selectedUserGroups = [];
+                    this.userGroupService.fetchRootUserGroup();
+                    this.userService.fetchUsers();
+                    this.onUserGroupSelected();
                 }
             )
 
