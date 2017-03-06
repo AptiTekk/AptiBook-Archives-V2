@@ -80,8 +80,6 @@ public class User extends MultiTenantEntity implements Serializable {
     }
 
     public void setEmailAddress(String emailAddress) {
-        if (emailAddress != null)
-            emailAddress = emailAddress.toLowerCase();
         this.emailAddress = emailAddress;
     }
 

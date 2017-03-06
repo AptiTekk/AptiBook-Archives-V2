@@ -43,7 +43,7 @@ public class UserValidator extends RestValidator {
      * @param excludedUserId An ID which is exempt from checking; if a user with this email address and ID is found, the email address is still considered valid.
      * @throws RestValidationException If the email address is in use.
      */
-    public void checkIfEmailAddressIsInUse(String emailAddress, @Nullable Long excludedUserId) throws RestValidationException {
+    void checkIfEmailAddressIsInUse(String emailAddress, @Nullable Long excludedUserId) throws RestValidationException {
         User otherUser = userRepository.findByEmailAddress(emailAddress);
         if (otherUser != null && !otherUser.getId().equals(excludedUserId))
             throw new RestValidationException(badRequest("The Email Address is already in use."));

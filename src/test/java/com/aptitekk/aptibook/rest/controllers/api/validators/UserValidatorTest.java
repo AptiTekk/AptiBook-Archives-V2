@@ -35,21 +35,6 @@ public class UserValidatorTest extends AbstractWebClientTest {
     @Autowired
     private UserGroupRepository userGroupRepository;
 
-    @Autowired
-    private TenantRepository tenantRepository;
-
-    @MockBean
-    private TenantManagementService tenantManagementService;
-
-    @Override
-    @Before
-    public void setUp() throws Exception {
-        super.setUp();
-
-        Tenant demoTenant = tenantRepository.findTenantBySlug("demo");
-        given(this.tenantManagementService.getTenant()).willReturn(demoTenant);
-    }
-
     /**
      * This test makes sure that an exception is thrown if we try to check if the "admin" email address is in use for a new user.
      */
@@ -80,7 +65,7 @@ public class UserValidatorTest extends AbstractWebClientTest {
      * Ensures that the admin email address is invalid when not updating the admin.
      */
     @Test(expected = RestValidator.RestValidationException.class)
-    public void testAdminEmailIsInvalidForAdmin() {
+    public void testAdminEmailIsInvalidForNonAdmin() {
         userValidator.validateEmailAddress("admin", null);
     }
 
@@ -214,7 +199,7 @@ public class UserValidatorTest extends AbstractWebClientTest {
         List<UserGroupDTO> userGroupDTOs = new ArrayList<>();
 
         UserGroupDTO rootGroup = new UserGroupDTO();
-        rootGroup.id = userGroupRepository.findByName("root").id;
+        rootGroup.id = userGroupRepository.findByName("root").getId();
         userGroupDTOs.add(rootGroup);
 
         userValidator.validateUserGroups(userGroupDTOs, null);
@@ -228,7 +213,7 @@ public class UserValidatorTest extends AbstractWebClientTest {
         List<UserGroupDTO> userGroupDTOs = new ArrayList<>();
 
         UserGroupDTO administratorsGroup = new UserGroupDTO();
-        administratorsGroup.id = userGroupRepository.findByName("Administrators").id;
+        administratorsGroup.id = userGroupRepository.findByName("Administrators").getId();
         userGroupDTOs.add(administratorsGroup);
 
         userValidator.validateUserGroups(userGroupDTOs, userRepository.findByEmailAddress("admin"));
@@ -251,11 +236,11 @@ public class UserValidatorTest extends AbstractWebClientTest {
         List<UserGroupDTO> userGroupDTOs = new ArrayList<>();
 
         UserGroupDTO administratorsGroup = new UserGroupDTO();
-        administratorsGroup.id = userGroupRepository.findByName("Administrators").id;
+        administratorsGroup.id = userGroupRepository.findByName("Administrators").getId();
         userGroupDTOs.add(administratorsGroup);
 
         UserGroupDTO librariansGroup = new UserGroupDTO();
-        librariansGroup.id = userGroupRepository.findByName("Librarians").id;
+        librariansGroup.id = userGroupRepository.findByName("Librarians").getId();
         userGroupDTOs.add(librariansGroup);
 
         userValidator.validateUserGroups(userGroupDTOs, null);
@@ -269,7 +254,7 @@ public class UserValidatorTest extends AbstractWebClientTest {
         List<UserGroupDTO> userGroupDTOs = new ArrayList<>();
 
         UserGroupDTO administratorsGroup = new UserGroupDTO();
-        administratorsGroup.id = userGroupRepository.findByName("Administrators").id;
+        administratorsGroup.id = userGroupRepository.findByName("Administrators").getId();
         userGroupDTOs.add(administratorsGroup);
 
         userValidator.validateUserGroups(userGroupDTOs, null);

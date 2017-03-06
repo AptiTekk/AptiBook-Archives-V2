@@ -9,10 +9,12 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
+import com.aptitekk.aptibook.rest.controllers.api.validators.UserGroupValidator;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -29,21 +31,24 @@ public class UserGroupController extends APIControllerAbstract {
 
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
+    private UserGroupValidator userGroupValidator;
 
     @Autowired
-    public UserGroupController(UserGroupRepository userGroupRepository, UserGroupService userGroupService) {
+    public UserGroupController(UserGroupRepository userGroupRepository,
+                               UserGroupService userGroupService,
+                               UserGroupValidator userGroupValidator) {
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
+        this.userGroupValidator = userGroupValidator;
     }
 
     @RequestMapping(value = "/userGroups", method = RequestMethod.GET)
     public ResponseEntity<?> getUserGroups() {
 
-        if (authService.isUserSignedIn()) {
-            return ok(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.WithoutParent.class));
-        }
+        if (!authService.isUserSignedIn())
+            return noPermission();
 
-        return noPermission();
+        return ok(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.WithoutParent.class));
     }
 
     @RequestMapping(value = "/userGroups", method = RequestMethod.POST)
@@ -55,52 +60,70 @@ public class UserGroupController extends APIControllerAbstract {
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
+        UserGroup userGroup = new UserGroup();
+
         if (userGroupDTO.name == null)
-            return badRequest("The User Group has no name.");
+            return badRequest("The group name was not supplied.");
+
+        userGroupValidator.validateName(userGroupDTO.name, null);
+        userGroup.setName(userGroupDTO.name);
 
         if (userGroupDTO.parent == null)
-            return badRequest("The User Group has no parent.");
+            return badRequest("The group parent was not supplied.");
 
         UserGroup parentGroup = userGroupRepository.findByName(userGroupDTO.parent.name);
         if (parentGroup == null)
-            return badRequest("The Parent User Group could not be found.");
+            return badRequest("The group parent could not be found.");
 
-        UserGroup userGroup = new UserGroup();
-        userGroup.name = userGroupDTO.name;
-        userGroup.parent = parentGroup;
+        userGroup.setParent(parentGroup);
 
         userGroup = userGroupRepository.save(userGroup);
-        return created(modelMapper.map(userGroup, UserGroupDTO.class), "/userGroups/" + userGroup.id);
+        return created(modelMapper.map(userGroup, UserGroupDTO.class), "/userGroups/" + userGroup.getId());
     }
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserGroup(@PathVariable Long id) {
-
         if (!authService.isUserSignedIn())
             return unauthorized();
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return badRequest("User Group could not be found.");
+            return notFound("No user groups were found with the ID: " + id);
 
         return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUserGroupUsers(@PathVariable Long id) {
-
         if (!authService.isUserSignedIn())
             return unauthorized();
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return badRequest("User Group could not be found.");
+            return notFound("No user groups were found with the ID: " + id);
 
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)
                 && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
-        return ok(modelMapper.map(userGroup.users, new TypeToken<List<UserDTO>>() {
+        return ok(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
+        }.getType()));
+    }
+
+    @RequestMapping(value = "/userGroups/{id}/resources", method = RequestMethod.GET)
+    public ResponseEntity<?> getUserGroupResources(@PathVariable Long id) {
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return notFound("No user groups were found with the ID: " + id);
+
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)
+                && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
+            return noPermission();
+
+        return ok(modelMapper.map(userGroup.getResources(), new TypeToken<List<ResourceDTO.WithoutReservations>>() {
         }.getType()));
     }
 
@@ -114,18 +137,12 @@ public class UserGroupController extends APIControllerAbstract {
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return badRequest("User Group not found.");
+            return badRequest("No group was found by the specified ID.");
 
-        if (userGroupDTO == null)
-            return badRequest("User Group was not supplied.");
-
-        if (userGroupDTO.name != null)
-            if (userGroupDTO.name.length() > 30)
-                return badRequest("The Name must be 30 characters or less.");
-            else if (!userGroupDTO.name.matches("[^<>;=]*"))
-                return badRequest("The Name cannot contain these characters: < > ; =");
-            else
-                userGroup.name = userGroupDTO.name;
+        if (userGroupDTO.name != null) {
+            userGroupValidator.validateName(userGroupDTO.name, userGroup);
+            userGroup.setName(userGroupDTO.name);
+        }
 
         userGroup = userGroupRepository.save(userGroup);
         return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
@@ -142,31 +159,31 @@ public class UserGroupController extends APIControllerAbstract {
         // Make sure that the selected User Group exists.
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return badRequest("User Group not found.");
+            return notFound("No user groups were found with the ID: " + id);
 
         // Make sure that the new parent User Group exists.
         UserGroup newParentUserGroup = userGroupRepository.findInCurrentTenant(newParentId);
         if (newParentUserGroup == null)
-            return badRequest("New Parent User Group not found.");
+            return badRequest("The new parent group was not found.");
 
         // Make sure that the selected and parent groups are not the same groups.
         if (id.equals(newParentId))
-            return badRequest("This User Group and the New Parent User Group cannot be the same.");
+            return badRequest("This group and the new parent group must be different.");
 
         // Check if they are already where they should be.
-        if (userGroup.parent.equals(newParentUserGroup))
+        if (userGroup.getParent().equals(newParentUserGroup))
             return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
 
         // Make sure we are not placing the selected User Group below itself on the same branch.
         List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
         if (hierarchyDown.contains(newParentUserGroup))
-            return badRequest("The New Parent User Group cannot be below this User Group on the same branch.");
+            return badRequest("The new parent group is below this user group on the same branch.");
 
-        userGroup.parent.children.remove(userGroup);
-        userGroup.parent = newParentUserGroup;
+        userGroup.getParent().getChildren().remove(userGroup);
+        userGroup.setParent(newParentUserGroup);
         userGroup = userGroupRepository.save(userGroup);
 
-        //TODO: Fix all users who now have more than one assigned group on the same branch.
+        //FIXME: Fix all users who now have more than one assigned group on the same branch.
 
         return ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
     }
@@ -182,20 +199,20 @@ public class UserGroupController extends APIControllerAbstract {
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return badRequest("User Group could not be found.");
+            return notFound("No user groups were found with the ID: " + id);
 
         if (userGroup.isRoot())
             return badRequest("The Root Group cannot be deleted.");
 
         // Move children groups upwards.
-        userGroup.parent.children.addAll(userGroup.children);
-        for (UserGroup child : userGroup.children) {
-            child.parent = userGroup.parent;
+        userGroup.getParent().getChildren().addAll(userGroup.getChildren());
+        for (UserGroup child : userGroup.getChildren()) {
+            child.setParent(userGroup.getParent());
             userGroupRepository.save(child);
         }
 
-        userGroup.parent.children.remove(userGroup);
-        userGroup.children.clear();
+        userGroup.getParent().getChildren().remove(userGroup);
+        userGroup.getChildren().clear();
 
         userGroupRepository.delete(userGroup);
 
@@ -204,15 +221,12 @@ public class UserGroupController extends APIControllerAbstract {
 
     @RequestMapping(value = "/userGroups/hierarchyDown/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserGroupsHierarchyDown(@PathVariable Long id) {
-        if (id == null)
-            return badRequest("Missing ID");
-
         if (!authService.isUserSignedIn())
             return unauthorized();
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return badRequest("UserGroup not found.");
+            return notFound("No user groups were found with the ID: " + id);
 
         return ok(modelMapper.map(userGroupService.getHierarchyDown(userGroup), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
         }.getType()));
@@ -220,15 +234,12 @@ public class UserGroupController extends APIControllerAbstract {
 
     @RequestMapping(value = "/userGroups/hierarchyUp/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserGroupsHierarchyUp(@PathVariable Long id) {
-        if (id == null)
-            return badRequest("Missing ID");
-
         if (!authService.isUserSignedIn())
             return unauthorized();
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
         if (userGroup == null)
-            return badRequest("UserGroup not found.");
+            return notFound("No user groups were found with the ID: " + id);
 
         return ok(modelMapper.map(userGroupService.getHierarchyUp(userGroup), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
         }.getType()));

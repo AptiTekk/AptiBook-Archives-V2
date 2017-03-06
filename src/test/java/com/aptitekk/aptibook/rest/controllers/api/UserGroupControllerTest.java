@@ -50,13 +50,13 @@ public class UserGroupControllerTest extends AbstractWebClientTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/demo/userGroups")
+                        .post("/api/junit/userGroups")
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newUserGroupJson.toString()))
                 .andExpect(MockMvcResultMatchers.status().isCreated())
                 .andExpect(jsonPath("$.name", is(newUserGroupJson.getString("name"))));
 
-        UserGroup userGroup = userGroupRepository.findByName(newUserGroupJson.getString("name"), tenantRepository.findTenantBySlug("demo"));
+        UserGroup userGroup = userGroupRepository.findByName(newUserGroupJson.getString("name"), getJUnitTenant());
         assertNotNull("User Group was not created.", userGroup);
     }
 

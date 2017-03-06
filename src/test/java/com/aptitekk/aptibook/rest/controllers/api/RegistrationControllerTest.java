@@ -35,12 +35,12 @@ public class RegistrationControllerTest extends AbstractWebClientTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/demo/register")
+                        .post("/api/junit/register")
                         .content(newUserJson.toString())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
 
-        User user = userRepository.findByEmailAddress(newUserJson.getString("emailAddress"), tenantRepository.findTenantBySlug("demo"));
+        User user = userRepository.findByEmailAddress(newUserJson.getString("emailAddress"), getJUnitTenant());
         assertNotNull("The registered user was not created.", user);
         assertFalse("The user was already verified.", user.verified);
         assertNotNull("The user does not have a verification code.", user.verificationCode);

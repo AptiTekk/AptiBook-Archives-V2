@@ -23,7 +23,8 @@
                             }">
 			</form-group>
 			
-			<label class="control-label">Parent User Group</label>
+			<label *ngIf="rootGroup?.children?.length > 0"
+				   class="control-label">Parent User Group</label>
 			<tree #tree
 				  formControlName="parent">
 			</tree>

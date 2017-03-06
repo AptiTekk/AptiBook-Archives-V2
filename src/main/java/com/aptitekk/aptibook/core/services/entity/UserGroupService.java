@@ -31,7 +31,7 @@ public class UserGroupService {
 
         UserGroup currentGroup = origin;
         UserGroup parentGroup;
-        while ((parentGroup = currentGroup.parent) != null) {
+        while ((parentGroup = currentGroup.getParent()) != null) {
             hierarchy.add(parentGroup);
             currentGroup = parentGroup;
         }
@@ -52,9 +52,7 @@ public class UserGroupService {
         List<UserGroup> groups = new ArrayList<>();
         while ((currEntry = queue.poll()) != null) {
             groups.add(currEntry);
-            for (UserGroup child : currEntry.children) {
-                queue.add(child);
-            }
+            queue.addAll(currEntry.getChildren());
         }
         return groups;
     }
@@ -69,7 +67,7 @@ public class UserGroupService {
         List<UserGroup> userGroups = getHierarchyDown(origin);
         List<Resource> userGroupResources = new ArrayList<>();
         for (UserGroup userGroup : userGroups) {
-            userGroupResources.addAll(userGroup.resources);
+            userGroupResources.addAll(userGroup.getResources());
         }
         return userGroupResources;
     }

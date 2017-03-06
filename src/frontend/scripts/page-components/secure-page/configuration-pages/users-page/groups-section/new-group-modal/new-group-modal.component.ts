@@ -17,8 +17,7 @@ import {UserGroup} from "../../../../../../models/user-group.model";
 })
 export class NewGroupModalComponent implements OnInit {
 
-    @ViewChild('modal')
-    modal: ModalComponent;
+    @ViewChild('modal') modal: ModalComponent;
 
     @Output() submitted = new EventEmitter<UserGroup>();
 

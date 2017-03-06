@@ -20,7 +20,7 @@ public class UserGroupRepository extends MultiTenantEntityRepositoryAbstract<Use
     public void delete(UserGroup userGroup) {
         if (userGroup != null) {
             //Remove user assignments
-            for (User user : userGroup.users) {
+            for (User user : userGroup.getUsers()) {
                 user.userGroups.remove(userGroup);
             }
         }
@@ -40,6 +40,8 @@ public class UserGroupRepository extends MultiTenantEntityRepositoryAbstract<Use
 
     /**
      * Finds Group Entity by its name, within the specified Tenant.
+     * <p>
+     * The search is case-insensitive.
      *
      * @param userGroupName The name of the group to search for.
      * @param tenant        The Tenant of the User Group to search for.
@@ -51,8 +53,8 @@ public class UserGroupRepository extends MultiTenantEntityRepositoryAbstract<Use
 
         try {
             return entityManager
-                    .createQuery("SELECT g FROM UserGroup g WHERE g.name = :name AND g.tenant = :tenant", UserGroup.class)
-                    .setParameter("name", userGroupName)
+                    .createQuery("SELECT g FROM UserGroup g WHERE LOWER(g.name) = :name AND g.tenant = :tenant", UserGroup.class)
+                    .setParameter("name", userGroupName.toLowerCase())
                     .setParameter("tenant", tenant)
                     .getSingleResult();
         } catch (PersistenceException e) {

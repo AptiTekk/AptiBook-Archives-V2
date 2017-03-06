@@ -48,7 +48,7 @@ public class PermissionService {
         }
 
         for (UserGroup userGroup : user.userGroups) {
-            for (Permission permission : userGroup.permissions) {
+            for (Permission permission : userGroup.getPermissions()) {
                 if (permission.descriptor == descriptor || permission.descriptor == Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
                     return true;
             }
@@ -80,7 +80,7 @@ public class PermissionService {
         }
 
         for (UserGroup userGroup : user.userGroups) {
-            for (Permission permission : userGroup.permissions) {
+            for (Permission permission : userGroup.getPermissions()) {
                 if (permission.descriptor.getGroup() == group || permission.descriptor == Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
                     return true;
             }

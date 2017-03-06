@@ -6,6 +6,7 @@
 
 import {User} from "./user.model";
 import {ReservationDecision} from "./reservation-decision.model";
+import {Resource} from "./resource.model";
 
 export interface UserGroup {
 
@@ -16,6 +17,8 @@ export interface UserGroup {
     root?: boolean;
 
     users?: User[];
+
+    resources?: Resource[];
 
     parent?: UserGroup;
 

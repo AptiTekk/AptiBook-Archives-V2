@@ -70,7 +70,7 @@ public class TenantIntegrityService {
     private void checkForRootGroup(Tenant tenant) {
         if (userGroupRepository.findRootGroup(tenant) == null) {
             UserGroup rootGroup = new UserGroup();
-            rootGroup.name = UserGroupRepository.ROOT_GROUP_NAME;
+            rootGroup.setName(UserGroupRepository.ROOT_GROUP_NAME);
             rootGroup.tenant = tenant;
             try {
                 userGroupRepository.save(rootGroup);

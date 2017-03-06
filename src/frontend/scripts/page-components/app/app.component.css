@@ -93,6 +93,10 @@
     background: none;
 }
 
+.app .btn-toolbar .btn {
+    margin-bottom: 5px;
+}
+
 /* Select Box Styling */
 
 .app select.big-select {

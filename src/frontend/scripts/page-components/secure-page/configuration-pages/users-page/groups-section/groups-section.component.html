@@ -17,6 +17,8 @@
 			   [type]="'primary'"
 			   [title]="'Select a User Group'">
 			<panel-body>
+				<p *ngIf="rootGroup?.children?.length == 0">There are no User Groups.</p>
+				
 				<tree [selectable]="true"
 					  [dragAndDrop]="true"
 					  (selected)="onUserGroupSelected()"
@@ -94,7 +96,7 @@
 				</navigation>
 				
 				<div *ngIf="showAssignedUsers">
-					<datatable [selectableRows]="true"
+					<datatable [selectableRows]="false"
 							   (rowSelected)="onUserSelected(selectedUserGroup?.users[$event])"
 							   (rowDeselected)="onUserDeselected()"
 							   [bodyHeight]="'500px'">
@@ -122,11 +124,24 @@
 							</datatable-cell>
 						</datatable-column>
 					</datatable>
-					<span *ngIf="true">Select a User by clicking on a row in the table.</span>
 				</div>
 				
 				<div *ngIf="!showAssignedUsers">
-				
+					<datatable [selectableRows]="false"
+							   (rowSelected)="onResourceSelected(selectedUserGroup?.resources[$event])"
+							   (rowDeselected)="onResourceDeselected()"
+							   [bodyHeight]="'500px'">
+						<datatable-column [title]="'Name'">
+							<datatable-cell *ngFor="let resource of selectedUserGroup?.resources">
+								{{resource.name}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Requires Approval'">
+							<datatable-cell *ngFor="let resource of selectedUserGroup?.resources">
+								{{resource.needsApproval ? 'Yes' : 'No'}}
+							</datatable-cell>
+						</datatable-column>
+					</datatable>
 				</div>
 			</div>
 		</div>

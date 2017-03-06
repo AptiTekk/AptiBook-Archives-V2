@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {NgModule} from "@angular/core";
+import {ErrorHandler, NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
 import {AppComponent} from "./page-components/app/app.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
@@ -17,6 +17,7 @@ import * as guards from "./routing/guards";
 import * as pipes from "./pipes";
 import {vendorImports} from "./vendors/angular-vendors";
 import {vendorComponents} from "./vendors/angular-vendors";
+import {AptiBookErrorHandler} from "./error-handler";
 
 const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
 
@@ -30,6 +31,10 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
         ...vendorImports
     ],
     providers: [
+        {
+            provide: ErrorHandler,
+            useClass: AptiBookErrorHandler
+        },
         ...mapImports(singletons),
         ...mapImports(guards)
     ],

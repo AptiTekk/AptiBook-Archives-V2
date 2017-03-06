@@ -11,6 +11,8 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {APIService} from "../../../../services/singleton/api.service";
 import {Resource} from "../../../../models/resource.model";
 import {ResourceService} from "../../../../services/singleton/resource.service";
+import {UserGroup} from "../../../../models/user-group.model";
+import {UserGroupService} from "../../../../services/singleton/usergroup.service";
 
 @Component({
     selector: 'resources-page',
@@ -21,6 +23,7 @@ export class ResourcesPageComponent implements OnInit {
 
     currentResourceCategory: ResourceCategory;
     resourceCategories: ResourceCategory[];
+    rootGroup: UserGroup;
 
     resourceForDeletion: Resource;
 
@@ -28,26 +31,36 @@ export class ResourcesPageComponent implements OnInit {
                 private route: ActivatedRoute,
                 protected apiService: APIService,
                 private resourceCategoryService: ResourceCategoryService,
-                private resourceService: ResourceService) {
+                private resourceService: ResourceService,
+                private userGroupService: UserGroupService) {
     }
 
     ngOnInit(): void {
-        this.resourceCategoryService.getResourceCategories().subscribe(resourceCategories => {
-            this.resourceCategories = resourceCategories;
+        this.resourceCategoryService.fetchResourceCategories();
 
-            this.route.params.subscribe(params => {
-                let resourceCategoryName = params['resourceCategory'];
-                if (resourceCategoryName) {
-                    let filteredCategories = this.resourceCategories.filter(resourceCategory => resourceCategory.name.toLowerCase() === resourceCategoryName.toLowerCase());
-                    if (filteredCategories.length > 0) {
-                        this.currentResourceCategory = filteredCategories[0];
-                        return;
-                    }
-                }
+        this.resourceCategoryService
+            .getResourceCategories()
+            .subscribe(resourceCategories => {
+                this.resourceCategories = resourceCategories;
 
-                this.currentResourceCategory = this.resourceCategories[0];
+                this.route.params
+                    .subscribe(params => {
+                        let resourceCategoryName = params['resourceCategory'];
+                        if (resourceCategoryName) {
+                            let filteredCategories = this.resourceCategories.filter(resourceCategory => resourceCategory.name.toLowerCase() === resourceCategoryName.toLowerCase());
+                            if (filteredCategories.length > 0) {
+                                this.currentResourceCategory = filteredCategories[0];
+                                return;
+                            }
+                        }
+
+                        this.currentResourceCategory = this.resourceCategories[0];
+                    });
             });
-        });
+
+        this.userGroupService.getRootUserGroup().subscribe(
+            rootGroup => this.rootGroup = rootGroup
+        );
     }
 
     onNewCategory(resourceCategory: ResourceCategory) {

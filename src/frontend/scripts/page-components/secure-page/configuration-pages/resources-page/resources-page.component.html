@@ -63,10 +63,16 @@
 						
 						<!-- Add Button -->
 						<button class="btn btn-primary"
+								[disabled]="!(rootGroup?.children?.length > 0)"
 								(click)="newResourceModal.open(currentResourceCategory)">
 							Add New Resource
 						</button>
 					</div>
+					
+					<p *ngIf="!(rootGroup?.children?.length > 0)">
+						<br/>
+						Please add User Groups before adding Resources.
+					</p>
 					
 					<hr/>
 				</div>

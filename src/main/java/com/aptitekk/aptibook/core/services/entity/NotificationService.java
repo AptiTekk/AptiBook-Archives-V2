@@ -40,7 +40,7 @@ public class NotificationService {
             return;
 
         for (UserGroup userGroup : userGroupList) {
-            for (User user : userGroup.users) {
+            for (User user : userGroup.getUsers()) {
                 sendNotification(type, subject, body, user);
             }
         }
