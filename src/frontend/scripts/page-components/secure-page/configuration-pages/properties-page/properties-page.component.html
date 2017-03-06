@@ -1,0 +1,110 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<ol class="breadcrumb">
+	<li class="active">Configuration</li>
+	<li class="active">Properties</li>
+</ol>
+
+<div class="container-fluid">
+	<div *ngIf="properties != undefined">
+		<div class="row">
+			
+			<div class="col-xs-12 col-md-8">
+				
+				<alert #successAlert
+					   [severity]="'success'"></alert>
+				<alert #warnAlert
+					   [severity]="'warning'"></alert>
+				
+				<!-- Toolbar -->
+				<div class="btn-toolbar">
+					<button class="btn btn-primary" (click)="onSubmit()">
+						Save Changes
+					</button>
+					<button class="btn btn-danger pull-right"
+							type="button"
+							(click)="confirmationModal.open()">
+						Reset All Properties
+					</button>
+				</div>
+				<hr/>
+				
+				<!-- Section Selection Tabs -->
+				<navigation [horizontal]="true"
+							[links]="sectionLinks">
+				</navigation>
+			</div>
+			
+			<form [formGroup]="formGroup">
+
+				<property-section [sectionPath]="'personalization'">
+					<div class="col-xs-12 col-md-8">
+						<!-- Personalization Section -->
+						<h3>Personalization</h3>
+						<hr/>
+						
+						<!-- Organization Name -->
+						<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
+									[label]="'Organization Name'"
+									[placeholder]="'Bingham High School'"
+									[autoFocus]="true">
+						</form-group>
+					
+					</div>
+				</property-section>
+				
+				<property-section [sectionPath]="'authentication'">
+					<div class="col-xs-12 col-md-8">
+						<!-- Google Sign In Section -->
+						<h3>Google Sign In</h3>
+						<hr/>
+						
+						<!-- Sign In Enabled Toggle Switch -->
+						<div class="from-group">
+							<label>Google Sign-In Enabled</label>
+							<br/>
+							<toggle-switch #googleSignInEnabledSwitch
+										   [onText]="'Yes'"
+										   [offText]="'No'"
+										   style="margin-right: 10px"
+										   formControlName="GOOGLE_SIGN_IN_ENABLED">
+							</toggle-switch>
+						</div>
+						<br/>
+						
+						<!-- Allowed Domain Names -->
+						<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
+									[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
+									[readOnly]="!googleSignInEnabledSwitch.isOn()">
+						</form-group>
+						
+						<!-- Registration Section -->
+						<h3>Registration</h3>
+						<hr/>
+						
+						<!-- Registration Enabled Toggle Switch -->
+						<div class="from-group">
+							<label>Registration Enabled</label>
+							<br/>
+							<toggle-switch
+									[onText]="'Yes'"
+									[offText]="'No'"
+									style="margin-right: 10px"
+									formControlName="REGISTRATION_ENABLED"></toggle-switch>
+						</div>
+					</div>
+				</property-section>
+			</form>
+		</div>
+	</div>
+</div>
+
+<properties-confirm-modal
+		#confirmationModal
+		[message]="'Are you sure you want to reset all properties?'"
+		(confirm)="reset()">
+</properties-confirm-modal>

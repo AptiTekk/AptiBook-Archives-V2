@@ -4,7 +4,8 @@
  * Proprietary and confidential.
  */
 
-export * from './configuration-container.component';
-export * from './resources-page';
-export * from './users-page';
-export * from './properties-page';
+export interface Property {
+    propertyValue?: string;
+    defaultValue?: string;
+    keyName?: string;
+}

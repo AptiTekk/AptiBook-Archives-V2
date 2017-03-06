@@ -14,6 +14,6 @@ public class BooleanPropertyValidator extends PropertyValidator {
 
     @Override
     public boolean isValid(String inputValue) {
-        return inputValue.equalsIgnoreCase("true") || inputValue.equalsIgnoreCase("false");
+        return inputValue != null && (inputValue.equalsIgnoreCase("true") || inputValue.equalsIgnoreCase("false"));
     }
 }

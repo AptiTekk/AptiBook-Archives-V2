@@ -25,20 +25,14 @@ public class Property extends MultiTenantEntity implements Serializable {
 
     public enum Group {
 
-        PERSONALIZATION("Personalization", null),
-        REGISTRATION("Registration", null),
-        GOOGLE_SIGN_IN("Google Sign In", null);
+        PERSONALIZATION(null),
+        REGISTRATION(null),
+        GOOGLE_SIGN_IN(null);
 
-        private String friendlyName;
         private Class<? extends ChangeListener> propertyGroupChangeListenerClass;
 
-        Group(String friendlyName, Class<? extends ChangeListener> propertyGroupChangeListenerClass) {
-            this.friendlyName = friendlyName;
+        Group(Class<? extends ChangeListener> propertyGroupChangeListenerClass) {
             this.propertyGroupChangeListenerClass = propertyGroupChangeListenerClass;
-        }
-
-        public String getFriendlyName() {
-            return friendlyName;
         }
 
         public List<Key> getKeys() {
@@ -67,27 +61,21 @@ public class Property extends MultiTenantEntity implements Serializable {
 
     public enum Key {
 
-        PERSONALIZATION_ORGANIZATION_NAME("Organization Name", null, Group.PERSONALIZATION, new MaxLengthPropertyValidator(64)),
+        PERSONALIZATION_ORGANIZATION_NAME(null, Group.PERSONALIZATION, new MaxLengthPropertyValidator(64)),
 
-        REGISTRATION_ENABLED("User Registration Enabled", "true", Group.REGISTRATION, new BooleanPropertyValidator()),
+        REGISTRATION_ENABLED("true", Group.REGISTRATION, new BooleanPropertyValidator()),
 
-        GOOGLE_SIGN_IN_ENABLED("Google Sign-In Enabled", "false", Group.GOOGLE_SIGN_IN, new BooleanPropertyValidator()),
-        GOOGLE_SIGN_IN_WHITELIST("Allowed Google Sign-In Domain Names (Comma Separated)", "gmail.com, example.org", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256));
+        GOOGLE_SIGN_IN_ENABLED("false", Group.GOOGLE_SIGN_IN, new BooleanPropertyValidator()),
+        GOOGLE_SIGN_IN_WHITELIST("gmail.com, example.org", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256));
 
-        private String fieldLabel;
         private final String defaultValue;
         private final Group group;
         private PropertyValidator propertyValidator;
 
-        Key(String fieldLabel, String defaultValue, Group group, PropertyValidator propertyValidator) {
-            this.fieldLabel = fieldLabel;
+        Key(String defaultValue, Group group, PropertyValidator propertyValidator) {
             this.defaultValue = defaultValue;
             this.group = group;
             this.propertyValidator = propertyValidator;
-        }
-
-        public String getFieldLabel() {
-            return fieldLabel;
         }
 
         public String getDefaultValue() {
@@ -111,10 +99,14 @@ public class Property extends MultiTenantEntity implements Serializable {
     @Enumerated(EnumType.STRING)
     public Key propertyKey;
 
+    public String getKeyName() {
+        return this.propertyKey.name();
+    }
+
     public String propertyValue;
 
-    public String getFieldLabel() {
-        return this.propertyKey.getFieldLabel();
+    public String getDefaultValue() {
+        return this.propertyKey.getDefaultValue();
     }
 
     @Override

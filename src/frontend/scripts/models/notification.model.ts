@@ -10,12 +10,12 @@ export interface Notification {
 
     id?: number;
 
-    subject?: string
+    subject?: string;
 
-    body?: string
+    body?: string;
 
-    creation?: Moment
+    creation?: Moment;
 
-    read?: boolean
+    read?: boolean;
 
 }

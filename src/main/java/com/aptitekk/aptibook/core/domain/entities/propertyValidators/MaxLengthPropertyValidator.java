@@ -21,6 +21,6 @@ public class MaxLengthPropertyValidator extends PropertyValidator {
 
     @Override
     public boolean isValid(String inputValue) {
-        return inputValue.length() <= maxLength;
+        return inputValue == null || inputValue.length() <= maxLength;
     }
 }

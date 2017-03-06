@@ -4,7 +4,5 @@
  * Proprietary and confidential.
  */
 
-export * from './configuration-container.component';
-export * from './resources-page';
-export * from './users-page';
-export * from './properties-page';
+export * from './properties-page.component'
+export * from './properties-confirm-modal/properties-confirm.modal.component'
