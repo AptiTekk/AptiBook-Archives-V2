@@ -10,6 +10,8 @@ import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 
 import javax.persistence.PersistenceException;
+import java.util.List;
+import java.util.Set;
 
 @EntityRepository
 public class UserGroupRepository extends MultiTenantEntityRepositoryAbstract<UserGroup> {

@@ -6,7 +6,7 @@
 
 import {Resource} from "./resource.model";
 import {User} from "./user.model";
-import {UserGroupWithDecision} from "./user-group.model";
+import {UserGroup, UserGroupWithDecision} from "./user-group.model";
 import moment = require("moment");
 import Moment = moment.Moment;
 import {ReservationDecision} from "./reservation-decision.model";
@@ -44,5 +44,9 @@ export interface ReservationWithOrganizedDecisions extends Reservation {
     decisions?: ReservationDecision[];
 
     hierarchy?: UserGroupWithDecision[];
+
+    decidingFor?: UserGroup;
+
+    alreadyDecidedFor?: boolean;
 
 }

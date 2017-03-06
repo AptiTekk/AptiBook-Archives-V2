@@ -8,12 +8,14 @@
      class="modal fade"
      tabindex="-1"
      role="dialog"
-     (keydown.esc)="closeOnEscape ? closeModal() : 0"
+     (keydown.esc)="closeOnEscape ? cancel() : 0"
      (keydown.enter)="!submitButtonDisabled && submitButtonLabel ? onSubmit.emit() : 0"
      [ngClass]="{'in': isOpen}"
      [ngStyle]="{'display': 'block'}"
-     (click)="closeOnOutsideClick ? closeModal() : 0">
+     (click)="closeOnOutsideClick ? cancel() : 0">
     <div class="modal-dialog"
+         [class.modal-lg]="size === 'lg'"
+         [class.modal-sm]="size === 'sm'"
          role="document"
          (click)="$event.stopPropagation();">
         <div class="modal-content">
@@ -24,7 +26,7 @@
                 <button type="button"
                         class="close"
                         aria-label="Close"
-                        (click)="closeModal()"
+                        (click)="cancel()"
                         *ngIf="!hideCloseButton">
                     <span aria-hidden="true">x</span>
                 </button>

@@ -5,6 +5,7 @@
  */
 
 export * from './management-container.component';
+export * from './approval-modal/approval-modal.component';
 export * from './approved-page/approved-page.component';
 export * from './calendar-page/calendar-page.component';
 export * from './approval-queue-page/approval-queue-page.component';

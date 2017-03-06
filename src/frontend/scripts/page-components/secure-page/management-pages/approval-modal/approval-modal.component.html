@@ -1,0 +1,136 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<modal [title]="'Approve or Reject Reservation'"
+	   [size]="'lg'"
+	   (onCancel)="onCancel()">
+	<modal-body>
+		<alert #dangerAlert
+			   [severity]="'danger'"></alert>
+		<form [formGroup]="formGroup">
+			<div class="row">
+				<div class="col-xs-12 col-md-3">
+					<resource-image [resource]="reservation?.resource">
+					</resource-image>
+				</div>
+				<div class="col-xs-12 col-md-9">
+					<form-group [label]="'Reservation Title'"
+								[control]="formGroup.controls['title']"
+								[readOnly]="true">
+					</form-group>
+					<form-group [label]="'Requested By'"
+								[control]="formGroup.controls['requestedBy']"
+								[readOnly]="true">
+					</form-group>
+					<form-group [label]="'Requested On'"
+								[control]="formGroup.controls['requestedOn']"
+								[readOnly]="true">
+					</form-group>
+					<div class="row">
+						<div class="col-xs-12 col-md-6">
+							<form-group [label]="'Start Time'"
+										[control]="formGroup.controls['startTime']"
+										[readOnly]="true">
+							</form-group>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<form-group [label]="'End Time'"
+										[control]="formGroup.controls['endTime']"
+										[readOnly]="true">
+							</form-group>
+						</div>
+					</div>
+					
+					<hr/>
+					
+					<div class="row">
+						<div class="col-xs-12">
+							<p>You are deciding on behalf of the
+								<span style="font-weight: bold">{{reservation?.decidingFor.name}}</span> User Group.</p>
+							<p *ngIf="reservation?.alreadyDecidedFor"
+							   class="warning">Warning: A decision has already been made for your User Group. Deciding again will change that decision!</p>
+							
+							<div *ngFor="let userGroup of reservation?.hierarchy; let i = index">
+								
+								<!-- Makes sure to only display the root group if the admin user has made a decision. -->
+								<div *ngIf="!(userGroup.root && !userGroup.decision)"
+									 [style.margin-left]="(16 * i) + 'px'">
+									
+									<span class="fa"
+										  [class.fa-hourglass-half]="!userGroup.decision"
+										  [class.text-primary]="!userGroup.decision"
+										  [class.fa-check-circle]="userGroup.decision?.approved"
+										  [class.text-success]="userGroup.decision?.approved"
+										  [class.fa-times-circle]="userGroup.decision?.rejected"
+										  [class.text-danger]="userGroup.decision?.rejected"></span>
+									
+									<!-- User Group Name -->
+									<span style="font-weight: bold">{{userGroup.name}}</span>
+									
+									<!-- A Decision has been made; display the name of the user who made the decision. -->
+									<span *ngIf="userGroup.decision">
+										User
+										<span style="font-weight: bold">{{userGroup.decision.user.fullName}}</span>
+									</span>
+									has
+									
+									<!-- Display the decision outcome -->
+									<span class="label label-success"
+										  *ngIf="userGroup.decision?.approved">approved</span>
+									
+									<span class="label label-danger"
+										  *ngIf="userGroup.decision?.rejected">rejected</span>
+									
+									<span *ngIf="!userGroup.decision"
+										  style="font-weight: bold">
+										not yet decided upon
+									</span>
+									
+									this Reservation.
+									
+									<!-- If Overridden -->
+									<span *ngIf="userGroup.overriddenBy">
+										(<span class="label label-info">Overridden</span>
+										by the decision of
+										
+										<!-- Who decided to override -->
+										<span style="font-weight: bold">{{userGroup.overriddenBy.decision.user.fullName}}</span>
+										to
+										
+										<!-- What they decided -->
+										<span class="label label-success"
+											  *ngIf="userGroup.overriddenBy.decision.approved">approve</span>
+										<span class="label label-danger"
+											  *ngIf="userGroup.overriddenBy.decision.rejected">reject</span>
+										on behalf of the
+										
+										<!-- Which group they are a part of -->
+										<span style="font-weight: bold">{{userGroup.overriddenBy.name}}</span>
+										
+										User Group.)
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</modal-body>
+	<modal-footer>
+		<button class="btn btn-success"
+				(click)="onApprove()">
+			Approve
+		</button>
+		<button class="btn btn-danger"
+				(click)="onReject()">
+			Reject
+		</button>
+		<button class="btn btn-default"
+				(click)="onCancel()">Cancel
+		</button>
+	</modal-footer>
+</modal>

@@ -37,6 +37,10 @@ public class ReservationDecision extends MultiTenantEntity implements Serializab
      */
     public String comment;
 
+    public boolean isRejected() {
+        return !this.approved;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
