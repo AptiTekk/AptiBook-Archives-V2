@@ -55,8 +55,8 @@ public class DevService {
                     "Webpack Watcher",
                     "node_modules/.bin/webpack.cmd",
                     "--config", "webpack/webpack.dev.config.js",
-                    "--watch", "--watchOptions.poll=300") {
-                boolean keepPrinting;
+                    "--watch") {
+                boolean keepPrinting = false;
 
                 @Override
                 public void processLine(String line) {
