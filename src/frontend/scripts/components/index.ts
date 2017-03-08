@@ -7,6 +7,7 @@
 export * from './accordian-navigation';
 export * from './alert/alert.component';
 export * from './calendar';
+export * from './confirmation-modal/confirmation-modal.component';
 export * from './datatable';
 export * from './date-time-picker/date-time-picker.component';
 export * from './deletion-confirmation-modal/deletion-confirmation-modal.component';

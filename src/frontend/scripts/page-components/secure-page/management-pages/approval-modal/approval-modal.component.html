@@ -134,3 +134,12 @@
 		</button>
 	</modal-footer>
 </modal>
+
+<confirmation-modal #overrideConfirmationModal
+					[title]="'Overriding Decision Confirmation'"
+					[message]="'Warning: This action will override another decision. Would you like to continue?'">
+</confirmation-modal>
+<confirmation-modal #changeConfirmationModal
+					[title]="'Changing Decision Confirmation'"
+					[message]="'Warning: This action will change your existing decision. Would you like to continue?'">
+</confirmation-modal>

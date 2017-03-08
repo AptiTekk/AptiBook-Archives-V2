@@ -1,0 +1,102 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
+import {ModalComponent} from "../modal/modal.component";
+
+@Component({
+    selector: 'confirmation-modal',
+    templateUrl: 'confirmation-modal.component.html'
+})
+export class ConfirmationModalComponent {
+
+    /**
+     * Determines the title of the modal.
+     * Defaults to "Confirmation".
+     */
+    @Input() title: string = "Confirmation";
+
+    /**
+     * Determines the message in the modal. Supports HTML.
+     * Defaults to "Are you sure you'd like to do this?"
+     */
+    @Input() message: string = "Are you sure you'd like to do this?";
+
+    /**
+     * The text to put inside the "Yes" button.
+     * Defaults to "Yes".
+     */
+    @Input() yesButtonLabel: string = "Yes";
+
+    /**
+     * The color of the "Yes" button.
+     * Valid choices are:
+     * - primary (Blue)
+     * - warning (Yellow)
+     * - danger (Red)
+     * - default (Grey)
+     *
+     * Defaults to "primary".
+     */
+    @Input() yesButtonColor: string = "primary";
+
+    /**
+     * The text to put inside the "No" button.
+     * Defaults to "No".
+     */
+    @Input() noButtonLabel: string = "No";
+
+    /**
+     * The color of the "No" button.
+     * Valid choices are:
+     * - primary (Blue)
+     * - warning (Yellow)
+     * - danger (Red)
+     * - default (Grey)
+     *
+     * Defaults to "default".
+     */
+    @Input() noButtonColor: string = "default";
+
+    /**
+     * Emitted if the user pushes yes.
+     */
+    @Output() yes = new EventEmitter<void>();
+
+    /**
+     * Emitted if the user pushes no.
+     */
+    @Output() no = new EventEmitter<void>();
+
+    /**
+     * The modal within this component.
+     */
+    @ViewChild(ModalComponent) private modal: ModalComponent;
+
+    /**
+     * Opens the confirmation modal.
+     */
+    public open(): void {
+        this.modal.openModal();
+    }
+
+    /**
+     * Called when the user clicks yes.
+     */
+    protected onYes() {
+        this.modal.closeModal();
+        this.yes.emit();
+    }
+
+    /**
+     * Called when the user clicks no.
+     */
+    protected onNo() {
+        this.modal.closeModal();
+        this.no.emit();
+    }
+
+}
