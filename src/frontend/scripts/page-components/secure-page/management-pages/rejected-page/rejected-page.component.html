@@ -30,6 +30,11 @@
 							  [class.text-danger]="reservation.rejected"></span>
 					</datatable-cell>
 				</datatable-column>
+				<datatable-column [title]="'Requested Resource'">
+					<datatable-cell *ngFor="let reservation of reservations">
+						{{reservation.resource.name}}
+					</datatable-cell>
+				</datatable-column>
 				<datatable-column [title]="'Requested On'">
 					<datatable-cell *ngFor="let reservation of reservations">
 						{{reservation.dateCreated | date:'EEEE, MMM d, yyyy, h:mm a'}}

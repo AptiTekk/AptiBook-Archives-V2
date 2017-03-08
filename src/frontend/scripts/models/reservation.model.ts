@@ -41,12 +41,24 @@ export interface ReservationWithUnorganizedDecisions extends Reservation {
 
 export interface ReservationWithOrganizedDecisions extends Reservation {
 
+    /**
+     * The decisions made on this reservation.
+     */
     decisions?: ReservationDecision[];
 
+    /**
+     * The hierarchy of groups that can decide on the reservation, in sorted order.
+     */
     hierarchy?: UserGroupWithDecision[];
 
+    /**
+     * The user group that the user is deciding for when making a decision.
+     */
     decidingFor?: UserGroup;
 
-    alreadyDecidedFor?: boolean;
+    /**
+     * The decision that the user's "decidingFor" group has already made, if one exists.
+     */
+    existingDecision?: ReservationDecision;
 
 }

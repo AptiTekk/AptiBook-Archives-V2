@@ -4,16 +4,17 @@
   ~ Proprietary and confidential.
   -->
 
-<modal [title]="title">
+<modal [title]="title"
+	   (onCancel)="onDecision(false)">
 	<modal-body>
 		{{message}}
 	</modal-body>
 	<modal-footer>
 		<button class="btn btn-{{yesButtonColor}}"
-				(click)="onYes()">{{yesButtonLabel}}
+				(click)="onDecision(true)">{{yesButtonLabel}}
 		</button>
 		<button class="btn btn-{{noButtonColor}}"
-				(click)="onNo()">{{noButtonLabel}}
+				(click)="onDecision(false)">{{noButtonLabel}}
 		</button>
 	</modal-footer>
 </modal>

@@ -50,7 +50,7 @@
 						<div class="col-xs-12">
 							<p>You are deciding on behalf of the
 								<span style="font-weight: bold">{{reservation?.decidingFor.name}}</span> User Group.</p>
-							<p *ngIf="reservation?.alreadyDecidedFor"
+							<p *ngIf="reservation?.existingDecision"
 							   class="warning">Warning: A decision has already been made for your User Group. Deciding again will change that decision!</p>
 							
 							<div *ngFor="let userGroup of reservation?.hierarchy; let i = index">
@@ -122,24 +122,27 @@
 	</modal-body>
 	<modal-footer>
 		<button class="btn btn-success"
+				[disabled]="reservation?.existingDecision?.approved"
 				(click)="onApprove()">
 			Approve
 		</button>
 		<button class="btn btn-danger"
+				[disabled]="reservation?.existingDecision?.rejected"
 				(click)="onReject()">
 			Reject
 		</button>
 		<button class="btn btn-default"
-				(click)="onCancel()">Cancel
+				(click)="onCancel()">
+			Cancel
 		</button>
 	</modal-footer>
 </modal>
 
 <confirmation-modal #overrideConfirmationModal
-					[title]="'Overriding Decision Confirmation'"
-					[message]="'Warning: This action will override another decision. Would you like to continue?'">
+					[title]="'Overriding Decision'"
+					[message]="'Warning: This action will override another group\'s decision. Would you like to continue?'">
 </confirmation-modal>
 <confirmation-modal #changeConfirmationModal
-					[title]="'Changing Decision Confirmation'"
-					[message]="'Warning: This action will change your existing decision. Would you like to continue?'">
+					[title]="'Changing Decision'"
+					[message]="'Warning: This action will change your group\'s existing decision. Would you like to continue?'">
 </confirmation-modal>

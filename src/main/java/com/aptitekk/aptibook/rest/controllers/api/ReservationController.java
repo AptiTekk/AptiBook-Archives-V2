@@ -192,6 +192,15 @@ public class ReservationController extends APIControllerAbstract {
 
         // Save the new decision.
         reservationDecision = reservationDecisionRepository.save(reservationDecision);
+
+        // If this group is at the top of the hierarchy,
+        // then we have made a final decision on the reservation.
+        if (decidingFor.isRoot() || decidingFor.getParent().isRoot()) {
+            //TODO: Allow for changes after the final decision has already been made?
+            reservation.status = approved ? Reservation.Status.APPROVED : Reservation.Status.REJECTED;
+            reservationRepository.save(reservation);
+        }
+
         return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
         }.getType()));
     }

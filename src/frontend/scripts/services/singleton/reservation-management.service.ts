@@ -138,7 +138,7 @@ export class ReservationManagementService {
                 // Check if this group is the one that the user is deciding for.
                 if (this.user.userGroups.some(group => group.id === currentGroup.id)) {
                     organizedReservation.decidingFor = currentGroup;
-                    organizedReservation.alreadyDecidedFor = currentGroup.decision != null;
+                    organizedReservation.existingDecision = currentGroup.decision;
                 }
 
             } while ((currentGroup = currentGroup.parent));

@@ -46,9 +46,7 @@ export class RejectedPageComponent{
                     this.reservationManagementService
                         .getRejectedReservations()
                         .subscribe(reservations => {
-                            reservations.forEach(reservation => {
-                                this.reservations.push(reservation);
-                            });
+                            this.reservations = reservations;
                             this.loaderService.stopLoading();
                         });
                 }

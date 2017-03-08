@@ -62,14 +62,10 @@ export class ConfirmationModalComponent {
     @Input() noButtonColor: string = "default";
 
     /**
-     * Emitted if the user pushes yes.
+     * Emitted when the user makes a decision.
+     * The event will be a boolean; true for "Yes" and false for "No" (aka cancel).
      */
-    @Output() yes = new EventEmitter<void>();
-
-    /**
-     * Emitted if the user pushes no.
-     */
-    @Output() no = new EventEmitter<void>();
+    @Output() decision = new EventEmitter<boolean>();
 
     /**
      * The modal within this component.
@@ -84,19 +80,11 @@ export class ConfirmationModalComponent {
     }
 
     /**
-     * Called when the user clicks yes.
+     * Called when the user clicks yes or no, or the modal is cancelled.
      */
-    protected onYes() {
+    protected onDecision(decisionMade: boolean) {
         this.modal.closeModal();
-        this.yes.emit();
-    }
-
-    /**
-     * Called when the user clicks no.
-     */
-    protected onNo() {
-        this.modal.closeModal();
-        this.no.emit();
+        this.decision.emit(decisionMade);
     }
 
 }
