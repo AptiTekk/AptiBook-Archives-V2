@@ -46,7 +46,6 @@ export class ApprovedPageComponent {
                 if (user) {
                     this.reservationManagementService
                         .getApprovedReservations()
-                        .take(1)
                         .subscribe(reservations => {
                             this.reservations = reservations;
                             this.loaderService.stopLoading();

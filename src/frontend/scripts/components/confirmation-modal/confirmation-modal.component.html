@@ -6,8 +6,7 @@
 
 <modal [title]="title"
 	   (onCancel)="onDecision(false)">
-	<modal-body>
-		{{message}}
+	<modal-body [innerHtml]="message">
 	</modal-body>
 	<modal-footer>
 		<button class="btn btn-{{yesButtonColor}}"

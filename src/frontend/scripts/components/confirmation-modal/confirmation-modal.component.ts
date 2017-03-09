@@ -5,7 +5,7 @@
  */
 
 import {Component, EventEmitter, Input, Output, ViewChild} from '@angular/core';
-import {ModalComponent} from "../modal/modal.component";
+import {ModalComponent, ModalComponentBody} from "../modal/modal.component";
 
 @Component({
     selector: 'confirmation-modal',
