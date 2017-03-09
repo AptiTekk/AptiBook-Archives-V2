@@ -123,7 +123,6 @@ export class ApprovalQueuePageComponent implements OnInit {
     }
 
     protected decisionMade() {
-        this.deselectAll();
         this.reservationManagementService.fetchReservations();
     }
 }

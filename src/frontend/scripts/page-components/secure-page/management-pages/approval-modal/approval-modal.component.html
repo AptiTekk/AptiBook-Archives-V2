@@ -4,9 +4,9 @@
   ~ Proprietary and confidential.
   -->
 
-<modal [title]="'Approve or Reject Reservation'"
+<modal [title]="reservation?.status === 'PENDING' ? 'Approve or Reject Reservation' : 'Reservation Details'"
 	   [size]="'lg'"
-	   (onCancel)="onCancel()">
+	   (onCancel)="onClose()">
 	<modal-body>
 		<alert #dangerAlert
 			   [severity]="'danger'"></alert>
@@ -122,18 +122,20 @@
 	</modal-body>
 	<modal-footer>
 		<button class="btn btn-success"
+				*ngIf="reservation?.status === 'PENDING'"
 				[disabled]="reservation?.existingDecision?.approved"
 				(click)="onApprove()">
 			Approve
 		</button>
 		<button class="btn btn-danger"
+				*ngIf="reservation?.status === 'PENDING'"
 				[disabled]="reservation?.existingDecision?.rejected"
 				(click)="onReject()">
 			Reject
 		</button>
 		<button class="btn btn-default"
-				(click)="onCancel()">
-			Cancel
+				(click)="onClose()">
+			Close
 		</button>
 	</modal-footer>
 </modal>

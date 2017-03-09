@@ -116,4 +116,7 @@
 
 </div>
 
-<approval-modal (cancelled)="deselectAll()" (approved)="decisionMade()" (rejected)="decisionMade()"></approval-modal>
+<approval-modal (closed)="deselectAll()"
+				(approved)="decisionMade()"
+				(rejected)="decisionMade()">
+</approval-modal>

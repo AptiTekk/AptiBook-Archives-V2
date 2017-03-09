@@ -52,9 +52,9 @@ export class ApprovalModalComponent implements OnInit {
     @Output() rejected = new EventEmitter<void>();
 
     /**
-     * Fired when the user cancels all operations and closes the modal.
+     * Fired when the user closes the modal (via the close button or one of the decisions).
      */
-    @Output() cancelled = new EventEmitter<void>();
+    @Output() closed = new EventEmitter<void>();
 
     /**
      * The currently signed in user.
@@ -119,6 +119,7 @@ export class ApprovalModalComponent implements OnInit {
     public close(): void {
         this.modal.closeModal();
         this.behalfOfGroup = null;
+        this.closed.emit();
     }
 
     /**
@@ -268,12 +269,10 @@ export class ApprovalModalComponent implements OnInit {
     }
 
     /**
-     * Called when the user clicks "Cancel" on the modal.
-     * Fires the cancelled emitter.
+     * Called when the user clicks "Close" on the modal.
      */
-    private onCancel(): void {
+    private onClose(): void {
         this.close();
-        this.cancelled.emit();
     }
 
 }
