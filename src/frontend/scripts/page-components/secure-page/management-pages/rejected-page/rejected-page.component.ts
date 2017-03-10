@@ -4,8 +4,8 @@
  * Proprietary and confidential.
  */
 
-import {Component, ViewChild} from '@angular/core';
-import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation.model";
+import {Component, ViewChild} from "@angular/core";
+import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {LoaderService} from "../../../../services/singleton/loader.service";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
@@ -17,7 +17,7 @@ import {DataTableComponent} from "../../../../components/datatable/datatable.com
     templateUrl: 'rejected-page.component.html',
     styleUrls: ['rejected-page.component.css']
 })
-export class RejectedPageComponent{
+export class RejectedPageComponent {
     /**
      * The currently signed in user.
      */

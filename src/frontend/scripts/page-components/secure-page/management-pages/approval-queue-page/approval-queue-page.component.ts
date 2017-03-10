@@ -6,15 +6,12 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
-import {
-    ReservationWithUnorganizedDecisions, Reservation,
-    ReservationWithOrganizedDecisions
-} from "../../../../models/reservation.model";
+import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
-import moment = require("moment");
 import {LoaderService} from "../../../../services/singleton/loader.service";
 import {ApprovalModalComponent} from "../approval-modal/approval-modal.component";
 import {DataTableComponent} from "../../../../components/datatable/datatable.component";
+import moment = require("moment");
 
 @Component({
     selector: 'approval-queue-page',
@@ -59,7 +56,7 @@ export class ApprovalQueuePageComponent implements OnInit {
             .subscribe(user => {
                 this.user = user;
 
-                if(user) {
+                if (user) {
                     this.reservationManagementService
                         .getPendingReservations()
                         .subscribe(reservations => {

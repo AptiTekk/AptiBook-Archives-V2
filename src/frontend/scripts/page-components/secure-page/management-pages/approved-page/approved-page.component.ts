@@ -6,7 +6,7 @@
 
 import {Component, ViewChild} from '@angular/core';
 import {User} from "../../../../models/user.model";
-import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation.model";
+import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {LoaderService} from "../../../../services/singleton/loader.service";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";

@@ -4,8 +4,8 @@
  * Proprietary and confidential.
  */
 
-import {User} from "./user.model";
-import {UserGroup} from "./user-group.model";
+import {User} from "../user.model";
+import {UserGroup} from "../user-group.model";
 import {Reservation} from "./reservation.model";
 
 export interface ReservationDecision {

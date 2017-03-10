@@ -49,42 +49,43 @@
 					<div class="row">
 						<div class="col-xs-12">
 							<p>You are deciding on behalf of the
-								<span style="font-weight: bold">{{reservation?.decidingFor.name}}</span> User Group.</p>
-							<p *ngIf="reservation?.existingDecision"
+								<span style="font-weight: bold">{{reservation?.decidingFor.userGroup.name}}</span> User Group.
+							</p>
+							<p *ngIf="reservation?.decidingFor.decision"
 							   class="warning">Warning: A decision has already been made for your User Group. Deciding again will change that decision!</p>
 							
-							<div *ngFor="let userGroup of reservation?.hierarchy; let i = index">
+							<div *ngFor="let relation of reservation?.decisionHierarchy; let i = index">
 								
 								<!-- Makes sure to only display the root group if the admin user has made a decision. -->
-								<div *ngIf="!(userGroup.root && !userGroup.decision)"
+								<div *ngIf="!(relation.userGroup.root && !relation.decision)"
 									 [style.margin-left]="(16 * i) + 'px'">
 									
 									<span class="fa"
-										  [class.fa-hourglass-half]="!userGroup.decision"
-										  [class.text-primary]="!userGroup.decision"
-										  [class.fa-check-circle]="userGroup.decision?.approved"
-										  [class.text-success]="userGroup.decision?.approved"
-										  [class.fa-times-circle]="userGroup.decision?.rejected"
-										  [class.text-danger]="userGroup.decision?.rejected"></span>
+										  [class.fa-hourglass-half]="!relation.decision"
+										  [class.text-primary]="!relation.decision"
+										  [class.fa-check-circle]="relation.decision?.approved"
+										  [class.text-success]="relation.decision?.approved"
+										  [class.fa-times-circle]="relation.decision?.rejected"
+										  [class.text-danger]="relation.decision?.rejected"></span>
 									
 									<!-- User Group Name -->
-									<span style="font-weight: bold">{{userGroup.name}}</span>
+									<span style="font-weight: bold">{{relation.userGroup.name}}</span>
 									
 									<!-- A Decision has been made; display the name of the user who made the decision. -->
-									<span *ngIf="userGroup.decision">
+									<span *ngIf="relation.decision">
 										User
-										<span style="font-weight: bold">{{userGroup.decision.user.fullName}}</span>
+										<span style="font-weight: bold">{{relation.decision.user.fullName}}</span>
 									</span>
 									has
 									
 									<!-- Display the decision outcome -->
 									<span class="label label-success"
-										  *ngIf="userGroup.decision?.approved">approved</span>
+										  *ngIf="relation.decision?.approved">approved</span>
 									
 									<span class="label label-danger"
-										  *ngIf="userGroup.decision?.rejected">rejected</span>
+										  *ngIf="relation.decision?.rejected">rejected</span>
 									
-									<span *ngIf="!userGroup.decision"
+									<span *ngIf="!relation.decision"
 										  style="font-weight: bold">
 										not yet decided upon
 									</span>
@@ -92,23 +93,23 @@
 									this Reservation.
 									
 									<!-- If Overridden -->
-									<span *ngIf="userGroup.overriddenBy">
+									<span *ngIf="relation.overriddenBy">
 										(<span class="label label-info">Overridden</span>
 										by the decision of
 										
 										<!-- Who decided to override -->
-										<span style="font-weight: bold">{{userGroup.overriddenBy.decision.user.fullName}}</span>
+										<span style="font-weight: bold">{{relation.overriddenBy.decision.user.fullName}}</span>
 										to
 										
 										<!-- What they decided -->
 										<span class="label label-success"
-											  *ngIf="userGroup.overriddenBy.decision.approved">approve</span>
+											  *ngIf="relation.overriddenBy.decision.approved">approve</span>
 										<span class="label label-danger"
-											  *ngIf="userGroup.overriddenBy.decision.rejected">reject</span>
+											  *ngIf="relation.overriddenBy.decision.rejected">reject</span>
 										on behalf of the
 										
 										<!-- Which group they are a part of -->
-										<span style="font-weight: bold">{{userGroup.overriddenBy.name}}</span>
+										<span style="font-weight: bold">{{relation.overriddenBy.userGroup.name}}</span>
 										
 										User Group.)
 									</span>
@@ -123,13 +124,13 @@
 	<modal-footer>
 		<button class="btn btn-success"
 				*ngIf="reservation?.status === 'PENDING'"
-				[disabled]="reservation?.existingDecision?.approved"
+				[disabled]="reservation?.decidingFor.decision?.approved"
 				(click)="onApprove()">
 			Approve
 		</button>
 		<button class="btn btn-danger"
 				*ngIf="reservation?.status === 'PENDING'"
-				[disabled]="reservation?.existingDecision?.rejected"
+				[disabled]="reservation?.decidingFor.decision?.rejected"
 				(click)="onReject()">
 			Reject
 		</button>

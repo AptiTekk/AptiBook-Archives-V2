@@ -4,12 +4,13 @@
  * Proprietary and confidential.
  */
 
-import {Resource} from "./resource.model";
-import {User} from "./user.model";
-import {UserGroup, UserGroupWithDecision} from "./user-group.model";
+import {Resource} from "../resource.model";
+import {User} from "../user.model";
+import {UserGroup} from "../user-group.model";
+import {ReservationDecision} from "./reservation-decision.model";
 import moment = require("moment");
 import Moment = moment.Moment;
-import {ReservationDecision} from "./reservation-decision.model";
+import {DecisionHierarchyRelation} from "./decision-hierarchy-relation.model";
 
 export interface Reservation {
 
@@ -47,18 +48,13 @@ export interface ReservationWithOrganizedDecisions extends Reservation {
     decisions?: ReservationDecision[];
 
     /**
-     * The hierarchy of groups that can decide on the reservation, in sorted order.
+     * The decision hierarchy, with the uppermost group at the beginning of the array.
      */
-    hierarchy?: UserGroupWithDecision[];
+    decisionHierarchy?: DecisionHierarchyRelation[];
 
     /**
-     * The user group that the user is deciding for when making a decision.
+     * The relation that the user is acting as a part of when making a decision.
      */
-    decidingFor?: UserGroup;
-
-    /**
-     * The decision that the user's "decidingFor" group has already made, if one exists.
-     */
-    existingDecision?: ReservationDecision;
+    decidingFor?: DecisionHierarchyRelation;
 
 }

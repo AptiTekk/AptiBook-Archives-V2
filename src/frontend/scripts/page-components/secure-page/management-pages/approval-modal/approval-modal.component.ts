@@ -4,19 +4,17 @@
  * Proprietary and confidential.
  */
 
-import {Component, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
+import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../../../components/modal/modal.component";
 import {User} from "../../../../models/user.model";
-import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation.model";
+import {ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
-import {DatePipe} from "@angular/common";
-import moment = require("moment");
 import {UserGroup} from "../../../../models/user-group.model";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
 import {AlertComponent} from "../../../../components/alert/alert.component";
 import {ConfirmationModalComponent} from "../../../../components/index";
-import {Observable} from "rxjs";
+import moment = require("moment");
 
 @Component({
     selector: 'approval-modal',
@@ -132,7 +130,7 @@ export class ApprovalModalComponent implements OnInit {
     private onApprove(skipExistingDecisionCheck: boolean = false, skipOverridingDecisionCheck: boolean = false): void {
 
         // Check if we are changing the decision.
-        if (!skipExistingDecisionCheck && this.reservation.existingDecision) {
+        if (!skipExistingDecisionCheck && this.reservation.decidingFor.decision) {
             this.changeConfirmationModal.open();
 
             this.changeConfirmationModal
@@ -148,26 +146,26 @@ export class ApprovalModalComponent implements OnInit {
 
         // Check if we are overriding another decision
         else if (!skipOverridingDecisionCheck) {
-            let overridingGroup: UserGroup;
+            let willOverride: boolean = false;
 
             // Search for the group we are deciding for in the hierarchy,
             // then check if any group below will be overridden.
 
-            // If a group below ours is already overriding another,
+            // If a group below ours is already overridden,
             // then we don't need to warn about any groups below them.
             let foundDecidingForGroup: boolean = false;
-            for (let group of this.reservation.hierarchy) {
+            for (let relation of this.reservation.decisionHierarchy) {
                 if (foundDecidingForGroup) {
-                    if (group.overriddenBy)
+                    if (relation.overriddenBy)
                         break;
-                    if (group.decision == null || group.decision.rejected)
-                        overridingGroup = group;
-                } else if (group.id === this.reservation.decidingFor.id) {
+                    if (relation.decision == null || relation.decision.rejected)
+                        willOverride = true;
+                } else if (relation === this.reservation.decidingFor) {
                     foundDecidingForGroup = true;
                 }
             }
 
-            if (overridingGroup) {
+            if (willOverride) {
                 this.overrideConfirmationModal.open();
 
                 this.overrideConfirmationModal
@@ -205,7 +203,7 @@ export class ApprovalModalComponent implements OnInit {
     private onReject(skipExistingDecisionCheck: boolean = false, skipOverridingDecisionCheck: boolean = false): void {
 
         // Check if we are changing the decision.
-        if (!skipExistingDecisionCheck && this.reservation.existingDecision) {
+        if (!skipExistingDecisionCheck && this.reservation.decidingFor.decision) {
             this.changeConfirmationModal.open();
 
             this.changeConfirmationModal
@@ -221,26 +219,26 @@ export class ApprovalModalComponent implements OnInit {
 
         // Check if we are overriding another decision
         else if (!skipOverridingDecisionCheck) {
-            let overridingGroup: UserGroup;
+            let willOverride: boolean = false;
 
             // Search for the group we are deciding for in the hierarchy,
             // then check if any group below will be overridden.
 
-            // If a group below ours is already overriding another,
+            // If a group below ours is already overridden,
             // then we don't need to warn about any groups below them.
             let foundDecidingForGroup: boolean = false;
-            for (let group of this.reservation.hierarchy) {
+            for (let relation of this.reservation.decisionHierarchy) {
                 if (foundDecidingForGroup) {
-                    if (group.overriddenBy)
+                    if (relation.overriddenBy)
                         break;
-                    if (group.decision == null || group.decision.approved)
-                        overridingGroup = group;
-                } else if (group.id === this.reservation.decidingFor.id) {
+                    if (relation.decision == null || relation.decision.approved)
+                        willOverride = true;
+                } else if (relation === this.reservation.decidingFor) {
                     foundDecidingForGroup = true;
                 }
             }
 
-            if (overridingGroup) {
+            if (willOverride) {
                 this.overrideConfirmationModal.open();
 
                 this.overrideConfirmationModal
