@@ -6,7 +6,8 @@
 
 <modal [title]="title"
 	   (onCancel)="onDecision(false)">
-	<modal-body [innerHtml]="message">
+	<modal-body>
+		<ng-content></ng-content>
 	</modal-body>
 	<modal-footer>
 		<button class="btn btn-{{yesButtonColor}}"

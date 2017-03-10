@@ -51,8 +51,6 @@
 							<p>You are deciding on behalf of the
 								<span style="font-weight: bold">{{reservation?.decidingFor.userGroup.name}}</span> User Group.
 							</p>
-							<p *ngIf="reservation?.decidingFor.decision"
-							   class="warning">Warning: A decision has already been made for your User Group. Deciding again will change that decision!</p>
 							
 							<div *ngFor="let relation of reservation?.decisionHierarchy; let i = index">
 								
@@ -142,10 +140,16 @@
 </modal>
 
 <confirmation-modal #overrideConfirmationModal
-					[title]="'Overriding Decision'"
-					[message]="'<b>Warning:</b> This action will override another group\'s decision. Would you like to continue?'">
+					[title]="'Overriding Decision'">
+	<alert [severity]="'warning'"
+		   [displayed]="true">
+		<b>Warning:</b> This action will override another group's decision. Would you like to continue?
+	</alert>
 </confirmation-modal>
 <confirmation-modal #changeConfirmationModal
-					[title]="'Changing Decision'"
-					[message]="'<b>Warning:</b> This action will change your group\'s existing decision. Would you like to continue?'">
+					[title]="'Changing Decision'">
+	<alert [severity]="'warning'"
+		   [displayed]="true">
+		<b>Warning:</b> This action will change your group's existing decision. Would you like to continue?
+	</alert>
 </confirmation-modal>

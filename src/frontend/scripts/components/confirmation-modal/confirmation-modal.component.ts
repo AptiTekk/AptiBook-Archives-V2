@@ -20,12 +20,6 @@ export class ConfirmationModalComponent {
     @Input() title: string = "Confirmation";
 
     /**
-     * Determines the message in the modal. Supports HTML.
-     * Defaults to "Are you sure you'd like to do this?"
-     */
-    @Input() message: string = "Are you sure you'd like to do this?";
-
-    /**
      * The text to put inside the "Yes" button.
      * Defaults to "Yes".
      */
