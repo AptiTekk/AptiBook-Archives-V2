@@ -5,7 +5,7 @@
  */
 
 import {User} from "./user.model";
-import {ReservationDecision} from "./reservation-decision.model";
+import {ReservationDecision} from "./reservation/reservation-decision.model";
 import {Resource} from "./resource.model";
 
 export interface UserGroup {
@@ -23,13 +23,5 @@ export interface UserGroup {
     parent?: UserGroup;
 
     children?: UserGroup[];
-
-}
-
-export interface UserGroupWithDecision extends UserGroup {
-
-    decision?: ReservationDecision;
-
-    overriddenBy?: UserGroupWithDecision;
 
 }

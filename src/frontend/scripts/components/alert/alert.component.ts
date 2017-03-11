@@ -80,9 +80,6 @@ export class AlertComponent {
     }
 
     isDisplayed(): boolean {
-        if (!this.message)
-            return false;
-
         return this.displayed || this.timerRunning;
     }
 

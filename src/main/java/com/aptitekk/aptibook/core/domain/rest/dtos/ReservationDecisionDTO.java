@@ -24,6 +24,8 @@ public class ReservationDecisionDTO {
 
     public boolean approved;
 
+    public boolean rejected;
+
     public String comment;
 
     @JsonIgnoreProperties("reservation")

@@ -5,7 +5,7 @@
  */
 
 import {Component, ViewChild} from "@angular/core";
-import {Reservation} from "../../models/reservation.model";
+import {Reservation} from "../../models/reservation/reservation.model";
 import {ModalComponent} from "../modal/modal.component";
 import {APIService} from "../../services/singleton/api.service";
 import moment = require("moment");

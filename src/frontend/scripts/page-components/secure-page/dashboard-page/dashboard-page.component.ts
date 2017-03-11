@@ -5,7 +5,7 @@
  */
 
 import {Component, trigger, state, style, transition, animate, ViewChild, OnInit, AfterViewInit} from "@angular/core";
-import {Reservation} from "../../../models/reservation.model";
+import {Reservation} from "../../../models/reservation/reservation.model";
 import {APIService} from "../../../services/singleton/api.service";
 import {ReservationInfoModalComponent} from "../../../components/reservation-info-modal/reservation-info-modal.component";
 import {AuthService} from "../../../services/singleton/auth.service";

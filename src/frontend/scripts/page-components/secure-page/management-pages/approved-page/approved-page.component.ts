@@ -4,12 +4,14 @@
  * Proprietary and confidential.
  */
 
-import {Component} from '@angular/core';
+import {Component, ViewChild} from '@angular/core';
 import {User} from "../../../../models/user.model";
-import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation.model";
+import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {LoaderService} from "../../../../services/singleton/loader.service";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
+import {ApprovalModalComponent} from "../approval-modal/approval-modal.component";
+import {DataTableComponent} from "../../../../components/datatable/datatable.component";
 
 @Component({
     selector: 'approved-page',
@@ -20,17 +22,27 @@ export class ApprovedPageComponent {
     /**
      * The currently signed in user.
      */
-    user: User;
+    protected user: User;
 
     /**
      * An array containing the approved reservations.
      */
-    reservations: Reservation[] = [];
+    protected reservations: Reservation[] = [];
 
     /**
      * The selected reservation.
      */
     protected selectedReservation: ReservationWithOrganizedDecisions;
+
+    /**
+     * The modal for viewing reservation details
+     */
+    @ViewChild(ApprovalModalComponent) protected approvalModal: ApprovalModalComponent;
+
+    /**
+     * The datatable containing the information about the reservations.
+     */
+    @ViewChild(DataTableComponent) protected dataTable: DataTableComponent;
 
     constructor(private reservationManagementService: ReservationManagementService,
                 private loaderService: LoaderService,
@@ -46,7 +58,6 @@ export class ApprovedPageComponent {
                 if (user) {
                     this.reservationManagementService
                         .getApprovedReservations()
-                        .take(1)
                         .subscribe(reservations => {
                             this.reservations = reservations;
                             this.loaderService.stopLoading();
@@ -59,18 +70,24 @@ export class ApprovedPageComponent {
      * Fired when a reservation is clicked in the datatable.
      * @param reservation The clicked reservation.
      */
-    onReservationSelected(reservation: Reservation) {
+    protected onReservationSelected(reservation: Reservation) {
         // The reservation is considered unorganized if it does not have a hierarchy.
         if (!reservation['hierarchy']) {
             this.reservationManagementService.organizeReservation(reservation);
         }
         this.selectedReservation = reservation;
+
+        this.approvalModal.open(reservation);
     }
 
     /**
      * Fired when the reservation that was selected in the datatable is deselected.
      */
-    onReservationDeselected() {
+    protected onReservationDeselected() {
         this.selectedReservation = null;
+    }
+
+    protected deselectAll(): void {
+        this.dataTable.deselectRows();
     }
 }

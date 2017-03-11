@@ -7,10 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
-import com.aptitekk.aptibook.core.domain.repositories.ReservationDecisionRepository;
-import com.aptitekk.aptibook.core.domain.repositories.ReservationRepository;
-import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
-import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationWithDecisionsDTO;
@@ -36,15 +33,23 @@ public class ReservationController extends APIControllerAbstract {
     private final ResourceRepository resourceRepository;
     private final UserRepository userRepository;
     private final ReservationService reservationService;
+    private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
     private final ReservationDecisionRepository reservationDecisionRepository;
 
     @Autowired
-    public ReservationController(ReservationRepository reservationRepository, UserRepository userRepository, ResourceRepository resourceRepository, ReservationService reservationService, UserGroupService userGroupService, ReservationDecisionRepository reservationDecisionRepository) {
+    public ReservationController(ReservationRepository reservationRepository,
+                                 UserRepository userRepository,
+                                 ResourceRepository resourceRepository,
+                                 ReservationService reservationService,
+                                 UserGroupRepository userGroupRepository,
+                                 UserGroupService userGroupService,
+                                 ReservationDecisionRepository reservationDecisionRepository) {
         this.reservationRepository = reservationRepository;
         this.resourceRepository = resourceRepository;
         this.userRepository = userRepository;
         this.reservationService = reservationService;
+        this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.reservationDecisionRepository = reservationDecisionRepository;
     }
@@ -157,7 +162,7 @@ public class ReservationController extends APIControllerAbstract {
 
         Reservation reservation = reservationRepository.find(id);
         if (reservation == null)
-            return badRequest("Reservation not found.");
+            return notFound("Reservation not found.");
 
         User currentUser = authService.getCurrentUser();
 
@@ -172,13 +177,30 @@ public class ReservationController extends APIControllerAbstract {
         if (decidingFor == null)
             return noPermission("You are not allowed to decide upon this Reservation.");
 
+        // Remove the existing decisions.
+        List<ReservationDecision> decisionsToRemove = reservationDecisionRepository.getUserGroupDecisionsByReservation(decidingFor, reservation);
+        for (ReservationDecision decision : decisionsToRemove) {
+            reservationDecisionRepository.delete(decision);
+        }
+
+        // Create a new decision.
         ReservationDecision reservationDecision = new ReservationDecision();
         reservationDecision.user = authService.getCurrentUser();
         reservationDecision.approved = approved;
         reservationDecision.reservation = reservation;
         reservationDecision.userGroup = decidingFor;
 
+        // Save the new decision.
         reservationDecision = reservationDecisionRepository.save(reservationDecision);
+
+        // If this group is at the top of the hierarchy,
+        // then we have made a final decision on the reservation.
+        if (decidingFor.isRoot() || decidingFor.getParent().isRoot()) {
+            //TODO: Allow for changes after the final decision has already been made?
+            reservation.status = approved ? Reservation.Status.APPROVED : Reservation.Status.REJECTED;
+            reservationRepository.save(reservation);
+        }
+
         return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
         }.getType()));
     }

@@ -5,7 +5,7 @@
  */
 
 import {Component, ViewChild} from "@angular/core";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RegistrationService} from "../../../services/singleton/registration.service";
 import {User} from "../../../models/user.model";
@@ -38,7 +38,6 @@ export class RegisterComponent {
         });
 
     }
-
 
     ngAfterViewInit(): void {
         //Check for errors in the parameters

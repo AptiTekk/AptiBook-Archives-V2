@@ -14,8 +14,7 @@
 		<div class="col-xs-12">
 			<h3>Rejected Reservations</h3>
 			<hr/>
-			<datatable #userTable
-					   [selectableRows]="true"
+			<datatable [selectableRows]="true"
 					   (rowSelected)="onReservationSelected(reservations[$event])"
 					   (rowDeselected)="onReservationDeselected()">
 				<datatable-column [orderable]="false"
@@ -28,6 +27,11 @@
 							  [class.text-success]="reservation.approved"
 							  [class.fa-times-circle]="reservation.rejected"
 							  [class.text-danger]="reservation.rejected"></span>
+					</datatable-cell>
+				</datatable-column>
+				<datatable-column [title]="'Requested Resource'">
+					<datatable-cell *ngFor="let reservation of reservations">
+						{{reservation.resource.name}}
 					</datatable-cell>
 				</datatable-column>
 				<datatable-column [title]="'Requested On'">
@@ -59,3 +63,6 @@
 		</div>
 	</div>
 </div>
+
+<approval-modal (closed)="deselectAll()">
+</approval-modal>
