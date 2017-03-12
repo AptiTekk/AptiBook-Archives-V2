@@ -21,3 +21,4 @@ npm-debug.log*
 Test Results*.html
 /tmp/
 /.idea/typescript-compiler.xml
+/.awcache/

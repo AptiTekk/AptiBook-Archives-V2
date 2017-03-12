@@ -16,7 +16,6 @@ import {
     ViewChild
 } from "@angular/core";
 import {DataTableColumnComponent} from "./datatable-column/datatable-column.component";
-import DataTable = DataTables.DataTable;
 
 @Component({
     selector: 'datatable',
@@ -44,7 +43,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
         this.initDataTable();
 
         // Set up Event Listeners
-        this.datatable.on('select', (e, dt: DataTable, type, indexes) => {
+        this.datatable.on('select', (e, dt, type, indexes) => {
             this.selectedRow = -1;
             if (type === 'row') {
                 this.selectedRow = indexes[0];
@@ -52,7 +51,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
             }
         });
 
-        this.datatable.on('deselect', (e, dt: DataTable, type, indexes) => {
+        this.datatable.on('deselect', (e, dt, type, indexes) => {
             this.selectedRow = -1;
             if (type === 'row') {
                 this.rowDeselected.emit(indexes[0]);

@@ -112,7 +112,7 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
             this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.add("col-xs-12");
         }
 
-        this.dateTimePicker.on("dp.change", e => {
+        this.dateTimePicker.on("dp.change", (e: any) => {
             let newDate: Moment = e.date;
 
             if (this.ensureDateIsAfterMinDate())
