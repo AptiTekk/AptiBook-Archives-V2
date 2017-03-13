@@ -11,6 +11,7 @@ import {RegistrationService} from "../../../services/singleton/registration.serv
 import {User} from "../../../models/user.model";
 import {AlertComponent} from "../../../components/alert/alert.component";
 import {LoaderService} from "../../../services/singleton/loader.service";
+import {APIService} from "../../../services/singleton/api.service";
 
 @Component({
     selector: 'register',
@@ -21,13 +22,21 @@ export class RegisterComponent {
     @ViewChild('registerAlert')
     registerAlert: AlertComponent;
 
+    allowedDomains: string[] = [];
     formGroup: FormGroup;
 
     constructor(formBuilder: FormBuilder,
+                private apiService: APIService,
                 private router: Router,
                 private activeRoute: ActivatedRoute,
                 private registrationService: RegistrationService,
                 private loaderService: LoaderService) {
+
+        this.apiService.get("properties/allowedDomains").subscribe(
+            response => {
+                this.allowedDomains = response.propertyValue.split(',');
+            }
+        );
 
         this.formGroup = formBuilder.group({
             emailAddress: [null, Validators.compose([Validators.required, Validators.maxLength(100), Validators.pattern("[^<>;=]*")])],
@@ -70,6 +79,19 @@ export class RegisterComponent {
                 this.loaderService.stopLoading();
             }
         );
+    }
+
+    allowedDomain(): boolean{
+        if (this.formGroup.controls['emailAddress'].pristine)
+            return true;
+        let email = this.formGroup.controls['emailAddress'].value;
+        let found = false;
+            this.allowedDomains.forEach(domain =>{
+                if(~email.indexOf(domain)){
+                    found = true;
+                }
+            });
+        return found;
     }
 
     doPasswordsMatch(): boolean {
