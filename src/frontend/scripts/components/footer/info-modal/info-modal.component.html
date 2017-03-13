@@ -4,9 +4,21 @@
   ~ Proprietary and confidential.
   -->
 
-<modal #modal [cancelButtonLabel]="Close" [title]="'AptiBook Information'">
-<modal-body>
-    <h4>AptiBook Version:</h4>
-    {{aptiBookVersion}}
-</modal-body>
+<modal #modal
+	   [cancelButtonLabel]="Close"
+	   [title]="'AptiBook Information'">
+	<modal-body>
+		<h4>Version</h4>
+		{{aptiBookVersion}}
+		
+		<hr/>
+		
+		<h4>Attributions</h4>
+		<accordion>
+			<accordion-item *ngFor="let attribution of attributions"
+							[title]="attribution.name">
+				<pre class="attribution-license">{{attribution.license}}</pre>
+			</accordion-item>
+		</accordion>
+	</modal-body>
 </modal>

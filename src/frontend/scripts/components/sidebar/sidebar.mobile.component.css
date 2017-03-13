@@ -32,16 +32,16 @@
         display: none;
     }
 
-    :host /deep/ #sidebar.closed #content accordian-navigation .navigation-block-label,
-    :host /deep/ #sidebar.closed #content accordian-navigation .navigation-block-caret {
+    :host /deep/ #sidebar.closed #content accordion-navigation .navigation-block-label,
+    :host /deep/ #sidebar.closed #content accordion-navigation .navigation-block-caret {
         display: none;
     }
 
-    :host /deep/ #content accordian-navigation .navigation-block {
+    :host /deep/ #content accordion-navigation .navigation-block {
         white-space: nowrap;
     }
 
-    :host /deep/ #sidebar.closed #content accordian-navigation .navigation-block {
+    :host /deep/ #sidebar.closed #content accordion-navigation .navigation-block {
         padding-right: 0;
     }
 

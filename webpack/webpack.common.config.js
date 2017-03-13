@@ -48,6 +48,14 @@ var config = {
                 exclude: [/\.(component|page)\.css$/]
             },
             {
+                test: /\.xml$/,
+                use: "xml-loader"
+            },
+            {
+                test: /\.yaml/,
+                use: ["json-loader", "yaml-loader"]
+            },
+            {
                 test: /\.(png|jpg|gif|svg)(\?v=[\d\.]+)?$/,
                 use: "file-loader?name=./resources/images/[hash].[ext]"
             },
