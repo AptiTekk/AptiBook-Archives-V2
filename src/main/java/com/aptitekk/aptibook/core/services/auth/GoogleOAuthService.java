@@ -6,8 +6,10 @@
 
 package com.aptitekk.aptibook.core.services.auth;
 
+import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.oauth.GoogleUserInfo;
 import com.aptitekk.aptibook.core.services.LogService;
@@ -37,12 +39,14 @@ public class GoogleOAuthService {
     private final UserRepository userRepository;
     private final HttpServletRequest httpServletRequest;
     private final LogService logService;
+    private final PropertiesRepository propertiesRepository;
 
     @Autowired
-    public GoogleOAuthService(UserRepository userRepository, HttpServletRequest httpServletRequest, LogService logService) {
+    public GoogleOAuthService(UserRepository userRepository, HttpServletRequest httpServletRequest, LogService logService, PropertiesRepository propertiesRepository) {
         this.userRepository = userRepository;
         this.httpServletRequest = httpServletRequest;
         this.logService = logService;
+        this.propertiesRepository = propertiesRepository;
     }
 
     public String getSignInUrl(Tenant tenant) {
@@ -70,31 +74,41 @@ public class GoogleOAuthService {
 
             if (googleUserInfo != null) {
 
-                //Find user from google email.
-                User user = userRepository.findByEmailAddress(googleUserInfo.getEmailAddress(), tenant);
+                Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf("GOOGLE_SIGN_IN_WHITELIST"));
+                System.out.println("value: " + property.getDefaultValue());
+                String[] allowedDomains = property.propertyValue.split(",");
+                for(String domain : allowedDomains){
+                    if(googleUserInfo.getEmailAddress().contains(domain)){
+                        System.out.println("found match: " +googleUserInfo.getEmailAddress() + "domain: " + domain);
+                        //Find user from google email.
+                        User user = userRepository.findByEmailAddress(googleUserInfo.getEmailAddress(), tenant);
 
-                //User does not yet exist
-                if (user == null) {
+                        //User does not yet exist
+                        if (user == null) {
 
-                    //Create user
-                    user = new User();
-                    user.tenant = tenant;
-                    user.setEmailAddress(googleUserInfo.getEmailAddress());
-                    user.firstName = googleUserInfo.getFirstName();
-                    user.lastName = googleUserInfo.getLastName();
-                    user.verified = true;
-                    user.userState = User.State.APPROVED;
-                    user = userRepository.save(user);
+                            //Create user
+                            user = new User();
+                            user.tenant = tenant;
+                            user.setEmailAddress(googleUserInfo.getEmailAddress());
+                            user.firstName = googleUserInfo.getFirstName();
+                            user.lastName = googleUserInfo.getLastName();
+                            user.verified = true;
+                            user.userState = User.State.APPROVED;
+                            user = userRepository.save(user);
+                        }
+
+                        //Revoke the token, we are done with it.
+                        request = new OAuthRequest(Verb.GET, GOOGLE_REVOKE_URL, googleOAuthService);
+                        request.addQuerystringParameter("token", accessToken.getAccessToken());
+                        response = request.send();
+                        if (!response.isSuccessful())
+                            logService.logError(getClass(), "Could not revoke access token: " + response.getMessage());
+
+                        return user;
+                    }
                 }
+                return null;
 
-                //Revoke the token, we are done with it.
-                request = new OAuthRequest(Verb.GET, GOOGLE_REVOKE_URL, googleOAuthService);
-                request.addQuerystringParameter("token", accessToken.getAccessToken());
-                response = request.send();
-                if (!response.isSuccessful())
-                    logService.logError(getClass(), "Could not revoke access token: " + response.getMessage());
-
-                return user;
             }
         } catch (Exception e) {
             logService.logException(getClass(), e, "Could not parse code");

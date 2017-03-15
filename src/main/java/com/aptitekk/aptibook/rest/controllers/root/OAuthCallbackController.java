@@ -63,6 +63,11 @@ public class OAuthCallbackController {
                             User user = googleOAuthService.getUserFromCode(tenant, code);
                             if (user != null) {
                                 authService.setUserOfTenant(user, tenant, httpServletResponse);
+                            }else{
+                                //redirect to error page
+                                System.out.println("User is null");
+                                redirectToTenantWithError(httpServletResponse, tenantSlug, error);
+                                return;
                             }
                         }
                     }
