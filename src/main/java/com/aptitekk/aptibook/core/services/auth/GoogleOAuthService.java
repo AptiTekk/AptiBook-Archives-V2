@@ -74,16 +74,21 @@ public class GoogleOAuthService {
 
             if (googleUserInfo != null) {
 
-                Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf("GOOGLE_SIGN_IN_WHITELIST"));
-                System.out.println("value: " + property.getDefaultValue());
+                Property property = propertiesRepository.findPropertyByKey(Property.Key.GOOGLE_SIGN_IN_WHITELIST, tenant);
+                System.out.println("value: " + property.propertyValue);
                 String[] allowedDomains = property.propertyValue.split(",");
-                for(String domain : allowedDomains){
-                    if(googleUserInfo.getEmailAddress().contains(domain)){
-                        System.out.println("found match: " +googleUserInfo.getEmailAddress() + "domain: " + domain);
+                boolean foundMatch = false;
+                for (String domain : allowedDomains) {
+                    if (googleUserInfo.getEmailAddress().contains(domain)) {
+                        System.out.println("found match: " + googleUserInfo.getEmailAddress() + "domain: " + domain);
                         //Find user from google email.
-                        User user = userRepository.findByEmailAddress(googleUserInfo.getEmailAddress(), tenant);
+                        foundMatch = true;
 
+                    }
+                }
+                    if (foundMatch) {
                         //User does not yet exist
+                        User user = userRepository.findByEmailAddress(googleUserInfo.getEmailAddress(), tenant);
                         if (user == null) {
 
                             //Create user
@@ -103,10 +108,9 @@ public class GoogleOAuthService {
                         response = request.send();
                         if (!response.isSuccessful())
                             logService.logError(getClass(), "Could not revoke access token: " + response.getMessage());
-
+                        foundMatch = false;
                         return user;
                     }
-                }
                 return null;
 
             }
