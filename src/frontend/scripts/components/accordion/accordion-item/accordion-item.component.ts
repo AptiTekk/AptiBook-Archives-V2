@@ -13,8 +13,8 @@ import {AccordionComponent} from "../accordion.component";
     styleUrls: ['accordion-item.component.css'],
     animations: [
         trigger('activated', [
-            state('true', style({opacity: 1})),
-            state('false', style({opacity: 0, margin: 0, height: 0})),
+            state('true', style({opacity: 1, height: '*'})),
+            state('false', style({opacity: 0, height: 0, "pointer-events": "none"})),
             transition('1 => 0', animate('200ms')),
             transition('0 => 1', animate('200ms'))
         ])

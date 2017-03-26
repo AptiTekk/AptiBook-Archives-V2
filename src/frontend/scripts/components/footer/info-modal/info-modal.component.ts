@@ -18,12 +18,9 @@ export class InfoModalComponent {
     modal: ModalComponent;
 
     aptiBookVersion: string = "@project.version@";
-    attributions: [{ name: string, license: string }] = require('../../../../resources/attributions.yaml');
 
     openModal() {
         this.modal.openModal();
-
-        console.log(this.attributions);
     }
 
 }

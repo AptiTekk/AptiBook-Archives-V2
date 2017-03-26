@@ -12,3 +12,7 @@
     color: inherit !important;
     cursor: pointer;
 }
+
+.panel-collapse {
+    overflow-y: hidden;
+}
