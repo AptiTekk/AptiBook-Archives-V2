@@ -5,7 +5,7 @@
  */
 
 import {Component} from "@angular/core";
-import {LoaderService} from "../../services/singleton/loader.service";
+import {LoaderService} from "../../core/services/loader.service";
 
 @Component({
     selector: 'loader',

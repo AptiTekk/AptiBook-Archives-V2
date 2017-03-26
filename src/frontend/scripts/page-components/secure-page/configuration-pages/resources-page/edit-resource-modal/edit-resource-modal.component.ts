@@ -6,11 +6,11 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
-import {ResourceService} from "../../../../../services/singleton/resource.service";
-import {APIService} from "../../../../../services/singleton/api.service";
+import {UserGroupService} from "../../../../../core/services/usergroup.service";
+import {ResourceService} from "../../../../../core/services/resource.service";
+import {APIService} from "../../../../../core/services/api.service";
 import {Resource} from "../../../../../models/resource.model";
-import {LoaderService} from "../../../../../services/singleton/loader.service";
+import {LoaderService} from "../../../../../core/services/loader.service";
 import {ResourceImageComponent} from "../../../../../components/resource-image/resource-image.component";
 import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
 import {ResourceCategory} from "../../../../../models/resource-category.model";

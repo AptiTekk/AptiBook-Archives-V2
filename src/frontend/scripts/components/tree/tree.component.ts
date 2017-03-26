@@ -8,7 +8,7 @@ import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from "@angul
 import {UserGroup} from "../../models/user-group.model";
 import {TreeNodeComponent} from "./tree-node/tree-node.component";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
-import {UserGroupService} from "../../services/singleton/usergroup.service";
+import {UserGroupService} from "../../core/services/usergroup.service";
 import * as Collections from "typescript-collections";
 
 @Component({

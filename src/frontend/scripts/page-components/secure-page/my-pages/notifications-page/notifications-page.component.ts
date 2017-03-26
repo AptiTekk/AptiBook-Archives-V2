@@ -6,8 +6,8 @@
 
 import {Component} from "@angular/core";
 import {Notification} from "../../../../models/notification.model";
-import {AuthService} from "../../../../services/singleton/auth.service";
-import {NotificationService} from "../../../../services/singleton/notification.service";
+import {AuthService} from "../../../../core/services/auth.service";
+import {NotificationService} from "../../../../core/services/notification.service";
 import * as moment from "moment";
 import Moment = moment.Moment;
 @Component({

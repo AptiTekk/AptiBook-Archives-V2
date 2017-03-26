@@ -6,14 +6,14 @@
 
 import {Component} from "@angular/core";
 import {Resource} from "../../../../models/resource.model";
-import {ReservationDetailsService} from "../../../../services/singleton/reservation-details.service";
-import {SearchService} from "../../../../services/singleton/search.service";
+import {ReservationDetailsService} from "../../../../core/services/reservation-details.service";
+import {SearchService} from "../../../../core/services/search.service";
 import {User} from "../../../../models/user.model";
-import {AuthService} from "../../../../services/singleton/auth.service";
+import {AuthService} from "../../../../core/services/auth.service";
 import {Reservation} from "../../../../models/reservation/reservation.model";
-import {ReservationService} from "../../../../services/singleton/reservation.service";
+import {ReservationService} from "../../../../core/services/reservation.service";
 import {Router} from "@angular/router";
-import {APIService} from "../../../../services/singleton/api.service";
+import {APIService} from "../../../../core/services/api.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import Moment = moment.Moment;
 import moment = require("moment");

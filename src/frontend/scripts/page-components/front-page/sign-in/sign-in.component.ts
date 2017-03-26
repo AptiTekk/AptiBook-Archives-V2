@@ -6,11 +6,11 @@
 
 import {AfterViewInit, Component, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
-import {OAuthService} from "../../../services/stateful/oauth.service";
-import {AuthService} from "../../../services/singleton/auth.service";
+import {OAuthService} from "../../../core/services/oauth.service";
+import {AuthService} from "../../../core/services/auth.service";
 import {AlertComponent} from "../../../components/alert/alert.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {LoaderService} from "../../../services/singleton/loader.service";
+import {LoaderService} from "../../../core/services/loader.service";
 
 @Component({
     selector: 'sign-in',

@@ -6,9 +6,9 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ModalComponent} from "../../../../../../components/modal/modal.component";
-import {LoaderService} from "../../../../../../services/singleton/loader.service";
+import {LoaderService} from "../../../../../../core/services/loader.service";
 import {UniquenessValidator} from "../../../../../../validators/uniqueness.validator";
-import {UserGroupService} from "../../../../../../services/singleton/usergroup.service";
+import {UserGroupService} from "../../../../../../core/services/usergroup.service";
 import {UserGroup} from "../../../../../../models/user-group.model";
 
 @Component({

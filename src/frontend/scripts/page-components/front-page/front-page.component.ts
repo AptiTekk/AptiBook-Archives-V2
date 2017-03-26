@@ -5,15 +5,14 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {TenantService} from "../../services/singleton/tenant.service";
-import {OAuthService} from "../../services/stateful/oauth.service";
+import {TenantService} from "../../core/services/tenant.service";
+import {OAuthService} from "../../core/services/oauth.service";
 import {Tenant} from "../../models/tenant.model";
 
 @Component({
     selector: 'front-page',
     templateUrl: 'front-page.component.html',
-    styleUrls: ['front-page.component.css'],
-    providers: [OAuthService]
+    styleUrls: ['front-page.component.css']
 })
 export class FrontPageComponent implements OnInit {
 

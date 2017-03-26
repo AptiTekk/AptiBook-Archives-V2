@@ -8,7 +8,7 @@ import {
     Component, Directive, ElementRef, forwardRef, Input, OnChanges, OnInit, AfterViewInit, QueryList, SimpleChanges, ViewChild,
     ViewChildren
 } from "@angular/core";
-import {PropertiesService} from "../../../../services/singleton/properties-service";
+import {PropertiesService} from "../../../../core/services/properties-service";
 import {Property} from "../../../../models/property.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {AlertComponent} from "../../../../components/alert/alert.component";

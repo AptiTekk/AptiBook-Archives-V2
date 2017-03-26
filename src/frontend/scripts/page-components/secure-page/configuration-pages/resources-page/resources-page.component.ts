@@ -5,14 +5,14 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {ResourceCategoryService} from "../../../../services/singleton/resource-category.service";
+import {ResourceCategoryService} from "../../../../core/services/resource-category.service";
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import {ActivatedRoute, Router} from "@angular/router";
-import {APIService} from "../../../../services/singleton/api.service";
+import {APIService} from "../../../../core/services/api.service";
 import {Resource} from "../../../../models/resource.model";
-import {ResourceService} from "../../../../services/singleton/resource.service";
+import {ResourceService} from "../../../../core/services/resource.service";
 import {UserGroup} from "../../../../models/user-group.model";
-import {UserGroupService} from "../../../../services/singleton/usergroup.service";
+import {UserGroupService} from "../../../../core/services/usergroup.service";
 
 @Component({
     selector: 'resources-page',

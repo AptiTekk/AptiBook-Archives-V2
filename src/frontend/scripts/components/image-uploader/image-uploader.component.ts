@@ -8,7 +8,7 @@ import {Component, ViewChild, ElementRef, Input, OnInit} from "@angular/core";
 import {FileItem} from "ng2-file-upload/file-upload/file-item.class";
 import {FileUploader, FileUploaderOptions} from "ng2-file-upload";
 import {Observable} from "rxjs";
-import {APIService} from "../../services/singleton/api.service";
+import {APIService} from "../../core/services/api.service";
 
 @Component({
     selector: 'image-uploader',

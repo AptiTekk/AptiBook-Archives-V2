@@ -6,11 +6,11 @@
 
 import {Component, trigger, state, style, transition, animate, ViewChild, OnInit, AfterViewInit} from "@angular/core";
 import {Reservation} from "../../../models/reservation/reservation.model";
-import {APIService} from "../../../services/singleton/api.service";
+import {APIService} from "../../../core/services/api.service";
 import {ReservationInfoModalComponent} from "../../../components/reservation-info-modal/reservation-info-modal.component";
-import {AuthService} from "../../../services/singleton/auth.service";
+import {AuthService} from "../../../core/services/auth.service";
 import {User} from "../../../models/user.model";
-import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
+import {ResourceCategoryService} from "../../../core/services/resource-category.service";
 import {ResourceCategory} from "../../../models/resource-category.model";
 import {ActivatedRoute, UrlSegment} from "@angular/router";
 import {CalendarComponent} from "../../../components/calendar/calendar.component";

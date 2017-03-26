@@ -4,15 +4,15 @@
  * Proprietary and confidential.
  */
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {UserGroupService} from "../../../../services/singleton/usergroup.service";
+import {UserGroupService} from "../../../../core/services/usergroup.service";
 import {UserGroup} from "../../../../models/user-group.model";
-import {ResourceCategoryService} from "../../../../services/singleton/resource-category.service";
+import {ResourceCategoryService} from "../../../../core/services/resource-category.service";
 import {ReservationInfoModalComponent} from "../../../../components/reservation-info-modal/reservation-info-modal.component";
 import {User} from "../../../../models/user.model";
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import {Reservation} from "../../../../models/reservation/reservation.model";
-import {AuthService} from "../../../../services/singleton/auth.service";
-import {APIService} from "../../../../services/singleton/api.service";
+import {AuthService} from "../../../../core/services/auth.service";
+import {APIService} from "../../../../core/services/api.service";
 
 @Component({
     selector: 'calendar-page',

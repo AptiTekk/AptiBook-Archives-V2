@@ -11,15 +11,14 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
 import * as components from "./components";
 import * as pageComponents from "./page-components";
-import * as singletons from "./services/singleton";
 import {routes} from "./routing/routes";
 import * as guards from "./routing/guards";
 import * as pipes from "./pipes";
-import {vendorImports} from "./vendors/angular-vendors";
-import {vendorComponents} from "./vendors/angular-vendors";
+import {vendorComponents, vendorImports} from "./vendors/angular-vendors";
 import {AptiBookErrorHandler} from "./error-handler";
+import {CoreModule} from "./core/core.module";
 
-const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
+export const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
 
 @NgModule({
     imports: [
@@ -27,22 +26,22 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
         FormsModule,
         ReactiveFormsModule,
         HttpModule,
+        CoreModule,
         routes,
         ...vendorImports
-    ],
-    providers: [
-        {
-            provide: ErrorHandler,
-            useClass: AptiBookErrorHandler
-        },
-        ...mapImports(singletons),
-        ...mapImports(guards)
     ],
     declarations: [
         ...mapImports(components),
         ...mapImports(pageComponents),
         ...mapImports(pipes),
         ...vendorComponents
+    ],
+    providers: [
+        {
+            provide: ErrorHandler,
+            useClass: AptiBookErrorHandler
+        },
+        ...mapImports(guards)
     ],
     bootstrap: [AppComponent]
 })

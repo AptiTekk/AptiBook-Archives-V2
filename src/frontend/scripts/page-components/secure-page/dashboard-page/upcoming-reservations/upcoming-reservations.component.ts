@@ -6,8 +6,8 @@
 
 import {Component} from "@angular/core";
 import {Reservation} from "../../../../models/reservation/reservation.model";
-import {AuthService} from "../../../../services/singleton/auth.service";
-import {ReservationService} from "../../../../services/singleton/reservation.service";
+import {AuthService} from "../../../../core/services/auth.service";
+import {ReservationService} from "../../../../core/services/reservation.service";
 
 @Component({
     selector: 'upcoming-reservations',

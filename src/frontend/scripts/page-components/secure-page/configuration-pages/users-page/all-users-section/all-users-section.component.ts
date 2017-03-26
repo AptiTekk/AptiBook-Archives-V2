@@ -5,8 +5,8 @@
  */
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {User} from "../../../../../models/user.model";
-import {UserService} from "../../../../../services/singleton/user.service";
-import {AuthService} from "../../../../../services/singleton/auth.service";
+import {UserService} from "../../../../../core/services/user.service";
+import {AuthService} from "../../../../../core/services/auth.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DataTableComponent} from "../../../../../components/datatable/datatable.component";
 

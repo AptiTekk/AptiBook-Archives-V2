@@ -4,11 +4,11 @@
  * Proprietary and confidential.
  */
 
-import {AuthService} from "../../services/singleton/auth.service";
+import {AuthService} from "../../core/services/auth.service";
 import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
-import {TenantService} from "../../services/singleton/tenant.service";
+import {TenantService} from "../../core/services/tenant.service";
 
 @Injectable()
 export class FrontPageGuard implements CanActivate {

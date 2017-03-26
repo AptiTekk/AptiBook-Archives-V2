@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 import {Component, Input} from "@angular/core";
-import {APIService} from "../../services/singleton/api.service";
+import {APIService} from "../../core/services/api.service";
 import {User} from "../../models/user.model";
 
 @Component({

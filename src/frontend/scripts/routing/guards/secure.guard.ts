@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {AuthService} from "../../services/singleton/auth.service";
+import {AuthService} from "../../core/services/auth.service";
 import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate, UrlSegment} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";

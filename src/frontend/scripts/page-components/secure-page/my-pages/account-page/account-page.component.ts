@@ -5,9 +5,9 @@
  */
 
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {AuthService} from "../../../../services/singleton/auth.service";
+import {AuthService} from "../../../../core/services/auth.service";
 import {User} from "../../../../models/user.model";
-import {UserService} from "../../../../services/singleton/user.service";
+import {UserService} from "../../../../core/services/user.service";
 import {AlertComponent} from "../../../../components/alert/alert.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 

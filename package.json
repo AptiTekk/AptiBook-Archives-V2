@@ -39,6 +39,8 @@
     "zone.js": "^0.7.4"
   },
   "devDependencies": {
+    "@angular/compiler-cli": "^2.4.10",
+    "@ngtools/webpack": "^1.2.14",
     "@types/bootstrap.v3.datetimepicker": "^4.17.34",
     "@types/core-js": "^0.9.34",
     "@types/jquery": "^2.0.34",

@@ -11,10 +11,10 @@ import {AlertComponent} from "../../../components/alert/alert.component";
 import {Router} from "@angular/router";
 import {Resource} from "../../../models/resource.model";
 import {ResourceCategory} from "../../../models/resource-category.model";
-import {SearchService} from "../../../services/singleton/search.service";
-import {APIService} from "../../../services/singleton/api.service";
-import {ResourceCategoryService} from "../../../services/singleton/resource-category.service";
-import {ReservationDetailsService} from "../../../services/singleton/reservation-details.service";
+import {SearchService} from "../../../core/services/search.service";
+import {APIService} from "../../../core/services/api.service";
+import {ResourceCategoryService} from "../../../core/services/resource-category.service";
+import {ReservationDetailsService} from "../../../core/services/reservation-details.service";
 
 @Component({
     selector: 'search-results-page',

@@ -6,9 +6,9 @@
 
 import {Component, ViewChild} from "@angular/core";
 import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
-import {AuthService} from "../../../../services/singleton/auth.service";
-import {LoaderService} from "../../../../services/singleton/loader.service";
-import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
+import {AuthService} from "../../../../core/services/auth.service";
+import {LoaderService} from "../../../../core/services/loader.service";
+import {ReservationManagementService} from "../../../../core/services/reservation-management.service";
 import {User} from "../../../../models/user.model";
 import {ApprovalModalComponent} from "../approval-modal/approval-modal.component";
 import {DataTableComponent} from "../../../../components/datatable/datatable.component";

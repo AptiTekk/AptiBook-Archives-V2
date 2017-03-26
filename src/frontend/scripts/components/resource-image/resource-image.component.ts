@@ -5,7 +5,7 @@
  */
 import {Component, Input, ViewChild} from "@angular/core";
 import {Resource} from "../../models/resource.model";
-import {APIService} from "../../services/singleton/api.service";
+import {APIService} from "../../core/services/api.service";
 import {ImageUploaderComponent} from "../image-uploader/image-uploader.component";
 import {Observable} from "rxjs";
 

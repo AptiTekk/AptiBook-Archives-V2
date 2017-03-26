@@ -5,7 +5,7 @@
  */
 import {Component, OnInit} from "@angular/core";
 import {HeaderComponent} from "../../../components/header/header.component";
-import {ReservationManagementService} from "../../../services/singleton/reservation-management.service";
+import {ReservationManagementService} from "../../../core/services/reservation-management.service";
 
 @Component({
     selector: 'management-container',

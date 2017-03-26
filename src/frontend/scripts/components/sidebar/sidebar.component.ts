@@ -5,12 +5,12 @@
  */
 import {Component, OnInit} from "@angular/core";
 import {NavigationLink} from "../navigation/navigation-link.model";
-import {AuthService} from "../../services/singleton/auth.service";
+import {AuthService} from "../../core/services/auth.service";
 import {User} from "../../models/user.model";
 import {Router} from "@angular/router";
-import {NotificationService} from "../../services/singleton/notification.service";
+import {NotificationService} from "../../core/services/notification.service";
 import {Notification} from "../../models/notification.model";
-import {LoaderService} from "../../services/singleton/loader.service";
+import {LoaderService} from "../../core/services/loader.service";
 
 @Component({
     selector: 'app-sidebar',

@@ -7,8 +7,8 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core"
 import {ModalComponent} from "../../../../../components/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ResourceCategory} from "../../../../../models/resource-category.model";
-import {ResourceCategoryService} from "../../../../../services/singleton/resource-category.service";
-import {LoaderService} from "../../../../../services/singleton/loader.service";
+import {ResourceCategoryService} from "../../../../../core/services/resource-category.service";
+import {LoaderService} from "../../../../../core/services/loader.service";
 import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
 
 @Component({

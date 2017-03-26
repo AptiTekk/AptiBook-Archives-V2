@@ -21,7 +21,7 @@ import {ResourceCategory} from "../../models/resource-category.model";
 import {UserGroup} from "../../models/user-group.model";
 import Moment = moment.Moment;
 import moment = require("moment");
-import {APIService} from "../../services/singleton/api.service";
+import {APIService} from "../../core/services/api.service";
 
 @Component({
     selector: 'calendar',

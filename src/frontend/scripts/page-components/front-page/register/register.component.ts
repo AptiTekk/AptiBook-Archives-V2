@@ -7,10 +7,10 @@
 import {Component, ViewChild} from "@angular/core";
 import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
-import {RegistrationService} from "../../../services/singleton/registration.service";
+import {RegistrationService} from "../../../core/services/registration.service";
 import {User} from "../../../models/user.model";
 import {AlertComponent} from "../../../components/alert/alert.component";
-import {LoaderService} from "../../../services/singleton/loader.service";
+import {LoaderService} from "../../../core/services/loader.service";
 
 @Component({
     selector: 'register',

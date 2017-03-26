@@ -6,10 +6,10 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {UserGroup} from "../../../../../models/user-group.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserGroupService} from "../../../../../services/singleton/usergroup.service";
+import {UserGroupService} from "../../../../../core/services/usergroup.service";
 import {User} from "../../../../../models/user.model";
 import {AlertComponent} from "../../../../../components/alert/alert.component";
-import {UserService} from "../../../../../services/singleton/user.service";
+import {UserService} from "../../../../../core/services/user.service";
 import {TreeComponent} from "../../../../../components/tree/tree.component";
 import {Observable} from "rxjs";
 import {Resource} from "../../../../../models/resource.model";

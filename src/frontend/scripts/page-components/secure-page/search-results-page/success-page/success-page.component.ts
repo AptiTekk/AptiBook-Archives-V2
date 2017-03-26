@@ -5,9 +5,9 @@
  */
 
 import {Component} from "@angular/core";
-import {ReservationService} from "../../../../services/singleton/reservation.service";
+import {ReservationService} from "../../../../core/services/reservation.service";
 import {Reservation} from "../../../../models/reservation/reservation.model";
-import {APIService} from "../../../../services/singleton/api.service";
+import {APIService} from "../../../../core/services/api.service";
 
 @Component({
     selector: 'success-page',

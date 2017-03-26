@@ -4,11 +4,11 @@
  * Proprietary and confidential.
  */
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {AuthService} from "../../../../services/singleton/auth.service";
+import {AuthService} from "../../../../core/services/auth.service";
 import {User} from "../../../../models/user.model";
 import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
-import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
-import {LoaderService} from "../../../../services/singleton/loader.service";
+import {ReservationManagementService} from "../../../../core/services/reservation-management.service";
+import {LoaderService} from "../../../../core/services/loader.service";
 import {ApprovalModalComponent} from "../approval-modal/approval-modal.component";
 import {DataTableComponent} from "../../../../components/datatable/datatable.component";
 import moment = require("moment");

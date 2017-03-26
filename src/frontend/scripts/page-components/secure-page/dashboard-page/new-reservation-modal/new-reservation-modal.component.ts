@@ -7,7 +7,7 @@
 import {Component, ViewChild} from "@angular/core";
 import * as moment from "moment";
 import {Router} from "@angular/router";
-import {SearchService} from "../../../../services/singleton/search.service";
+import {SearchService} from "../../../../core/services/search.service";
 import {ModalComponent} from "../../../../components/modal/modal.component";
 import Moment = moment.Moment;
 

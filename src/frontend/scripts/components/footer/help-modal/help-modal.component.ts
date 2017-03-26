@@ -6,8 +6,7 @@
 
 import {Component, ViewChild, OnInit} from "@angular/core";
 import {ModalComponent} from "../../modal/modal.component";
-import {HelpService} from "../../../services/singleton";
-import {HelpTopic} from "../../../services/singleton/help.service";
+import {HelpTopic, HelpService} from "../../../core/services/help.service";
 
 @Component({
     selector: 'help-modal',

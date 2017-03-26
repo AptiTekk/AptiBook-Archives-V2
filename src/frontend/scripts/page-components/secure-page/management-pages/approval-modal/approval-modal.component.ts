@@ -8,10 +8,10 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core"
 import {ModalComponent} from "../../../../components/modal/modal.component";
 import {User} from "../../../../models/user.model";
 import {ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
-import {AuthService} from "../../../../services/singleton/auth.service";
+import {AuthService} from "../../../../core/services/auth.service";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {UserGroup} from "../../../../models/user-group.model";
-import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
+import {ReservationManagementService} from "../../../../core/services/reservation-management.service";
 import {AlertComponent} from "../../../../components/alert/alert.component";
 import {ConfirmationModalComponent} from "../../../../components/index";
 import moment = require("moment");

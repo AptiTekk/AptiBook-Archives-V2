@@ -5,7 +5,7 @@
  */
 
 import {Injectable} from "@angular/core";
-import {APIService} from "../singleton/api.service";
+import {APIService} from "./api.service";
 import {ReplaySubject} from "rxjs";
 
 @Injectable()
