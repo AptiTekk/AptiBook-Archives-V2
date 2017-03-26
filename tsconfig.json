@@ -1,6 +1,10 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "lib": [
+      "dom",
+      "es7"
+    ],
     "module": "commonjs",
     "moduleResolution": "node",
     "sourceMap": true,
@@ -9,11 +13,10 @@
     "removeComments": false,
     "suppressImplicitAnyIndexErrors": true
   },
-
   "awesomeTypescriptLoaderOptions": {
-    "useWebpackText": true
+    "useWebpackText": true,
+    "useCache": true
   },
-
   "exclude": [
     "node_modules"
   ]
