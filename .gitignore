@@ -7,7 +7,7 @@ target/
 /node_modules/
 
 /src/main/webapp/*
-/src/frontend/*.js*
+/src/frontend/**/*.js*
 
 /src/main/resources/application-development.properties
 

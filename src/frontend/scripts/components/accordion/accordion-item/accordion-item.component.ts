@@ -4,8 +4,9 @@
  * Proprietary and confidential.
  */
 
-import {animate, Component, forwardRef, Host, Inject, Input, state, style, transition, trigger} from "@angular/core";
+import {Component, forwardRef, Host, Inject, Input} from "@angular/core";
 import {AccordionComponent} from "../accordion.component";
+import {animate, state, style, transition, trigger} from "@angular/animations";
 
 @Component({
     selector: 'accordion-item',
@@ -13,8 +14,8 @@ import {AccordionComponent} from "../accordion.component";
     styleUrls: ['accordion-item.component.css'],
     animations: [
         trigger('activated', [
-            state('true', style({opacity: 1, height: '*'})),
-            state('false', style({opacity: 0, height: 0, "pointer-events": "none"})),
+            state('1', style({opacity: 1, height: '*'})),
+            state('0', style({opacity: 0, height: 0, "pointer-events": "none"})),
             transition('1 => 0', animate('200ms')),
             transition('0 => 1', animate('200ms'))
         ])
