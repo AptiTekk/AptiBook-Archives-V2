@@ -18,6 +18,7 @@ import * as pipes from "./pipes";
 import {vendorImports} from "./vendors/angular-vendors";
 import {vendorComponents} from "./vendors/angular-vendors";
 import {AptiBookErrorHandler} from "./error-handler";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 
 const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
 
@@ -28,6 +29,7 @@ const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
         ReactiveFormsModule,
         HttpModule,
         routes,
+        BrowserAnimationsModule,
         ...vendorImports
     ],
     providers: [
