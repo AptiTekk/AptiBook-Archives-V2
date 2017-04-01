@@ -60,12 +60,14 @@ public class OAuthCallbackController {
                     //Check for code and set the appropriate user if the code exists.
                     if (code != null && !code.isEmpty()) {
                         if (tenant != null) {
-                            User user = googleOAuthService.getUserFromCode(tenant, code);
-                            if (user != null) {
+                            try {
+                                User user = googleOAuthService.getUserFromCode(tenant, code);
                                 authService.setUserOfTenant(user, tenant, httpServletResponse);
-                            }else{
-                                //User will comeback null if domain doest match white list, redirect with message.
-                                redirectToTenantWithError(httpServletResponse, tenantSlug, "cancelled");
+                            } catch (GoogleOAuthService.DomainNotWhitelistedException e) {
+                                redirectToTenantWithError(httpServletResponse, tenantSlug, "not-whitelisted");
+                                return;
+                            } catch (GoogleOAuthService.InvalidCodeException e) {
+                                redirectToTenantWithError(httpServletResponse, tenantSlug, "invalid-code");
                                 return;
                             }
                         }

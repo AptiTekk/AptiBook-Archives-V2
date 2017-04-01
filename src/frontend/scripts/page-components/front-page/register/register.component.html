@@ -50,7 +50,7 @@
                     maxlength: 'This must be 30 characters or less.'
                     }">
 	</form-group>
-	`
+	
 	<form-group [control]="formGroup.controls['confirmPassword']"
 				[label]="'Confirm Password'"
 				[faIconName]="'asterisk'"
@@ -65,12 +65,8 @@
 		 style="display: inline-block; color: darkred">
 		The Passwords do not match!
 	</div>
-	<div *ngIf="!allowedDomain()"
-		 style="display: inline-block; color: darkred">
-		This domain is not allowed! Please contact your System Administrator.
-	</div>
 	<button class="btn btn-primary btn-large btn-block"
-			[disabled]="formGroup.invalid || !doPasswordsMatch() || !allowedDomain() ">
+			[disabled]="formGroup.invalid || !doPasswordsMatch()">
 		Register
 	</button>
 

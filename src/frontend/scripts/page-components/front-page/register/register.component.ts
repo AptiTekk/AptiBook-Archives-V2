@@ -5,7 +5,7 @@
  */
 
 import {Component, ViewChild} from "@angular/core";
-import {AbstractControl, FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ActivatedRoute, Router} from "@angular/router";
 import {RegistrationService} from "../../../services/singleton/registration.service";
 import {User} from "../../../models/user.model";
@@ -62,6 +62,12 @@ export class RegisterComponent {
     }
 
     onSubmit() {
+        // Make sure the email domain is allowed.
+        if (!this.allowedDomain()) {
+            this.registerAlert.display("Unfortunately, the domain of the email address you provided is not whitelisted.", false);
+            return;
+        }
+
         let newUser: User = {
             emailAddress: this.formGroup.controls['emailAddress'].value,
             firstName: this.formGroup.controls['firstName'].value,
@@ -80,19 +86,27 @@ export class RegisterComponent {
         );
     }
 
-    allowedDomain(): boolean{
+    /**
+     * Determines if the email address provided by the user is whitelisted.
+     * @returns True if it is whitelisted (allowed), false otherwise.
+     */
+    allowedDomain(): boolean {
         if (this.formGroup.controls['emailAddress'].pristine)
             return true;
         let email = this.formGroup.controls['emailAddress'].value;
         let found = false;
-            this.allowedDomains.forEach(domain =>{
-                if(~email.indexOf(domain)){
-                    found = true;
-                }
-            });
+        this.allowedDomains.forEach(domain => {
+            if (~email.indexOf(domain)) {
+                found = true;
+            }
+        });
         return found;
     }
 
+    /**
+     * Determines if the password and confirm password fields match.
+     * @returns True if the passwords match, false otherwise.
+     */
     doPasswordsMatch(): boolean {
         if (this.formGroup.controls['confirmPassword'].pristine)
             return true;
