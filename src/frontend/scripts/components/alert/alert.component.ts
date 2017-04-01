@@ -4,16 +4,17 @@
  * Proprietary and confidential.
  */
 
-import {animate, Component, EventEmitter, Input, Output, state, style, transition, trigger} from "@angular/core";
+import {Component, EventEmitter, Input, Output} from "@angular/core";
 import {Observable, Subscription} from "rxjs";
+import {trigger, state, style, transition, animate} from "@angular/animations";
 
 @Component({
     selector: 'alert',
     templateUrl: 'alert.component.html',
     animations: [
         trigger('alertDisplayed', [
-            state('true', style({opacity: 1})),
-            state('false', style({opacity: 0, margin: 0, padding: '0 15px'})),
+            state('1', style({opacity: 1})),
+            state('0', style({opacity: 0, margin: 0, padding: '0 15px'})),
             transition('1 => 0', animate('200ms')),
             transition('0 => 1', animate('200ms'))
         ])
