@@ -4,4 +4,5 @@
  * Proprietary and confidential.
  */
 
-export * from './accordian-navigation.component';
+export * from './accordion.component';
+export * from './accordion-item/accordion-item.component';

@@ -4,7 +4,8 @@
  * Proprietary and confidential.
  */
 
-export * from './accordian-navigation';
+export * from './accordion';
+export * from './accordion-navigation';
 export * from './alert/alert.component';
 export * from './calendar';
 export * from './confirmation-modal/confirmation-modal.component';

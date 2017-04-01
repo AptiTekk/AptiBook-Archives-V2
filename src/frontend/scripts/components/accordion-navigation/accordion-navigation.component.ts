@@ -8,16 +8,16 @@ import {Component, ContentChildren, QueryList, Input, Inject, forwardRef, OnInit
 import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 
 @Component({
-    selector: 'accordian-navigation',
-    templateUrl: 'accordian-navigation.component.html',
-    styleUrls: ['accordian-navigation.component.css']
+    selector: 'accordion-navigation',
+    templateUrl: 'accordion-navigation.component.html',
+    styleUrls: ['accordion-navigation.component.css']
 })
-export class AccordianNavigationComponent implements OnInit, AfterViewInit {
+export class AccordionNavigationComponent implements OnInit, AfterViewInit {
 
-    @ContentChildren(AccordianNavigationComponent) private navigationQueryList: QueryList<AccordianNavigationComponent>;
-    protected children: AccordianNavigationComponent[];
+    @ContentChildren(AccordionNavigationComponent) private navigationQueryList: QueryList<AccordionNavigationComponent>;
+    protected children: AccordionNavigationComponent[];
 
-    protected parent: AccordianNavigationComponent;
+    protected parent: AccordionNavigationComponent;
 
     /**
      * The font awesome icon for the component. (E.x.: 'user')
