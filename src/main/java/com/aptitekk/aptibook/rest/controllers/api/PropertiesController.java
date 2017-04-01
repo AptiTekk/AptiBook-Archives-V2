@@ -61,6 +61,14 @@ public class PropertiesController extends APIControllerAbstract {
         return ok(modelMapper.map(property, PropertyDTO.class));
     }
 
+    @RequestMapping(value = "properties/allowedDomains", method = RequestMethod.GET)
+    public ResponseEntity<?> getAllowedDomains() {
+
+        Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf("GOOGLE_SIGN_IN_WHITELIST"));
+
+        return ok(modelMapper.map(property, PropertyDTO.class));
+    }
+
     @RequestMapping(value = "properties/{keyName}", method = RequestMethod.PATCH)
     public ResponseEntity<?> setPropertyValue(@PathVariable String keyName, @RequestBody PropertyDTO propertyDTO) {
 

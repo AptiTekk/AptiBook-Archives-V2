@@ -11,6 +11,7 @@ import com.aptitekk.aptibook.ApplicationContextProvider;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.BooleanPropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.MaxLengthPropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
+import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.context.ApplicationContext;
@@ -22,6 +23,8 @@ import java.util.List;
 
 @Entity
 public class Property extends MultiTenantEntity implements Serializable {
+
+
 
     public enum Group {
 
@@ -104,6 +107,8 @@ public class Property extends MultiTenantEntity implements Serializable {
     }
 
     public String propertyValue;
+
+
 
     public String getDefaultValue() {
         return this.propertyKey.getDefaultValue();
