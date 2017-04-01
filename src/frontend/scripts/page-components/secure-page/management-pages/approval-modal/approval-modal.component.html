@@ -1,0 +1,155 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<modal [title]="reservation?.status === 'PENDING' ? 'Approve or Reject Reservation' : 'Reservation Details'"
+	   [size]="'lg'"
+	   (onCancel)="onClose()">
+	<modal-body>
+		<alert #dangerAlert
+			   [severity]="'danger'"></alert>
+		<form [formGroup]="formGroup">
+			<div class="row">
+				<div class="col-xs-12 col-md-3">
+					<resource-image [resource]="reservation?.resource">
+					</resource-image>
+				</div>
+				<div class="col-xs-12 col-md-9">
+					<form-group [label]="'Reservation Title'"
+								[control]="formGroup.controls['title']"
+								[readOnly]="true">
+					</form-group>
+					<form-group [label]="'Requested By'"
+								[control]="formGroup.controls['requestedBy']"
+								[readOnly]="true">
+					</form-group>
+					<form-group [label]="'Requested On'"
+								[control]="formGroup.controls['requestedOn']"
+								[readOnly]="true">
+					</form-group>
+					<div class="row">
+						<div class="col-xs-12 col-md-6">
+							<form-group [label]="'Start Time'"
+										[control]="formGroup.controls['startTime']"
+										[readOnly]="true">
+							</form-group>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<form-group [label]="'End Time'"
+										[control]="formGroup.controls['endTime']"
+										[readOnly]="true">
+							</form-group>
+						</div>
+					</div>
+					
+					<hr/>
+					
+					<div class="row">
+						<div class="col-xs-12">
+							<p>You are deciding on behalf of the
+								<span style="font-weight: bold">{{reservation?.decidingFor.userGroup.name}}</span> User Group.
+							</p>
+							
+							<div *ngFor="let relation of reservation?.decisionHierarchy; let i = index">
+								
+								<!-- Makes sure to only display the root group if the admin user has made a decision. -->
+								<div *ngIf="!(relation.userGroup.root && !relation.decision)"
+									 [style.margin-left]="(16 * i) + 'px'">
+									
+									<span class="fa"
+										  [class.fa-hourglass-half]="!relation.decision"
+										  [class.text-primary]="!relation.decision"
+										  [class.fa-check-circle]="relation.decision?.approved"
+										  [class.text-success]="relation.decision?.approved"
+										  [class.fa-times-circle]="relation.decision?.rejected"
+										  [class.text-danger]="relation.decision?.rejected"></span>
+									
+									<!-- User Group Name -->
+									<span style="font-weight: bold">{{relation.userGroup.name}}</span>
+									
+									<!-- A Decision has been made; display the name of the user who made the decision. -->
+									<span *ngIf="relation.decision">
+										User
+										<span style="font-weight: bold">{{relation.decision.user.fullName}}</span>
+									</span>
+									has
+									
+									<!-- Display the decision outcome -->
+									<span class="label label-success"
+										  *ngIf="relation.decision?.approved">approved</span>
+									
+									<span class="label label-danger"
+										  *ngIf="relation.decision?.rejected">rejected</span>
+									
+									<span *ngIf="!relation.decision"
+										  style="font-weight: bold">
+										not yet decided upon
+									</span>
+									
+									this Reservation.
+									
+									<!-- If Overridden -->
+									<span *ngIf="relation.overriddenBy">
+										(<span class="label label-info">Overridden</span>
+										by the decision of
+										
+										<!-- Who decided to override -->
+										<span style="font-weight: bold">{{relation.overriddenBy.decision.user.fullName}}</span>
+										to
+										
+										<!-- What they decided -->
+										<span class="label label-success"
+											  *ngIf="relation.overriddenBy.decision.approved">approve</span>
+										<span class="label label-danger"
+											  *ngIf="relation.overriddenBy.decision.rejected">reject</span>
+										on behalf of the
+										
+										<!-- Which group they are a part of -->
+										<span style="font-weight: bold">{{relation.overriddenBy.userGroup.name}}</span>
+										
+										User Group.)
+									</span>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</modal-body>
+	<modal-footer>
+		<button class="btn btn-success"
+				*ngIf="reservation?.status === 'PENDING'"
+				[disabled]="reservation?.decidingFor.decision?.approved"
+				(click)="onApprove()">
+			Approve
+		</button>
+		<button class="btn btn-danger"
+				*ngIf="reservation?.status === 'PENDING'"
+				[disabled]="reservation?.decidingFor.decision?.rejected"
+				(click)="onReject()">
+			Reject
+		</button>
+		<button class="btn btn-default"
+				(click)="onClose()">
+			Close
+		</button>
+	</modal-footer>
+</modal>
+
+<confirmation-modal #overrideConfirmationModal
+					[title]="'Overriding Decision'">
+	<alert [severity]="'warning'"
+		   [displayed]="true">
+		<b>Warning:</b> This action will override another group's decision. Would you like to continue?
+	</alert>
+</confirmation-modal>
+<confirmation-modal #changeConfirmationModal
+					[title]="'Changing Decision'">
+	<alert [severity]="'warning'"
+		   [displayed]="true">
+		<b>Warning:</b> This action will change your group's existing decision. Would you like to continue?
+	</alert>
+</confirmation-modal>

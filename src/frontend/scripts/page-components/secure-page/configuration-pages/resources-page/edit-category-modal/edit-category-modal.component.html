@@ -4,30 +4,31 @@
   ~ Proprietary and confidential.
   -->
 
-<modal #modal [title]="'Editing Resource Category' + (resourceCategory ? ' \'' + resourceCategory.name + '\'' : '')"
-       [cancelButtonLabel]="'Cancel'"
-       [submitButtonLabel]="'Save Category'"
-       [submitButtonDisabled]="formGroup.invalid"
-       [dangerSubmitButtonLabel]="'Delete Category'"
-       (onSubmit)="onCategorySubmitted()"
-       (onDangerSubmit)="deleteConfirmModal.open()">
-    <modal-body>
-        <form [formGroup]="formGroup">
-            <form-group [control]="formGroup.controls['name']"
-                        [label]="'Name'"
-                        [errorMessages]="
+<modal #modal
+	   [title]="'Editing Resource Category' + (resourceCategory ? ' \'' + resourceCategory.name + '\'' : '')"
+	   [cancelButtonLabel]="'Cancel'"
+	   [submitButtonLabel]="'Save Category'"
+	   [submitButtonDisabled]="formGroup.invalid"
+	   [dangerSubmitButtonLabel]="'Delete Category'"
+	   (onSubmit)="onCategorySubmitted()"
+	   (onDangerSubmit)="deleteConfirmModal.open()">
+	<modal-body>
+		<form [formGroup]="formGroup">
+			<form-group [control]="formGroup.controls['name']"
+						[label]="'Name'"
+						[errorMessages]="
                             {
                             required: 'This is required.',
                             pattern: 'These characters are not allowed:  < > ; =',
                             maxlength: 'This must be 30 characters or less.',
                             isUnique: 'A Category by this name already exists!'
                             }">
-            </form-group>
-        </form>
-    </modal-body>
+			</form-group>
+		</form>
+	</modal-body>
 </modal>
 <deletion-confirmation-modal #deleteConfirmModal
-                             [message]="resourceCategory ? 'Are you sure you want to delete the \''+resourceCategory.name+'\' Resource Category?' : ''"
-                             [warning]="'All associated Resources and Reservations will be deleted as well!'"
-                             (confirm)="onDeleteCategory()">
+							 [message]="resourceCategory ? 'Are you sure you want to delete the \''+resourceCategory.name+'\' Resource Category?' : ''"
+							 [warning]="'All associated Resources and Reservations will be deleted as well!'"
+							 (confirm)="onDeleteCategory()">
 </deletion-confirmation-modal>

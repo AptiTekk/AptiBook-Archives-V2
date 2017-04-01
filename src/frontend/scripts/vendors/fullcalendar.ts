@@ -6,4 +6,4 @@
 
 import "fullcalendar/dist/fullcalendar";
 
-require("!style!css!fullcalendar/dist/fullcalendar.css");
+require("!style-loader!css-loader!fullcalendar/dist/fullcalendar.css");

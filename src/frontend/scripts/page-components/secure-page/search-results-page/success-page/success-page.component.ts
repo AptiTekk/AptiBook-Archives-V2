@@ -6,7 +6,7 @@
 
 import {Component} from "@angular/core";
 import {ReservationService} from "../../../../services/singleton/reservation.service";
-import {Reservation} from "../../../../models/reservation.model";
+import {Reservation} from "../../../../models/reservation/reservation.model";
 import {APIService} from "../../../../services/singleton/api.service";
 
 @Component({

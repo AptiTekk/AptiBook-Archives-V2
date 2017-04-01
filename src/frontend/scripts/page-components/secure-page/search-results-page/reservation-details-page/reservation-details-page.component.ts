@@ -10,7 +10,7 @@ import {ReservationDetailsService} from "../../../../services/singleton/reservat
 import {SearchService} from "../../../../services/singleton/search.service";
 import {User} from "../../../../models/user.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
-import {Reservation} from "../../../../models/reservation.model";
+import {Reservation} from "../../../../models/reservation/reservation.model";
 import {ReservationService} from "../../../../services/singleton/reservation.service";
 import {Router} from "@angular/router";
 import {APIService} from "../../../../services/singleton/api.service";

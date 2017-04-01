@@ -3,16 +3,15 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {User} from "../../../../models/user.model";
-import {
-    ReservationWithUnorganizedDecisions, Reservation,
-    ReservationWithOrganizedDecisions
-} from "../../../../models/reservation.model";
+import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
 import {ReservationManagementService} from "../../../../services/singleton/reservation-management.service";
-import moment = require("moment");
 import {LoaderService} from "../../../../services/singleton/loader.service";
+import {ApprovalModalComponent} from "../approval-modal/approval-modal.component";
+import {DataTableComponent} from "../../../../components/datatable/datatable.component";
+import moment = require("moment");
 
 @Component({
     selector: 'approval-queue-page',
@@ -24,15 +23,20 @@ export class ApprovalQueuePageComponent implements OnInit {
     /**
      * The currently signed in user.
      */
-    user: User;
+    protected user: User;
 
     /**
      * An array containing the pending reservations.
      */
-    reservations: Reservation[] = [];
+    protected reservations: Reservation[] = [];
 
-    reservationsAwaitingUser: Reservation[] = [];
-    reservationsAwaitingOthers: Reservation[] = [];
+    @ViewChild('awaitingUserTable') awaitingUserTable: DataTableComponent;
+    protected reservationsAwaitingUser: Reservation[] = [];
+
+    @ViewChild('awaitingOthersTable') awaitingOthersTable: DataTableComponent;
+    protected reservationsAwaitingOthers: Reservation[] = [];
+
+    @ViewChild(ApprovalModalComponent) protected approvalModal: ApprovalModalComponent;
 
     /**
      * The selected reservation.
@@ -52,7 +56,7 @@ export class ApprovalQueuePageComponent implements OnInit {
             .subscribe(user => {
                 this.user = user;
 
-                if(user) {
+                if (user) {
                     this.reservationManagementService
                         .getPendingReservations()
                         .subscribe(reservations => {
@@ -99,6 +103,8 @@ export class ApprovalQueuePageComponent implements OnInit {
         }
 
         this.selectedReservation = reservation;
+
+        this.approvalModal.open(this.selectedReservation);
     }
 
     /**
@@ -108,10 +114,13 @@ export class ApprovalQueuePageComponent implements OnInit {
         this.selectedReservation = null;
     }
 
-    makeDecision(approved: boolean, reservation: Reservation) {
-        this.reservationManagementService
-            .makeDecision(approved, reservation)
-            .subscribe(response => this.reservationManagementService.fetchReservations());
+    protected deselectAll() {
+        this.awaitingUserTable.deselectRows();
+        this.awaitingOthersTable.deselectRows();
+    }
+
+    protected decisionMade() {
+        this.reservationManagementService.fetchReservations();
     }
 }
 

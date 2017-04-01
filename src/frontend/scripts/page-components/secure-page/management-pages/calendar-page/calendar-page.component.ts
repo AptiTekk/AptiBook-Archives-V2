@@ -10,7 +10,7 @@ import {ResourceCategoryService} from "../../../../services/singleton/resource-c
 import {ReservationInfoModalComponent} from "../../../../components/reservation-info-modal/reservation-info-modal.component";
 import {User} from "../../../../models/user.model";
 import {ResourceCategory} from "../../../../models/resource-category.model";
-import {Reservation} from "../../../../models/reservation.model";
+import {Reservation} from "../../../../models/reservation/reservation.model";
 import {AuthService} from "../../../../services/singleton/auth.service";
 import {APIService} from "../../../../services/singleton/api.service";
 

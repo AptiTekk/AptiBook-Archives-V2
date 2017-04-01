@@ -16,7 +16,7 @@ import {
     ViewChild
 } from "@angular/core";
 import {User} from "../../models/user.model";
-import {Reservation} from "../../models/reservation.model";
+import {Reservation} from "../../models/reservation/reservation.model";
 import {ResourceCategory} from "../../models/resource-category.model";
 import {UserGroup} from "../../models/user-group.model";
 import Moment = moment.Moment;

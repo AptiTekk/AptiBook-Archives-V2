@@ -7,6 +7,7 @@
 import {Component, ViewChild, OnInit} from "@angular/core";
 import {ModalComponent} from "../../modal/modal.component";
 import {HelpService} from "../../../services/singleton";
+import {HelpTopic} from "../../../services/singleton/help.service";
 
 @Component({
     selector: 'help-modal',
@@ -17,7 +18,7 @@ export class HelpModalComponent implements OnInit {
     @ViewChild('modal')
     modal: ModalComponent;
 
-    helpTopics: [{title: string, slug: string}];
+    helpTopics: HelpTopic[];
 
     constructor(private helpService: HelpService) {
     }
