@@ -50,6 +50,8 @@ export class SignInComponent implements AfterViewInit {
                         this.loginDangerAlert.display("Unfortunately, Sign In with Google failed because access was denied.", false);
                     else if (params['googleError'] === "inactive")
                         this.loginDangerAlert.display("Unfortunately, Sign In with Google failed because it is not allowed.", false);
+                    else if(params['googleError'] === "cancelled")
+                        this.loginDangerAlert.display("Unfortunately, Your email domain is not allowed.", false);
 
                 } else if (params['verified'] !== undefined) {
                     if (params['verified'] === "true")

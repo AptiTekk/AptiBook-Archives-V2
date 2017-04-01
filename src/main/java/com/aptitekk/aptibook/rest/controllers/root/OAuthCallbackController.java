@@ -64,9 +64,8 @@ public class OAuthCallbackController {
                             if (user != null) {
                                 authService.setUserOfTenant(user, tenant, httpServletResponse);
                             }else{
-                                //redirect to error page
-                                System.out.println("User is null");
-                                redirectToTenantWithError(httpServletResponse, tenantSlug, error);
+                                //User will comeback null if domain doest match white list, redirect with message.
+                                redirectToTenantWithError(httpServletResponse, tenantSlug, "cancelled");
                                 return;
                             }
                         }
