@@ -4,18 +4,18 @@
  * Proprietary and confidential.
  */
 
-var path = require('path');
-var webpack = require('webpack');
-var HtmlWebpackPlugin = require('html-webpack-plugin');
-var CleanWebpackPlugin = require('clean-webpack-plugin');
+const path = require('path');
+const webpack = require('webpack');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
-var config = {
+const config = {
     cache: true,
 
     entry: {
-        polyfills: path.join(__dirname, '../src/frontend/scripts/polyfills'),
-        vendor: path.join(__dirname, '../src/frontend/scripts/vendors/vendors'),
-        main: path.join(__dirname, '../src/frontend/scripts/main')
+        polyfills: path.join(__dirname, '../src/frontend/scripts/polyfills.ts'),
+        vendor: path.join(__dirname, '../src/frontend/scripts/vendors/vendors.ts'),
+        main: path.join(__dirname, '../src/frontend/scripts/main.ts')
     },
 
     module: {

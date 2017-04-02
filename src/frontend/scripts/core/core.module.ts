@@ -23,29 +23,17 @@ import {ReservationService} from "./services/reservation.service";
 import {TenantService} from "./services/tenant.service";
 import {ResourceService} from "./services/resource.service";
 import {LoaderService} from "./services/loader.service";
-import {AppComponent} from "./components/app/app.component";
-import {SidebarComponent} from "./components/sidebar/sidebar.component";
-import {FooterModule} from "core/components/footer/footer.module";
-import {HeaderComponent} from "./components/header/header.component";
-import {LoaderComponent} from "./components/loader/loader.component";
-import {RoutesModule} from "./routing/routes.module";
 import {AptiBookErrorHandler} from "./error-handler";
+import {HttpModule} from "@angular/http";
 
 /**
- * This module contains modules and components which should only load once in the application.
- * For example, the sidebar which is on every page, or the routes which never change.
+ * This module contains the services and other things which should only load once in the application.
  */
 @NgModule({
     imports: [
-        RoutesModule,
-        FooterModule
+        HttpModule
     ],
-    declarations: [
-        AppComponent,
-        HeaderComponent,
-        SidebarComponent,
-        LoaderComponent
-    ],
+    declarations: [],
     exports: [],
     providers: [
         {

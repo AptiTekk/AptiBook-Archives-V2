@@ -4,10 +4,9 @@
  * Proprietary and confidential.
  */
 
-var config = require('./webpack.common.config.js');
-var AotPlugin = require('@ngtools/webpack').AotPlugin;
-
-var path = require('path');
+const config = require('./webpack.common.config.js');
+const AotPlugin = require('@ngtools/webpack').AotPlugin;
+const path = require('path');
 
 config.module.rules.unshift(
     {

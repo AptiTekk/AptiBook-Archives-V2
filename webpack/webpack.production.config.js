@@ -4,10 +4,9 @@
  * Proprietary and confidential.
  */
 
-var config = require('./webpack.common.config.js');
-var AotPlugin = require('@ngtools/webpack').AotPlugin;
-
-var path = require('path');
+const config = require('./webpack.common.config.js');
+const AotPlugin = require('@ngtools/webpack').AotPlugin;
+const path = require('path');
 
 config.module.rules.unshift(
     {
@@ -19,8 +18,8 @@ config.module.rules.unshift(
 
 config.plugins.push(
     new AotPlugin({
-        tsConfigPath: 'tsconfig.json',
-        entryModule: 'src/frontend/scripts/app.module#AppModule'
+        tsConfigPath: path.join(__dirname, '../tsconfig.json'),
+        entryModule: path.join(__dirname, '../src/frontend/scripts/app.module#AppModule')
     })
 );
 

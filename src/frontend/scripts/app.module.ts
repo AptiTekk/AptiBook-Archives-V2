@@ -6,26 +6,27 @@
 
 import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
-import {AppComponent} from "./core/components/app/app.component";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
-import {HttpModule} from "@angular/http";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {AppComponent} from "./app/app.component";
 import {CoreModule} from "./core/core.module";
-import {VendorsModule} from "./vendors/vendors.module";
-import {FeaturesModule} from "./page-components/features.module";
+import {FeaturesModule} from "./features/features.module";
+import {HeaderModule} from "./app/header/header.module";
+import {FooterModule} from "./app/footer/footer.module";
+import {LoaderModule} from "./app/loader/loader.module";
+import {AppRoutesModule} from "./app.routes";
 
 @NgModule({
     imports: [
         BrowserModule,
-        FormsModule,
-        ReactiveFormsModule,
-        HttpModule,
-        CoreModule,
-        VendorsModule,
+        HeaderModule,
+        FooterModule,
+        LoaderModule,
         FeaturesModule,
-        BrowserAnimationsModule
+        CoreModule,
+        AppRoutesModule
     ],
-    declarations: [],
+    declarations: [
+        AppComponent
+    ],
     providers: [],
     bootstrap: [AppComponent]
 })
