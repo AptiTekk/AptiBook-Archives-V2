@@ -4,22 +4,15 @@
  * Proprietary and confidential.
  */
 
-import {ErrorHandler, NgModule} from "@angular/core";
+import {NgModule} from "@angular/core";
 import {BrowserModule} from "@angular/platform-browser";
-import {AppComponent} from "./page-components/app/app.component";
+import {AppComponent} from "./core/components/app/app.component";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {HttpModule} from "@angular/http";
-import * as components from "./components";
-import * as pageComponents from "./page-components";
-import {routes} from "./routing/routes";
-import * as guards from "./routing/guards";
-import * as pipes from "./pipes";
-import {vendorComponents, vendorImports} from "./vendors/angular-vendors";
-import {AptiBookErrorHandler} from "./error-handler";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {CoreModule} from "./core/core.module";
-
-export const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
+import {VendorsModule} from "./vendors/vendors.module";
+import {FeaturesModule} from "./page-components/features.module";
 
 @NgModule({
     imports: [
@@ -28,23 +21,12 @@ export const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key])
         ReactiveFormsModule,
         HttpModule,
         CoreModule,
-        routes,
-        BrowserAnimationsModule,
-        ...vendorImports
+        VendorsModule,
+        FeaturesModule,
+        BrowserAnimationsModule
     ],
-    declarations: [
-        ...mapImports(components),
-        ...mapImports(pageComponents),
-        ...mapImports(pipes),
-        ...vendorComponents
-    ],
-    providers: [
-        {
-            provide: ErrorHandler,
-            useClass: AptiBookErrorHandler
-        },
-        ...mapImports(guards)
-    ],
+    declarations: [],
+    providers: [],
     bootstrap: [AppComponent]
 })
 export class AppModule {

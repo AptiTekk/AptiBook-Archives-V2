@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-body > app:empty {
+body > at-app:empty {
     background-color: rgba(66, 114, 183, 0.3);
 }
 
@@ -20,7 +20,7 @@ body > app:empty {
     transition: opacity linear 0.5s;
 }
 
-app:empty + #splashscreen {
+at-app:empty + #splashscreen {
     opacity: 1;
 }
 
