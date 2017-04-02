@@ -16,6 +16,7 @@ import * as guards from "./routing/guards";
 import * as pipes from "./pipes";
 import {vendorComponents, vendorImports} from "./vendors/angular-vendors";
 import {AptiBookErrorHandler} from "./error-handler";
+import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {CoreModule} from "./core/core.module";
 
 export const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key]);
@@ -28,6 +29,7 @@ export const mapImports = (obj: Object) => Object.keys(obj).map(key => obj[key])
         HttpModule,
         CoreModule,
         routes,
+        BrowserAnimationsModule,
         ...vendorImports
     ],
     declarations: [

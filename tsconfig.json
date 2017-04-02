@@ -1,6 +1,8 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "baseUrl": "./src/frontend/scripts",
+    "outDir": "./lib",
     "lib": [
       "dom",
       "es7"

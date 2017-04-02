@@ -69,7 +69,7 @@
     padding: 10px 0 0 10px;
 }
 
-:host /deep/ #content accordian-navigation .navigation-block {
+:host /deep/ #content accordion-navigation .navigation-block {
     border-radius: 5px 0 0 5px;
 }
 

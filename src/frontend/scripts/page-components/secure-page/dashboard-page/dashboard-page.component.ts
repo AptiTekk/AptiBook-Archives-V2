@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component, trigger, state, style, transition, animate, ViewChild, OnInit, AfterViewInit} from "@angular/core";
+import {Component, ViewChild, OnInit} from "@angular/core";
 import {Reservation} from "../../../models/reservation/reservation.model";
 import {APIService} from "../../../core/services/api.service";
 import {ReservationInfoModalComponent} from "../../../components/reservation-info-modal/reservation-info-modal.component";
@@ -12,7 +12,7 @@ import {AuthService} from "../../../core/services/auth.service";
 import {User} from "../../../models/user.model";
 import {ResourceCategoryService} from "../../../core/services/resource-category.service";
 import {ResourceCategory} from "../../../models/resource-category.model";
-import {ActivatedRoute, UrlSegment} from "@angular/router";
+import {ActivatedRoute} from "@angular/router";
 import {CalendarComponent} from "../../../components/calendar/calendar.component";
 
 @Component({

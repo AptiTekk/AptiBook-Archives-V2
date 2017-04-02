@@ -4,9 +4,17 @@
   ~ Proprietary and confidential.
   -->
 
-<modal #modal [cancelButtonLabel]="Close" [title]="'AptiBook Information'">
-<modal-body>
-    <h4>AptiBook Version:</h4>
-    {{aptiBookVersion}}
-</modal-body>
+<modal #modal
+	   [cancelButtonLabel]="Close"
+	   [title]="'AptiBook Information'">
+	<modal-body>
+		<h4>Version</h4>
+		{{aptiBookVersion}}
+		
+		<hr/>
+		
+		<h4>Attributions</h4>
+		Third party library attributions can be found
+		<a href="https://support.aptitekk.com/article/aptibook-attributions/" target="_blank">here.</a>
+	</modal-body>
 </modal>

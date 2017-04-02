@@ -6,10 +6,8 @@ target/
 
 /node_modules/
 
-/src/frontend/**/*.js
-/src/frontend/**/*.js.map
-
 /src/main/webapp/*
+/src/frontend/**/*.js*
 
 /src/main/resources/application-development.properties
 
@@ -22,3 +20,4 @@ Test Results*.html
 /tmp/
 /.idea/typescript-compiler.xml
 /.awcache/
+/lib/
