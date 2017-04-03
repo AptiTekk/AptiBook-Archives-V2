@@ -4,33 +4,34 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.crypto;
+package com.aptitekk.aptibook.core.security;
 
 import com.aptitekk.AbstractWebClientTest;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import org.junit.Test;
 
-import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.Assert.assertNotEquals;
+import static org.junit.Assert.assertTrue;
 
 
-public class PasswordStorageTest extends AbstractWebClientTest {
+public class PasswordUtilsTest extends AbstractWebClientTest {
 
     @Test
     public void testSamePasswordHashesAreDifferent() throws Exception {
         String password = PasswordGenerator.generateRandomPassword(50);
 
-        String passwordHash1 = PasswordStorage.createHash(password);
-        String passwordHash2 = PasswordStorage.createHash(password);
+        String passwordHash1 = PasswordUtils.encodePassword(password);
+        String passwordHash2 = PasswordUtils.encodePassword(password);
 
-        assertThat(passwordHash1).isNotEqualTo(passwordHash2);
+        assertNotEquals(passwordHash1, passwordHash2);
     }
 
     @Test
     public void testPasswordIsValid() throws Exception {
         String password = PasswordGenerator.generateRandomPassword(50);
 
-        String passwordHash = PasswordStorage.createHash(password);
+        String passwordHash = PasswordUtils.encodePassword(password);
 
-        assertThat(PasswordStorage.verifyPassword(password, passwordHash)).isTrue();
+        assertTrue(PasswordUtils.passwordsMatch(password, passwordHash));
     }
 }

@@ -6,7 +6,6 @@
 
 package com.aptitekk.aptibook.core.services.tenant;
 
-import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerMapping;
@@ -20,13 +19,10 @@ import java.util.Map;
 @Component
 public class TenantInterceptor extends HandlerInterceptorAdapter {
 
-    private final TenantRepository tenantRepository;
     private final TenantManagementService tenantManagementService;
 
     @Autowired
-    public TenantInterceptor(TenantRepository tenantRepository,
-                             TenantManagementService tenantManagementService) {
-        this.tenantRepository = tenantRepository;
+    public TenantInterceptor(TenantManagementService tenantManagementService) {
         this.tenantManagementService = tenantManagementService;
     }
 

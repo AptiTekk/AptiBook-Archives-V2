@@ -6,13 +6,13 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
+import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.entity.NotificationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
@@ -114,12 +114,7 @@ public class UserController extends APIControllerAbstract {
         }
 
         String newPassword = PasswordGenerator.generateRandomPassword(10);
-        try {
-            newUser.hashedPassword = PasswordStorage.createHash(newPassword);
-        } catch (PasswordStorage.CannotPerformOperationException e) {
-            logService.logException(getClass(), e, "Could not generate new User's password.");
-            return serverError("The User's password could not be generated.");
-        }
+        newUser.hashedPassword = PasswordUtils.encodePassword(newPassword);
 
         newUser.verified = true;
         newUser.userState = User.State.APPROVED;
@@ -201,13 +196,7 @@ public class UserController extends APIControllerAbstract {
 
         if (userDTO.newPassword != null) {
             userValidator.validatePassword(userDTO.newPassword);
-
-            try {
-                currentUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
-            } catch (PasswordStorage.CannotPerformOperationException e) {
-                logService.logException(getClass(), e, "Could not hash password from PATCH.");
-                return serverError("Could not save new password.");
-            }
+            currentUser.hashedPassword = PasswordUtils.encodePassword(userDTO.newPassword);
         }
 
         if (userDTO.userGroups != null) {

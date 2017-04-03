@@ -6,12 +6,12 @@
 
 package com.aptitekk.aptibook.core.domain.repositories;
 
-import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
+import com.aptitekk.aptibook.core.security.PasswordUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -94,10 +94,10 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
                     .setParameter("tenant", getTenant())
                     .getSingleResult();
             if (user != null && user.hashedPassword != null) {
-                if (PasswordStorage.verifyPassword(password, user.hashedPassword))
+                if (PasswordUtils.passwordsMatch(password, user.hashedPassword))
                     return user;
             }
-        } catch (PersistenceException | PasswordStorage.CannotPerformOperationException | PasswordStorage.InvalidHashException e) {
+        } catch (PersistenceException e) {
             return null;
         }
         return null;

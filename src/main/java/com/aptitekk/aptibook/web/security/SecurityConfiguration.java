@@ -13,34 +13,36 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final RESTAuthenticationEntryPoint authenticationEntryPoint;
-
-    private final RESTAuthenticationSuccessHandler authenticationSuccessHandler;
-
-    private final RESTAuthenticationFailureHandler authenticationFailureHandler;
+    private final DatabaseAuthenticationProvider databaseAuthenticationProvider;
+    private final TenantFilter tenantFilter;
 
     @Autowired
-    public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint, RESTAuthenticationSuccessHandler authenticationSuccessHandler, RESTAuthenticationFailureHandler authenticationFailureHandler) {
+    public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint,
+                                 DatabaseAuthenticationProvider databaseAuthenticationProvider,
+                                 TenantFilter tenantFilter) {
         this.authenticationEntryPoint = authenticationEntryPoint;
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.databaseAuthenticationProvider = databaseAuthenticationProvider;
+        this.tenantFilter = tenantFilter;
     }
 
     @Autowired
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        auth.inMemoryAuthentication()
-                .withUser("user").password("user").roles("USER")
-                .and().withUser("admin").password("admin").roles("ADMIN");
+        // Authenticates using the database authentication provider. (Username and Password)
+        auth.authenticationProvider(databaseAuthenticationProvider);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
+                // Add the tenant filter
+                .addFilterAfter(tenantFilter, SecurityContextPersistenceFilter.class)
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
                 //.antMatchers("/api/*/auth/sign-in").permitAll() // Everyone can access the sign in endpoint.
@@ -50,18 +52,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .anyRequest().permitAll() // Permit anything outside of the api endpoints.
                 .and()
 
+                // Enable HTTP Basic authentication
+                .httpBasic()
+                .and()
+
                 // Disable CSRF (Cross Site Request Forgery) for now.
                 .csrf()
-                .disable() //TODO: Look into CSRF
+                .and() //TODO: Look into CSRF
 
                 // Define behavior when an unauthenticated user accesses a secured endpoint.
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint)
-                .and()
-
-                // Configure the login page behavior
-                .formLogin()
-                .successHandler(authenticationSuccessHandler)
-                .failureHandler(authenticationFailureHandler);
+                .and();
     }
 }
