@@ -24,7 +24,7 @@ export class AuthService {
      */
     public reloadUser(): void {
         this.apiService.get("auth/sign-in").subscribe(
-            response => this.user.next(<User>response),
+            response => this.user.next(response),
             err => this.user.next(undefined));
     }
 

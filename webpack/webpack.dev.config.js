@@ -11,7 +11,7 @@ const path = require('path');
 config.module.rules.unshift(
     {
         test: /\.ts$/,
-        use: ['awesome-typescript-loader', 'angular2-template-loader', 'angular-router-loader?debug=true'],
+        use: ['awesome-typescript-loader', 'angular2-template-loader', 'angular-router-loader'],
         exclude: [/\.(spec|e2e)\.ts$/]
     }
 );

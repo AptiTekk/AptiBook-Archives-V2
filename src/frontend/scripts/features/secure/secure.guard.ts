@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate, UrlSegment} from "@angular/router";
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {AuthService} from "../../core/services/auth.service";
@@ -22,13 +22,7 @@ export class SecureGuard implements CanActivate {
                     if (user) {
                         listener.next(true);
                     } else {
-                        let urlSegments: UrlSegment[] = route.url;
-                        for (let segment of urlSegments) {
-                            if (segment.toString() === "secure") {
-                                this.router.navigate(['', 'sign-in']);
-                                break;
-                            }
-                        }
+                        this.router.navigate(['', 'sign-in']);
                         listener.next(false);
                     }
                 });
