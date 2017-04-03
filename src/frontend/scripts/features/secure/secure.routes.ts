@@ -50,90 +50,16 @@ const routes: Routes = [
                 loadChildren: './search-results/search-results.module#SearchResultsModule'
             },
             {
-                path: 'my',
-                children: [
-                    {
-                        path: 'account',
-                        component: AccountComponent
-                    },
-                    {
-                        path: 'notifications',
-                        component: NotificationsComponent
-                    },
-                    {
-                        path: '**',
-                        redirectTo: 'account'
-                    }
-                ]
+                path: 'user',
+                loadChildren: './user/user.module#UserModule'
             },
             {
                 path: 'configuration',
-                children: [
-                    {
-                        path: 'resources',
-                        component: ResourcesConfigurationComponent
-                    },
-                    {
-                        path: 'resources/:resourceCategory',
-                        component: ResourcesConfigurationComponent,
-                    },
-                    {
-                        path: 'users',
-                        component: UsersConfigurationComponent,
-                        children: [
-                            {
-                                path: '',
-                                component: AllUsersComponent
-                            },
-                            {
-                                path: 'groups',
-                                component: GroupsComponent
-                            },
-                            {
-                                path: '**',
-                                redirectTo: ''
-                            }
-                        ]
-                    },
-                    {
-                        path: 'properties/:section',
-                        component: PropertiesConfigurationComponent,
-                    },
-                    {
-                        path: 'properties',
-                        redirectTo: 'properties/personalization'
-                    },
-                    {
-                        path: '**',
-                        redirectTo: 'resources'
-                    }
-                ]
+                loadChildren: './configuration/configuration.module#ConfigurationModule'
             },
             {
                 path: 'management',
-                component: ManagementComponent,
-                children: [
-                    {
-                        path: 'queue',
-                        component: ApprovalQueueComponent
-                    },
-                    {
-                        path: 'approved',
-                        component: ApprovedComponent
-                    },
-                    {
-                        path: 'rejected',
-                        component: RejectedComponent
-                    },
-                    {
-                        path: 'calendar',
-                        component: CalendarComponent
-                    },
-                    {
-                        path: '**',
-                        redirectTo: 'pending'
-                    }
-                ]
+                loadChildren: './management/management.module#ManagementModule'
             },
             {
                 path: '**',

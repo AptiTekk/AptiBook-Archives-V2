@@ -11,10 +11,16 @@ import {UsersConfigurationModule} from "./users/users.module";
 import {ResourcesConfigurationModule} from "./resources/resources.module";
 import {PropertiesConfigurationModule} from "./properties/properties.module";
 import {SharedModule} from "../../../shared/shared.module";
+import {ConfigurationRoutesModule} from "./configuration.routes";
 
 @NgModule({
     imports: [
         SharedModule,
+
+        // Routes
+        ConfigurationRoutesModule,
+
+        // Components
         ResourcesConfigurationModule,
         PropertiesConfigurationModule,
         UsersConfigurationModule

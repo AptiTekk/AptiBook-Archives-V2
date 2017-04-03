@@ -18,7 +18,7 @@
 	
 	<div id="notifications"
 		 [class.unread]="unreadNotifications.length > 0"
-		 [routerLink]="['', 'secure', 'my', 'notifications']"
+		 [routerLink]="['', 'secure', 'user', 'notifications']"
 		 [routerLinkActive]="'active'">
 		<i class="fa fa-bell"
 		   aria-hidden="true"></i>
@@ -37,7 +37,7 @@
 									  [label]="'Upcoming Reservations'">
 				</accordion-navigation>
 			</accordion-navigation>
-			<accordion-navigation [link]="['', 'secure', 'my', 'account']"
+			<accordion-navigation [link]="['', 'secure', 'user', 'account']"
 								  [icon]="'user'"
 								  [label]="'My Account'">
 			</accordion-navigation>

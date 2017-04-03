@@ -14,11 +14,14 @@ import {ApprovedComponent} from "./approved/approved.component";
 import {RejectedComponent} from "./rejected/rejected.component";
 import {CalendarComponent} from "./calendar/calendar.component";
 import {CommonModule} from "@angular/common";
+import {ManagementRoutesModule} from "./management.routes";
 
 @NgModule({
     imports: [
-        CommonModule,
-        SharedModule
+        SharedModule,
+
+        //Routes
+        ManagementRoutesModule
     ],
     declarations: [
         ManagementComponent,

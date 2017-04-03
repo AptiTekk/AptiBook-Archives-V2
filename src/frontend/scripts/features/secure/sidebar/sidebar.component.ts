@@ -34,8 +34,8 @@ export class SidebarComponent implements OnInit {
     ];
 
     public myLinks: NavigationLink[] = [
-        {icon: 'pencil', label: 'My Account', path: ['', 'secure', 'my', 'account']},
-        {icon: 'bell', label: 'My Notifications', path: ['', 'secure', 'my', 'notifications']}
+        {icon: 'pencil', label: 'My Account', path: ['', 'secure', 'user', 'account']},
+        {icon: 'bell', label: 'My Notifications', path: ['', 'secure', 'user', 'notifications']}
     ];
 
     /**
