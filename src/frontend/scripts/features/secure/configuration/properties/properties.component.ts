@@ -31,7 +31,7 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
 
     public properties: Property[];
 
-    protected sectionLinks: NavigationLink[] = [
+    sectionLinks: NavigationLink[] = [
         {
             label: 'Personalization',
             icon: 'paint-brush',
@@ -46,7 +46,7 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
 
     @ViewChildren(forwardRef(() => PropertiesSectionComponent)) propertySections: QueryList<PropertiesSectionComponent>;
 
-    protected formGroup: FormGroup;
+    formGroup: FormGroup;
 
     constructor(private router: Router,
             private activatedRoute: ActivatedRoute,

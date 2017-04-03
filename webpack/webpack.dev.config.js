@@ -11,18 +11,10 @@ const path = require('path');
 config.module.rules.unshift(
     {
         test: /\.ts$/,
-        //use: '@ngtools/webpack',
-        use: ['awesome-typescript-loader', 'angular2-template-loader'],
+        use: ['awesome-typescript-loader', 'angular2-template-loader', 'angular-router-loader?debug=true'],
         exclude: [/\.(spec|e2e)\.ts$/]
     }
 );
-/*
-config.plugins.push(
-    new AotPlugin({
-        tsConfigPath: './tsconfig.json',
-        entryModule: 'src/frontend/scripts/app.module#AppModule'
-    })
-);*/
 
 config.devtool = 'source-map';
 config.output = {

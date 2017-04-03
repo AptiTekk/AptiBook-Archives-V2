@@ -22,15 +22,15 @@ export class TreeNodeComponent {
 
     @ViewChildren(TreeNodeComponent) children: QueryList<TreeNodeComponent>;
 
-    private nodeOverDropPoint: boolean = false;
-    private nodeOverNode: boolean = false;
+    nodeOverDropPoint: boolean = false;
+    nodeOverNode: boolean = false;
 
-    protected onNodeClick(event: MouseEvent) {
+    onNodeClick(event: MouseEvent) {
         if (this.tree.selectable)
             this.tree.onNodeSelected(this, event.ctrlKey);
     }
 
-    protected isSelected(): boolean {
+    isSelected(): boolean {
         for (let userGroup of this.tree.selectedUserGroups) {
             if (userGroup.id === this.userGroup.id)
                 return true;
@@ -41,12 +41,12 @@ export class TreeNodeComponent {
 
     /* Dragging of This Node */
 
-    protected onDragStart(event: DragEvent) {
+    onDragStart(event: DragEvent) {
         event.dataTransfer.effectAllowed = "move";
         this.tree.draggingNode = this;
     }
 
-    protected onDragEnd(event: DragEvent) {
+    onDragEnd(event: DragEvent) {
         this.tree.draggingNode = undefined;
     }
 
@@ -54,7 +54,7 @@ export class TreeNodeComponent {
 
     /* -- Drop Point Events */
 
-    protected onDragEnterDropPoint(event: DragEvent) {
+    onDragEnterDropPoint(event: DragEvent) {
         if (!this.tree.draggingNode)
             return;
 
@@ -73,12 +73,12 @@ export class TreeNodeComponent {
         this.nodeOverDropPoint = true;
     }
 
-    protected onDragLeaveDropPoint(event: DragEvent) {
+    onDragLeaveDropPoint(event: DragEvent) {
         event.dataTransfer.dropEffect = undefined;
         this.nodeOverDropPoint = false;
     }
 
-    protected onDropPointDrop(event: DragEvent) {
+    onDropPointDrop(event: DragEvent) {
         if (this.tree.draggingNode && this.nodeOverDropPoint) {
             this.tree.moveNode(this.tree.draggingNode, this.parent);
             this.nodeOverDropPoint = false;
@@ -87,7 +87,7 @@ export class TreeNodeComponent {
 
     /* -- Node Events */
 
-    protected onDragEnterNode(event: DragEvent) {
+    onDragEnterNode(event: DragEvent) {
         if (!this.tree.draggingNode)
             return;
 
@@ -108,12 +108,12 @@ export class TreeNodeComponent {
         this.nodeOverNode = true;
     }
 
-    protected onDragLeaveNode(event: DragEvent) {
+    onDragLeaveNode(event: DragEvent) {
         event.dataTransfer.dropEffect = undefined;
         this.nodeOverNode = false;
     }
 
-    protected onNodeDrop(event: DragEvent) {
+    onNodeDrop(event: DragEvent) {
         if (this.tree.draggingNode && this.nodeOverNode) {
             this.tree.moveNode(this.tree.draggingNode, this);
             this.nodeOverNode = false;

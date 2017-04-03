@@ -23,25 +23,25 @@ export class ApprovalQueueComponent implements OnInit {
     /**
      * The currently signed in user.
      */
-    protected user: User;
+    user: User;
 
     /**
      * An array containing the pending reservations.
      */
-    protected reservations: Reservation[] = [];
+    reservations: Reservation[] = [];
 
     @ViewChild('awaitingUserTable') awaitingUserTable: DataTableComponent;
-    protected reservationsAwaitingUser: Reservation[] = [];
+    reservationsAwaitingUser: Reservation[] = [];
 
     @ViewChild('awaitingOthersTable') awaitingOthersTable: DataTableComponent;
-    protected reservationsAwaitingOthers: Reservation[] = [];
+    reservationsAwaitingOthers: Reservation[] = [];
 
-    @ViewChild(ApprovalModalComponent) protected approvalModal: ApprovalModalComponent;
+    @ViewChild(ApprovalModalComponent) approvalModal: ApprovalModalComponent;
 
     /**
      * The selected reservation.
      */
-    protected selectedReservation: ReservationWithOrganizedDecisions;
+    selectedReservation: ReservationWithOrganizedDecisions;
 
     constructor(private reservationManagementService: ReservationManagementService,
                 private loaderService: LoaderService,
@@ -114,12 +114,12 @@ export class ApprovalQueueComponent implements OnInit {
         this.selectedReservation = null;
     }
 
-    protected deselectAll() {
+    deselectAll() {
         this.awaitingUserTable.deselectRows();
         this.awaitingOthersTable.deselectRows();
     }
 
-    protected decisionMade() {
+    decisionMade() {
         this.reservationManagementService.fetchReservations();
     }
 }

@@ -7,10 +7,10 @@
 import {Injectable} from "@angular/core";
 import {CanActivate, ActivatedRouteSnapshot, RouterStateSnapshot, Router} from "@angular/router";
 import {Observable} from "rxjs";
-import {SearchService} from "../../core/services/search.service";
+import {SearchService} from "../../../core/services/search.service";
 
 @Injectable()
-export class SearchGuard implements CanActivate {
+export class SearchResultsGuard implements CanActivate {
 
     constructor(private searchService: SearchService, private router: Router) {
     }

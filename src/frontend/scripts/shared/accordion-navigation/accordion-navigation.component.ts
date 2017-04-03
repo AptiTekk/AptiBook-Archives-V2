@@ -15,9 +15,9 @@ import {ActivatedRoute, NavigationEnd, Router} from "@angular/router";
 export class AccordionNavigationComponent implements OnInit, AfterViewInit {
 
     @ContentChildren(AccordionNavigationComponent) private navigationQueryList: QueryList<AccordionNavigationComponent>;
-    protected children: AccordionNavigationComponent[];
+    children: AccordionNavigationComponent[];
 
-    protected parent: AccordionNavigationComponent;
+    parent: AccordionNavigationComponent;
 
     /**
      * The font awesome icon for the component. (E.x.: 'user')
@@ -116,7 +116,7 @@ export class AccordionNavigationComponent implements OnInit, AfterViewInit {
             this.router.navigate(this.link);
     }
 
-    protected expand(): void {
+    expand(): void {
         if (this.parent) {
             this.parent.children.forEach(navigation => {
                 if (navigation !== this)
@@ -128,7 +128,7 @@ export class AccordionNavigationComponent implements OnInit, AfterViewInit {
         this.expanded = true;
     }
 
-    protected collapse(): void {
+    collapse(): void {
         if (this.canCollapse)
             this.expanded = false;
     }

@@ -21,27 +21,27 @@ export class RejectedComponent {
     /**
      * The currently signed in user.
      */
-    protected user: User;
+    user: User;
 
     /**
      * An array containing the approved reservations.
      */
-    protected reservations: Reservation[] = [];
+    reservations: Reservation[] = [];
 
     /**
      * The selected reservation.
      */
-    protected selectedReservation: ReservationWithOrganizedDecisions;
+    selectedReservation: ReservationWithOrganizedDecisions;
 
     /**
      * The modal for viewing reservation details
      */
-    @ViewChild(ApprovalModalComponent) protected approvalModal: ApprovalModalComponent;
+    @ViewChild(ApprovalModalComponent) approvalModal: ApprovalModalComponent;
 
     /**
      * The datatable containing the information about the reservations.
      */
-    @ViewChild(DataTableComponent) protected dataTable: DataTableComponent;
+    @ViewChild(DataTableComponent) dataTable: DataTableComponent;
 
     constructor(private reservationManagementService: ReservationManagementService,
                 private loaderService: LoaderService,
@@ -69,7 +69,7 @@ export class RejectedComponent {
      * Fired when a reservation is clicked in the datatable.
      * @param reservation The clicked reservation.
      */
-    protected onReservationSelected(reservation: Reservation) {
+    onReservationSelected(reservation: Reservation) {
         // The reservation is considered unorganized if it does not have a hierarchy.
         if (!reservation['hierarchy']) {
             this.reservationManagementService.organizeReservation(reservation);
@@ -82,11 +82,11 @@ export class RejectedComponent {
     /**
      * Fired when the reservation that was selected in the datatable is deselected.
      */
-    protected onReservationDeselected() {
+    onReservationDeselected() {
         this.selectedReservation = null;
     }
 
-    protected deselectAll() {
+    deselectAll() {
         this.dataTable.deselectRows();
     }
 }

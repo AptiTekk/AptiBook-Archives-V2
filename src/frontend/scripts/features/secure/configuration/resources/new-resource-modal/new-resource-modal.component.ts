@@ -35,11 +35,10 @@ export class NewResourceModalComponent implements OnInit {
 
     @Output() submitted: EventEmitter<void> = new EventEmitter<void>();
 
-    constructor(protected formBuilder: FormBuilder,
-                protected userGroupService: UserGroupService,
-                protected resourceService: ResourceService,
-                protected apiService: APIService,
-                protected loaderService: LoaderService) {
+    constructor(private formBuilder: FormBuilder,
+                private userGroupService: UserGroupService,
+                private resourceService: ResourceService,
+                private loaderService: LoaderService) {
     }
 
     ngOnInit(): void {

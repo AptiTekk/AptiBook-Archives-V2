@@ -29,7 +29,6 @@ export class CalendarComponent implements OnInit {
     filterOnlyUsersEvents: boolean = false;
 
     constructor(private userGroupService: UserGroupService,
-                protected apiService: APIService,
                 private resourceCategoryService: ResourceCategoryService,
                 private authService: AuthService) {
     }

@@ -19,8 +19,8 @@ import {Notification} from "../../models/notification.model";
 
 export class HeaderComponent implements OnInit {
 
-    protected user: User;
-    protected unreadNotifications: Notification[] = [];
+    user: User;
+    unreadNotifications: Notification[] = [];
 
     constructor(private router: Router,
                 private authService: AuthService,

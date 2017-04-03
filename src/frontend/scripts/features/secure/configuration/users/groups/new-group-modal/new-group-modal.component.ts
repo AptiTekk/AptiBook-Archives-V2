@@ -23,11 +23,11 @@ export class NewGroupModalComponent implements OnInit {
 
     formGroup: FormGroup;
 
-    private rootGroup: UserGroup;
+    rootGroup: UserGroup;
 
     constructor(private formBuilder: FormBuilder,
-                protected userGroupService: UserGroupService,
-                protected loaderService: LoaderService) {
+                private userGroupService: UserGroupService,
+                private loaderService: LoaderService) {
 
     }
 

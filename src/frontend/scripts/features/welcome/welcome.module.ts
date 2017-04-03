@@ -19,7 +19,6 @@ import {WelcomeRoutesModule} from "./welcome.routes";
  */
 @NgModule({
     imports: [
-        CommonModule,
         SharedModule,
         WelcomeRoutesModule,
         RegisterModule,

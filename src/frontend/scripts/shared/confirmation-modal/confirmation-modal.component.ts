@@ -76,7 +76,7 @@ export class ConfirmationModalComponent {
     /**
      * Called when the user clicks yes or no, or the modal is cancelled.
      */
-    protected onDecision(decisionMade: boolean) {
+    onDecision(decisionMade: boolean) {
         this.modal.closeModal();
         this.decision.emit(decisionMade);
     }

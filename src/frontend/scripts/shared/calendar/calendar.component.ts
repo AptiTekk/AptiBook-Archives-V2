@@ -188,7 +188,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
      * Gets the title of the calendar for the header.
      * @returns The title as a string, or an empty string if one is not defined.
      */
-    private getTitle(): string {
+    getTitle(): string {
         if (this.title)
             return this.title;
 

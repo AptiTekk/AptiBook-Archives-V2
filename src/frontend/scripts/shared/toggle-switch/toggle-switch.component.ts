@@ -21,15 +21,15 @@ import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 })
 export class ToggleSwitchComponent implements AfterViewInit, ControlValueAccessor {
 
-    @Input() protected onText: string = "On";
-    @Input() protected offText: string = "Off";
+    @Input() onText: string = "On";
+    @Input() offText: string = "Off";
 
-    protected switchWidth: number = 0;
+    switchWidth: number = 0;
 
     @Output()
-    protected onToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
+    onToggle: EventEmitter<boolean> = new EventEmitter<boolean>();
 
-    protected on: boolean;
+    on: boolean;
 
     ngAfterViewInit(): void {
         this.calculateSwitchWidth();
@@ -44,7 +44,7 @@ export class ToggleSwitchComponent implements AfterViewInit, ControlValueAccesso
         this.switchWidth = (maxLabelLength * 13);
     }
 
-    protected toggle() {
+    toggle() {
         this.on = !this.on;
         this.propagateChange(this.on);
         this.onToggle.next(this.on);

@@ -10,7 +10,7 @@ import {InactiveTenantComponent} from "./inactive-tenant.component";
 
 const routes: Routes = [
     {
-        path: 'inactive',
+        path: '',
         component: InactiveTenantComponent
     }
 ];

@@ -22,17 +22,17 @@ import {Resource} from "../../../../../models/resource.model";
 export class GroupsComponent implements OnInit {
 
     @ViewChild(TreeComponent) private tree: TreeComponent;
-    protected rootGroup: UserGroup;
+    rootGroup: UserGroup;
 
-    protected selectedUserGroups: UserGroup[];
-    protected selectedUserGroup: UserGroup;
+    selectedUserGroups: UserGroup[];
+    selectedUserGroup: UserGroup;
 
     @ViewChild('detailsInfoAlert') private detailsInfoAlert: AlertComponent;
     @ViewChild('detailsDangerAlert') private detailsDangerAlert: AlertComponent;
-    protected userGroupDetailsFormGroup: FormGroup;
-    protected editingDetails: boolean;
+    userGroupDetailsFormGroup: FormGroup;
+    editingDetails: boolean;
 
-    protected showAssignedUsers: boolean = true;
+    showAssignedUsers: boolean = true;
 
     constructor(private formBuilder: FormBuilder,
                 private userGroupService: UserGroupService,
@@ -52,7 +52,7 @@ export class GroupsComponent implements OnInit {
      * Returns an array containing only the names of the user's UserGroups
      * @param user The User
      */
-    protected getUserGroupsNames(user: User): string[] {
+    getUserGroupsNames(user: User): string[] {
         return user.userGroups.map(userGroup => {
             return userGroup.name
         });

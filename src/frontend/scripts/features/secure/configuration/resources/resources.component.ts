@@ -8,7 +8,6 @@ import {Component, OnInit} from "@angular/core";
 import {ResourceCategoryService} from "../../../../core/services/resource-category.service";
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import {ActivatedRoute, Router} from "@angular/router";
-import {APIService} from "../../../../core/services/api.service";
 import {Resource} from "../../../../models/resource.model";
 import {ResourceService} from "../../../../core/services/resource.service";
 import {UserGroup} from "../../../../models/user-group.model";
@@ -29,7 +28,6 @@ export class ResourcesConfigurationComponent implements OnInit {
 
     constructor(private router: Router,
                 private route: ActivatedRoute,
-                protected apiService: APIService,
                 private resourceCategoryService: ResourceCategoryService,
                 private resourceService: ResourceService,
                 private userGroupService: UserGroupService) {

@@ -24,8 +24,8 @@ export class NewCategoryModalComponent implements OnInit {
     formGroup: FormGroup;
 
     constructor(private formBuilder: FormBuilder,
-                protected resourceCategoryService: ResourceCategoryService,
-                protected loaderService: LoaderService) {
+                private resourceCategoryService: ResourceCategoryService,
+                private loaderService: LoaderService) {
 
     }
 

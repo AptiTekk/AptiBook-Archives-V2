@@ -54,9 +54,9 @@ export class FormGroupComponent {
 
     uuid: string = UUIDGenerator.generateUUID();
 
-    protected getErrorMessage(): string {
+    getErrorMessage(): string {
         if (this.errorMessages && this.control) {
-            let errors: {[key: string]: any} = this.control.errors;
+            let errors = this.control.errors;
             if (errors) {
                 for (let errorName in this.errorMessages) {
                     if (this.errorMessages.hasOwnProperty(errorName)) {

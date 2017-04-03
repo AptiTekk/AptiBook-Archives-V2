@@ -9,8 +9,21 @@ import {RouterModule, Routes} from "@angular/router";
 
 const routes: Routes = [
     {
+        path: 'secure',
+        loadChildren: './features/secure/secure.module#SecureModule'
+    },
+    {
+        path: 'inactive',
+        loadChildren: './features/inactive-tenant/inactive-tenant.module#InactiveTenantModule'
+    },
+    {
+        path: '',
+        loadChildren: './features/welcome/welcome.module#WelcomeModule'
+    },
+    {
         path: '**',
-        redirectTo: ''
+        redirectTo: '',
+        pathMatch: 'full'
     }
 ];
 

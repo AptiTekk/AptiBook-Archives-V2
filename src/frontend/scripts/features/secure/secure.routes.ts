@@ -8,10 +8,6 @@ import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 import {SecureComponent} from "./secure.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
-import {SearchGuard} from "./search.guard";
-import {ReservationDetailsComponent} from "./search-results/reservation-details/reservation-details.component";
-import {SuccessComponent} from "./search-results/success/success.component";
-import {SearchResultsComponent} from "./search-results/search-results.component";
 import {AccountComponent} from "./user/account/account.component";
 import {NotificationsComponent} from "./user/notifications/notifications.component";
 import {ResourcesConfigurationComponent} from "./configuration/resources/resources.component";
@@ -29,7 +25,7 @@ import {SecureGuard} from "./secure.guard";
 
 const routes: Routes = [
     {
-        path: 'secure',
+        path: '',
         component: SecureComponent,
         children: [
             {
@@ -51,21 +47,7 @@ const routes: Routes = [
             },
             {
                 path: 'search-results',
-                canActivate: [SearchGuard],
-                children: [
-                    {
-                        path: 'reservation-details',
-                        component: ReservationDetailsComponent
-                    },
-                    {
-                        path: 'success',
-                        component: SuccessComponent
-                    },
-                    {
-                        path: '**',
-                        component: SearchResultsComponent
-                    }
-                ]
+                loadChildren: './search-results/search-results.module#SearchResultsModule'
             },
             {
                 path: 'my',
@@ -170,8 +152,7 @@ const routes: Routes = [
         RouterModule
     ],
     providers: [
-        SecureGuard,
-        SearchGuard
+        SecureGuard
     ]
 })
 export class SecureRoutesModule {

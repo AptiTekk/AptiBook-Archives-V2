@@ -26,7 +26,7 @@ export class ResourceImageComponent {
 
     @Input() width: string;
 
-    constructor(protected apiService: APIService) {
+    constructor(private apiService: APIService) {
     }
 
     public clearImage() {

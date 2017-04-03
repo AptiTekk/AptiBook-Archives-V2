@@ -21,12 +21,17 @@ export class ImageUploaderComponent implements OnInit {
 
     @Input() currentImageUrl: string;
 
-    @ViewChild('imageUploadInput') protected imageUploadInput: ElementRef;
-    protected imagePreviewSrc: string;
+    @ViewChild('imageUploadInput') imageUploadInput: ElementRef;
+    imagePreviewSrc: string;
 
-    protected fileUploader: FileUploader;
+    fileUploader: FileUploader;
 
-    constructor(protected apiService: APIService) {
+    /**
+     * True if there is a file being dragged over top of the image currently.
+     */
+    fileOverImage: boolean;
+
+    constructor() {
     }
 
     ngOnInit(): void {
@@ -58,7 +63,7 @@ export class ImageUploaderComponent implements OnInit {
         reader.readAsDataURL(file);
     }
 
-    protected openImageFileChooser() {
+    openImageFileChooser() {
         $(this.imageUploadInput.nativeElement).trigger('click');
     }
 

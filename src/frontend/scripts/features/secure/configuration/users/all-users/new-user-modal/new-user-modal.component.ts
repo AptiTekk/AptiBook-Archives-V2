@@ -28,8 +28,8 @@ export class NewUserModalComponent implements OnInit {
     formGroup: FormGroup;
 
     constructor(private formBuilder: FormBuilder,
-                protected userService: UserService,
-                protected loaderService: LoaderService) {
+                private userService: UserService,
+                private loaderService: LoaderService) {
     }
 
     ngOnInit(): void {

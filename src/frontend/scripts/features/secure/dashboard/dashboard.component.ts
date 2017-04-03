@@ -4,15 +4,13 @@
  * Proprietary and confidential.
  */
 
-import {Component, ViewChild, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {Reservation} from "../../../models/reservation/reservation.model";
-import {APIService} from "../../../core/services/api.service";
 import {ReservationInfoModalComponent} from "../../../shared/reservation-info-modal/reservation-info-modal.component";
 import {AuthService} from "../../../core/services/auth.service";
 import {User} from "../../../models/user.model";
 import {ResourceCategoryService} from "../../../core/services/resource-category.service";
 import {ResourceCategory} from "../../../models/resource-category.model";
-import {ActivatedRoute} from "@angular/router";
 import {CalendarComponent} from "../../../shared/calendar/calendar.component";
 
 @Component({
@@ -35,10 +33,8 @@ export class DashboardComponent implements OnInit {
     filterOnlyUsersEvents: boolean = false;
 
 
-    constructor(protected apiService: APIService,
-                private authService: AuthService,
-                private resourceCategoryService: ResourceCategoryService,
-                private activatedRoute: ActivatedRoute) {
+    constructor(private authService: AuthService,
+                private resourceCategoryService: ResourceCategoryService) {
     }
 
     ngOnInit(): void {

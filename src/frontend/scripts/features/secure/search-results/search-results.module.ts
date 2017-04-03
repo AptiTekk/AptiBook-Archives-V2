@@ -12,11 +12,13 @@ import {ReservationDetailsComponent} from "./reservation-details/reservation-det
 import {SuccessComponent} from "./success/success.component";
 import {CommonModule} from "@angular/common";
 import {PipesModule} from "../../../pipes/pipes.module";
+import {SearchResultsRoutesModule} from "./search-results.routes";
 
 @NgModule({
     imports: [
         SharedModule,
-        PipesModule
+        PipesModule,
+        SearchResultsRoutesModule
     ],
     declarations: [
         SearchResultsComponent,

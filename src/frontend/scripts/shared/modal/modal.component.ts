@@ -25,7 +25,7 @@ export class ModalComponent implements OnInit {
      * Valid options are: "sm", "md", "lg".
      * Default is "md".
      */
-    @Input() protected size: string = "md";
+    @Input() size: string = "md";
 
     /**
      * Whether or not the modal should close when the user presses the ESC key.
@@ -88,7 +88,7 @@ export class ModalComponent implements OnInit {
     /**
      * Determines if the modal should be displayed or not.
      */
-    private isOpen: boolean = false;
+    isOpen: boolean = false;
 
     /**
      * The shadowy backdrop behind the modal.

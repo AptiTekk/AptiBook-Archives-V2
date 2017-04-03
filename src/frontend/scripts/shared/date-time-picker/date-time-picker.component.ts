@@ -36,15 +36,15 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
 
     @ViewChild('container') private container: ElementRef;
 
-    @Input() private inline: boolean = true;
+    @Input() inline: boolean = true;
 
-    @Input() private sideBySide: boolean = false;
+    @Input() sideBySide: boolean = false;
 
-    @Input() private stacked: boolean = false;
+    @Input() stacked: boolean = false;
 
-    @Input() private format: string = "dddd, MM/DD/YYYY, h:mm a";
+    @Input() format: string = "dddd, MM/DD/YYYY, h:mm a";
 
-    @Input() private minDate: Moment;
+    @Input() minDate: Moment;
 
     private dateTimePicker: JQuery;
 

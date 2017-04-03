@@ -19,7 +19,7 @@
 
 <ul class="nav nav-pills"
 	[class.nav-stacked]="!horizontal"
-	*ngIf="!links && navigationLinkComponents">
+	*ngIf="!links && navigationLinkComponents != null">
 	<li *ngFor="let linkComponent of navigationLinkComponents"
 		[class.active]="linkComponent.active">
 		<a (click)="linkComponent.selected.emit()"

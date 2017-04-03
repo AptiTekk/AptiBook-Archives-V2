@@ -34,7 +34,6 @@ export class SearchResultsComponent implements OnInit {
     end: Moment;
 
     constructor(private searchService: SearchService,
-                protected apiService: APIService,
                 private router: Router,
                 private resourceCategoryService: ResourceCategoryService,
                 private reservationDetailsService: ReservationDetailsService) {

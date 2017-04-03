@@ -29,8 +29,8 @@ export class EditCategoryModalComponent implements OnInit {
     resourceCategory: ResourceCategory;
 
     constructor(private formBuilder: FormBuilder,
-                protected resourceCategoryService: ResourceCategoryService,
-                protected loaderService: LoaderService) {
+                private resourceCategoryService: ResourceCategoryService,
+                private loaderService: LoaderService) {
     }
 
     ngOnInit(): void {

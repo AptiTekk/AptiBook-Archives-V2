@@ -22,27 +22,27 @@ export class AllUsersComponent implements OnInit {
     /**
      * All of the users, except admin.
      */
-    protected users: User[];
+    users: User[];
 
     /**
      * The user selected from the table.
      */
-    protected selectedUser: User;
+    selectedUser: User;
 
     /**
      * The selected user's personal information form group.
      */
-    protected selectedUserPersonalInformation: FormGroup;
+    selectedUserPersonalInformation: FormGroup;
 
     /**
      * Whether or not the selected user is being edited.
      */
-    protected editingSelectedUser: boolean;
+    editingSelectedUser: boolean;
 
     /**
      * The currently signed in user
      */
-    protected currentUser: User;
+    currentUser: User;
 
     constructor(private authService: AuthService,
                 private formBuilder: FormBuilder,
@@ -93,13 +93,13 @@ export class AllUsersComponent implements OnInit {
      * Returns an array containing only the names of the user's UserGroups
      * @param user The User
      */
-    protected getUserGroupsNames(user: User): string[] {
+    getUserGroupsNames(user: User): string[] {
         return user.userGroups.map(userGroup => {
             return userGroup.name
         });
     }
 
-    protected isSelectedUserCurrentUser(): boolean {
+    isSelectedUserCurrentUser(): boolean {
         if (this.currentUser && this.selectedUser)
             if (this.currentUser.id === this.selectedUser.id)
                 return true;
@@ -107,11 +107,11 @@ export class AllUsersComponent implements OnInit {
         return false;
     }
 
-    protected onAddNewUser() {
+    onAddNewUser() {
         this.userService.fetchUsers();
     }
 
-    protected onDeleteSelectedUser() {
+    onDeleteSelectedUser() {
         this.userService
             .deleteUser(this.selectedUser)
             .subscribe(
@@ -122,7 +122,7 @@ export class AllUsersComponent implements OnInit {
             );
     }
 
-    protected onUserSelected(user: User) {
+    onUserSelected(user: User) {
         this.selectedUser = user;
 
         this.selectedUserPersonalInformation = this.formBuilder.group({
@@ -137,18 +137,18 @@ export class AllUsersComponent implements OnInit {
         this.editingSelectedUser = false;
     }
 
-    protected onUserDeselected() {
+    onUserDeselected() {
         this.selectedUser = null;
         if (this.selectedUserPersonalInformation)
             this.selectedUserPersonalInformation.reset();
         this.editingSelectedUser = false;
     }
 
-    protected onStartEditingUser() {
+    onStartEditingUser() {
         this.editingSelectedUser = true;
     }
 
-    protected onSaveUserChanges() {
+    onSaveUserChanges() {
         this.selectedUser.emailAddress = this.selectedUserPersonalInformation.controls['emailAddress'].value;
         this.selectedUser.firstName = this.selectedUserPersonalInformation.controls['firstName'].value;
         this.selectedUser.lastName = this.selectedUserPersonalInformation.controls['lastName'].value;
@@ -164,7 +164,7 @@ export class AllUsersComponent implements OnInit {
             });
     }
 
-    protected onCancelEditingUser() {
+    onCancelEditingUser() {
         this.onUserSelected(this.selectedUser);
     }
 

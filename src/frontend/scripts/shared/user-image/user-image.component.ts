@@ -4,7 +4,6 @@
  * Proprietary and confidential.
  */
 import {Component, Input} from "@angular/core";
-import {APIService} from "../../core/services/api.service";
 import {User} from "../../models/user.model";
 
 @Component({
@@ -21,8 +20,7 @@ export class UserImageComponent {
 
     @Input() width: string;
 
-    constructor(protected apiService: APIService) {
-
+    constructor() {
     }
 
 }

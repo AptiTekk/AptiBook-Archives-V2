@@ -23,7 +23,7 @@ import {animate, state, style, transition, trigger} from "@angular/animations";
 })
 export class AccordionItemComponent {
 
-    @Input() protected title: string;
+    @Input() title: string;
 
     constructor(@Host() @Inject(forwardRef(() => AccordionComponent)) private accordion: AccordionComponent) {
     }
@@ -31,7 +31,7 @@ export class AccordionItemComponent {
     /**
      * Whether or not this accordion is expanded.
      */
-    protected activated: boolean = false;
+    activated: boolean = false;
 
     isActivated(): boolean {
         return this.activated;
@@ -41,7 +41,7 @@ export class AccordionItemComponent {
         this.activated = activated;
     }
 
-    private toggle() {
+    toggle() {
         this.accordion.toggleItem(this);
     }
 

@@ -16,7 +16,7 @@ import {Tenant} from "../../models/tenant.model";
 })
 export class WelcomeComponent implements OnInit {
 
-    private tenant: Tenant;
+    tenant: Tenant;
 
     constructor(private tenantService: TenantService) {
     }

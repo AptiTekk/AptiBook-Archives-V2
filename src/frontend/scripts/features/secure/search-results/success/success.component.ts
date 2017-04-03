@@ -4,20 +4,22 @@
  * Proprietary and confidential.
  */
 
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {ReservationService} from "../../../../core/services/reservation.service";
 import {Reservation} from "../../../../models/reservation/reservation.model";
-import {APIService} from "../../../../core/services/api.service";
 
 @Component({
     selector: 'at-search-success',
     templateUrl: 'success.component.html'
 })
-export class SuccessComponent {
+export class SuccessComponent implements OnInit {
 
     reservation: Reservation;
 
-    constructor(protected apiService: APIService, reservationService: ReservationService) {
-        reservationService.getLastReservationMade().subscribe(reservation => this.reservation = reservation);
+    constructor(private reservationService: ReservationService) {
+    }
+
+    ngOnInit(): void {
+        this.reservationService.getLastReservationMade().subscribe(reservation => this.reservation = reservation);
     }
 }

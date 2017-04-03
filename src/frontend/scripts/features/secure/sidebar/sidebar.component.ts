@@ -41,18 +41,18 @@ export class SidebarComponent implements OnInit {
     /**
      * The currently signed in user.
      */
-    private user: User;
+    user: User;
 
     //noinspection JSMismatchedCollectionQueryUpdate
     /**
      * Contains the currently signed in user's unread notifications.
      */
-    private unreadNotifications: Notification[] = [];
+    unreadNotifications: Notification[] = [];
 
     /**
      * This variable keeps track of when the user swipes the sidebar open or closed (on mobile devices)
      */
-    private swipedOpen: boolean = false;
+    swipedOpen: boolean = false;
 
     constructor(private authService: AuthService,
                 private notificationService: NotificationService,

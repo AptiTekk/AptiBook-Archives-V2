@@ -12,7 +12,7 @@ import {Component, Input} from "@angular/core";
 export class PropertiesSectionComponent {
 
     @Input() private sectionPath: string;
-    protected visible: boolean = false;
+    visible: boolean = false;
 
     /**
      * @returns The path after the /properties/ part of the url.

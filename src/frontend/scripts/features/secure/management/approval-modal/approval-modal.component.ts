@@ -57,22 +57,22 @@ export class ApprovalModalComponent implements OnInit {
     /**
      * The currently signed in user.
      */
-    protected user: User;
+    user: User;
 
     /**
      * The user group that the user is deciding on behalf of.
      */
-    protected behalfOfGroup: UserGroup;
+    behalfOfGroup: UserGroup;
 
     /**
      * The reservation which is being approved or rejected.
      */
-    protected reservation: ReservationWithOrganizedDecisions;
+    reservation: ReservationWithOrganizedDecisions;
 
     /**
      * Contains read-only fields for the reservation being approved or rejected.
      */
-    protected formGroup: FormGroup;
+    formGroup: FormGroup;
 
     constructor(private authService: AuthService,
                 private managementService: ReservationManagementService,
@@ -127,7 +127,7 @@ export class ApprovalModalComponent implements OnInit {
      * @param skipExistingDecisionCheck Whether or not to skip the check for existing decisions (which may display a modal).
      * @param skipOverridingDecisionCheck Whether or not to skip the check for overriding decisions (which may display a modal).
      */
-    private onApprove(skipExistingDecisionCheck: boolean = false, skipOverridingDecisionCheck: boolean = false): void {
+    onApprove(skipExistingDecisionCheck: boolean = false, skipOverridingDecisionCheck: boolean = false): void {
 
         // Check if we are changing the decision.
         if (!skipExistingDecisionCheck && this.reservation.decidingFor.decision) {
@@ -200,7 +200,7 @@ export class ApprovalModalComponent implements OnInit {
      * @param skipExistingDecisionCheck Whether or not to skip the check for existing decisions (which may display a modal).
      * @param skipOverridingDecisionCheck Whether or not to skip the check for overriding decisions (which may display a modal).
      */
-    private onReject(skipExistingDecisionCheck: boolean = false, skipOverridingDecisionCheck: boolean = false): void {
+    onReject(skipExistingDecisionCheck: boolean = false, skipOverridingDecisionCheck: boolean = false): void {
 
         // Check if we are changing the decision.
         if (!skipExistingDecisionCheck && this.reservation.decidingFor.decision) {
@@ -269,7 +269,7 @@ export class ApprovalModalComponent implements OnInit {
     /**
      * Called when the user clicks "Close" on the modal.
      */
-    private onClose(): void {
+    onClose(): void {
         this.close();
     }
 

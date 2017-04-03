@@ -31,8 +31,7 @@ export class ReservationDetailsComponent {
 
     formGroup: FormGroup;
 
-    constructor(protected apiService: APIService,
-                private formBuilder: FormBuilder,
+    constructor(private formBuilder: FormBuilder,
                 private reservationDetailsService: ReservationDetailsService,
                 private searchService: SearchService,
                 private authService: AuthService,
