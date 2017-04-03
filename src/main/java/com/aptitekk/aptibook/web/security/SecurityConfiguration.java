@@ -22,14 +22,20 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final RESTAuthenticationEntryPoint authenticationEntryPoint;
     private final DatabaseAuthenticationProvider databaseAuthenticationProvider;
     private final TenantFilter tenantFilter;
+    private final RESTAuthenticationSuccessHandler authenticationSuccessHandler;
+    private final RESTAuthenticationFailureHandler authenticationFailureHandler;
 
     @Autowired
     public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint,
                                  DatabaseAuthenticationProvider databaseAuthenticationProvider,
-                                 TenantFilter tenantFilter) {
+                                 TenantFilter tenantFilter,
+                                 RESTAuthenticationSuccessHandler authenticationSuccessHandler,
+                                 RESTAuthenticationFailureHandler authenticationFailureHandler) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.databaseAuthenticationProvider = databaseAuthenticationProvider;
         this.tenantFilter = tenantFilter;
+        this.authenticationSuccessHandler = authenticationSuccessHandler;
+        this.authenticationFailureHandler = authenticationFailureHandler;
     }
 
     @Autowired
@@ -56,13 +62,12 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .httpBasic()
                 .and()
 
-                // Disable CSRF (Cross Site Request Forgery) for now.
+                // Enable CSRF (Cross Site Request Forgery).
                 .csrf()
-                .and() //TODO: Look into CSRF
+                .and()
 
                 // Define behavior when an unauthenticated user accesses a secured endpoint.
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint)
-                .and();
+                .authenticationEntryPoint(authenticationEntryPoint);
     }
 }

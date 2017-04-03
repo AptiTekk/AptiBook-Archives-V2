@@ -14,6 +14,8 @@ import com.aptitekk.aptibook.core.services.CookieService;
 import com.aptitekk.aptibook.core.services.entity.PermissionService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,43 +26,14 @@ public class AuthService {
 
     private static final String COOKIE_NAME = "APTIBOOK_AUTH";
 
-    private final HttpServletRequest request;
-    private final CookieService cookieService;
-    private final TenantManagementService tenantManagementService;
     private final UserRepository userRepository;
     private final PermissionService permissionService;
 
     @Autowired
-    public AuthService(HttpServletRequest request, CookieService cookieService, TenantManagementService tenantManagementService, UserRepository userRepository, PermissionService permissionService) {
-        this.request = request;
-        this.cookieService = cookieService;
-        this.tenantManagementService = tenantManagementService;
+    public AuthService(UserRepository userRepository,
+                       PermissionService permissionService) {
         this.userRepository = userRepository;
         this.permissionService = permissionService;
-    }
-
-    /**
-     * Stores the User ID within an encrypted Cookie, related to the current Tenant, saved in the user's browser.
-     *
-     * @param user     The User to store.
-     * @param response The servlet response to save the Cookie in.
-     */
-    public void setCurrentUser(User user, HttpServletResponse response) {
-        this.setUserOfTenant(user, tenantManagementService.getTenant(), response);
-    }
-
-    /**
-     * Stores the User ID within an encrypted Cookie, related to the Tenant, saved in the user's browser.
-     *
-     * @param user     The User to store.
-     * @param tenant   The Tenant to relate the Cookie to.
-     * @param response The servlet response to save the Cookie in.
-     */
-    public void setUserOfTenant(User user, Tenant tenant, HttpServletResponse response) {
-        if (user == null || tenant == null || response == null)
-            return;
-
-        cookieService.storeEncryptedCookie(COOKIE_NAME, user.getId() + ":" + tenant.id, tenant, response);
     }
 
     /**
@@ -69,24 +42,9 @@ public class AuthService {
      * @return The User from the Cookie, or null if it could not be read / found.
      */
     public User getCurrentUser() {
-        String data = cookieService.getDataFromEncryptedCookie(COOKIE_NAME, request);
-        if (data == null)
-            return null;
-
-        String[] dataSplit = data.split(":");
-
-        if (dataSplit.length != 2)
-            return null;
-
-        try {
-            Long userId = Long.parseLong(dataSplit[0]);
-            Long tenantId = Long.parseLong(dataSplit[1]);
-
-            // Ensure that the cookie is for the same Tenant
-            if (tenantManagementService.getTenant().id.equals(tenantId))
-                return userRepository.findInCurrentTenant(userId);
-        } catch (NumberFormatException ignored) {
-        }
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication.getPrincipal() instanceof User)
+            return userRepository.findInCurrentTenant(((User) authentication.getPrincipal()).getId());
 
         return null;
     }
@@ -98,25 +56,6 @@ public class AuthService {
      */
     public boolean isUserSignedIn() {
         return getCurrentUser() != null;
-    }
-
-    /**
-     * Signs the current user out by deleting its Cookie.
-     *
-     * @param response The HttpServletResponse to store the deletion cookie in.
-     */
-    public void signOutCurrentUser(HttpServletResponse response) {
-        this.signOutUserOfTenant(tenantManagementService.getTenant(), response);
-    }
-
-    /**
-     * Signs the user out of the specified Tenant by deleting its Cookie.
-     *
-     * @param tenant   The tenant to remove the cookie from.
-     * @param response The HttpServletResponse to store the deletion cookie in.
-     */
-    public void signOutUserOfTenant(Tenant tenant, HttpServletResponse response) {
-        cookieService.deleteCookie(COOKIE_NAME, tenant, response);
     }
 
     /**

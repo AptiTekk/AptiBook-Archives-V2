@@ -23,7 +23,7 @@ export class AuthService {
      * Forces a reload of the user from the REST API
      */
     public reloadUser(): void {
-        this.apiService.get("auth/sign-in").subscribe(
+        this.apiService.get("users/current").subscribe(
             response => this.user.next(response),
             err => this.user.next(undefined));
     }
@@ -43,7 +43,7 @@ export class AuthService {
      */
     public signIn(emailAddress: String, password: String): Observable<User> {
         return Observable.create(listener => {
-            this.apiService.get("auth/sign-in", new Headers({
+            this.apiService.get("users/current", new Headers({
                 "Authorization": "Basic " + btoa(emailAddress + ":" + password)
             })).subscribe(
                 response => {

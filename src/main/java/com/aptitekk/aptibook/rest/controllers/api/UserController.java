@@ -134,6 +134,11 @@ public class UserController extends APIControllerAbstract {
         return created(modelMapper.map(newUser, UserDTO.class), "/users/" + newUser.getId());
     }
 
+    @RequestMapping(value = "/users/current", method = RequestMethod.GET)
+    public ResponseEntity<?> getCurrentUser() {
+        return ok(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
+    }
+
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable long id) {
         if (!authService.isUserSignedIn())

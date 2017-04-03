@@ -17,7 +17,8 @@ export class APIService {
     private apiUrl: string = "/api/" + this.tenantSlug + "/";
     private headers: Headers = new Headers({
         'Content-Type': 'application/json',
-        'Accept': 'application/json'
+        'Accept': 'application/json',
+        'X-Requested-With': 'XMLHttpRequest'
     });
 
     constructor(private http: Http) {

@@ -62,7 +62,7 @@ public class OAuthCallbackController {
                         if (tenant != null) {
                             try {
                                 User user = googleOAuthService.getUserFromCode(tenant, code);
-                                authService.setUserOfTenant(user, tenant, httpServletResponse);
+                                //authService.setUserOfTenant(user, tenant, httpServletResponse);
                             } catch (GoogleOAuthService.DomainNotWhitelistedException e) {
                                 redirectToTenantWithError(httpServletResponse, tenantSlug, "not-whitelisted");
                                 return;
