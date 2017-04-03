@@ -4,9 +4,17 @@
  * Proprietary and confidential.
  */
 
-var config = require('./webpack.common.config.js');
+const config = require('./webpack.common.config.js');
+const AotPlugin = require('@ngtools/webpack').AotPlugin;
+const path = require('path');
 
-var path = require('path');
+config.module.rules.unshift(
+    {
+        test: /\.ts$/,
+        use: ['awesome-typescript-loader', 'angular2-template-loader', 'angular-router-loader?debug=true'],
+        exclude: [/\.(spec|e2e)\.ts$/]
+    }
+);
 
 config.devtool = 'source-map';
 config.output = {

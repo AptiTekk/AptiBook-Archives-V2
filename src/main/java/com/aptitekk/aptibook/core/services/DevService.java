@@ -56,13 +56,13 @@ public class DevService {
                     "node_modules/.bin/webpack.cmd",
                     "--config", "webpack/webpack.dev.config.js",
                     "--watch") {
-                boolean keepPrinting = false;
+                boolean keepPrinting = true;
 
                 @Override
                 public void processLine(String line) {
                     if (keepPrinting && line.contains("hidden")) {
                         logService.logInfo(getClass(), "----");
-                        keepPrinting = false;
+                        //keepPrinting = false;
                     }
 
                     if (keepPrinting)
