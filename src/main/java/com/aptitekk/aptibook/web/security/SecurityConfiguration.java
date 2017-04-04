@@ -14,6 +14,9 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
+import org.springframework.security.web.csrf.CsrfFilter;
+import org.springframework.security.web.csrf.CsrfTokenRepository;
+import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
 @EnableWebSecurity
@@ -21,21 +24,18 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final RESTAuthenticationEntryPoint authenticationEntryPoint;
     private final DatabaseAuthenticationProvider databaseAuthenticationProvider;
-    private final TenantFilter tenantFilter;
-    private final RESTAuthenticationSuccessHandler authenticationSuccessHandler;
-    private final RESTAuthenticationFailureHandler authenticationFailureHandler;
+    private final TenantDiscoveryFilter tenantDiscoveryFilter;
+    private final CSRFCookieFilter csrfCookieFilter;
 
     @Autowired
     public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint,
                                  DatabaseAuthenticationProvider databaseAuthenticationProvider,
-                                 TenantFilter tenantFilter,
-                                 RESTAuthenticationSuccessHandler authenticationSuccessHandler,
-                                 RESTAuthenticationFailureHandler authenticationFailureHandler) {
+                                 TenantDiscoveryFilter tenantDiscoveryFilter,
+                                 CSRFCookieFilter csrfCookieFilter) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.databaseAuthenticationProvider = databaseAuthenticationProvider;
-        this.tenantFilter = tenantFilter;
-        this.authenticationSuccessHandler = authenticationSuccessHandler;
-        this.authenticationFailureHandler = authenticationFailureHandler;
+        this.tenantDiscoveryFilter = tenantDiscoveryFilter;
+        this.csrfCookieFilter = csrfCookieFilter;
     }
 
     @Autowired
@@ -47,8 +47,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                // Add the tenant filter
-                .addFilterAfter(tenantFilter, SecurityContextPersistenceFilter.class)
+                // Add the Tenant discovery filter
+                .addFilterAfter(tenantDiscoveryFilter, SecurityContextPersistenceFilter.class)
+                // Add the CSRF cookie filter
+                .addFilterAfter(csrfCookieFilter, CsrfFilter.class)
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
                 //.antMatchers("/api/*/auth/sign-in").permitAll() // Everyone can access the sign in endpoint.
@@ -64,10 +66,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Enable CSRF (Cross Site Request Forgery).
                 .csrf()
+                .csrfTokenRepository(generateCSRFTokenRepository())
                 .and()
 
                 // Define behavior when an unauthenticated user accesses a secured endpoint.
                 .exceptionHandling()
                 .authenticationEntryPoint(authenticationEntryPoint);
+    }
+
+    /**
+     * Generates a CSRF Token Repository with a modified header to fit Angular (and other framework) conventions.
+     *
+     * @return The CSRF Token Repository.
+     */
+    private CsrfTokenRepository generateCSRFTokenRepository() {
+        HttpSessionCsrfTokenRepository tokenRepository = new HttpSessionCsrfTokenRepository();
+        tokenRepository.setHeaderName("X-XSRF-TOKEN");
+        return tokenRepository;
     }
 }

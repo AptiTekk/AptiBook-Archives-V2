@@ -9,30 +9,29 @@ package com.aptitekk.aptibook.web.security;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.GenericFilterBean;
+import org.springframework.web.filter.OncePerRequestFilter;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
-import javax.servlet.ServletRequest;
-import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
  * Extracts the tenant slug from the url (if applicable) and stores the tenant in the request for later use.
  */
 @Component
-public class TenantFilter extends GenericFilterBean {
+public class TenantDiscoveryFilter extends OncePerRequestFilter {
 
     private final TenantManagementService tenantManagementService;
 
     @Autowired
-    public TenantFilter(TenantManagementService tenantManagementService) {
+    public TenantDiscoveryFilter(TenantManagementService tenantManagementService) {
         this.tenantManagementService = tenantManagementService;
     }
 
     @Override
-    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
         HttpServletRequest httpServletRequest = (HttpServletRequest) request;
         String[] path = httpServletRequest.getRequestURI().substring(1).split("/");
 
@@ -48,6 +47,7 @@ public class TenantFilter extends GenericFilterBean {
             }
         }
 
-        chain.doFilter(request, response);
+        filterChain.doFilter(request, response);
     }
+
 }
