@@ -6,12 +6,15 @@
 
 package com.aptitekk.aptibook.web.security;
 
+import com.aptitekk.aptibook.web.security.tenant.TenantAuthenticationFilter;
+import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
+import com.aptitekk.aptibook.web.security.tenant.TenantMapAuthenticationTokenProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -22,34 +25,19 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final RESTAuthenticationEntryPoint authenticationEntryPoint;
-    private final DatabaseAuthenticationProvider databaseAuthenticationProvider;
-    private final TenantMapAuthenticationTokenProvider tenantMapAuthenticationTokenProvider;
     private final TenantDiscoveryFilter tenantDiscoveryFilter;
     private final TenantAuthenticationFilter tenantAuthenticationFilter;
     private final CSRFCookieFilter csrfCookieFilter;
 
     @Autowired
     public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint,
-                                 DatabaseAuthenticationProvider databaseAuthenticationProvider,
-                                 TenantMapAuthenticationTokenProvider tenantMapAuthenticationTokenProvider,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
                                  TenantAuthenticationFilter tenantAuthenticationFilter,
                                  CSRFCookieFilter csrfCookieFilter) {
         this.authenticationEntryPoint = authenticationEntryPoint;
-        this.databaseAuthenticationProvider = databaseAuthenticationProvider;
-        this.tenantMapAuthenticationTokenProvider = tenantMapAuthenticationTokenProvider;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.tenantAuthenticationFilter = tenantAuthenticationFilter;
         this.csrfCookieFilter = csrfCookieFilter;
-    }
-
-    @Override
-    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-        auth
-                // Authenticates using the database authentication provider. (Username and Password)
-                .authenticationProvider(databaseAuthenticationProvider)
-                // Takes care of the TenantMapAuthenticationTokens who were set to authenticated = false by the TenantAuthenticationFilter.
-                .authenticationProvider(tenantMapAuthenticationTokenProvider);
     }
 
     @Override
@@ -69,6 +57,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .antMatchers("/api/**").authenticated() // All other endpoints must be authenticated.
                 .anyRequest().permitAll() // Permit anything outside of the api endpoints.
                 .and()
+
+                // Enable the default Form Login authentication.
+                .formLogin()
+                .disable()
 
                 // Enable HTTP Basic authentication
                 .httpBasic()

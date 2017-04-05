@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.security;
+package com.aptitekk.aptibook.web.security.tenant;
 
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
@@ -24,20 +24,21 @@ import java.io.IOException;
 /**
  * The purpose of this filter is to enable the ability for users to be signed into multiple Tenants at the same time.
  * <p>
- * This is achieved by setting the TenantMapAuthenticationToken (which holds a map with keys of Tenants and values of
- * authenticated User's IDs) to authenticated = false for the current request if the request was meant for a Tenant
- * for which there is no key in the map. (Or true if there is).
+ * This is achieved by setting the TenantMapAuthenticationToken's (which holds a map with keys of Tenants and values of
+ * authenticated User's IDs) current tenant to the tenant found by {@link TenantDiscoveryFilter}. This is used internally
+ * by the token to determine the result of calling the {@link TenantMapAuthenticationToken#isAuthenticated()} method. If
+ * the current tenant does not have a mapped user, then the method returns false; otherwise, true.
  * <p>
  * For example, the token of a user who is signed into /api/tenant1/ might have a map with the contents: [tenant1 -> 123].
- * Then, when the user visits /api/tenant2/, there is no key in the map of "tenant2". So, the authentication token is
- * set to authenticated = false. This tells Spring that it needs to authenticate the token.
+ * Then, when the user visits /api/tenant2/, there is no key in the map of "tenant2". So,  * isAuthenticated returns
+ * false. This tells Spring that it needs to authenticate the token.
  * <p>
  * Spring will then use the TenantMapAuthenticationTokenProvider to try to authenticate the token. This provider does
  * nothing more than return the token. This ensures that the token stays within the session context and is not deleted.
  * Without a provider, Spring would delete the token.
  * <p>
  * Finally, the user will authenticate using any other form of authentication, and this will add the "tenant2" key (in
- * our exmaple) to the map, setting the token to authenticated = true. Now, next time the user accesses /api/tenant2/,
+ * our exmaple) to the map, making the isAuthenticated method return true. Now, next time the user accesses /api/tenant2/,
  * the key will be found in the map, authenticated will be set to true, and the user is allowed access to the endpoints.
  */
 @Component
@@ -63,15 +64,8 @@ public class TenantAuthenticationFilter extends OncePerRequestFilter {
 
             // Make sure we are accessing a Tenant at all.
             if (currentTenant != null) {
-
-                // Check if there is a user in the token that is mapped to the current Tenant.
-                if (((TenantMapAuthenticationToken) authentication).getUserIdForTenant(currentTenant) == null) {
-                    // There is no user mapped, so we are not authenticated for this Tenant.
-                    authentication.setAuthenticated(false);
-                } else {
-                    // There is a user mapped, so we are authenticated for this Tenant.
-                    authentication.setAuthenticated(true);
-                }
+                // Set the current Tenant for this request on the authentication.
+                ((TenantMapAuthenticationToken) authentication).setCurrentTenant(currentTenant.id);
             }
         }
 
