@@ -136,7 +136,10 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/current", method = RequestMethod.GET)
     public ResponseEntity<?> getCurrentUser() {
-        return ok(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
+        if (authService.getCurrentUser() != null)
+            return ok(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
+        else
+            return badRequest();
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)

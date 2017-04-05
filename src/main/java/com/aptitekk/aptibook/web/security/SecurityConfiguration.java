@@ -19,37 +19,47 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
-@EnableWebSecurity
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final RESTAuthenticationEntryPoint authenticationEntryPoint;
     private final DatabaseAuthenticationProvider databaseAuthenticationProvider;
+    private final TenantMapAuthenticationTokenProvider tenantMapAuthenticationTokenProvider;
     private final TenantDiscoveryFilter tenantDiscoveryFilter;
+    private final TenantAuthenticationFilter tenantAuthenticationFilter;
     private final CSRFCookieFilter csrfCookieFilter;
 
     @Autowired
     public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint,
                                  DatabaseAuthenticationProvider databaseAuthenticationProvider,
+                                 TenantMapAuthenticationTokenProvider tenantMapAuthenticationTokenProvider,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
+                                 TenantAuthenticationFilter tenantAuthenticationFilter,
                                  CSRFCookieFilter csrfCookieFilter) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.databaseAuthenticationProvider = databaseAuthenticationProvider;
+        this.tenantMapAuthenticationTokenProvider = tenantMapAuthenticationTokenProvider;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
+        this.tenantAuthenticationFilter = tenantAuthenticationFilter;
         this.csrfCookieFilter = csrfCookieFilter;
     }
 
-    @Autowired
-    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-        // Authenticates using the database authentication provider. (Username and Password)
-        auth.authenticationProvider(databaseAuthenticationProvider);
+    @Override
+    protected void configure(AuthenticationManagerBuilder auth) throws Exception {
+        auth
+                // Authenticates using the database authentication provider. (Username and Password)
+                .authenticationProvider(databaseAuthenticationProvider)
+                // Takes care of the TenantMapAuthenticationTokens who were set to authenticated = false by the TenantAuthenticationFilter.
+                .authenticationProvider(tenantMapAuthenticationTokenProvider);
     }
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         http
-                // Add the Tenant discovery filter
+                // Add the Tenant Discovery Filter
                 .addFilterAfter(tenantDiscoveryFilter, SecurityContextPersistenceFilter.class)
-                // Add the CSRF cookie filter
+                // Add the Tenant Authentication Filter
+                .addFilterAfter(tenantAuthenticationFilter, SecurityContextPersistenceFilter.class)
+                // Add the CSRF Cookie Filter
                 .addFilterAfter(csrfCookieFilter, CsrfFilter.class)
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
@@ -62,6 +72,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Enable HTTP Basic authentication
                 .httpBasic()
+                .realmName("AptiBook")
                 .and()
 
                 // Enable CSRF (Cross Site Request Forgery).

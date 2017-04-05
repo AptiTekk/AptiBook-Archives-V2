@@ -10,21 +10,15 @@ import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.services.CookieService;
 import com.aptitekk.aptibook.core.services.entity.PermissionService;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.web.security.TenantMapAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
 @Service
 public class AuthService {
-
-    private static final String COOKIE_NAME = "APTIBOOK_AUTH";
 
     private final UserRepository userRepository;
     private final PermissionService permissionService;
@@ -43,8 +37,12 @@ public class AuthService {
      */
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication.getPrincipal() instanceof User)
-            return userRepository.findInCurrentTenant(((User) authentication.getPrincipal()).getId());
+        if (authentication instanceof TenantMapAuthenticationToken) {
+            Tenant tenant = userRepository.getTenant();
+            Long userId = ((TenantMapAuthenticationToken) authentication).getUserIdForTenant(tenant);
+
+            return userRepository.findInCurrentTenant(userId);
+        }
 
         return null;
     }

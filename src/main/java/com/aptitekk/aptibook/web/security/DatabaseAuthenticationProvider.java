@@ -14,9 +14,8 @@ import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 
 /**
  * Authenticates with User entities from the database.
@@ -36,7 +35,7 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider {
 
         String emailAddress = authentication.getName();
 
-        if(authentication.getCredentials() == null)
+        if (authentication.getCredentials() == null)
             throw new BadCredentialsException("No Password Supplied");
         String password = authentication.getCredentials().toString();
 
@@ -45,7 +44,18 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider {
         if (user == null)
             throw new BadCredentialsException("Bad Credentials");
 
-        return new UsernamePasswordAuthenticationToken(user, null, new ArrayList<>());
+        // Look for an existing Authentication Token, and append to it. Otherwise, make a new Token.
+        Authentication existingAuthentication = SecurityContextHolder.getContext().getAuthentication();
+        if (existingAuthentication instanceof TenantMapAuthenticationToken) {
+            ((TenantMapAuthenticationToken) existingAuthentication).addAuthenticatedUser(user.tenant, user.getId());
+            existingAuthentication.setAuthenticated(true);
+            return existingAuthentication;
+        } else {
+            TenantMapAuthenticationToken authenticationToken = new TenantMapAuthenticationToken();
+            authenticationToken.addAuthenticatedUser(user.tenant, user.getId());
+            authenticationToken.setAuthenticated(true);
+            return authenticationToken;
+        }
     }
 
     @Override
