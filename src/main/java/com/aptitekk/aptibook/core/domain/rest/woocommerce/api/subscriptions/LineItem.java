@@ -11,6 +11,7 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
@@ -31,7 +32,7 @@ public class LineItem {
     @JsonProperty("product_id")
     private Integer productId;
     private String sku;
-    private List<MetaItem> meta = new ArrayList<>();
+    private HashMap<String, MetaItem> meta;
 
     public Integer getId() {
         return id;
@@ -121,11 +122,11 @@ public class LineItem {
         this.sku = sku;
     }
 
-    public List<MetaItem> getMeta() {
+    public HashMap<String, MetaItem> getMeta() {
         return meta;
     }
 
-    public void setMeta(List<MetaItem> meta) {
+    public void setMeta(HashMap<String, MetaItem> meta) {
         this.meta = meta;
     }
 

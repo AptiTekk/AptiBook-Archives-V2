@@ -6,6 +6,7 @@
 
 package com.aptitekk.aptibook.web.security;
 
+import com.aptitekk.aptibook.web.security.tenant.TenantAccessDecisionManager;
 import com.aptitekk.aptibook.web.security.tenant.TenantAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantMapAuthenticationTokenProvider;
@@ -16,6 +17,8 @@ import org.springframework.security.config.annotation.authentication.builders.Au
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -27,16 +30,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final RESTAuthenticationEntryPoint authenticationEntryPoint;
     private final TenantDiscoveryFilter tenantDiscoveryFilter;
     private final TenantAuthenticationFilter tenantAuthenticationFilter;
+    private final TenantAccessDecisionManager tenantAccessDecisionManager;
     private final CSRFCookieFilter csrfCookieFilter;
 
     @Autowired
     public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
                                  TenantAuthenticationFilter tenantAuthenticationFilter,
+                                 TenantAccessDecisionManager tenantAccessDecisionManager,
                                  CSRFCookieFilter csrfCookieFilter) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.tenantAuthenticationFilter = tenantAuthenticationFilter;
+        this.tenantAccessDecisionManager = tenantAccessDecisionManager;
         this.csrfCookieFilter = csrfCookieFilter;
     }
 
@@ -51,7 +57,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterAfter(csrfCookieFilter, CsrfFilter.class)
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
-                //.antMatchers("/api/*/auth/sign-in").permitAll() // Everyone can access the sign in endpoint.
+                //.accessDecisionManager(tenantAccessDecisionManager)
                 .antMatchers(HttpMethod.GET, "/api/*/oauthUrl/*").permitAll() // Everyone can access the OAuth URL generators
                 .antMatchers(HttpMethod.GET, "/api/*/tenant").permitAll() // Everyone can access the basic tenant details
                 .antMatchers("/api/**").authenticated() // All other endpoints must be authenticated.
