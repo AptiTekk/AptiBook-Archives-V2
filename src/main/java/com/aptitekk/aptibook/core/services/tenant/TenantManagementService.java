@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.core.services.tenant;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
+import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -75,7 +76,7 @@ public class TenantManagementService {
     public Tenant getTenant() {
         try {
             if (request != null) {
-                Object attribute = request.getAttribute("tenant");
+                Object attribute = request.getAttribute(TenantDiscoveryFilter.TENANT_ATTRIBUTE);
                 if (attribute != null && attribute instanceof Tenant)
                     return (Tenant) attribute;
             }

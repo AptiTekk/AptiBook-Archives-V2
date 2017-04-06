@@ -8,15 +8,15 @@ package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.web.security.tenant.TenantMapAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
 
 /**
  * Authenticates with User entities from the database.
@@ -45,17 +45,7 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider {
         if (user == null)
             throw new BadCredentialsException("Bad Credentials");
 
-        // Look for an existing Authentication Token, and append to it. Otherwise, make a new Token.
-        Authentication existingAuthentication = SecurityContextHolder.getContext().getAuthentication();
-        if (existingAuthentication instanceof TenantMapAuthenticationToken) {
-            ((TenantMapAuthenticationToken) existingAuthentication).addAuthenticatedUser(user.tenant.id, user.getId());
-            return existingAuthentication;
-        } else {
-            TenantMapAuthenticationToken authenticationToken = new TenantMapAuthenticationToken();
-            authenticationToken.setCurrentTenant(user.tenant.id);
-            authenticationToken.addAuthenticatedUser(user.tenant.id, user.getId());
-            return authenticationToken;
-        }
+        return new UsernamePasswordAuthenticationToken(user.getId(), null, new ArrayList<>());
     }
 
     @Override

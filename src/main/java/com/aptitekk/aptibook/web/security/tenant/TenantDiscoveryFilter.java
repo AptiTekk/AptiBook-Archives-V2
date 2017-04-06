@@ -23,6 +23,8 @@ import java.io.IOException;
 @Component
 public class TenantDiscoveryFilter extends OncePerRequestFilter {
 
+    public static final String TENANT_ATTRIBUTE = "tenant";
+
     private final TenantManagementService tenantManagementService;
 
     @Autowired
@@ -43,7 +45,7 @@ public class TenantDiscoveryFilter extends OncePerRequestFilter {
                 // Ensure the slug is allowed
                 if (tenantManagementService.getAllowedTenantSlugs().contains(tenantSlug))
                     // Store the tenant for use elsewhere in the application.
-                    request.setAttribute("tenant", tenantManagementService.getTenantBySlug(tenantSlug));
+                    request.setAttribute(TENANT_ATTRIBUTE, tenantManagementService.getTenantBySlug(tenantSlug));
             }
         }
 

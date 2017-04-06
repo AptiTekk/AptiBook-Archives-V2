@@ -10,8 +10,8 @@ import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.entity.PermissionService;
-import com.aptitekk.aptibook.web.security.tenant.TenantMapAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -36,8 +36,8 @@ public class AuthService {
      */
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof TenantMapAuthenticationToken) {
-            Long userId = ((TenantMapAuthenticationToken) authentication).getCurrentAuthenticatedUserId();
+        if (authentication instanceof UsernamePasswordAuthenticationToken) {
+            Long userId = (Long) authentication.getPrincipal();
 
             return userRepository.findInCurrentTenant(userId);
         }

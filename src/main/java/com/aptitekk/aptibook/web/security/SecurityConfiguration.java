@@ -6,19 +6,13 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.web.security.tenant.TenantAccessDecisionManager;
-import com.aptitekk.aptibook.web.security.tenant.TenantAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
-import com.aptitekk.aptibook.web.security.tenant.TenantMapAuthenticationTokenProvider;
+import com.aptitekk.aptibook.web.security.tenant.TenantSecurityContextSwitcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.context.SecurityContextHolderStrategy;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -29,20 +23,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final RESTAuthenticationEntryPoint authenticationEntryPoint;
     private final TenantDiscoveryFilter tenantDiscoveryFilter;
-    private final TenantAuthenticationFilter tenantAuthenticationFilter;
-    private final TenantAccessDecisionManager tenantAccessDecisionManager;
+    private final TenantSecurityContextSwitcher tenantSecurityContextSwitcher;
     private final CSRFCookieFilter csrfCookieFilter;
 
     @Autowired
     public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
-                                 TenantAuthenticationFilter tenantAuthenticationFilter,
-                                 TenantAccessDecisionManager tenantAccessDecisionManager,
+                                 TenantSecurityContextSwitcher tenantSecurityContextSwitcher,
                                  CSRFCookieFilter csrfCookieFilter) {
         this.authenticationEntryPoint = authenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
-        this.tenantAuthenticationFilter = tenantAuthenticationFilter;
-        this.tenantAccessDecisionManager = tenantAccessDecisionManager;
+        this.tenantSecurityContextSwitcher = tenantSecurityContextSwitcher;
         this.csrfCookieFilter = csrfCookieFilter;
     }
 
@@ -50,9 +41,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 // Add the Tenant Discovery Filter
-                .addFilterAfter(tenantDiscoveryFilter, SecurityContextPersistenceFilter.class)
-                // Add the Tenant Authentication Filter
-                .addFilterAfter(tenantAuthenticationFilter, SecurityContextPersistenceFilter.class)
+                .addFilterBefore(tenantDiscoveryFilter, SecurityContextPersistenceFilter.class)
+                .addFilterBefore(tenantSecurityContextSwitcher, SecurityContextPersistenceFilter.class)
+
                 // Add the CSRF Cookie Filter
                 .addFilterAfter(csrfCookieFilter, CsrfFilter.class)
                 // Define the endpoints for which users must be authenticated.
@@ -70,7 +61,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Enable HTTP Basic authentication
                 .httpBasic()
-                .realmName("AptiBook")
                 .and()
 
                 // Enable CSRF (Cross Site Request Forgery).
