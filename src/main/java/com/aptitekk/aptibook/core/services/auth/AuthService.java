@@ -55,6 +55,15 @@ public class AuthService {
     }
 
     /**
+     * Signs the current user out.
+     */
+    public void signOut() {
+        if (isUserSignedIn()) {
+            SecurityContextHolder.clearContext();
+        }
+    }
+
+    /**
      * Determines if the current user has the given permission.
      *
      * @param descriptor The permission descriptor to check for.

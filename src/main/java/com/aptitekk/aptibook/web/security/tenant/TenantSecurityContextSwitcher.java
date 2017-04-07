@@ -53,7 +53,7 @@ public class TenantSecurityContextSwitcher extends OncePerRequestFilter {
         filterChain.doFilter(request, response);
 
         // Save the context from the HttpSessionSecurityContextRepository attribute into our map.
-
+        this.saveContextFromSession(request);
     }
 
     /**

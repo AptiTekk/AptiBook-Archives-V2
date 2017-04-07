@@ -64,7 +64,7 @@ export class AuthService {
      */
     public signOut(): Observable<void> {
         return Observable.create(listener => {
-            this.apiService.get("auth/sign-out").subscribe(
+            this.apiService.get("sign-out").subscribe(
                 response => {
                     this.user.next(undefined);
                     listener.next()
