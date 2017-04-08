@@ -34,20 +34,15 @@ public class TenantDiscoveryFilter extends OncePerRequestFilter {
 
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-        HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        String[] path = httpServletRequest.getRequestURI().substring(1).split("/");
+        String[] serverNameParts = request.getServerName().split("\\.");
 
-        // "/api/tenant/endpoint" -> ["api", "tenant", "endpoint"] -> length 3
-        if (path.length >= 2) {
-            if (path[0].equalsIgnoreCase("api")) {
-                String tenantSlug = path[1].toLowerCase();
+        // "demo.aptibook.net" -> ["demo", "aptibook", "net"]
+        String tenantSlug = serverNameParts[0].toLowerCase();
 
-                // Ensure the slug is allowed
-                if (tenantManagementService.getAllowedTenantSlugs().contains(tenantSlug))
-                    // Store the tenant for use elsewhere in the application.
-                    request.setAttribute(TENANT_ATTRIBUTE, tenantManagementService.getTenantBySlug(tenantSlug));
-            }
-        }
+        // Ensure the slug is allowed
+        if (tenantManagementService.getAllowedTenantSlugs().contains(tenantSlug))
+            // Store the tenant for use elsewhere in the application.
+            request.setAttribute(TENANT_ATTRIBUTE, tenantManagementService.getTenantBySlug(tenantSlug));
 
         filterChain.doFilter(request, response);
     }

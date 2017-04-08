@@ -30,9 +30,8 @@ public class AuthService {
     }
 
     /**
-     * Retrieves the User from the Cookie saved on the user's browser (if one exists).
-     *
-     * @return The User from the Cookie, or null if it could not be read / found.
+     * Retrieves the User from the current SecurityContext.
+     * @return The current User, or null if one could not be found.
      */
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -46,21 +45,10 @@ public class AuthService {
     }
 
     /**
-     * Determines if the user is signed in or not.
-     *
-     * @return True if the user is signed in, false otherwise.
-     */
-    public boolean isUserSignedIn() {
-        return getCurrentUser() != null;
-    }
-
-    /**
      * Signs the current user out.
      */
     public void signOut() {
-        if (isUserSignedIn()) {
-            SecurityContextHolder.clearContext();
-        }
+        SecurityContextHolder.clearContext();
     }
 
     /**

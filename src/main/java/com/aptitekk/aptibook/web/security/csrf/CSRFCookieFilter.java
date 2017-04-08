@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.security;
+package com.aptitekk.aptibook.web.security.csrf;
 
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Component;

@@ -12,13 +12,8 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1"/>
 
-    <script type="text/javascript">
-        var pathSplit = window.location.pathname.split('/');
-        var tenantSlug = pathSplit.length >= 2 ? pathSplit[1] : '';
-        document.write("<meta name=\'tenant\' content=\'" + tenantSlug + "\' />");
-        document.write("<base href=\'/" + tenantSlug + "\' />");
-    </script>
-
+	<base href="/"/>
+	
     <!-- Favicon -->
     <link rel="apple-touch-icon"
           sizes="180x180"

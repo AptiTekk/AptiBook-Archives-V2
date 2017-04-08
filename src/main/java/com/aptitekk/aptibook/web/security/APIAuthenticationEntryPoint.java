@@ -15,15 +15,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
-/**
- * This class defines the behavior when an un-authenticated user is denied access to a secured endpoint.
- */
 @Component
-public class RESTAuthenticationEntryPoint implements AuthenticationEntryPoint {
+public class APIAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
     @Override
-    public void commence(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, AuthenticationException e) throws IOException, ServletException {
-        httpServletResponse.sendError(HttpServletResponse.SC_UNAUTHORIZED);
+    public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
+        System.out.println("!!! ");
+        authException.printStackTrace();
     }
 
 }

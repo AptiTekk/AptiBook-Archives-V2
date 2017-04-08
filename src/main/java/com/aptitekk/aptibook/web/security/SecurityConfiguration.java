@@ -6,12 +6,13 @@
 
 package com.aptitekk.aptibook.web.security;
 
+import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
-import com.aptitekk.aptibook.web.security.tenant.TenantSecurityContextSwitcher;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -21,19 +22,16 @@ import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 @Configuration
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
-    private final RESTAuthenticationEntryPoint authenticationEntryPoint;
+    private final APIAuthenticationEntryPoint apiAuthenticationEntryPoint;
     private final TenantDiscoveryFilter tenantDiscoveryFilter;
-    private final TenantSecurityContextSwitcher tenantSecurityContextSwitcher;
     private final CSRFCookieFilter csrfCookieFilter;
 
     @Autowired
-    public SecurityConfiguration(RESTAuthenticationEntryPoint authenticationEntryPoint,
+    public SecurityConfiguration(APIAuthenticationEntryPoint apiAuthenticationEntryPoint,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
-                                 TenantSecurityContextSwitcher tenantSecurityContextSwitcher,
                                  CSRFCookieFilter csrfCookieFilter) {
-        this.authenticationEntryPoint = authenticationEntryPoint;
+        this.apiAuthenticationEntryPoint = apiAuthenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
-        this.tenantSecurityContextSwitcher = tenantSecurityContextSwitcher;
         this.csrfCookieFilter = csrfCookieFilter;
     }
 
@@ -42,15 +40,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 // Add the Tenant Discovery Filter
                 .addFilterBefore(tenantDiscoveryFilter, SecurityContextPersistenceFilter.class)
-                .addFilterBefore(tenantSecurityContextSwitcher, SecurityContextPersistenceFilter.class)
 
                 // Add the CSRF Cookie Filter
                 .addFilterAfter(csrfCookieFilter, CsrfFilter.class)
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
                 //.accessDecisionManager(tenantAccessDecisionManager)
-                .antMatchers(HttpMethod.GET, "/api/*/oauthUrl/*").permitAll() // Everyone can access the OAuth URL generators
-                .antMatchers(HttpMethod.GET, "/api/*/tenant").permitAll() // Everyone can access the basic tenant details
+                .antMatchers(HttpMethod.GET, "/api/oauthUrl/*").permitAll() // Everyone can access the OAuth URL generators
+                .antMatchers(HttpMethod.GET, "/api/tenant").permitAll() // Everyone can access the basic tenant details
                 .antMatchers("/api/**").authenticated() // All other endpoints must be authenticated.
                 .anyRequest().permitAll() // Permit anything outside of the api endpoints.
                 .and()
@@ -70,7 +67,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Define behavior when an unauthenticated user accesses a secured endpoint.
                 .exceptionHandling()
-                .authenticationEntryPoint(authenticationEntryPoint);
+                .authenticationEntryPoint(apiAuthenticationEntryPoint);
     }
 
     /**

@@ -32,42 +32,30 @@ public class NotificationController extends APIControllerAbstract {
 
     @RequestMapping(value = "/notifications/user/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUserNotifications(@PathVariable Long id) {
-        if (id == null) {
-            return badRequest("Missing ID");
-        }
-        if (authService.isUserSignedIn()) {
-            User user = authService.getCurrentUser();
-            if (user.isAdmin() || user.getId().equals(id)) {
-                try {
-                    List<Notification> notifications = notificationRepository.getAllForUser(user);
-                    return ok(modelMapper.map(notifications, new TypeToken<List<NotificationDTO.WithoutUser>>() {
-                    }.getType()));
-                } catch (Exception e) {
-                    return badRequest("Could not parse start or end time.");
-                }
+        User user = authService.getCurrentUser();
+        if (user.isAdmin() || user.getId().equals(id)) {
+            try {
+                List<Notification> notifications = notificationRepository.getAllForUser(user);
+                return ok(modelMapper.map(notifications, new TypeToken<List<NotificationDTO.WithoutUser>>() {
+                }.getType()));
+            } catch (Exception e) {
+                return badRequest("Could not parse start or end time.");
             }
-            return noPermission();
         }
-        return unauthorized();
+        return noPermission();
     }
 
     @RequestMapping(value = "/notifications/user/{id}/markRead", method = RequestMethod.PATCH)
     public ResponseEntity<?> markAllNotificationsRead(@PathVariable Long id) {
-        if (id == null) {
-            return badRequest("Missing ID");
-        }
-        if (authService.isUserSignedIn()) {
-            User user = authService.getCurrentUser();
-            if (user.isAdmin() || user.getId().equals(id)) {
-                try {
-                    notificationRepository.markAllAsReadForUser(user);
-                    return getUserNotifications(id);
-                } catch (Exception e) {
-                    return badRequest();
-                }
+        User user = authService.getCurrentUser();
+        if (user.isAdmin() || user.getId().equals(id)) {
+            try {
+                notificationRepository.markAllAsReadForUser(user);
+                return getUserNotifications(id);
+            } catch (Exception e) {
+                return badRequest();
             }
-            return noPermission();
         }
-        return unauthorized();
+        return noPermission();
     }
 }

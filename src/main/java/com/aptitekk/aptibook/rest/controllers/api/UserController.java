@@ -58,9 +58,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsers() {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
             return noPermission();
 
@@ -72,9 +69,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public ResponseEntity<?> addNewUser(@RequestBody UserDTO userDTO) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (userDTO == null)
             return badRequest("The User data was not supplied.");
 
@@ -144,9 +138,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         User user = userRepository.findInCurrentTenant(id);
         if (user == null)
             return notFound("No users were found with the ID: " + id);
@@ -160,9 +151,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (userDTO == null)
             return badRequest("The User data was not supplied.");
 
@@ -227,9 +215,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         User user = userRepository.findInCurrentTenant(id);
         if (user == null)
             return notFound("No users were found with the ID: " + id);

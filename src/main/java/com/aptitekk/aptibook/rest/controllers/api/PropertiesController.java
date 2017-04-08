@@ -34,9 +34,6 @@ public class PropertiesController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties", method = RequestMethod.GET)
     public ResponseEntity<?> getProperties() {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
@@ -46,10 +43,6 @@ public class PropertiesController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties/{keyName}", method = RequestMethod.GET)
     public ResponseEntity<?> getProperty(@PathVariable String keyName) {
-
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
@@ -71,10 +64,6 @@ public class PropertiesController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties/{keyName}", method = RequestMethod.PATCH)
     public ResponseEntity<?> setPropertyValue(@PathVariable String keyName, @RequestBody PropertyDTO propertyDTO) {
-
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
 

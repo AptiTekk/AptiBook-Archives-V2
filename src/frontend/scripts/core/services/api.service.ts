@@ -13,8 +13,7 @@ declare const JSOG: any;
 @Injectable()
 export class APIService {
 
-    private tenantSlug: string = document.head.querySelector("[name=tenant]")['content'];
-    private apiUrl: string = "/api/" + this.tenantSlug + "/";
+    private apiUrl: string = "/api/";
     private headers: Headers = new Headers({
         'Content-Type': 'application/json',
         'Accept': 'application/json',
