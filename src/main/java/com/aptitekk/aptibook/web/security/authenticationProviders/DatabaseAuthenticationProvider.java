@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.web.security.authenticationProviders;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.BadCredentialsException;
@@ -15,8 +16,6 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.stereotype.Component;
-
-import java.util.ArrayList;
 
 /**
  * Authenticates with User entities from the database.
@@ -43,9 +42,9 @@ public class DatabaseAuthenticationProvider implements AuthenticationProvider {
         // Find user with the email and password in the current tenant
         User user = userRepository.findUserWithCredentials(emailAddress, password);
         if (user == null)
-            throw new BadCredentialsException("Bad Credentials");
+            throw new BadCredentialsException("Invalid Username or Password");
 
-        return new UsernamePasswordAuthenticationToken(user.getId(), null, new ArrayList<>());
+        return new UserIDAuthenticationToken(user.getId());
     }
 
     @Override

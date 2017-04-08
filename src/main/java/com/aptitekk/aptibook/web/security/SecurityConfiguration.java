@@ -6,14 +6,15 @@
 
 package com.aptitekk.aptibook.web.security;
 
+import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
 import org.springframework.security.web.csrf.CsrfTokenRepository;
@@ -25,14 +26,17 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final APIAuthenticationEntryPoint apiAuthenticationEntryPoint;
     private final TenantDiscoveryFilter tenantDiscoveryFilter;
     private final CSRFCookieFilter csrfCookieFilter;
+    private final CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
 
     @Autowired
     public SecurityConfiguration(APIAuthenticationEntryPoint apiAuthenticationEntryPoint,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
-                                 CSRFCookieFilter csrfCookieFilter) {
+                                 CSRFCookieFilter csrfCookieFilter,
+                                 CustomBasicAuthenticationFilter customBasicAuthenticationFilter) {
         this.apiAuthenticationEntryPoint = apiAuthenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.csrfCookieFilter = csrfCookieFilter;
+        this.customBasicAuthenticationFilter = customBasicAuthenticationFilter;
     }
 
     @Override
@@ -40,9 +44,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 // Add the Tenant Discovery Filter
                 .addFilterBefore(tenantDiscoveryFilter, SecurityContextPersistenceFilter.class)
-
                 // Add the CSRF Cookie Filter
                 .addFilterAfter(csrfCookieFilter, CsrfFilter.class)
+                // Add the custom BasicAuthenticationFilter
+                .addFilterAt(customBasicAuthenticationFilter, BasicAuthenticationFilter.class)
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
                 //.accessDecisionManager(tenantAccessDecisionManager)

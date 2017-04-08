@@ -10,8 +10,8 @@ import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.entity.PermissionService;
+import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -31,12 +31,13 @@ public class AuthService {
 
     /**
      * Retrieves the User from the current SecurityContext.
+     *
      * @return The current User, or null if one could not be found.
      */
     public User getCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        if (authentication instanceof UsernamePasswordAuthenticationToken) {
-            Long userId = (Long) authentication.getPrincipal();
+        if (authentication instanceof UserIDAuthenticationToken) {
+            Long userId = ((UserIDAuthenticationToken) authentication).getUserId();
 
             return userRepository.findInCurrentTenant(userId);
         }
