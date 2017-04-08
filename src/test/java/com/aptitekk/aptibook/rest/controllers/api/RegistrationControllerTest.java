@@ -35,7 +35,7 @@ public class RegistrationControllerTest extends AbstractWebClientTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/junit/register")
+                        .post("/api/register")
                         .content(newUserJson.toString())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
@@ -45,7 +45,7 @@ public class RegistrationControllerTest extends AbstractWebClientTest {
         assertFalse("The user was already verified.", user.verified);
         assertNotNull("The user does not have a verification code.", user.verificationCode);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/demo/register/verify?code=" + user.verificationCode))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/register/verify?code=" + user.verificationCode))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.TEMPORARY_REDIRECT.value()));
 
         assertTrue("The user is not verified.", user.verified);

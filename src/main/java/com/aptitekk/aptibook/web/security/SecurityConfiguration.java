@@ -8,12 +8,14 @@ package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
+import com.aptitekk.aptibook.web.security.oauth.GoogleOAuthDetails;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -21,22 +23,26 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
+@EnableOAuth2Client
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final APIAuthenticationEntryPoint apiAuthenticationEntryPoint;
     private final TenantDiscoveryFilter tenantDiscoveryFilter;
     private final CSRFCookieFilter csrfCookieFilter;
     private final CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
+    private final GoogleOAuthDetails googleOAuthDetails;
 
     @Autowired
     public SecurityConfiguration(APIAuthenticationEntryPoint apiAuthenticationEntryPoint,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
                                  CSRFCookieFilter csrfCookieFilter,
-                                 CustomBasicAuthenticationFilter customBasicAuthenticationFilter) {
+                                 CustomBasicAuthenticationFilter customBasicAuthenticationFilter,
+                                 GoogleOAuthDetails googleOAuthDetails) {
         this.apiAuthenticationEntryPoint = apiAuthenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.csrfCookieFilter = csrfCookieFilter;
         this.customBasicAuthenticationFilter = customBasicAuthenticationFilter;
+        this.googleOAuthDetails = googleOAuthDetails;
     }
 
     @Override
@@ -44,21 +50,38 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         http
                 // Add the Tenant Discovery Filter
                 .addFilterBefore(tenantDiscoveryFilter, SecurityContextPersistenceFilter.class)
+
                 // Add the CSRF Cookie Filter
                 .addFilterAfter(csrfCookieFilter, CsrfFilter.class)
+
                 // Add the custom BasicAuthenticationFilter
                 .addFilterAt(customBasicAuthenticationFilter, BasicAuthenticationFilter.class)
+
+                // Add the Google OAuth Filter
+                .addFilterBefore(googleOAuthDetails.generateGoogleOAuthFilter(), BasicAuthenticationFilter.class)
+
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
-                //.accessDecisionManager(tenantAccessDecisionManager)
-                .antMatchers(HttpMethod.GET, "/api/oauthUrl/*").permitAll() // Everyone can access the OAuth URL generators
-                .antMatchers(HttpMethod.GET, "/api/tenant").permitAll() // Everyone can access the basic tenant details
-                .antMatchers("/api/**").authenticated() // All other endpoints must be authenticated.
-                .anyRequest().permitAll() // Permit anything outside of the api endpoints.
+
+                // Everyone can access the OAuth URL generators
+                .antMatchers(HttpMethod.GET, "/api/oauthUrl/*").permitAll()
+
+                // Everyone can access the basic tenant details
+                .antMatchers(HttpMethod.GET, "/api/tenant").permitAll()
+
+                // All other endpoints must be authenticated.
+                .antMatchers("/api/**").authenticated()
+
+                // Permit anything outside of the api endpoints.
+                .anyRequest().permitAll()
                 .and()
 
                 // Enable the default Form Login authentication.
                 .formLogin()
+                .disable()
+
+                // Disable the default logout endpoint, since we provide our own.
+                .logout()
                 .disable()
 
                 // Enable HTTP Basic authentication
@@ -85,4 +108,5 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
         tokenRepository.setHeaderName("X-XSRF-TOKEN");
         return tokenRepository;
     }
+
 }

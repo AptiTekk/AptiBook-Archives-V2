@@ -27,7 +27,7 @@ public class TenantControllerTest extends AbstractWebClientTest {
 
     @Test
     public void testGetTenant() throws Exception {
-        this.mockMvc.perform(get("/api/junit/tenant"))
+        this.mockMvc.perform(get("/api/tenant"))
                 .andExpect(jsonPath("$.id", is(getJUnitTenant().id.intValue())))
                 .andExpect(jsonPath("$.slug", is(getJUnitTenant().slug)));
     }
