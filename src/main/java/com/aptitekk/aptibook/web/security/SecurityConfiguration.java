@@ -63,10 +63,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
 
-                // Everyone can access the OAuth URL generators
-                .antMatchers(HttpMethod.GET, "/api/oauthUrl/*").permitAll()
+                // Everyone can access the OAuth Endpoints
+                .antMatchers(HttpMethod.GET, "/api/oauth/*").permitAll()
 
-                // Everyone can access the basic tenant details
+                // Everyone can access the basic Tenant details
                 .antMatchers(HttpMethod.GET, "/api/tenant").permitAll()
 
                 // All other endpoints must be authenticated.

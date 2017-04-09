@@ -8,13 +8,16 @@ package com.aptitekk.aptibook.web.security.oauth;
 
 import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.oauth.OAuth20Service;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.web.filter.OncePerRequestFilter;
 
@@ -36,8 +39,8 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
 
     private final String name;
     private final Property.Key propertyKey;
-    private final String apiKey;
-    private final String apiSecret;
+    protected final String apiKey;
+    protected final String apiSecret;
 
     @Autowired
     private TenantManagementService tenantManagementService;
@@ -69,7 +72,6 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
         // Check for OAuth Callback Request
         if (request.getRequestURI().startsWith(callbackPath)) {
             // Callback Request
-
             try {
                 // Check if we are accessing from a Tenant (which we redirected to), or if this is the callback from the OAuth Provider.
                 Tenant currentTenant = tenantManagementService.getTenant();
@@ -89,6 +91,10 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
                         throw new OAuthCallbackException("The origin could not be found! State: " + stateParam + " - Origin Map: " + SESSION_ORIGIN_MAP);
                     }
 
+                    // Free up some memory from the map.
+                    SESSION_ORIGIN_MAP.remove(stateParam);
+
+                    // Redirect to the callback at the user's origin.
                     response.sendRedirect(origin + callbackPath + "?code=" + codeParam);
                     return;
                 } else {
@@ -96,12 +102,26 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
                     String codeParam = request.getParameter("code");
                     if (codeParam == null) {
                         // The code is missing... This shouldn't happen!
-                        response.sendRedirect("/sign-in?oauth_error=missing_code&oauth_method=" + name);
+                        redirectWithError(response, "missing_code");
+                        return;
+                    }
+
+                    try {
+                        // Get the User from the code
+                        User user = this.getUserFromOAuthCode(buildOAuthService(createServiceBuilder(request)), codeParam);
+
+                        // Authenticate the User.
+                        SecurityContextHolder.getContext().setAuthentication(new UserIDAuthenticationToken(user.getId()));
+
+                        // Send back to Sign In page.
+                        response.sendRedirect("/sign-in");
+                        return;
+                    } catch (EmailDomainNotAllowedException e) {
+                        // The Email domain used is not allowed.
+                        redirectWithError(response, "invalid_domain");
                         return;
                     }
                 }
-
-                return;
             } catch (OAuthCallbackException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
                 response.getWriter().println("We apologize, but something wen't wrong while logging in. We have been notified of the problem.");
@@ -137,7 +157,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
                     }
 
                     // Something went wrong while generating the URL.
-                    response.sendRedirect("/sign-in?oauth_error=cannot_generate&oauth_method=" + name);
+                    redirectWithError(response, "cannot_generate");
                     return;
                 }
 
@@ -149,6 +169,15 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
         }
 
         filterChain.doFilter(request, response);
+    }
+
+    /**
+     * Redirects to the sign in page with the specified error name.
+     *
+     * @param errorName The name of the error, used in the parameters. Example: "cannot_generate"
+     */
+    private void redirectWithError(HttpServletResponse response, String errorName) throws IOException {
+        response.sendRedirect("/sign-in?oauth_error=" + errorName + "&oauth_method=" + name);
     }
 
     /**
@@ -219,9 +248,14 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
     abstract OAuth20Service buildOAuthService(ServiceBuilder serviceBuilder);
 
     /**
-     * Called after the client returns from the OAuth URL.
+     * Retrieves an existing or new User from the OAuth Code.
+     *
+     * @param oAuthService The service used for retrieving details.
+     * @param code         The code used for getting details from the OAuth Provider.
+     * @return The existing or new User. (New Users should be inserted into the database before returning.)
+     * @throws EmailDomainNotAllowedException If the email domain for the user is not allowed.
      */
-    abstract void handleCallback(HttpServletRequest request);
+    abstract User getUserFromOAuthCode(OAuth20Service oAuthService, String code) throws EmailDomainNotAllowedException;
 
     /**
      * An exception to be thrown when something goes wrong during the OAuth Callback Request.
@@ -237,6 +271,16 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
 
         public OAuthCallbackException(String message, Throwable cause) {
             super(message, cause);
+        }
+    }
+
+    /**
+     * An exception that should be thrown if the domain name of the email address that the User is signing in with
+     * is not allowed.
+     */
+    static class EmailDomainNotAllowedException extends Exception {
+        public EmailDomainNotAllowedException(String domainName) {
+            super(domainName);
         }
     }
 
