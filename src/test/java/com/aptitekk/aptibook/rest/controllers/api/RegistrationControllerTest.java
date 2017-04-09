@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.AbstractWebClientTest;
+import com.aptitekk.aptibook.AbstractWebClientTest;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.Assert.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 public class RegistrationControllerTest extends AbstractWebClientTest {
 
@@ -36,6 +37,7 @@ public class RegistrationControllerTest extends AbstractWebClientTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .post("/api/register")
+                        .with(csrf())
                         .content(newUserJson.toString())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));

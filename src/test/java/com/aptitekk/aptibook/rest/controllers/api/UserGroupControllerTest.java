@@ -6,7 +6,8 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.AbstractWebClientTest;
+import com.aptitekk.aptibook.AbstractWebClientTest;
+import com.aptitekk.aptibook.Authenticated;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
@@ -24,8 +25,10 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import static org.hamcrest.Matchers.is;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.BDDMockito.given;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 
+@Authenticated
 public class UserGroupControllerTest extends AbstractWebClientTest {
 
     @MockBean
@@ -50,6 +53,7 @@ public class UserGroupControllerTest extends AbstractWebClientTest {
         this.mockMvc
                 .perform(MockMvcRequestBuilders
                         .post("/api/userGroups")
+                        .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newUserGroupJson.toString()))
                 .andExpect(MockMvcResultMatchers.status().isCreated())

@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.core.security;
 
-import com.aptitekk.AbstractWebClientTest;
+import com.aptitekk.aptibook.AbstractWebClientTest;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import org.junit.Test;
 

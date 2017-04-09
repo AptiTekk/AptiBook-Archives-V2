@@ -6,8 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.AbstractWebClientTest;
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.AbstractWebClientTest;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.junit.Test;

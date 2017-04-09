@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.core.util;
 
-import com.aptitekk.AbstractWebClientTest;
+import com.aptitekk.aptibook.AbstractWebClientTest;
 import org.junit.Test;
 
 import static org.assertj.core.api.Assertions.assertThat;

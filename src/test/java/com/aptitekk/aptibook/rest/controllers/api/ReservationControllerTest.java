@@ -6,9 +6,8 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.AbstractWebClientTest;
+import com.aptitekk.aptibook.AbstractWebClientTest;
 import org.junit.Test;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 public class ReservationControllerTest extends AbstractWebClientTest {
 
