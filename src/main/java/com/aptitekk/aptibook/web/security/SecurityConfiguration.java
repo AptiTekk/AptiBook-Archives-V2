@@ -8,7 +8,7 @@ package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
-import com.aptitekk.aptibook.web.security.oauth.GoogleOAuthDetails;
+import com.aptitekk.aptibook.web.security.oauth.GoogleOAuthFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
@@ -30,19 +30,19 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final TenantDiscoveryFilter tenantDiscoveryFilter;
     private final CSRFCookieFilter csrfCookieFilter;
     private final CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
-    private final GoogleOAuthDetails googleOAuthDetails;
+    private final GoogleOAuthFilter googleOAuthFilter;
 
     @Autowired
     public SecurityConfiguration(APIAuthenticationEntryPoint apiAuthenticationEntryPoint,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
                                  CSRFCookieFilter csrfCookieFilter,
                                  CustomBasicAuthenticationFilter customBasicAuthenticationFilter,
-                                 GoogleOAuthDetails googleOAuthDetails) {
+                                 GoogleOAuthFilter googleOAuthFilter) {
         this.apiAuthenticationEntryPoint = apiAuthenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.csrfCookieFilter = csrfCookieFilter;
         this.customBasicAuthenticationFilter = customBasicAuthenticationFilter;
-        this.googleOAuthDetails = googleOAuthDetails;
+        this.googleOAuthFilter = googleOAuthFilter;
     }
 
     @Override
@@ -58,15 +58,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterAt(customBasicAuthenticationFilter, BasicAuthenticationFilter.class)
 
                 // Add the Google OAuth Filter
-                .addFilterBefore(googleOAuthDetails.generateGoogleOAuthFilter(), BasicAuthenticationFilter.class)
+                .addFilterBefore(googleOAuthFilter, BasicAuthenticationFilter.class)
 
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
 
-                // Everyone can access the OAuth URL generators
-                .antMatchers(HttpMethod.GET, "/api/oauthUrl/*").permitAll()
+                // Everyone can access the OAuth Endpoints
+                .antMatchers(HttpMethod.GET, "/api/oauth/*").permitAll()
 
-                // Everyone can access the basic tenant details
+                // Everyone can access the basic Tenant details
                 .antMatchers(HttpMethod.GET, "/api/tenant").permitAll()
 
                 // All other endpoints must be authenticated.
