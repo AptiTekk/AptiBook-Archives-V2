@@ -4,13 +4,13 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain.rest.oauth;
+package com.aptitekk.aptibook.web.security.oauth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class GoogleUserInfo {
+public class GoogleOAuthUserInfo {
 
     @JsonProperty("email")
     private String emailAddress;

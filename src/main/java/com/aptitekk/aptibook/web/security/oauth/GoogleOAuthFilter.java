@@ -10,12 +10,10 @@ import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.domain.rest.oauth.GoogleUserInfo;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.apis.GoogleApi20;
 import com.github.scribejava.core.builder.ServiceBuilder;
-import com.github.scribejava.core.exceptions.OAuthException;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.model.OAuthRequest;
 import com.github.scribejava.core.model.Response;
@@ -28,6 +26,7 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 @Component
 public class GoogleOAuthFilter extends AbstractOAuthFilter {
@@ -66,67 +65,62 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
     }
 
     @Override
-    User getUserFromOAuthCode(OAuth20Service oAuthService, String code) throws AbstractOAuthFilter.EmailDomainNotAllowedException {
-        try {
-            OAuth2AccessToken accessToken = oAuthService.getAccessToken(code);
+    User getUserFromOAuthCode(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws AbstractOAuthFilter.EmailDomainNotAllowedException, InterruptedException, ExecutionException, IOException {
+        //Get the User Info from Google
+        OAuthRequest request = new OAuthRequest(Verb.GET, GOOGLE_USER_INFO_URL);
+        oAuthService.signRequest(accessToken, request);
+        Response response = oAuthService.execute(request);
 
-            //Get the User Info from Google
-            OAuthRequest request = new OAuthRequest(Verb.GET, GOOGLE_USER_INFO_URL, oAuthService);
-            oAuthService.signRequest(accessToken, request);
-            Response response = request.send();
+        //Use ObjectMapper to parse the JSON as an Object
+        ObjectMapper objectMapper = new ObjectMapper();
+        GoogleOAuthUserInfo googleUserInfo = objectMapper.readValue(response.getBody(), GoogleOAuthUserInfo.class);
 
-            //Use ObjectMapper to parse the JSON as an Object
-            ObjectMapper objectMapper = new ObjectMapper();
-            GoogleUserInfo googleUserInfo = objectMapper.readValue(response.getBody(), GoogleUserInfo.class);
+        if (googleUserInfo != null) {
+            // Check to make sure their email domain is whitelisted.
+            Property property = propertiesRepository.findPropertyByKey(Property.Key.GOOGLE_SIGN_IN_WHITELIST);
+            String[] allowedDomains = property.propertyValue.split(",");
 
-            if (googleUserInfo != null) {
-                // Check to make sure their email domain is whitelisted.
-                Property property = propertiesRepository.findPropertyByKey(Property.Key.GOOGLE_SIGN_IN_WHITELIST);
-                String[] allowedDomains = property.propertyValue.split(",");
-
-                boolean domainWhitelisted = false;
-                // Compare each whitelisted domain to the email
-                for (String domain : allowedDomains) {
-                    if (googleUserInfo.getEmailAddress().contains(domain.trim())) {
-                        // The domain is whitelisted.
-                        domainWhitelisted = true;
-                        break;
-                    }
+            boolean domainWhitelisted = false;
+            // Compare each whitelisted domain to the email
+            for (String domain : allowedDomains) {
+                if (googleUserInfo.getEmailAddress().contains(domain.trim())) {
+                    // The domain is whitelisted.
+                    domainWhitelisted = true;
+                    break;
                 }
-
-                // If the domain is not whitelisted, throw an exception
-                if (!domainWhitelisted) {
-                    throw new EmailDomainNotAllowedException(googleUserInfo.getEmailAddress().substring(googleUserInfo.getEmailAddress().indexOf('@')));
-                }
-
-                User user = userRepository.findByEmailAddress(googleUserInfo.getEmailAddress());
-                // Check if the user does not yet exist.
-                if (user == null) {
-
-                    //Create a new user from the oauth details.
-                    user = new User();
-                    user.setEmailAddress(googleUserInfo.getEmailAddress());
-                    user.firstName = googleUserInfo.getFirstName();
-                    user.lastName = googleUserInfo.getLastName();
-                    user.verified = true;
-                    user.userState = User.State.APPROVED;
-                    user = userRepository.save(user);
-                }
-
-                //Revoke the token, we are done with it.
-                request = new OAuthRequest(Verb.GET, GOOGLE_REVOKE_URL, oAuthService);
-                request.addQuerystringParameter("token", accessToken.getAccessToken());
-                response = request.send();
-                if (!response.isSuccessful())
-                    logService.logError(getClass(), "Could not revoke access token: " + response.getMessage());
-                return user;
             }
-        } catch (IOException e) {
-            logService.logException(getClass(), e, "Could not parse code");
-        } catch (OAuthException e) {
-            e.printStackTrace();
+
+            // If the domain is not whitelisted, throw an exception
+            if (!domainWhitelisted) {
+                throw new EmailDomainNotAllowedException(googleUserInfo.getEmailAddress().substring(googleUserInfo.getEmailAddress().indexOf('@')));
+            }
+
+            User user = userRepository.findByEmailAddress(googleUserInfo.getEmailAddress());
+            // Check if the user does not yet exist.
+            if (user == null) {
+
+                //Create a new user from the oauth details.
+                user = new User();
+                user.setEmailAddress(googleUserInfo.getEmailAddress());
+                user.firstName = googleUserInfo.getFirstName();
+                user.lastName = googleUserInfo.getLastName();
+                user.verified = true;
+                user.userState = User.State.APPROVED;
+                user = userRepository.save(user);
+            }
+
+            return user;
         }
         return null;
+    }
+
+    @Override
+    void revokeToken(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws InterruptedException, ExecutionException, IOException {
+        OAuthRequest request = new OAuthRequest(Verb.GET, GOOGLE_REVOKE_URL);
+        request.addQuerystringParameter("token", accessToken.getAccessToken());
+        Response response = oAuthService.execute(request);
+        if (!response.isSuccessful())
+            logService.logError(getClass(), "Could not revoke access token: " + response.getMessage());
     }
 
 }
