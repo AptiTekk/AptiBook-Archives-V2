@@ -34,7 +34,7 @@ import java.util.Map;
 public class GoogleOAuthService {
 
     private static final String GOOGLE_API_KEY = "908953557522-o6m9dri19o1bmh0hrtkjgh6n0522n5lj.apps.googleusercontent.com";
-    private static final String GOOGLE_API_SECRET = "-mXdL_YoL6Q6HrLIF7lUZpAo";
+    private static final String GOOGLE_API_SECRET = "1asutKqHqijieeqgHGeu-ouE";
     private static final String GOOGLE_USER_INFO_URL = "https://www.googleapis.com/oauth2/v2/userinfo";
     private static final String GOOGLE_REVOKE_URL = "https://accounts.google.com/o/oauth2/revoke";
 
