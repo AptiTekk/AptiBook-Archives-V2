@@ -23,7 +23,7 @@ export class OAuthService {
     public reloadOAuthURLs() {
 
         //Reload Google URL
-        this.apiService.get("/oauthUrl/google").subscribe(
+        this.apiService.get("/oauth/google").subscribe(
             response => {
                 this.googleOAuthUrl.next(response.url);
             },

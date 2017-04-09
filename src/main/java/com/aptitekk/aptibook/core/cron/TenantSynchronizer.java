@@ -24,8 +24,8 @@ import org.springframework.stereotype.Service;
 import org.threeten.extra.Days;
 
 import java.time.LocalDateTime;
-import java.time.ZonedDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 @Service
@@ -159,9 +159,9 @@ public class TenantSynchronizer {
      * @return The slug if one exists, null otherwise.
      */
     private String getSlugFromLineItem(LineItem lineItem) {
-        List<MetaItem> meta = lineItem.getMeta();
+        HashMap<String, MetaItem> meta = lineItem.getMeta();
         if (meta != null && !meta.isEmpty()) {
-            for (MetaItem metaItem : meta) {
+            for (MetaItem metaItem : meta.values()) {
                 if (metaItem.getKey().equalsIgnoreCase(URL_SLUG_META_KEY)) {
                     return metaItem.getValue();
                 }

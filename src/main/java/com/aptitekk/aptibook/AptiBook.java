@@ -6,7 +6,6 @@
 
 package com.aptitekk.aptibook;
 
-import com.aptitekk.aptibook.core.services.tenant.TenantInterceptor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -27,22 +26,6 @@ public class AptiBook {
 
     public static void main(String... args) {
         SpringApplication.run(AptiBook.class, args);
-    }
-
-    @Configuration
-    public static class AptiBookConfiguration extends WebMvcConfigurerAdapter {
-
-        final TenantInterceptor tenantInterceptor;
-
-        @Autowired
-        public AptiBookConfiguration(TenantInterceptor tenantInterceptor) {
-            this.tenantInterceptor = tenantInterceptor;
-        }
-
-        @Override
-        public void addInterceptors(InterceptorRegistry registry) {
-            registry.addInterceptor(tenantInterceptor);
-        }
     }
 
 }

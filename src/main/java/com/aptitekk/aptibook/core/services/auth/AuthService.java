@@ -7,116 +7,49 @@
 package com.aptitekk.aptibook.core.services.auth;
 
 import com.aptitekk.aptibook.core.domain.entities.Permission;
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.services.CookieService;
 import com.aptitekk.aptibook.core.services.entity.PermissionService;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
 @Service
 public class AuthService {
 
-    private static final String COOKIE_NAME = "APTIBOOK_AUTH";
-
-    private final HttpServletRequest request;
-    private final CookieService cookieService;
-    private final TenantManagementService tenantManagementService;
     private final UserRepository userRepository;
     private final PermissionService permissionService;
 
     @Autowired
-    public AuthService(HttpServletRequest request, CookieService cookieService, TenantManagementService tenantManagementService, UserRepository userRepository, PermissionService permissionService) {
-        this.request = request;
-        this.cookieService = cookieService;
-        this.tenantManagementService = tenantManagementService;
+    public AuthService(UserRepository userRepository,
+                       PermissionService permissionService) {
         this.userRepository = userRepository;
         this.permissionService = permissionService;
     }
 
     /**
-     * Stores the User ID within an encrypted Cookie, related to the current Tenant, saved in the user's browser.
+     * Retrieves the User from the current SecurityContext.
      *
-     * @param user     The User to store.
-     * @param response The servlet response to save the Cookie in.
-     */
-    public void setCurrentUser(User user, HttpServletResponse response) {
-        this.setUserOfTenant(user, tenantManagementService.getTenant(), response);
-    }
-
-    /**
-     * Stores the User ID within an encrypted Cookie, related to the Tenant, saved in the user's browser.
-     *
-     * @param user     The User to store.
-     * @param tenant   The Tenant to relate the Cookie to.
-     * @param response The servlet response to save the Cookie in.
-     */
-    public void setUserOfTenant(User user, Tenant tenant, HttpServletResponse response) {
-        if (user == null || tenant == null || response == null)
-            return;
-
-        cookieService.storeEncryptedCookie(COOKIE_NAME, user.getId() + ":" + tenant.id, tenant, response);
-    }
-
-    /**
-     * Retrieves the User from the Cookie saved on the user's browser (if one exists).
-     *
-     * @return The User from the Cookie, or null if it could not be read / found.
+     * @return The current User, or null if one could not be found.
      */
     public User getCurrentUser() {
-        String data = cookieService.getDataFromEncryptedCookie(COOKIE_NAME, request);
-        if (data == null)
-            return null;
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication instanceof UserIDAuthenticationToken) {
+            Long userId = ((UserIDAuthenticationToken) authentication).getUserId();
 
-        String[] dataSplit = data.split(":");
-
-        if (dataSplit.length != 2)
-            return null;
-
-        try {
-            Long userId = Long.parseLong(dataSplit[0]);
-            Long tenantId = Long.parseLong(dataSplit[1]);
-
-            // Ensure that the cookie is for the same Tenant
-            if (tenantManagementService.getTenant().id.equals(tenantId))
-                return userRepository.findInCurrentTenant(userId);
-        } catch (NumberFormatException ignored) {
+            return userRepository.findInCurrentTenant(userId);
         }
 
         return null;
     }
 
     /**
-     * Determines if the user is signed in or not.
-     *
-     * @return True if the user is signed in, false otherwise.
+     * Signs the current user out.
      */
-    public boolean isUserSignedIn() {
-        return getCurrentUser() != null;
-    }
-
-    /**
-     * Signs the current user out by deleting its Cookie.
-     *
-     * @param response The HttpServletResponse to store the deletion cookie in.
-     */
-    public void signOutCurrentUser(HttpServletResponse response) {
-        this.signOutUserOfTenant(tenantManagementService.getTenant(), response);
-    }
-
-    /**
-     * Signs the user out of the specified Tenant by deleting its Cookie.
-     *
-     * @param tenant   The tenant to remove the cookie from.
-     * @param response The HttpServletResponse to store the deletion cookie in.
-     */
-    public void signOutUserOfTenant(Tenant tenant, HttpServletResponse response) {
-        cookieService.deleteCookie(COOKIE_NAME, tenant, response);
+    public void signOut() {
+        SecurityContextHolder.clearContext();
     }
 
     /**

@@ -6,13 +6,13 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
+import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.entity.NotificationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
@@ -58,9 +58,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsers() {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
             return noPermission();
 
@@ -72,9 +69,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public ResponseEntity<?> addNewUser(@RequestBody UserDTO userDTO) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (userDTO == null)
             return badRequest("The User data was not supplied.");
 
@@ -114,12 +108,7 @@ public class UserController extends APIControllerAbstract {
         }
 
         String newPassword = PasswordGenerator.generateRandomPassword(10);
-        try {
-            newUser.hashedPassword = PasswordStorage.createHash(newPassword);
-        } catch (PasswordStorage.CannotPerformOperationException e) {
-            logService.logException(getClass(), e, "Could not generate new User's password.");
-            return serverError("The User's password could not be generated.");
-        }
+        newUser.hashedPassword = PasswordUtils.encodePassword(newPassword);
 
         newUser.verified = true;
         newUser.userState = User.State.APPROVED;
@@ -139,11 +128,16 @@ public class UserController extends APIControllerAbstract {
         return created(modelMapper.map(newUser, UserDTO.class), "/users/" + newUser.getId());
     }
 
+    @RequestMapping(value = "/users/current", method = RequestMethod.GET)
+    public ResponseEntity<?> getCurrentUser() {
+        if (authService.getCurrentUser() != null)
+            return ok(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
+        else
+            return badRequest();
+    }
+
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         User user = userRepository.findInCurrentTenant(id);
         if (user == null)
             return notFound("No users were found with the ID: " + id);
@@ -157,9 +151,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (userDTO == null)
             return badRequest("The User data was not supplied.");
 
@@ -201,13 +192,7 @@ public class UserController extends APIControllerAbstract {
 
         if (userDTO.newPassword != null) {
             userValidator.validatePassword(userDTO.newPassword);
-
-            try {
-                currentUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
-            } catch (PasswordStorage.CannotPerformOperationException e) {
-                logService.logException(getClass(), e, "Could not hash password from PATCH.");
-                return serverError("Could not save new password.");
-            }
+            currentUser.hashedPassword = PasswordUtils.encodePassword(userDTO.newPassword);
         }
 
         if (userDTO.userGroups != null) {
@@ -230,9 +215,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         User user = userRepository.findInCurrentTenant(id);
         if (user == null)
             return notFound("No users were found with the ID: " + id);

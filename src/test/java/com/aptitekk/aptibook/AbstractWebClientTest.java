@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk;
+package com.aptitekk.aptibook;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;

@@ -6,9 +6,9 @@
 
 package com.aptitekk.aptibook.core.services.tenant;
 
-import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.*;
+import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
@@ -84,34 +84,30 @@ public class TenantIntegrityService {
         User adminUser = userRepository.findByEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS, tenant);
         if (adminUser == null) {
 
+            adminUser = new User();
+            adminUser.setEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS);
+
+            if (springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
+                String password = PasswordGenerator.generateRandomPassword(10);
+                adminUser.hashedPassword = PasswordUtils.encodePassword(password);
+                emailService.sendEmailNotification(tenant.adminEmail, "AptiBook Registration", "<p>Thank you for registering with AptiBook! We are very excited to hear about how you and your team uses AptiBook.</p>"
+                        + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>admin</b> on the navigation bar and visiting <b>My Account</b>.<br>"
+                        + webURIBuilderService.buildURI("/" + tenant.slug, null) + "</p>"
+                        + "<center>"
+                        + "Username: <b>admin</b> <br>"
+                        + "Password: <b>" + password + "</b>"
+                        + "</center>"
+                        + "<p>Please let us know of any way we can be of assistance, and be sure to check out our knowledge base at https://support.aptitekk.com/.</p>");
+            } else {
+                adminUser.hashedPassword = PasswordUtils.encodePassword("admin");
+            }
+            adminUser.verified = true;
+            adminUser.userState = User.State.APPROVED;
+            adminUser.tenant = tenant;
+
             try {
-                adminUser = new User();
-                adminUser.setEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS);
-
-                if (springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
-                    String password = PasswordGenerator.generateRandomPassword(10);
-                    adminUser.hashedPassword = PasswordStorage.createHash(password);
-                    emailService.sendEmailNotification(tenant.adminEmail, "AptiBook Registration", "<p>Thank you for registering with AptiBook! We are very excited to hear about how you and your team uses AptiBook.</p>"
-                            + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>admin</b> on the navigation bar and visiting <b>My Account</b>.<br>"
-                            + webURIBuilderService.buildURI("/" + tenant.slug, null) + "</p>"
-                            + "<center>"
-                            + "Username: <b>admin</b> <br>"
-                            + "Password: <b>" + password + "</b>"
-                            + "</center>"
-                            + "<p>Please let us know of any way we can be of assistance, and be sure to check out our knowledge base at https://support.aptitekk.com/.</p>");
-                } else {
-                    adminUser.hashedPassword = PasswordStorage.createHash("admin");
-                }
-                adminUser.verified = true;
-                adminUser.userState = User.State.APPROVED;
-                adminUser.tenant = tenant;
-
-                try {
-                    userRepository.save(adminUser);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            } catch (PasswordStorage.CannotPerformOperationException e) {
+                userRepository.save(adminUser);
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
