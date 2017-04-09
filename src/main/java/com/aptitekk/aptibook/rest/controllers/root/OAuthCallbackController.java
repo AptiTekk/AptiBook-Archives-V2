@@ -13,7 +13,7 @@ import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
-import com.aptitekk.aptibook.core.services.auth.GoogleOAuthService;
+import com.aptitekk.aptibook.web.security.oauth.GoogleOAuthService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -60,7 +60,7 @@ public class OAuthCallbackController {
                     //Check for code and set the appropriate user if the code exists.
                     if (code != null && !code.isEmpty()) {
                         if (tenant != null) {
-                            try {
+                            /*try {
                                 User user = googleOAuthService.getUserFromCode(tenant, code);
                                 //authService.setUserOfTenant(user, tenant, httpServletResponse);
                             } catch (GoogleOAuthService.DomainNotWhitelistedException e) {
@@ -69,7 +69,7 @@ public class OAuthCallbackController {
                             } catch (GoogleOAuthService.InvalidCodeException e) {
                                 redirectToTenantWithError(httpServletResponse, tenantSlug, "invalid-code");
                                 return;
-                            }
+                            }*/
                         }
                     }
                     //Google error

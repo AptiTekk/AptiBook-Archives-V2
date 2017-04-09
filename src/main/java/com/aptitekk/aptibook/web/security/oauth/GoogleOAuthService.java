@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.services.auth;
+package com.aptitekk.aptibook.web.security.oauth;
 
 import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
@@ -51,15 +51,7 @@ public class GoogleOAuthService {
         this.propertiesRepository = propertiesRepository;
     }
 
-    public String getSignInUrl(Tenant tenant) {
-        OAuth20Service oAuthService = buildService(tenant.slug);
-        final Map<String, String> additionalParams = new HashMap<>();
-        additionalParams.put("access_type", "online");
-        additionalParams.put("prompt", "consent");
-        return oAuthService.getAuthorizationUrl(additionalParams);
-    }
-
-    public User getUserFromCode(Tenant tenant, String code) throws DomainNotWhitelistedException, InvalidCodeException {
+    /*public User getUserFromCode(Tenant tenant, String code) throws DomainNotWhitelistedException, InvalidCodeException {
         OAuth20Service googleOAuthService = buildService(tenant.slug);
 
         try {
@@ -124,21 +116,8 @@ public class GoogleOAuthService {
         }
         return null;
     }
+*/
 
-    private OAuth20Service buildService(String tenantSlug) {
-        ServiceBuilder serviceBuilder = new ServiceBuilder();
-        serviceBuilder.apiKey(GOOGLE_API_KEY);
-        serviceBuilder.apiSecret(GOOGLE_API_SECRET);
-
-        String url = httpServletRequest.getRequestURL().toString();
-        String[] urlSplit = url.split("/");
-        serviceBuilder.callback(urlSplit[0] + "//" + urlSplit[2] + "/oauth/google");
-
-        serviceBuilder.scope("email");
-        serviceBuilder.state("tenant=" + tenantSlug);
-
-        return serviceBuilder.build(GoogleApi20.instance());
-    }
 
     /**
      * An exception thrown when getting an oauth user whose email domain is not whitelisted.

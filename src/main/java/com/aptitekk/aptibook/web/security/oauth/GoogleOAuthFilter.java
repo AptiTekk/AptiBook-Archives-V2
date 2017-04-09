@@ -7,62 +7,41 @@
 package com.aptitekk.aptibook.web.security.oauth;
 
 import com.aptitekk.aptibook.core.domain.entities.Property;
-import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
-import com.aptitekk.aptibook.core.services.auth.GoogleOAuthService;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
-import org.springframework.beans.factory.annotation.Autowired;
+import com.github.scribejava.apis.GoogleApi20;
+import com.github.scribejava.core.builder.ServiceBuilder;
+import com.github.scribejava.core.oauth.OAuth20Service;
 import org.springframework.stereotype.Component;
-import org.springframework.web.filter.OncePerRequestFilter;
 
-import javax.servlet.FilterChain;
-import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 @Component
-public class GoogleOAuthFilter extends OncePerRequestFilter {
+public class GoogleOAuthFilter extends AbstractOAuthFilter {
 
-    private static final String AUTH_URL = "/api/oauth/google";
-    private static final String CALLBACK_URL = "/api/oauth/google/callback";
+    private static final String API_KEY = "908953557522-o6m9dri19o1bmh0hrtkjgh6n0522n5lj.apps.googleusercontent.com";
+    private static final String API_SECRET = "1asutKqHqijieeqgHGeu-ouE";
 
-    private final TenantManagementService tenantManagementService;
-    private final PropertiesRepository propertiesRepository;
-    private final GoogleOAuthService googleOAuthService;
-
-    @Autowired
-    public GoogleOAuthFilter(TenantManagementService tenantManagementService,
-                             PropertiesRepository propertiesRepository,
-                             GoogleOAuthService googleOAuthService) {
-
-        this.tenantManagementService = tenantManagementService;
-        this.propertiesRepository = propertiesRepository;
-        this.googleOAuthService = googleOAuthService;
+    public GoogleOAuthFilter() {
+        super("google", Property.Key.GOOGLE_SIGN_IN_ENABLED, API_KEY, API_SECRET);
     }
 
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
-
-        if (request.getRequestURI().startsWith(CALLBACK_URL)) {
-            //TODO: Google OAuth Callback
-            return;
-        } else if (request.getRequestURI().startsWith(AUTH_URL)) {
-            Property googleSignInProperty = propertiesRepository.findPropertyByKey(Property.Key.GOOGLE_SIGN_IN_ENABLED);
-            if (Boolean.parseBoolean(googleSignInProperty.propertyValue)) {
-                String signInUrl = googleOAuthService.getSignInUrl(tenantManagementService.getTenant());
-                if (signInUrl != null) {
-                    response.setStatus(HttpServletResponse.SC_TEMPORARY_REDIRECT);
-                    response.setHeader("Location", signInUrl);
-                    return;
-                }
-                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
-                return;
-            }
-            response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
-            return;
-        }
-
-        filterChain.doFilter(request, response);
+    String generateUrl(OAuth20Service oAuth20Service, HttpServletRequest request) {
+        final Map<String, String> additionalParams = new HashMap<>();
+        additionalParams.put("access_type", "online");
+        additionalParams.put("prompt", "consent");
+        return oAuth20Service.getAuthorizationUrl(additionalParams);
     }
 
+    @Override
+    OAuth20Service buildOAuthService(ServiceBuilder serviceBuilder) {
+        serviceBuilder.scope("email");
+        return serviceBuilder.build(GoogleApi20.instance());
+    }
+
+    @Override
+    void handleCallback(HttpServletRequest request) {
+
+    }
 }
