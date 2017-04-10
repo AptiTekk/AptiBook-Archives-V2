@@ -29,8 +29,6 @@ public class TenantIntegrityService {
 
     private final PropertiesRepository propertiesRepository;
 
-    private final PermissionRepository permissionRepository;
-
     private final EmailService emailService;
 
     private final SpringProfileService springProfileService;
@@ -41,7 +39,6 @@ public class TenantIntegrityService {
                                   UserRepository userRepository,
                                   ResourceCategoryRepository resourceCategoryRepository,
                                   PropertiesRepository propertiesRepository,
-                                  PermissionRepository permissionRepository,
                                   EmailService emailService,
                                   SpringProfileService springProfileService,
                                   WebURIBuilderService webURIBuilderService) {
@@ -49,7 +46,6 @@ public class TenantIntegrityService {
         this.userRepository = userRepository;
         this.resourceCategoryRepository = resourceCategoryRepository;
         this.propertiesRepository = propertiesRepository;
-        this.permissionRepository = permissionRepository;
         this.emailService = emailService;
         this.springProfileService = springProfileService;
         this.webURIBuilderService = webURIBuilderService;
@@ -64,7 +60,6 @@ public class TenantIntegrityService {
         checkForRootGroup(tenant);
         checkForAdminUser(tenant);
         writeDefaultProperties(tenant);
-        writeDefaultPermissions(tenant);
     }
 
     private void checkForRootGroup(Tenant tenant) {
@@ -151,32 +146,6 @@ public class TenantIntegrityService {
                 property.tenant = tenant;
                 try {
                     propertiesRepository.save(property);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private void writeDefaultPermissions(Tenant tenant) {
-        Iterable<Permission> currentPermissions = permissionRepository.findAllForTenant(tenant);
-
-        for (Permission.Descriptor descriptor : Permission.Descriptor.values()) {
-            boolean foundPermission = false;
-
-            for (Permission permission : currentPermissions) {
-                if (permission.descriptor.equals(descriptor)) {
-                    foundPermission = true;
-                    break;
-                }
-            }
-
-            if (!foundPermission) {
-                Permission permission = new Permission();
-                permission.descriptor = descriptor;
-                permission.tenant = tenant;
-                try {
-                    permissionRepository.save(permission);
                 } catch (Exception e) {
                     e.printStackTrace();
                 }

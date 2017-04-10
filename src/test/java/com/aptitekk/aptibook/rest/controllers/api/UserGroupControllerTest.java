@@ -8,8 +8,8 @@ package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.AbstractWebClientTest;
 import com.aptitekk.aptibook.Authenticated;
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
@@ -46,7 +46,7 @@ public class UserGroupControllerTest extends AbstractWebClientTest {
     @Test
     public void testAddNewUserGroup() throws Exception {
 
-        given(this.authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL)).willReturn(true);
+        given(this.authService.doesCurrentUserHavePermission(Permissions.Descriptor.GROUPS_MODIFY_ALL)).willReturn(true);
 
         JSONObject newUserGroupJson = getJsonObjectFromFile("controllers/userGroupController/newUserGroup.json");
 

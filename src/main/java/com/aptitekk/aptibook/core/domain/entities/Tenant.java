@@ -101,9 +101,6 @@ public class Tenant extends GlobalEntity {
     private List<File> files;
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
-    private List<Permission> permissions;
-
-    @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
     private List<Property> properties;
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)

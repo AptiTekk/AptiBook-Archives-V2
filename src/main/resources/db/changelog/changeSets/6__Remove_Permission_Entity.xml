@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <!-- Removes the Permission Entity, which is no longer used. (Enums are used instead). -->
+    <!-- Additionally, adds the permissions columns to User and UserGroup -->
+    <changeSet id="6" author="MitchTalmadge">
+        <dropTable tableName="user_permission"/>
+        <dropTable tableName="usergroup_permission"/>
+        <dropTable tableName="permission"/>
+
+        <createTable tableName="user_permissions">
+            <column name="user_id" type="BIGINT" />
+            <column name="descriptor" type="TEXT" />
+        </createTable>
+
+        <createTable tableName="usergroup_permissions">
+            <column name="usergroup_id" type="BIGINT" />
+            <column name="descriptor" type="TEXT" />
+        </createTable>
+    </changeSet>
+
+</databaseChangeLog>

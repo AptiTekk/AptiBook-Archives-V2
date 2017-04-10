@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.LogService;
@@ -114,11 +115,14 @@ public class DemoTenantBuilder {
             userRepository.save(adminUser);
         }
 
+        Set<Permissions.Descriptor> fullPermissions = new HashSet<>();
+        fullPermissions.add(Permissions.Descriptor.GENERAL_FULL_PERMISSIONS);
+
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
                 "Administrators",
                 userGroupRepository.findRootGroup(demoTenant),
-                null
+                fullPermissions
         );
 
         UserGroup librariansUserGroup = createUserGroup(
@@ -328,7 +332,7 @@ public class DemoTenantBuilder {
      */
     private UserGroup createUserGroup(String name,
                                       UserGroup parent,
-                                      List<Permission> permissions) {
+                                      Set<Permissions.Descriptor> permissions) {
         UserGroup userGroup = new UserGroup();
         userGroup.tenant = demoTenant;
         userGroup.setName(name);

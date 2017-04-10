@@ -6,10 +6,10 @@
 
 package com.aptitekk.aptibook.core.domain.repositories;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 
@@ -109,19 +109,19 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
      * @param descriptor The permission to filter users by.
      * @return A list of users with either the given permission or full permissions. Includes admin.
      */
-    public List<User> findUsersWithPermission(Permission.Descriptor descriptor) {
+    public List<User> findUsersWithPermission(Permissions.Descriptor descriptor) {
         try {
             List<User> usersWithPermission = entityManager
-                    .createQuery("SELECT distinct u from User u LEFT JOIN fetch u.permissions p WHERE (p.descriptor = ?1 OR p.descriptor = ?2) AND u.tenant = ?3", User.class)
+                    .createQuery("SELECT u from User u WHERE (?1 MEMBER OF u.permissions OR ?2 MEMBER OF u.permissions) AND u.tenant = ?3", User.class)
                     .setParameter(1, descriptor)
-                    .setParameter(2, Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
+                    .setParameter(2, Permissions.Descriptor.GENERAL_FULL_PERMISSIONS)
                     .setParameter(3, getTenant())
                     .getResultList();
 
             List<UserGroup> groupsWithPermission = entityManager
-                    .createQuery("SELECT distinct g FROM UserGroup g LEFT JOIN fetch g.permissions p WHERE (p.descriptor = ?1 OR p.descriptor = ?2) AND g.tenant = ?3", UserGroup.class)
+                    .createQuery("SELECT g FROM UserGroup g WHERE (?1 MEMBER OF g.permissions OR ?2 MEMBER OF g.permissions)  AND g.tenant = ?3", UserGroup.class)
                     .setParameter(1, descriptor)
-                    .setParameter(2, Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
+                    .setParameter(2, Permissions.Descriptor.GENERAL_FULL_PERMISSIONS)
                     .setParameter(3, getTenant())
                     .getResultList();
 

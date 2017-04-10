@@ -21,7 +21,7 @@
         <setting name="provider-name" value="Hibernate" />
         <datasource-mapping>
           <factory-entry name="Entities" />
-          <factory-entry name="entityManagerFactory" />
+          <factory-entry name="entityManagerFactory" value="4667fa40-b2b7-46c2-83ec-4cda8417fcc0" />
         </datasource-mapping>
       </configuration>
     </facet>

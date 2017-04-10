@@ -11,6 +11,7 @@
  */
 package com.aptitekk.aptibook.core.domain.entities;
 
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 
 import javax.persistence.Entity;
@@ -31,14 +32,14 @@ public class Notification extends MultiTenantEntity implements Serializable {
         TYPE_RESERVATION_REQUESTED("Email when a Reservation is Requested", true, true, null),
         TYPE_RESERVATION_REQUEST_AUTO_APPROVED("Email upon Automatic Approval of a Reservation Request", false, true, null),
         TYPE_RESERVATION_CANCELLED_USER_GROUPS("Email when a Reservation is Cancelled", true, true, null),
-        TYPE_APPROVAL_REQUEST("Email when a New User Registers", true, false, Permission.Descriptor.USERS_MODIFY_ALL);
+        TYPE_APPROVAL_REQUEST("Email when a New User Registers", true, false, Permissions.Descriptor.USERS_MODIFY_ALL);
 
         private final String label;
         private final boolean defaultValue;
         private final boolean userGroupRequired;
-        private final Permission.Descriptor requiredPermissionDescriptor;
+        private final Permissions.Descriptor requiredPermissionDescriptor;
 
-        Type(String label, boolean defaultValue, boolean userGroupRequired, Permission.Descriptor requiredPermissionDescriptor) {
+        Type(String label, boolean defaultValue, boolean userGroupRequired, Permissions.Descriptor requiredPermissionDescriptor) {
             this.label = label;
             this.defaultValue = defaultValue;
             this.userGroupRequired = userGroupRequired;
@@ -57,7 +58,7 @@ public class Notification extends MultiTenantEntity implements Serializable {
             return userGroupRequired;
         }
 
-        public Permission.Descriptor getRequiredPermissionDescriptor() {
+        public Permissions.Descriptor getRequiredPermissionDescriptor() {
             return requiredPermissionDescriptor;
         }
     }
