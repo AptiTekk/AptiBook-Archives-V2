@@ -14,7 +14,6 @@ export class OAuthService {
     private googleOAuthUrl: ReplaySubject<string> = new ReplaySubject<string>(1);
 
     constructor(private apiService: APIService) {
-        this.reloadOAuthURLs();
     }
 
     /**

@@ -42,7 +42,6 @@
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: org.springframework.security:spring-security-test:4.2.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:1.5.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.5.2.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot:1.5.2.RELEASE" level="project" />
@@ -159,7 +158,7 @@
     <orderEntry type="library" name="Maven: com.mindscapehq:core:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.mindscapehq:webprovider:2.1.1" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.gson:gson:2.7" level="project" />
-    <orderEntry type="library" name="Maven: com.sparkpost:sparkpost-lib:0.16.1" level="project" />
+    <orderEntry type="library" name="Maven: com.sparkpost:sparkpost-lib:0.17" level="project" />
     <orderEntry type="library" name="Maven: log4j:log4j:1.2.17" level="project" />
     <orderEntry type="library" name="Maven: com.google.code.findbugs:annotations:3.0.0" level="project" />
     <orderEntry type="library" name="Maven: com.yepher.jsondoc:annotations:0.0.2" level="project" />

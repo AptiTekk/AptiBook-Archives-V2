@@ -44,6 +44,9 @@ export class SignInComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        // Reload the OAuth URLs
+        this.oAuthService.reloadOAuthURLs();
+
         //Check for errors in the parameters
         this.activeRoute.queryParams.subscribe(
             params => {
