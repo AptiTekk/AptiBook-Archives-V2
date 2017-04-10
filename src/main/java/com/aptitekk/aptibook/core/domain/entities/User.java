@@ -7,14 +7,12 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
+import org.apache.tools.ant.taskdefs.condition.Not;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 
 @SuppressWarnings("JpaDataSourceORMInspection")
@@ -52,8 +50,32 @@ public class User extends MultiTenantEntity implements Serializable {
         PENDING;
     }
 
+   /* public String[][] getNotificationTypeSettingsArray() {
+        String[][] entrySet = new String[notificationTypeSettings.entrySet().size()][2];
+        for(int i = 0; i < notificationTypeSettings.entrySet().size(); i++){
+            Notification.Type key = (Notification.Type)notificationTypeSettings.keySet().toArray()[i];
+            String value = notificationTypeSettings.get(key).toString();
+            entrySet[i][0] = key.getLabel();
+            entrySet[i][1] = value;
+        }
+        return entrySet;
+    }*/
+
+ /*   @Transient
+    private String[][] notificationTypeSettingsArray;*/
+
+
+    @ElementCollection(targetClass = Notification.Type.class)
+    @CollectionTable(name = "notification_setting", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "descriptor")
+    public Set<Notification.Type> notificationSetting;
+
+
     @SuppressWarnings("JpaAttributeTypeInspection")
     public Map<Notification.Type, Boolean> notificationTypeSettings = new HashMap<>();
+
+
 
     @ManyToMany
     public List<UserGroup> userGroups = new ArrayList<>();

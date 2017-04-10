@@ -61,6 +61,11 @@ public class Notification extends MultiTenantEntity implements Serializable {
             return requiredPermissionDescriptor;
         }
     }
+    public static class NotificationSetting{
+        Notification.Type setting;
+        boolean enabled;
+    }
+
 
     @Id
     @GeneratedValue

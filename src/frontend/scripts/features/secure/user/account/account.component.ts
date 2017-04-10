@@ -45,6 +45,7 @@ export class AccountComponent implements OnInit {
                 lastName: [this.user.lastName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
                 phoneNumber: [this.user.phoneNumber, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
                 location: [this.user.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])],
+                TYPE_RESERVATION_APPROVED: this.user.notificationTypeSettings,
                 userGroups: this.user.userGroups
             });
         });
@@ -58,6 +59,7 @@ export class AccountComponent implements OnInit {
         updatedUser.lastName = this.personalInformation.controls['lastName'].value;
         updatedUser.phoneNumber = this.personalInformation.controls['phoneNumber'].value;
         updatedUser.location = this.personalInformation.controls['location'].value;
+        //updatedUser.notificationTypeSettings[0][1] = this.personalInformation.controls['TYPE_RESERVATION_APPROVED'].value;
         updatedUser.userGroups = null;
 
         this.userService.patchUser(updatedUser, changingPassword).take(1).subscribe(

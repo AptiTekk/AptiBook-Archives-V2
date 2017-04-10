@@ -155,6 +155,9 @@ public class UserController extends APIControllerAbstract {
         return ok(modelMapper.map(user, UserDTO.class));
     }
 
+  //TODO: Get, patch methods for user notification settings.
+
+
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
         if (!authService.isUserSignedIn())
