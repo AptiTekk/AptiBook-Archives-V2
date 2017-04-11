@@ -10,6 +10,7 @@ import {User} from "../../../../models/user.model";
 import {UserService} from "../../../../core/services/user.service";
 import {AlertComponent} from "../../../../shared/alert/alert.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {NotificationSetting} from "../../../../models/notification-setting.model";
 
 @Component({
     selector: 'at-user-account',
@@ -27,7 +28,7 @@ export class AccountComponent implements OnInit {
     passwordsInfoAlert: AlertComponent;
 
     user: User;
-
+    notificationSettings: NotificationSetting[];
     personalInformation: FormGroup;
 
     constructor(private authService: AuthService,
@@ -45,10 +46,18 @@ export class AccountComponent implements OnInit {
                 lastName: [this.user.lastName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
                 phoneNumber: [this.user.phoneNumber, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
                 location: [this.user.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])],
-                TYPE_RESERVATION_APPROVED: this.user.notificationTypeSettings,
                 userGroups: this.user.userGroups
             });
         });
+        this.userService.fetchUserNotificationSettings();
+        this.userService.getNotificationSettings().subscribe(settings => {
+                this.notificationSettings = settings;
+                console.log("Size " + this.notificationSettings.length);
+            }
+        );
+
+        //test patch method
+
     }
 
     onPersonalInformationSubmit(changingPassword: boolean = false) {
@@ -59,7 +68,6 @@ export class AccountComponent implements OnInit {
         updatedUser.lastName = this.personalInformation.controls['lastName'].value;
         updatedUser.phoneNumber = this.personalInformation.controls['phoneNumber'].value;
         updatedUser.location = this.personalInformation.controls['location'].value;
-        //updatedUser.notificationTypeSettings[0][1] = this.personalInformation.controls['TYPE_RESERVATION_APPROVED'].value;
         updatedUser.userGroups = null;
 
         this.userService.patchUser(updatedUser, changingPassword).take(1).subscribe(

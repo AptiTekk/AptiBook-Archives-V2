@@ -150,6 +150,15 @@ public class UserController extends APIControllerAbstract {
         }.getType()));
     }
 
+    @RequestMapping(value="/users/current/notifications/settings", method = RequestMethod.PATCH)
+    public ResponseEntity<?> patchNotificationSettings(@RequestBody User.NotificationSetting notificationSetting){
+        User user = authService.getCurrentUser();
+        user.notificationSettings.add(notificationSetting);
+        user = userRepository.save(user);
+        return ok(modelMapper.map(user.notificationSettings, new TypeToken<Set<User.NotificationSetting>>() {
+        }.getType()));
+    }
+
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
         if (userDTO == null)

@@ -19,7 +19,6 @@ import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
-
 public class Notification extends MultiTenantEntity implements Serializable {
 
     @Id

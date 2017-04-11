@@ -164,25 +164,8 @@
 					<panel [type]="'primary'"
 						   [title]="'Email Notification Preferences'">
 						<panel-body>
-						<!--	<div class="from-group">
-								<label>Reservation Approved</label>
-								<br/>
-								&lt;!&ndash;<toggle-switch #registrationApproved
-											   [onText]="'Yes'"
-											   [offText]="'No'"
-											   style="margin-right: 10px"
-											   formControlName="TYPE_RESERVATION_APPROVED">
-								</toggle-switch>&ndash;&gt;
-							</div>-->
 							<div class="col-xs-12 col-md-6">
-								<form-group [control]="personalInformation.controls['TYPE_RESERVATION_APPROVED']"
-											[label]="user.notificationTypeSettings[0][0]"
-											[errorMessages]="
-                                            {
-                                            pattern: 'These characters are not allowed:  < > ; =',
-                                            maxlength: 'This must be 30 characters or less.'
-                                            }">
-								</form-group>
+								
 							</div>
 						</panel-body>
 					</panel>

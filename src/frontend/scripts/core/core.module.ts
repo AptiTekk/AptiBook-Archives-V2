@@ -25,7 +25,7 @@ import {ResourceService} from "./services/resource.service";
 import {LoaderService} from "./services/loader.service";
 import {AptiBookErrorHandler} from "./error-handler";
 import {HttpModule} from "@angular/http";
-import {PermissionsService} from "./services/permissions.server";
+import {PermissionsService} from "./services/permissions.service";
 
 /**
  * This module contains the services and other things which should only load once in the application.

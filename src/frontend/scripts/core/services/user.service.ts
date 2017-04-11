@@ -8,16 +8,34 @@ import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {User} from "../../models/user.model";
 import {Observable, ReplaySubject} from "rxjs";
+import {NotificationSetting} from "../../models/notification-setting.model";
 
 @Injectable()
 export class UserService {
 
     users: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
+    private notificationSettings: ReplaySubject<NotificationSetting[]> = new ReplaySubject<NotificationSetting[]>(1);
 
     constructor(private apiService: APIService) {
     }
 
+    public fetchUserNotificationSettings() {
+        this.apiService.get("/users/current/notifications/settings").subscribe(
+            response => this.notificationSettings.next(response),
+            err => this.notificationSettings.next([])
+        );
+    }
 
+    public pathUserNotificationSettings(notificationSetting: NotificationSetting) {
+        this.apiService.patch("/users/current/notifications/settings", notificationSetting).subscribe(
+            response => this.notificationSettings.next(response),
+            err => this.notificationSettings.next([])
+        )
+    }
+
+    public getNotificationSettings(): ReplaySubject<NotificationSetting[]>{
+        return this.notificationSettings;
+    }
 
     public fetchUsers() {
         this.apiService
