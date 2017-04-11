@@ -6,8 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.crypto.PasswordStorage;
-import com.aptitekk.aptibook.core.domain.entities.Permission;
+import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
@@ -156,15 +155,13 @@ public class UserController extends APIControllerAbstract {
   //TODO: Get, patch methods for user notification settings.
     @RequestMapping(value = "/users/{id}/notification", method = RequestMethod.GET)
     public ResponseEntity<?> getNotificatoinSettings(@PathVariable Long id){
-        if (!authService.isUserSignedIn())
-            return unauthorized();
         User currentUser = userRepository.findInCurrentTenant(id);
         if (currentUser == null)
             return notFound("No users were found with the ID: " + id);
-        Set<Notification.Type> notificationSettingsForUser = new HashSet<>();
+        Set<Notification.NotificationSetting> notificationSettingsForUser = new HashSet<>();
         System.out.println("Size"+currentUser.notificationSetting.size());
         notificationSettingsForUser.addAll(currentUser.notificationSetting);
-        return ok(modelMapper.map(notificationSettingsForUser, new TypeToken<Set<Notification.Type>>(){}.getType()));
+        return ok(modelMapper.map(notificationSettingsForUser, new TypeToken<Set<Notification.NotificationSetting>>(){}.getType()));
 
     }
 

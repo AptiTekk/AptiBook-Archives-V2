@@ -14,6 +14,7 @@
         <createTable tableName="notification_setting">
             <column name="user_id" type="BIGINT" />
             <column name="setting" type="TEXT" />
+            <column name="enabled" type="boolean" />
         </createTable>
     </changeSet>
 

@@ -118,6 +118,11 @@ public class DemoTenantBuilder {
         Set<Permissions.Descriptor> fullPermissions = new HashSet<>();
         fullPermissions.add(Permissions.Descriptor.GENERAL_FULL_PERMISSIONS);
 
+
+        Set<Notification.NotificationSetting> notificationSettings = new HashSet<>();
+        Notification.NotificationSetting setting = new Notification.NotificationSetting(Notification.Type.TYPE_APPROVAL_REQUEST, true);
+        notificationSettings.add(setting);
+
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
                 "Administrators",
@@ -144,6 +149,7 @@ public class DemoTenantBuilder {
                 "Jill",
                 "Administrator",
                 "demo",
+                notificationSettings,
                 administratorsUserGroup);
 
         User teacher = createUser(
@@ -151,6 +157,7 @@ public class DemoTenantBuilder {
                 "John",
                 "Teacher",
                 "demo",
+                null,
                 teachersUserGroup);
 
         User librarian = createUser(
@@ -158,6 +165,7 @@ public class DemoTenantBuilder {
                 "Julia",
                 "Librarian",
                 "demo",
+                null,
                 librariansUserGroup
         );
 
@@ -356,6 +364,7 @@ public class DemoTenantBuilder {
                             String firstName,
                             String lastName,
                             String password,
+                            Set<Notification.NotificationSetting> settings,
                             UserGroup... userGroups) {
         User user = new User();
         user.tenant = demoTenant;
@@ -365,7 +374,7 @@ public class DemoTenantBuilder {
         user.verified = true;
         user.userState = User.State.APPROVED;
         user.hashedPassword = PasswordUtils.encodePassword(password);
-
+        user.notificationSetting = settings;
         user.userGroups.addAll(Arrays.asList(userGroups));
         return userRepository.save(user);
     }

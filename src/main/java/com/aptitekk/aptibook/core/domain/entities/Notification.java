@@ -62,17 +62,23 @@ public class Notification extends MultiTenantEntity implements Serializable {
             return requiredPermissionDescriptor;
         }
     }
-    //@Table(name="notification_setting")
-    /*@Embeddable
-    public static class NotificationSetting{
 
+    @Embeddable
+    public static class NotificationSetting{
+        public NotificationSetting(Notification.Type setting, boolean enabled){
+            this.setting = setting;
+            this.enabled = enabled;
+        }
+        public NotificationSetting(){
+
+        }
 
         @Enumerated(EnumType.STRING)
         @Column(name = "setting")
         Notification.Type setting;
         @Column(name = "enabled")
-        boolean defaultValue;
-    }*/
+        boolean enabled;
+    }
 
 
     @Id

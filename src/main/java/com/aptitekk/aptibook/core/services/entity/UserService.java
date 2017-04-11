@@ -12,15 +12,15 @@ import com.aptitekk.aptibook.core.services.annotations.EntityService;
 
 import java.util.HashSet;
 import java.util.Set;
-/*
+
 
 @EntityService
 public class UserService {
     public Set<Notification.NotificationSetting> getAllUserNotificationSettings(User user){
-        Set<Notification.NotificationSetting> settings = new HashSet<>();
-        settings.addAll(user.notificationSetting);
-        return settings;
+            Set<Notification.NotificationSetting> settings = new HashSet<>();
+            settings.addAll(user.notificationSetting);
+            return settings;
     }
 
 }
-*/
+
