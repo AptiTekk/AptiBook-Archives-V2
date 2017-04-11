@@ -65,11 +65,9 @@ public class User extends MultiTenantEntity implements Serializable {
     private String[][] notificationTypeSettingsArray;*/
 
 
-    @ElementCollection(targetClass = Notification.Type.class)
+    @ElementCollection(targetClass = Notification.NotificationSetting.class)
     @CollectionTable(name = "notification_setting", joinColumns = @JoinColumn(name = "user_id"))
-    @Enumerated(EnumType.STRING)
-    @Column(name = "descriptor")
-    public Set<Notification.Type> notificationSetting;
+    public Set<Notification.NotificationSetting> notificationSetting;
 
 
     @SuppressWarnings("JpaAttributeTypeInspection")

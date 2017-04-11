@@ -13,10 +13,7 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
-import javax.persistence.ManyToOne;
+import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -62,7 +59,10 @@ public class Notification extends MultiTenantEntity implements Serializable {
         }
     }
     public static class NotificationSetting{
+        @Enumerated(EnumType.STRING)
+        @Column(name = "setting")
         Notification.Type setting;
+        @Column(name = "enabled")
         boolean enabled;
     }
 
