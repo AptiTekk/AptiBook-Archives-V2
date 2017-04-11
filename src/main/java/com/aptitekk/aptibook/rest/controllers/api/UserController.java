@@ -159,7 +159,6 @@ public class UserController extends APIControllerAbstract {
         if (currentUser == null)
             return notFound("No users were found with the ID: " + id);
         Set<Notification.NotificationSetting> notificationSettingsForUser = new HashSet<>();
-        System.out.println("Size"+currentUser.notificationSetting.size());
         notificationSettingsForUser.addAll(currentUser.notificationSetting);
         return ok(modelMapper.map(notificationSettingsForUser, new TypeToken<Set<Notification.NotificationSetting>>(){}.getType()));
 
