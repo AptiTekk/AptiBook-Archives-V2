@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.crypto.PasswordStorage;
+import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
@@ -16,6 +17,7 @@ import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.entity.NotificationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
+//import com.aptitekk.aptibook.core.services.entity.UserService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
@@ -28,7 +30,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.websocket.server.PathParam;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 @APIController
 public class UserController extends APIControllerAbstract {
@@ -39,6 +43,7 @@ public class UserController extends APIControllerAbstract {
     private final UserGroupService userGroupService;
     private final EmailService emailService;
     private final NotificationService notificationService;
+   // private final UserService userService;
 
     @Autowired
     public UserController(
@@ -47,13 +52,15 @@ public class UserController extends APIControllerAbstract {
             UserGroupRepository userGroupRepository,
             UserGroupService userGroupService,
             EmailService emailService,
-            NotificationService notificationService) {
+            NotificationService notificationService
+            /*UserService userService*/) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.emailService = emailService;
         this.notificationService = notificationService;
+        //this.userService = userService;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -156,7 +163,19 @@ public class UserController extends APIControllerAbstract {
     }
 
   //TODO: Get, patch methods for user notification settings.
+    @RequestMapping(value = "/users/{id}/notification", method = RequestMethod.GET)
+    public ResponseEntity<?> getNotificatoinSettings(@PathVariable Long id){
+        if (!authService.isUserSignedIn())
+            return unauthorized();
+        User currentUser = userRepository.findInCurrentTenant(id);
+        if (currentUser == null)
+            return notFound("No users were found with the ID: " + id);
+        Set<Notification.Type> notificationSettingsForUser = new HashSet<>();
+        System.out.println("Size"+currentUser.notificationSetting.size());
+        notificationSettingsForUser.addAll(currentUser.notificationSetting);
+        return ok(modelMapper.map(notificationSettingsForUser, new TypeToken<Set<Notification.Type>>(){}.getType()));
 
+    }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {

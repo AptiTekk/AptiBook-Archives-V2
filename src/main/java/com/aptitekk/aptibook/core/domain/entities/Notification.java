@@ -12,13 +12,16 @@
 package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
+import org.apache.tools.ant.taskdefs.condition.Not;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
 @Entity
+
 public class Notification extends MultiTenantEntity implements Serializable {
+
 
     public enum Type {
 
@@ -59,14 +62,16 @@ public class Notification extends MultiTenantEntity implements Serializable {
         }
     }
     //@Table(name="notification_setting")
-    @Embeddable
+    /*@Embeddable
     public static class NotificationSetting{
+
+
         @Enumerated(EnumType.STRING)
         @Column(name = "setting")
         Notification.Type setting;
         @Column(name = "enabled")
         boolean defaultValue;
-    }
+    }*/
 
 
     @Id

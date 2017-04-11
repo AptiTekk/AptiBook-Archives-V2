@@ -18,6 +18,8 @@ export class UserService {
         this.fetchUsers();
     }
 
+
+
     public fetchUsers() {
         this.apiService
             .get("/users")

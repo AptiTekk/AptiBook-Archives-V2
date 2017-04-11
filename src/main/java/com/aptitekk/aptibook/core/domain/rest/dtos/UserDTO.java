@@ -14,6 +14,7 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class UserDTO {
@@ -34,7 +35,7 @@ public class UserDTO {
 
     public List<UserGroupDTO.WithoutParentOrChildren> userGroups;
 
-    //public String[][] notificationTypeSettingsArray;
+    //public Set<Notification.NotificationSetting> notificationSetting;
 
     public String fullName;
 

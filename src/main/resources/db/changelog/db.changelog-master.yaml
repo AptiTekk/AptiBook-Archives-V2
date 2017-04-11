@@ -10,4 +10,4 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeSets/5__Remove_TimeZone_Property.xml
   - include:
-      file: db/changelog/changeSets/7_Add_Notification_Settings_Table.xml
+      file: db/changelog/changeSets/7_Add_Notification_Setting_Table.xml

@@ -14,7 +14,7 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.*;
 
-
+//@Access(AccessType.FIELD)
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "\"user\"")
@@ -64,10 +64,13 @@ public class User extends MultiTenantEntity implements Serializable {
  /*   @Transient
     private String[][] notificationTypeSettingsArray;*/
 
+    //@Access(AccessType.PROPERTY)
 
-    @ElementCollection(targetClass = Notification.NotificationSetting.class)
-    @CollectionTable(name = "notifications_settings",joinColumns = @JoinColumn(name = "user_id"))
-    public Set<Notification.NotificationSetting> notificationSetting;
+    @ElementCollection(targetClass = Notification.Type.class)
+    @CollectionTable(name = "notification_setting",joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "setting")
+    public Set<Notification.Type> notificationSetting;
 
 
     @SuppressWarnings("JpaAttributeTypeInspection")

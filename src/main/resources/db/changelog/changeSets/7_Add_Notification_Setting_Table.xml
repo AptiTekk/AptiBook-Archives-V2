@@ -10,12 +10,10 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
 
-    <!-- Removes the Permission Entity, which is no longer used. (Enums are used instead). -->
-    <!-- Additionally, adds the permissions columns to User and UserGroup -->
     <changeSet id="7" author="PashaShestakov">
-        <createTable tableName="notifications_settings">
+        <createTable tableName="notification_setting">
+            <column name="user_id" type="BIGINT" />
             <column name="setting" type="TEXT" />
-            <column name="enabled" type="boolean" />
         </createTable>
     </changeSet>
 
