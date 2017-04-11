@@ -65,7 +65,7 @@ public class Notification extends MultiTenantEntity implements Serializable {
         @Column(name = "setting")
         Notification.Type setting;
         @Column(name = "enabled")
-        boolean enabled;
+        boolean defaultValue;
     }
 
 
