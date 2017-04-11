@@ -66,7 +66,7 @@ public class User extends MultiTenantEntity implements Serializable {
 
 
     @ElementCollection(targetClass = Notification.NotificationSetting.class)
-    @CollectionTable(name = "notification_setting", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "notifications",joinColumns = @JoinColumn(name = "user_id"))
     public Set<Notification.NotificationSetting> notificationSetting;
 
 
