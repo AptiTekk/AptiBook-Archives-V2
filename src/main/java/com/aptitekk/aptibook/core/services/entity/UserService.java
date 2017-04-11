@@ -6,9 +6,14 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
+import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
+
+import java.util.EnumSet;
+import java.util.HashSet;
+import java.util.Set;
 
 
 @EntityService
@@ -35,6 +40,19 @@ public class UserService {
 
         // The NotificationSetting for the given type does not exist for the User. Using the default value instead.
         return notificationType.getDefaultValue();
+    }
+
+    /**
+     *
+     * @param user          The User.
+     * @return  Set of NotificationSetting, with default values if value for given type does not exist for the user.
+     */
+    public Set<User.NotificationSetting> buildNotificationSettings(User user) {
+        Set<User.NotificationSetting> userNotificationSettings = new HashSet<>();
+        for (NotificationType notificationType : EnumSet.allOf(NotificationType.class)) {
+            userNotificationSettings.add(new User.NotificationSetting(notificationType, doesUserWantEmailNotifications(user, notificationType)));
+        }
+        return userNotificationSettings;
     }
 
 }

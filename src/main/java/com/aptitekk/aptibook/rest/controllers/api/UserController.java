@@ -13,6 +13,7 @@ import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
+import com.aptitekk.aptibook.core.services.entity.UserService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
@@ -34,15 +35,18 @@ public class UserController extends APIControllerAbstract {
     private final UserRepository userRepository;
     private final UserValidator userValidator;
     private final EmailService emailService;
+    private final UserService userService;
 
     @Autowired
     public UserController(
             UserRepository userRepository,
             UserValidator userValidator,
-            EmailService emailService) {
+            EmailService emailService,
+            UserService userService) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.emailService = emailService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -138,22 +142,23 @@ public class UserController extends APIControllerAbstract {
         return ok(modelMapper.map(user, UserDTO.class));
     }
 
-    //TODO: Get, patch methods for user notification settings.
+
     @RequestMapping(value = "/users/current/notifications/settings", method = RequestMethod.GET)
     public ResponseEntity<?> getNotificationSettings() {
-
-        // Pasha: it's probably better to use /users/current here instead of an id.
-        // We don't want any user to access any other user's settings.
-        // The only time the notification settings will be changed is by the currently signed in user.
-
-        return ok(modelMapper.map(authService.getCurrentUser().notificationSettings, new TypeToken<Set<User.NotificationSetting>>() {
+        return ok(modelMapper.map(userService.buildNotificationSettings(authService.getCurrentUser()), new TypeToken<Set<User.NotificationSetting>>() {
         }.getType()));
     }
+
 
     @RequestMapping(value="/users/current/notifications/settings", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchNotificationSettings(@RequestBody User.NotificationSetting notificationSetting){
         User user = authService.getCurrentUser();
-        user.notificationSettings.add(notificationSetting);
+        //Find passed in notification setting in user's notification settings and set value of user's setting to passed in value.
+        for(User.NotificationSetting setting : user.notificationSettings){
+            if(setting.getType() == notificationSetting.getType()){
+                setting.setEmailEnabled(notificationSetting.isEmailEnabled());
+            }
+        }
         user = userRepository.save(user);
         return ok(modelMapper.map(user.notificationSettings, new TypeToken<Set<User.NotificationSetting>>() {
         }.getType()));

@@ -16,6 +16,7 @@ import {NotificationSetting} from "../../../../models/notification-setting.model
     selector: 'at-user-account',
     templateUrl: 'account.component.html'
 })
+
 export class AccountComponent implements OnInit {
 
     @ViewChild('errorAlert')
@@ -52,12 +53,15 @@ export class AccountComponent implements OnInit {
         this.userService.fetchUserNotificationSettings();
         this.userService.getNotificationSettings().subscribe(settings => {
                 this.notificationSettings = settings;
+
+                //TEST CODE//
                 console.log("Size " + this.notificationSettings.length);
-            }
-        );
-
-        //test patch method
-
+                this.notificationSettings.forEach(setting => {
+                        console.log(setting.type + " " + setting.emailEnabled);
+                    }
+                );
+                //END TEST CODE//
+            });
     }
 
     onPersonalInformationSubmit(changingPassword: boolean = false) {
