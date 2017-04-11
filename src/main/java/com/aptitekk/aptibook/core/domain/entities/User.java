@@ -6,13 +6,15 @@
 
 package com.aptitekk.aptibook.core.domain.entities;
 
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 
 import javax.persistence.*;
-
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Set;
 
 
 @SuppressWarnings("JpaDataSourceORMInspection")
@@ -50,29 +52,9 @@ public class User extends MultiTenantEntity implements Serializable {
         PENDING;
     }
 
-   /* public String[][] getNotificationTypeSettingsArray() {
-        String[][] entrySet = new String[notificationTypeSettings.entrySet().size()][2];
-        for(int i = 0; i < notificationTypeSettings.entrySet().size(); i++){
-            Notification.Type key = (Notification.Type)notificationTypeSettings.keySet().toArray()[i];
-            String value = notificationTypeSettings.get(key).toString();
-            entrySet[i][0] = key.getLabel();
-            entrySet[i][1] = value;
-        }
-        return entrySet;
-    }*/
-
- /*   @Transient
-    private String[][] notificationTypeSettingsArray;*/
-
-    //@Access(AccessType.PROPERTY)
-
-    @ElementCollection(targetClass = Notification.NotificationSetting.class)
-    @CollectionTable(name = "notification_setting",joinColumns = @JoinColumn(name = "user_id"))
-    public Set<Notification.NotificationSetting> notificationSetting;
-
-
-    @SuppressWarnings("JpaAttributeTypeInspection")
-    public Map<Notification.Type, Boolean> notificationTypeSettings = new HashMap<>();
+    @ElementCollection(targetClass = NotificationSetting.class)
+    @CollectionTable(name = "user_notification_settings", joinColumns = @JoinColumn(name = "user_id"))
+    public Set<NotificationSetting> notificationSettings;
 
     @ManyToMany
     public List<UserGroup> userGroups = new ArrayList<>();
@@ -149,6 +131,60 @@ public class User extends MultiTenantEntity implements Serializable {
     @Override
     public int hashCode() {
         return EqualsHelper.calculateHashCode(emailAddress, firstName, lastName, phoneNumber, location, hashedPassword, verificationCode, verified);
+    }
+
+    /**
+     * Describes a single Notification Setting for a User.
+     */
+    @Embeddable
+    public static class NotificationSetting implements Serializable {
+
+        /**
+         * The type of Notification for this setting.
+         */
+        @Enumerated(EnumType.STRING)
+        @Column(name = "type")
+        private NotificationType type;
+
+        /**
+         * Whether or not email notifications are enabled.
+         */
+        @Column(name = "email_enabled")
+        private boolean emailEnabled;
+
+        /**
+         * Constructs a new NotificationSetting with the given parameters.
+         *
+         * @param type         The type of Notification for this setting.
+         * @param emailEnabled Whether or not email notifications are enabled.
+         */
+        public NotificationSetting(NotificationType type, boolean emailEnabled) {
+            this.type = type;
+            this.emailEnabled = emailEnabled;
+        }
+
+        /**
+         * Constructs a new instance with a null type and false enabled fields.
+         * Be sure to set the type with {@link #setType(NotificationType)}
+         */
+        public NotificationSetting() {
+        }
+
+        public NotificationType getType() {
+            return type;
+        }
+
+        public void setType(NotificationType setting) {
+            this.type = setting;
+        }
+
+        public boolean isEmailEnabled() {
+            return emailEnabled;
+        }
+
+        public void setEmailEnabled(boolean enabled) {
+            this.emailEnabled = enabled;
+        }
     }
 
 }

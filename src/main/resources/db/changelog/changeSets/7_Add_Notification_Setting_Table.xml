@@ -1,4 +1,3 @@
-
 <!--
   ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
   ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
@@ -11,10 +10,12 @@
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
 
     <changeSet id="7" author="PashaShestakov">
-        <createTable tableName="notification_setting">
-            <column name="user_id" type="BIGINT" />
-            <column name="setting" type="TEXT" />
-            <column name="enabled" type="boolean" />
+        <dropColumn tableName="user" columnName="notificationtypesettings"/>
+
+        <createTable tableName="user_notification_settings">
+            <column name="user_id" type="BIGINT"/>
+            <column name="type" type="TEXT"/>
+            <column name="email_enabled" type="boolean"/>
         </createTable>
     </changeSet>
 

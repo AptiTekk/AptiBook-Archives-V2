@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
@@ -115,13 +116,13 @@ public class DemoTenantBuilder {
             userRepository.save(adminUser);
         }
 
+        // Full Permissions
         Set<Permissions.Descriptor> fullPermissions = new HashSet<>();
         fullPermissions.add(Permissions.Descriptor.GENERAL_FULL_PERMISSIONS);
 
-
-        Set<Notification.NotificationSetting> notificationSettings = new HashSet<>();
-        Notification.NotificationSetting setting = new Notification.NotificationSetting(Notification.Type.TYPE_APPROVAL_REQUEST, true);
-        notificationSettings.add(setting);
+        // Notification Settings
+        Set<User.NotificationSetting> notificationSettings = new HashSet<>();
+        notificationSettings.add(new User.NotificationSetting(NotificationType.TYPE_APPROVAL_REQUEST, true));
 
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
@@ -353,18 +354,19 @@ public class DemoTenantBuilder {
     /**
      * Creates a User.
      *
-     * @param emailAddress The user's email address.
-     * @param firstName    The user's first name.
-     * @param lastName     The user's last name.
-     * @param password     The user's password (not hashed)
-     * @param userGroups   Any user groups the user should be assigned to.
+     * @param emailAddress         The user's email address.
+     * @param firstName            The user's first name.
+     * @param lastName             The user's last name.
+     * @param password             The user's password (not hashed)
+     * @param notificationSettings A set of NotificationSettings for the user.
+     * @param userGroups           Any user groups the user should be assigned to.
      * @return A new, saved User.
      */
     private User createUser(String emailAddress,
                             String firstName,
                             String lastName,
                             String password,
-                            Set<Notification.NotificationSetting> settings,
+                            Set<User.NotificationSetting> notificationSettings,
                             UserGroup... userGroups) {
         User user = new User();
         user.tenant = demoTenant;
@@ -374,7 +376,7 @@ public class DemoTenantBuilder {
         user.verified = true;
         user.userState = User.State.APPROVED;
         user.hashedPassword = PasswordUtils.encodePassword(password);
-        user.notificationSetting = settings;
+        user.notificationSettings = notificationSettings;
         user.userGroups.addAll(Arrays.asList(userGroups));
         return userRepository.save(user);
     }

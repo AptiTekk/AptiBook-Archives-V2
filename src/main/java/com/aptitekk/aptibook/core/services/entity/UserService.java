@@ -6,20 +6,35 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
-
-import java.util.HashSet;
-import java.util.Set;
 
 
 @EntityService
 public class UserService {
-    public Set<Notification.NotificationSetting> getAllUserNotificationSettings(User user){
-            Set<Notification.NotificationSetting> settings = new HashSet<>();
-            settings.addAll(user.notificationSetting);
-            return settings;
+
+    /**
+     * Determines if the provided User wants email notifications for the provided NotificationType.
+     *
+     * @param user             The User.
+     * @param notificationType The NotificationType to check.
+     * @return True if the User wants email notifications, false otherwise.
+     */
+    public boolean doesUserWantEmailNotifications(User user, NotificationType notificationType) {
+        if (user == null)
+            throw new IllegalArgumentException("User is null");
+        if (notificationType == null)
+            throw new IllegalArgumentException("NotificationType is null");
+
+        // Look for the NotificationSetting that pertains to this NotificationType.
+        for (User.NotificationSetting notificationSetting : user.notificationSettings) {
+            if (notificationSetting.getType() == notificationType)
+                return notificationSetting.isEmailEnabled();
+        }
+
+        // The NotificationSetting for the given type does not exist for the User. Using the default value instead.
+        return notificationType.getDefaultValue();
     }
 
 }

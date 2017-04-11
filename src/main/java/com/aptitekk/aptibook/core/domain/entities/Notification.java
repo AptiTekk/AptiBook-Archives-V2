@@ -13,7 +13,6 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import org.apache.tools.ant.taskdefs.condition.Not;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -22,64 +21,6 @@ import java.time.LocalDateTime;
 @Entity
 
 public class Notification extends MultiTenantEntity implements Serializable {
-
-
-    public enum Type {
-
-        TYPE_RESERVATION_APPROVED("Email when your Reservation Request is Approved", true, false, null),
-        TYPE_RESERVATION_REJECTED("Email when your Reservation Request is Rejected", true, false, null),
-        TYPE_RESERVATION_CANCELLED_USER("Email when your Reservation is Cancelled", true, false, null),
-        TYPE_RESERVATION_REQUESTED("Email when a Reservation is Requested", true, true, null),
-        TYPE_RESERVATION_REQUEST_AUTO_APPROVED("Email upon Automatic Approval of a Reservation Request", false, true, null),
-        TYPE_RESERVATION_CANCELLED_USER_GROUPS("Email when a Reservation is Cancelled", true, true, null),
-        TYPE_APPROVAL_REQUEST("Email when a New User Registers", true, false, Permissions.Descriptor.USERS_MODIFY_ALL);
-
-        private final String label;
-        private final boolean defaultValue;
-        private final boolean userGroupRequired;
-        private final Permissions.Descriptor requiredPermissionDescriptor;
-
-        Type(String label, boolean defaultValue, boolean userGroupRequired, Permissions.Descriptor requiredPermissionDescriptor) {
-            this.label = label;
-            this.defaultValue = defaultValue;
-            this.userGroupRequired = userGroupRequired;
-            this.requiredPermissionDescriptor = requiredPermissionDescriptor;
-        }
-
-        public String getLabel() {
-            return label;
-        }
-
-        public boolean getDefaultValue() {
-            return defaultValue;
-        }
-
-        public boolean isUserGroupRequired() {
-            return userGroupRequired;
-        }
-
-        public Permissions.Descriptor getRequiredPermissionDescriptor() {
-            return requiredPermissionDescriptor;
-        }
-    }
-
-    @Embeddable
-    public static class NotificationSetting{
-        public NotificationSetting(Notification.Type setting, boolean enabled){
-            this.setting = setting;
-            this.enabled = enabled;
-        }
-        public NotificationSetting(){
-
-        }
-
-        @Enumerated(EnumType.STRING)
-        @Column(name = "setting")
-        Notification.Type setting;
-        @Column(name = "enabled")
-        boolean enabled;
-    }
-
 
     @Id
     @GeneratedValue

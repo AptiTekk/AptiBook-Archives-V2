@@ -6,17 +6,13 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
-import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
-import com.aptitekk.aptibook.core.services.entity.NotificationService;
-import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
@@ -29,7 +25,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.websocket.server.PathParam;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -38,25 +33,16 @@ public class UserController extends APIControllerAbstract {
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
-    private final UserGroupRepository userGroupRepository;
-    private final UserGroupService userGroupService;
     private final EmailService emailService;
-    private final NotificationService notificationService;
 
     @Autowired
     public UserController(
             UserRepository userRepository,
             UserValidator userValidator,
-            UserGroupRepository userGroupRepository,
-            UserGroupService userGroupService,
-            EmailService emailService,
-            NotificationService notificationService) {
+            EmailService emailService) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
-        this.userGroupRepository = userGroupRepository;
-        this.userGroupService = userGroupService;
         this.emailService = emailService;
-        this.notificationService = notificationService;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -152,16 +138,16 @@ public class UserController extends APIControllerAbstract {
         return ok(modelMapper.map(user, UserDTO.class));
     }
 
-  //TODO: Get, patch methods for user notification settings.
-    @RequestMapping(value = "/users/{id}/notification", method = RequestMethod.GET)
-    public ResponseEntity<?> getNotificatoinSettings(@PathVariable Long id){
-        User currentUser = userRepository.findInCurrentTenant(id);
-        if (currentUser == null)
-            return notFound("No users were found with the ID: " + id);
-        Set<Notification.NotificationSetting> notificationSettingsForUser = new HashSet<>();
-        notificationSettingsForUser.addAll(currentUser.notificationSetting);
-        return ok(modelMapper.map(notificationSettingsForUser, new TypeToken<Set<Notification.NotificationSetting>>(){}.getType()));
+    //TODO: Get, patch methods for user notification settings.
+    @RequestMapping(value = "/users/current/notifications/settings", method = RequestMethod.GET)
+    public ResponseEntity<?> getNotificationSettings() {
 
+        // Pasha: it's probably better to use /users/current here instead of an id.
+        // We don't want any user to access any other user's settings.
+        // The only time the notification settings will be changed is by the currently signed in user.
+
+        return ok(modelMapper.map(authService.getCurrentUser().notificationSettings, new TypeToken<Set<User.NotificationSetting>>() {
+        }.getType()));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
