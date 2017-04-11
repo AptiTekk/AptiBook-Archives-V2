@@ -6,15 +6,15 @@
 
 package com.aptitekk.aptibook.core.domain.entities;
 
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
-import org.apache.tools.ant.taskdefs.condition.Not;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 import java.util.*;
 
-//@Access(AccessType.FIELD)
+
 @SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 @Table(name = "\"user\"")
@@ -76,8 +76,6 @@ public class User extends MultiTenantEntity implements Serializable {
     @SuppressWarnings("JpaAttributeTypeInspection")
     public Map<Notification.Type, Boolean> notificationTypeSettings = new HashMap<>();
 
-
-
     @ManyToMany
     public List<UserGroup> userGroups = new ArrayList<>();
 
@@ -91,8 +89,11 @@ public class User extends MultiTenantEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     public List<Notification> notifications = new ArrayList<>();
 
-    @ManyToMany
-    public List<Permission> permissions;
+    @ElementCollection(targetClass = Permissions.Descriptor.class)
+    @CollectionTable(name = "user_permissions", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "descriptor")
+    public Set<Permissions.Descriptor> permissions;
 
     public Long getId() {
         return this.id;

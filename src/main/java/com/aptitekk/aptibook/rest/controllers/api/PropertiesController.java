@@ -6,8 +6,8 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Property;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
 import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.PropertyDTO;
@@ -34,10 +34,7 @@ public class PropertiesController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties", method = RequestMethod.GET)
     public ResponseEntity<?> getProperties() {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
         return ok(modelMapper.map(propertiesRepository.findAll(), new TypeToken<LinkedList<PropertyDTO>>() {
@@ -46,11 +43,7 @@ public class PropertiesController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties/{keyName}", method = RequestMethod.GET)
     public ResponseEntity<?> getProperty(@PathVariable String keyName) {
-
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
         Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf(keyName));
@@ -71,11 +64,7 @@ public class PropertiesController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties/{keyName}", method = RequestMethod.PATCH)
     public ResponseEntity<?> setPropertyValue(@PathVariable String keyName, @RequestBody PropertyDTO propertyDTO) {
-
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
         Property property = propertiesRepository.findPropertyByKey(Property.Key.valueOf(keyName));

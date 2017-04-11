@@ -4,4 +4,10 @@
  * Proprietary and confidential.
  */
 
-export * from './resource-category-filter.pipe';
+package com.aptitekk.aptibook.core.domain.rest.dtos;
+
+public class PermissionDTO {
+
+
+
+}

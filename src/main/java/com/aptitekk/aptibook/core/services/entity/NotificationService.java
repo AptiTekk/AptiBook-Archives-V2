@@ -6,7 +6,11 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.Notification;
+import com.aptitekk.aptibook.core.domain.entities.Reservation;
+import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.NotificationRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.EmailService;
@@ -51,18 +55,6 @@ public class NotificationService {
         notification = notificationRepository.save(notification);
         if (!user.isAdmin() && (type == null || user.notificationTypeSettings.get(type)))
             emailService.sendEmailNotification(notification);
-    }
-
-    public void sendNewUserRegistrationNotifications(User newUser) {
-        List<User> recipients = userRepository.findUsersWithPermission(Permission.Descriptor.USERS_MODIFY_ALL);
-        for (User user : recipients) {
-            sendNotification(Notification.Type.TYPE_APPROVAL_REQUEST,
-                    "New User Registration",
-                    "A new user, <b>" + newUser.getFullName() +
-                            "</b>, has registered for AptiBook, and is waiting for approval to sign in. " +
-                            "Please approve or reject this user.",
-                    user);
-        }
     }
 
     public void sendNewReservationNotifications(Reservation reservation) {

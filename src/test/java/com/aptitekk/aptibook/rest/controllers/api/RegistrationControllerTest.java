@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.AbstractWebClientTest;
+import com.aptitekk.aptibook.AbstractWebClientTest;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import static org.junit.Assert.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.csrf;
 
 public class RegistrationControllerTest extends AbstractWebClientTest {
 
@@ -35,7 +36,8 @@ public class RegistrationControllerTest extends AbstractWebClientTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/api/junit/register")
+                        .post("/api/register")
+                        .with(csrf())
                         .content(newUserJson.toString())
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.CREATED.value()));
@@ -45,7 +47,7 @@ public class RegistrationControllerTest extends AbstractWebClientTest {
         assertFalse("The user was already verified.", user.verified);
         assertNotNull("The user does not have a verification code.", user.verificationCode);
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/demo/register/verify?code=" + user.verificationCode))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/register/verify?code=" + user.verificationCode))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.TEMPORARY_REDIRECT.value()));
 
         assertTrue("The user is not verified.", user.verified);

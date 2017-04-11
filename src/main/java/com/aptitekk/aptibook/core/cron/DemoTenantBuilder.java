@@ -6,9 +6,10 @@
 
 package com.aptitekk.aptibook.core.cron;
 
-import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.*;
+import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
@@ -110,19 +111,18 @@ public class DemoTenantBuilder {
 
         User adminUser = userRepository.findByEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS, demoTenant);
         if (adminUser != null) {
-            try {
-                adminUser.hashedPassword = PasswordStorage.createHash("demo");
-                userRepository.save(adminUser);
-            } catch (PasswordStorage.CannotPerformOperationException e) {
-                logService.logException(getClass(), e, "Could not change admin password.");
-            }
+            adminUser.hashedPassword = PasswordUtils.encodePassword("demo");
+            userRepository.save(adminUser);
         }
+
+        Set<Permissions.Descriptor> fullPermissions = new HashSet<>();
+        fullPermissions.add(Permissions.Descriptor.GENERAL_FULL_PERMISSIONS);
 
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
                 "Administrators",
                 userGroupRepository.findRootGroup(demoTenant),
-                null
+                fullPermissions
         );
 
         UserGroup librariansUserGroup = createUserGroup(
@@ -308,7 +308,6 @@ public class DemoTenantBuilder {
         );
 
 
-
         //Add Notifications
         Notification notification = new Notification(teacher, "Test Notification", "Lorem ipsum");
         notification.tenant = demoTenant;
@@ -333,7 +332,7 @@ public class DemoTenantBuilder {
      */
     private UserGroup createUserGroup(String name,
                                       UserGroup parent,
-                                      List<Permission> permissions) {
+                                      Set<Permissions.Descriptor> permissions) {
         UserGroup userGroup = new UserGroup();
         userGroup.tenant = demoTenant;
         userGroup.setName(name);
@@ -365,11 +364,8 @@ public class DemoTenantBuilder {
         user.lastName = lastName;
         user.verified = true;
         user.userState = User.State.APPROVED;
-        try {
-            user.hashedPassword = PasswordStorage.createHash(password);
-        } catch (PasswordStorage.CannotPerformOperationException e) {
-            logService.logException(getClass(), e, "Could not save demo user's password");
-        }
+        user.hashedPassword = PasswordUtils.encodePassword(password);
+
         user.userGroups.addAll(Arrays.asList(userGroups));
         return userRepository.save(user);
     }
@@ -413,7 +409,6 @@ public class DemoTenantBuilder {
         return resourceRepository.save(resource);
 
     }
-
 
 
     /**

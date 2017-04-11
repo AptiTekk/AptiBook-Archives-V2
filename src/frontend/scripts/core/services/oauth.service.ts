@@ -14,7 +14,6 @@ export class OAuthService {
     private googleOAuthUrl: ReplaySubject<string> = new ReplaySubject<string>(1);
 
     constructor(private apiService: APIService) {
-        this.reloadOAuthURLs();
     }
 
     /**
@@ -23,7 +22,7 @@ export class OAuthService {
     public reloadOAuthURLs() {
 
         //Reload Google URL
-        this.apiService.get("/oauthUrl/google").subscribe(
+        this.apiService.get("/oauth/google").subscribe(
             response => {
                 this.googleOAuthUrl.next(response.url);
             },

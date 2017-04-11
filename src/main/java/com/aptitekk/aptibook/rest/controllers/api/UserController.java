@@ -7,17 +7,17 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.crypto.PasswordStorage;
-import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
+import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.entity.NotificationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
-//import com.aptitekk.aptibook.core.services.entity.UserService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
@@ -43,7 +43,6 @@ public class UserController extends APIControllerAbstract {
     private final UserGroupService userGroupService;
     private final EmailService emailService;
     private final NotificationService notificationService;
-   // private final UserService userService;
 
     @Autowired
     public UserController(
@@ -52,23 +51,18 @@ public class UserController extends APIControllerAbstract {
             UserGroupRepository userGroupRepository,
             UserGroupService userGroupService,
             EmailService emailService,
-            NotificationService notificationService
-            /*UserService userService*/) {
+            NotificationService notificationService) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.emailService = emailService;
         this.notificationService = notificationService;
-        //this.userService = userService;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsers() {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL))
             return noPermission();
 
         List<User> users = userRepository.findAll();
@@ -79,13 +73,10 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
     public ResponseEntity<?> addNewUser(@RequestBody UserDTO userDTO) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (userDTO == null)
             return badRequest("The User data was not supplied.");
 
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL))
             return noPermission();
 
         User newUser = new User();
@@ -121,12 +112,7 @@ public class UserController extends APIControllerAbstract {
         }
 
         String newPassword = PasswordGenerator.generateRandomPassword(10);
-        try {
-            newUser.hashedPassword = PasswordStorage.createHash(newPassword);
-        } catch (PasswordStorage.CannotPerformOperationException e) {
-            logService.logException(getClass(), e, "Could not generate new User's password.");
-            return serverError("The User's password could not be generated.");
-        }
+        newUser.hashedPassword = PasswordUtils.encodePassword(newPassword);
 
         newUser.verified = true;
         newUser.userState = User.State.APPROVED;
@@ -146,17 +132,22 @@ public class UserController extends APIControllerAbstract {
         return created(modelMapper.map(newUser, UserDTO.class), "/users/" + newUser.getId());
     }
 
+    @RequestMapping(value = "/users/current", method = RequestMethod.GET)
+    public ResponseEntity<?> getCurrentUser() {
+        if (authService.getCurrentUser() != null)
+            return ok(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
+        else
+            return badRequest();
+    }
+
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
     public ResponseEntity<?> getUser(@PathVariable long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         User user = userRepository.findInCurrentTenant(id);
         if (user == null)
             return notFound("No users were found with the ID: " + id);
 
         if (!user.equals(authService.getCurrentUser()))
-            if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+            if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL))
                 return noPermission();
 
         return ok(modelMapper.map(user, UserDTO.class));
@@ -179,9 +170,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         if (userDTO == null)
             return badRequest("The User data was not supplied.");
 
@@ -190,7 +178,7 @@ public class UserController extends APIControllerAbstract {
             return notFound("No users were found with the ID: " + id);
 
         if (!currentUser.equals(authService.getCurrentUser()))
-            if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+            if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL))
                 return noPermission();
 
         // If Password Only is true, then we do not need to worry about updating this data.
@@ -223,17 +211,11 @@ public class UserController extends APIControllerAbstract {
 
         if (userDTO.newPassword != null) {
             userValidator.validatePassword(userDTO.newPassword);
-
-            try {
-                currentUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
-            } catch (PasswordStorage.CannotPerformOperationException e) {
-                logService.logException(getClass(), e, "Could not hash password from PATCH.");
-                return serverError("Could not save new password.");
-            }
+            currentUser.hashedPassword = PasswordUtils.encodePassword(userDTO.newPassword);
         }
 
         if (userDTO.userGroups != null) {
-            if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+            if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL))
                 return noPermission("You may not modify User Groups.");
 
             List<UserGroup> userGroupList = userValidator.validateUserGroups(userDTO.userGroups, currentUser);
@@ -252,9 +234,6 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUser(@PathVariable long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         User user = userRepository.findInCurrentTenant(id);
         if (user == null)
             return notFound("No users were found with the ID: " + id);
@@ -262,7 +241,7 @@ public class UserController extends APIControllerAbstract {
         if (user.isAdmin())
             return badRequest("The admin user cannot be deleted.");
 
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL))
             return noPermission();
 
         userRepository.delete(user);

@@ -16,6 +16,7 @@ import org.springframework.core.io.ResourceLoader;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -68,6 +69,11 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(RestValidator.RestValidationException.class)
     protected ResponseEntity<?> handleRestValidationException(RestValidator.RestValidationException ex) {
         return ex.getResponseEntity();
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return new ResponseEntity<>(new RestError(ex.getMessage()), HttpStatus.BAD_REQUEST);
     }
 
     @Override

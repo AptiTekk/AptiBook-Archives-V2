@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {AfterViewInit, Component, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
 import {ActivatedRoute, Router} from "@angular/router";
 import {OAuthService} from "../../../core/services/oauth.service";
 import {AuthService} from "../../../core/services/auth.service";
@@ -16,7 +16,7 @@ import {LoaderService} from "../../../core/services/loader.service";
     selector: 'sign-in',
     templateUrl: 'sign-in.component.html'
 })
-export class SignInComponent implements AfterViewInit {
+export class SignInComponent implements OnInit, AfterViewInit {
 
     @ViewChild('loginDangerAlert') loginDangerAlert: AlertComponent;
     @ViewChild('loginInfoAlert') loginInfoAlert: AlertComponent;
@@ -25,14 +25,16 @@ export class SignInComponent implements AfterViewInit {
 
     googleSignInUrl: string;
 
-    constructor(formBuilder: FormBuilder,
+    constructor(private formBuilder: FormBuilder,
                 private router: Router,
                 private activeRoute: ActivatedRoute,
                 private oAuthService: OAuthService,
                 private authService: AuthService,
                 private loaderService: LoaderService) {
+    }
 
-        this.signInFormGroup = formBuilder.group({
+    ngOnInit(): void {
+        this.signInFormGroup = this.formBuilder.group({
             emailAddress: [null, Validators.required],
             password: [null, Validators.required]
         });
@@ -42,24 +44,35 @@ export class SignInComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        // Reload the OAuth URLs
+        this.oAuthService.reloadOAuthURLs();
+
         //Check for errors in the parameters
         this.activeRoute.queryParams.subscribe(
             params => {
-                if (params['googleError']) {
-                    if (params['googleError'] === "access_denied")
-                        this.loginDangerAlert.display("Unfortunately, Sign In with Google failed because access was denied.", false);
-                    else if (params['googleError'] === "inactive")
-                        this.loginDangerAlert.display("Unfortunately, Sign In with Google failed because it is not allowed.", false);
-                    else if(params['googleError'] === "not-whitelisted")
-                        this.loginDangerAlert.display("Unfortunately, Your email domain is not allowed.", false);
-                    else if(params['googleError'] === "invalid-code")
-                        this.loginDangerAlert.display("Unfortunately, Sign In with Google could not process successfully.", false)
+                if (params['oauth_error']) {
+                    let oAuthMethod = params['oauth_method'] === 'google' ? 'Google' : null;
 
+                    switch (params['oauth_error']) {
+                        case 'server_error':
+                            this.loginDangerAlert.display("Unfortunately, sign in could not process successfully.", false);
+                            break;
+                        case 'invalid_domain':
+                            this.loginDangerAlert.display("Unfortunately, the email address you used to sign in is not allowed.", false);
+                            break;
+                        case 'access_denied':
+                            this.loginDangerAlert.display("Unfortunately, we were unable to access your account details.", false);
+                            break;
+                    }
                 } else if (params['verified'] !== undefined) {
-                    if (params['verified'] === "true")
-                        this.loginInfoAlert.display("Your Email Address has been verified and you may now sign in.", false);
-                    else if (params['verified'] === "false")
-                        this.loginDangerAlert.display("Your Email Address could not be verified.", false);
+                    switch (params['verified']) {
+                        case 'true':
+                            this.loginInfoAlert.display("Your Email Address has been verified and you may now sign in.", false);
+                            break;
+                        case 'false':
+                            this.loginDangerAlert.display("Your Email Address could not be verified.", false);
+                            break;
+                    }
                 }
             });
     }

@@ -4,16 +4,16 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain.entities;
+package com.aptitekk.aptibook.core.domain.entities.enums;
 
-import com.aptitekk.aptibook.core.util.EqualsHelper;
-
-import javax.persistence.*;
-import java.io.Serializable;
+import javax.persistence.Column;
+import java.util.HashSet;
 import java.util.Set;
 
-@Entity
-public class Permission extends MultiTenantEntity implements Serializable {
+/**
+ * Permissions for the application.
+ */
+public class Permissions {
 
     /**
      * Defines the groups of permissions.
@@ -30,24 +30,29 @@ public class Permission extends MultiTenantEntity implements Serializable {
         PERMISSIONS("Permissions"),
         PROPERTIES("Properties");
 
-        private String friendlyName;
+        private String displayName;
 
-        Group(String friendlyName) {
+        private Set<Descriptor> descriptors = new HashSet<>();
 
-            this.friendlyName = friendlyName;
+        Group(String displayName) {
+
+            this.displayName = displayName;
         }
 
-        public String getFriendlyName() {
-            return friendlyName;
+        public String getDisplayName() {
+            return displayName;
         }
 
+        public Set<Descriptor> getDescriptors() {
+            return descriptors;
+        }
     }
-
+    
     /**
      * Defines the details about the permissions, including their descriptions.
      * The order in this enum determines the order shown to the user within each Group on the Permissions page.
      * <p>
-     * NOTE: Any modifications to the NAME of the descriptor (not friendlyName) will clear its existence from the database!
+     * NOTE: Any modifications to the NAME of the descriptor (not displayName) will clear its existence from the database!
      */
     public enum Descriptor {
 
@@ -122,21 +127,23 @@ public class Permission extends MultiTenantEntity implements Serializable {
                         "</ul>");
 
         private final Group group;
-        private final String friendlyName;
+        private final String displayName;
         private final String description;
 
-        Descriptor(Group group, String friendlyName, String description) {
+        Descriptor(Group group, String displayName, String description) {
             this.group = group;
-            this.friendlyName = friendlyName;
+            this.displayName = displayName;
             this.description = description;
+
+            group.descriptors.add(this);
         }
 
         public Group getGroup() {
             return group;
         }
 
-        public String getFriendlyName() {
-            return friendlyName;
+        public String getDisplayName() {
+            return displayName;
         }
 
         public String getDescription() {
@@ -145,34 +152,4 @@ public class Permission extends MultiTenantEntity implements Serializable {
 
     }
 
-    @Id
-    @GeneratedValue
-    public Long id;
-
-    @Enumerated(value = EnumType.STRING)
-    public Descriptor descriptor;
-
-    @ManyToMany(mappedBy = "permissions")
-    public Set<UserGroup> userGroups;
-
-    @ManyToMany(mappedBy = "permissions")
-    public Set<User> users;
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null) return false;
-
-        if (!(o instanceof Permission)) return false;
-
-        Permission other = (Permission) o;
-
-        return EqualsHelper.areEquals(descriptor, other.descriptor);
-    }
-
-    @Override
-    public int hashCode() {
-        return EqualsHelper.calculateHashCode(descriptor);
-    }
 }

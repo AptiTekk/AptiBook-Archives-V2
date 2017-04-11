@@ -15,7 +15,6 @@ export class UserService {
     users: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
 
     constructor(private apiService: APIService) {
-        this.fetchUsers();
     }
 
 
@@ -26,7 +25,7 @@ export class UserService {
             .take(1)
             .subscribe(
                 response => this.users.next(response),
-                err => this.users.next(undefined)
+                err => this.users.next([])
             )
     }
 

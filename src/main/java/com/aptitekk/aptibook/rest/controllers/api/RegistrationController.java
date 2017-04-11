@@ -6,10 +6,10 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.crypto.PasswordStorage;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
+import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
@@ -77,12 +77,7 @@ public class RegistrationController extends APIControllerAbstract {
             return badRequest("The New Password was not supplied.");
 
         userValidator.validatePassword(userDTO.newPassword);
-        try {
-            newUser.hashedPassword = PasswordStorage.createHash(userDTO.newPassword);
-        } catch (PasswordStorage.CannotPerformOperationException e) {
-            logService.logException(getClass(), e, "Could not hash password.");
-            return serverError("Could not save new password.");
-        }
+        newUser.hashedPassword = PasswordUtils.encodePassword(userDTO.newPassword);
 
         // Create the verification code.
         String verificationCode = PasswordGenerator.generateRandomPassword(16);

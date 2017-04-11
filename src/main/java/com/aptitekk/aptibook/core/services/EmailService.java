@@ -35,10 +35,12 @@ public class EmailService {
     private Client client;
 
     private final LogService logService;
+    private final SpringProfileService springProfileService;
 
     @Autowired
-    public EmailService(LogService logService) {
+    public EmailService(LogService logService, SpringProfileService springProfileService) {
         this.logService = logService;
+        this.springProfileService = springProfileService;
     }
 
     @PostConstruct
@@ -77,6 +79,10 @@ public class EmailService {
      * @return true if the email was sent, false otherwise.
      */
     private boolean sendEmail(String templateId, Map<String, Object> substitutionData, String... recipients) {
+        // Tests don't need to send emails.
+        if(springProfileService.isProfileActive(SpringProfileService.Profile.TESTING))
+            return true;
+
         if (client == null)
             return false;
 

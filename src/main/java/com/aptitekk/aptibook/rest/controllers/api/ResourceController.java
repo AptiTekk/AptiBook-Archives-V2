@@ -6,10 +6,10 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
@@ -49,29 +49,23 @@ public class ResourceController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
     public ResponseEntity<?> getAvailableResources(@RequestParam(value = "start") String start, @RequestParam(value = "end") String end) {
-        if (authService.isUserSignedIn()) {
-            try {
-                Date startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
-                Date endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
-                LocalDateTime startLocalDateTime = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
-                LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
+        try {
+            Date startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
+            Date endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
+            LocalDateTime startLocalDateTime = LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault());
+            LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
 
-                List<Resource> availableResources = reservationService.findAvailableResources(startLocalDateTime, endLocalDateTime);
-                return ok(modelMapper.map(availableResources, new TypeToken<List<ResourceDTO>>() {
-                }.getType()));
-            } catch (ParseException e) {
-                return badRequest("Could not parse start or end times.");
-            }
+            List<Resource> availableResources = reservationService.findAvailableResources(startLocalDateTime, endLocalDateTime);
+            return ok(modelMapper.map(availableResources, new TypeToken<List<ResourceDTO>>() {
+            }.getType()));
+        } catch (ParseException e) {
+            return badRequest("Could not parse start or end times.");
         }
-        return unauthorized();
     }
 
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
     public ResponseEntity<?> addResource(@RequestBody ResourceDTO.WithoutReservations resourceDTO) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.RESOURCES_MODIFY_ALL))
             return noPermission();
 
         Resource resource = new Resource();
@@ -119,66 +113,59 @@ public class ResourceController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchResource(@RequestBody ResourceDTO resourceDTO, @PathVariable Long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-        else {
-            Resource resource = resourceRepository.findInCurrentTenant(id);
-            ResourceCategory resourceCategory = null;
+        Resource resource = resourceRepository.findInCurrentTenant(id);
+        ResourceCategory resourceCategory = null;
 
-            if (resource == null)
-                return noPermission();
+        if (resource == null)
+            return noPermission();
 
-            if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
-                return noPermission();
+        if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
+            return noPermission();
 
-            if (resourceDTO.resourceCategory != null) {
-                resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
-                if (resourceCategory == null)
-                    return badRequest("Category not found.");
-                else
-                    resource.resourceCategory = resourceCategory;
-            }
-
-            if (resourceDTO.name != null) {
-                if (resourceDTO.name.length() > 30)
-                    return badRequest("Name must be 30 characters or less.");
-
-                if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
-                    return badRequest("Name includes invalid characters.");
-
-                Resource existingResource = resourceRepository.findByName(resourceDTO.name, resourceCategory);
-                if (existingResource != null && !existingResource.id.equals(resourceDTO.id))
-                    return badRequest("A Resource by that name already exists!");
-
-                resource.name = resourceDTO.name;
-            }
-
-            if (resourceDTO.owner != null) {
-                UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
-                if (owner == null)
-                    return badRequest("Owner not found.");
-                else if (owner.isRoot())
-                    return badRequest("Owner cannot be root.");
-                else
-                    resource.owner = owner;
-            }
-
-            if (resourceDTO.needsApproval != null)
-                resource.needsApproval = resourceDTO.needsApproval;
-
-            resource = resourceRepository.save(resource);
-            return ok(modelMapper.map(resource, ResourceDTO.class));
+        if (resourceDTO.resourceCategory != null) {
+            resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
+            if (resourceCategory == null)
+                return badRequest("Category not found.");
+            else
+                resource.resourceCategory = resourceCategory;
         }
+
+        if (resourceDTO.name != null) {
+            if (resourceDTO.name.length() > 30)
+                return badRequest("Name must be 30 characters or less.");
+
+            if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
+                return badRequest("Name includes invalid characters.");
+
+            Resource existingResource = resourceRepository.findByName(resourceDTO.name, resourceCategory);
+            if (existingResource != null && !existingResource.id.equals(resourceDTO.id))
+                return badRequest("A Resource by that name already exists!");
+
+            resource.name = resourceDTO.name;
+        }
+
+        if (resourceDTO.owner != null) {
+            UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
+            if (owner == null)
+                return badRequest("Owner not found.");
+            else if (owner.isRoot())
+                return badRequest("Owner cannot be root.");
+            else
+                resource.owner = owner;
+        }
+
+        if (resourceDTO.needsApproval != null)
+            resource.needsApproval = resourceDTO.needsApproval;
+
+        resource = resourceRepository.save(resource);
+        return ok(modelMapper.map(resource, ResourceDTO.class));
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteResource(@PathVariable Long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
-        if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
+        if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
         resourceRepository.delete(resource);

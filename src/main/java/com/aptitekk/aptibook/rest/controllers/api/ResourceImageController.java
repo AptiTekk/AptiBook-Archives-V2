@@ -45,12 +45,6 @@ public class ResourceImageController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<?> getImage(@PathVariable Long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
-        if (id == null)
-            return badRequest("No ID Supplied.");
-
         Resource resource = resourceRepository.findInCurrentTenant(id);
         if (resource == null)
             return badRequest("Resource not found.");
@@ -63,12 +57,9 @@ public class ResourceImageController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
     public ResponseEntity<?> setImage(@PathVariable Long id, @RequestPart("file") MultipartFile multipartFile) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
-        if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
+        if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
         if (multipartFile == null)
@@ -123,15 +114,12 @@ public class ResourceImageController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteImage(@PathVariable Long id) {
-        if (!authService.isUserSignedIn())
-            return unauthorized();
-
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
         if (resource == null)
             return noPermission();
 
-        if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
+        if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
         File imageFile = resource.image;
