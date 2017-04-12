@@ -13,12 +13,12 @@
 	<div class="row"
 		 *ngFor="let permissionGroup of permissionGroups">
 		<div class="col-xs-12">
-			<h1>{{permissionGroup.name}}</h1>
+			<h2>{{permissionGroup.name}}</h2>
 			<hr/>
 			<div class="row"
 				 *ngFor="let permissionDetails of permissionGroup.details">
 				<div class="col-xs-12 col-md-6">
-					<h2>{{permissionDetails.name}}</h2>
+					<h3>{{permissionDetails.name}}</h3>
 					<p [innerHTML]="permissionDetails.description"></p>
 				</div>
 				<div class="col-xs-6 col-md-3">
