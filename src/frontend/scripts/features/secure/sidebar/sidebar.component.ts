@@ -5,7 +5,6 @@
  */
 import {Component, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
-import {NavigationLink} from "../../../shared/navigation/navigation-link.model";
 import {User} from "../../../models/user.model";
 import {Notification} from "../../../models/notification.model";
 import {AuthService} from "../../../core/services/auth.service";
@@ -20,25 +19,6 @@ import {Permission} from "../../../models/permission.model";
     styleUrls: ['sidebar.component.css', 'sidebar.mobile.component.css']
 })
 export class SidebarComponent implements OnInit {
-
-    public reservationManagementLinks: NavigationLink[] = [
-        {icon: 'hourglass-half', label: 'Pending', path: ['', 'secure', 'management', 'pending']},
-        {icon: 'calendar-check-o', label: 'Approved', path: ['', 'secure', 'management', 'approved']},
-        {icon: 'calendar-times-o', label: 'Rejected', path: ['', 'secure', 'management', 'rejected']},
-        {icon: 'calendar', label: 'Calendar', path: ['', 'secure', 'management', 'calendar']}
-    ];
-
-    public configurationLinks: NavigationLink[] = [
-        {icon: 'tags', label: 'Resources', path: ['', 'secure', 'configuration', 'resources']},
-        {icon: 'user', label: 'Users', path: ['', 'secure', 'configuration', 'users']},
-        {icon: 'unlock', label: 'Permissions', path: ['', 'secure', 'configuration', 'permissions']},
-        {icon: 'cog', label: 'Properties', path: ['', 'secure', 'configuration', 'properties']}
-    ];
-
-    public myLinks: NavigationLink[] = [
-        {icon: 'pencil', label: 'My Account', path: ['', 'secure', 'user', 'account']},
-        {icon: 'bell', label: 'My Notifications', path: ['', 'secure', 'user', 'notifications']}
-    ];
 
     /**
      * The currently signed in user.
@@ -84,6 +64,24 @@ export class SidebarComponent implements OnInit {
         this.permissionsService.getCurrentUserPermissions().subscribe(
             permissions => this.userPermissions = permissions
         )
+    }
+
+    /**
+     * Determines if the current User has any of the given permissions.
+     * @param descriptors The descriptors of the permissions to check for.
+     * @returns true if the user has permission (admin always returns true,
+     * and users with full permissions return true).
+     */
+    hasPermission(descriptors: string[]): boolean {
+        // Check for admin status
+        if (this.user != null && this.user.admin)
+            return true;
+
+        // Filter for full permissions or the given permission.
+        return this.userPermissions
+                .filter(permission => permission.descriptor === 'GENERAL_FULL_PERMISSIONS'
+                || descriptors.includes(permission.descriptor))
+                .length > 0;
     }
 
     onSwipeRight() {

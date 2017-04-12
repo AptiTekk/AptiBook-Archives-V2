@@ -11,6 +11,7 @@ import {UsersConfigurationComponent} from "./users/users.component";
 import {AllUsersComponent} from "./users/all-users/all-users.component";
 import {GroupsComponent} from "./users/groups/groups.component";
 import {PropertiesConfigurationComponent} from "./properties/properties.component";
+import {PermissionsConfigurationComponent} from "./permissions/permissions.component";
 
 const routes: Routes = [
     {
@@ -43,8 +44,12 @@ const routes: Routes = [
                 ]
             },
             {
+                path: 'permissions',
+                component: PermissionsConfigurationComponent
+            },
+            {
                 path: 'properties/:section',
-                component: PropertiesConfigurationComponent,
+                component: PropertiesConfigurationComponent
             },
             {
                 path: 'properties',

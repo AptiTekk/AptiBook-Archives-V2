@@ -12,6 +12,7 @@ import {ResourcesConfigurationModule} from "./resources/resources.module";
 import {PropertiesConfigurationModule} from "./properties/properties.module";
 import {SharedModule} from "../../../shared/shared.module";
 import {ConfigurationRoutesModule} from "./configuration.routes";
+import {PermissionsConfigurationModule} from "./permissions/permissions.module";
 
 @NgModule({
     imports: [
@@ -23,6 +24,7 @@ import {ConfigurationRoutesModule} from "./configuration.routes";
         // Components
         ResourcesConfigurationModule,
         PropertiesConfigurationModule,
+        PermissionsConfigurationModule,
         UsersConfigurationModule
     ],
     declarations: [

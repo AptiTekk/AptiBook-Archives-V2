@@ -66,19 +66,23 @@
 								  *ngIf="user?.admin || userPermissions.length > 0">
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'resources']"
 									  [icon]="'tags'"
-									  [label]="'Resources'">
+									  [label]="'Resources'"
+									  *ngIf="hasPermission(['RESOURCE_CATEGORIES_MODIFY_ALL', 'RESOURCES_MODIFY_OWN', 'RESOURCES_MODIFY_HIERARCHY', 'RESOURCES_MODIFY_ALL'])">
 				</accordion-navigation>
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'users']"
 									  [icon]="'user'"
-									  [label]="'Users'">
+									  [label]="'Users'"
+									  *ngIf="hasPermission(['USERS_MODIFY_ALL', 'GROUPS_MODIFY_ALL'])">
 				</accordion-navigation>
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'permissions']"
 									  [icon]="'unlock'"
-									  [label]="'Permissions'">
+									  [label]="'Permissions'"
+									  *ngIf="hasPermission(['PERMISSIONS_MODIFY_ALL'])">
 				</accordion-navigation>
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'properties']"
 									  [icon]="'cog'"
-									  [label]="'Properties'">
+									  [label]="'Properties'"
+									  *ngIf="hasPermission(['PROPERTIES_MODIFY_ALL'])">
 				</accordion-navigation>
 			</accordion-navigation>
 		</accordion-navigation>
