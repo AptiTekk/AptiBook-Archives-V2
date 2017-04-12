@@ -19,7 +19,7 @@ export class PermissionsService {
                 private authService: AuthService) {
 
         // Listen for user changes and fetch permissions if a user is signed in.
-        this.authService.getUser().subscribe(
+        this.authService.getCurrentUser().subscribe(
             user => {
                 if (user)
                     this.fetchCurrentUserPermissions();

@@ -36,7 +36,7 @@ export class CalendarComponent implements OnInit {
     ngOnInit(): void {
 
         // Get user and hierarchy down
-        this.authService.getUser().subscribe(user => {
+        this.authService.getCurrentUser().subscribe(user => {
             this.currentUser = user;
             this.userGroupOwnerFilter = [];
 

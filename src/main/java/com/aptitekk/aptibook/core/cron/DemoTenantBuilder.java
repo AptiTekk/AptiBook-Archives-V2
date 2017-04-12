@@ -121,8 +121,8 @@ public class DemoTenantBuilder {
         fullPermissions.add(Permissions.Descriptor.GENERAL_FULL_PERMISSIONS);
 
         // Notification Settings
-        Set<User.NotificationSetting> notificationSettings = new HashSet<>();
-        notificationSettings.add(new User.NotificationSetting(NotificationType.TYPE_APPROVAL_REQUEST, true));
+        Map<NotificationType, User.NotificationToggles> notificationSettings = new HashMap<>();
+        notificationSettings.put(NotificationType.TYPE_APPROVAL_REQUEST, new User.NotificationToggles(true));
 
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
@@ -366,7 +366,7 @@ public class DemoTenantBuilder {
                             String firstName,
                             String lastName,
                             String password,
-                            Set<User.NotificationSetting> notificationSettings,
+                            Map<NotificationType, User.NotificationToggles> notificationSettings,
                             UserGroup... userGroups) {
         User user = new User();
         user.tenant = demoTenant;

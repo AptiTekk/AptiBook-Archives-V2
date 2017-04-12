@@ -81,7 +81,7 @@ export class ApprovalModalComponent implements OnInit {
 
     ngOnInit() {
         this.authService
-            .getUser()
+            .getCurrentUser()
             .subscribe(user => this.user = user);
 
         this.formGroup = this.formBuilder.group({

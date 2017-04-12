@@ -61,7 +61,7 @@ export class AllUsersComponent implements AfterViewInit {
             });
 
         this.authService.reloadUser();
-        this.authService.getUser().take(1).subscribe(user => {
+        this.authService.getCurrentUser().take(1).subscribe(user => {
             this.currentUser = user;
         });
 

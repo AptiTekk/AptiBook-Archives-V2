@@ -14,6 +14,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 
@@ -52,9 +53,11 @@ public class User extends MultiTenantEntity implements Serializable {
         PENDING;
     }
 
-    @ElementCollection(targetClass = NotificationSetting.class)
+    @ElementCollection(targetClass = NotificationToggles.class)
     @CollectionTable(name = "user_notification_settings", joinColumns = @JoinColumn(name = "user_id"))
-    public Set<NotificationSetting> notificationSettings;
+    @MapKeyColumn(name = "type")
+    @MapKeyEnumerated(EnumType.STRING)
+    public Map<NotificationType, NotificationToggles> notificationSettings;
 
     @ManyToMany
     public List<UserGroup> userGroups = new ArrayList<>();
@@ -134,17 +137,10 @@ public class User extends MultiTenantEntity implements Serializable {
     }
 
     /**
-     * Describes a single Notification Setting for a User.
+     * Describes the different toggleable notification methods.
      */
     @Embeddable
-    public static class NotificationSetting implements Serializable {
-
-        /**
-         * The type of Notification for this setting.
-         */
-        @Enumerated(EnumType.STRING)
-        @Column(name = "type")
-        private NotificationType type;
+    public static class NotificationToggles implements Serializable {
 
         /**
          * Whether or not email notifications are enabled.
@@ -153,29 +149,18 @@ public class User extends MultiTenantEntity implements Serializable {
         private boolean emailEnabled;
 
         /**
-         * Constructs a new NotificationSetting with the given parameters.
+         * Constructs a new instance with the given parameters.
          *
-         * @param type         The type of Notification for this setting.
          * @param emailEnabled Whether or not email notifications are enabled.
          */
-        public NotificationSetting(NotificationType type, boolean emailEnabled) {
-            this.type = type;
+        public NotificationToggles(boolean emailEnabled) {
             this.emailEnabled = emailEnabled;
         }
 
         /**
-         * Constructs a new instance with a null type and false enabled fields.
-         * Be sure to set the type with {@link #setType(NotificationType)}
+         * Constructs a new instance with false enabled fields.
          */
-        public NotificationSetting() {
-        }
-
-        public NotificationType getType() {
-            return type;
-        }
-
-        public void setType(NotificationType setting) {
-            this.type = setting;
+        public NotificationToggles() {
         }
 
         public boolean isEmailEnabled() {

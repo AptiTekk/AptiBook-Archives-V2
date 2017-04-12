@@ -10,7 +10,7 @@ import {User} from "../../../../models/user.model";
 import {UserService} from "../../../../core/services/user.service";
 import {AlertComponent} from "../../../../shared/alert/alert.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {NotificationSetting} from "../../../../models/notification-setting.model";
+import {NotificationToggles} from "../../../../models/notification-toggles.model";
 
 @Component({
     selector: 'at-user-account',
@@ -29,7 +29,7 @@ export class AccountComponent implements OnInit {
     passwordsInfoAlert: AlertComponent;
 
     user: User;
-    notificationSettings: NotificationSetting[];
+    notificationSettings: NotificationToggles[];
     personalInformation: FormGroup;
 
     constructor(private authService: AuthService,
@@ -39,7 +39,7 @@ export class AccountComponent implements OnInit {
 
     ngOnInit(): void {
         this.authService.reloadUser();
-        this.authService.getUser().take(1).subscribe(user => {
+        this.authService.getCurrentUser().take(1).subscribe(user => {
             this.user = user;
 
             this.personalInformation = this.formBuilder.group({
@@ -50,18 +50,6 @@ export class AccountComponent implements OnInit {
                 userGroups: this.user.userGroups
             });
         });
-        this.userService.fetchUserNotificationSettings();
-        this.userService.getNotificationSettings().subscribe(settings => {
-                this.notificationSettings = settings;
-
-                //TEST CODE//
-                console.log("Size " + this.notificationSettings.length);
-                this.notificationSettings.forEach(setting => {
-                        console.log(setting.type + " " + setting.emailEnabled);
-                    }
-                );
-                //END TEST CODE//
-            });
     }
 
     onPersonalInformationSubmit(changingPassword: boolean = false) {

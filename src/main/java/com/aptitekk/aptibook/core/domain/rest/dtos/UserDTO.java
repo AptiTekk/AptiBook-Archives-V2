@@ -35,7 +35,7 @@ public class UserDTO {
 
     public List<UserGroupDTO.WithoutParentOrChildren> userGroups;
 
-    //public Set<Notification.NotificationSetting> notificationSetting;
+    //public Set<Notification.NotificationToggles> notificationSetting;
 
     public String fullName;
 

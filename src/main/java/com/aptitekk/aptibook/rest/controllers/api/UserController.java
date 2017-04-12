@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
@@ -27,7 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
-import java.util.Set;
+import java.util.Map;
 
 @APIController
 public class UserController extends APIControllerAbstract {
@@ -145,23 +146,29 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/current/notifications/settings", method = RequestMethod.GET)
     public ResponseEntity<?> getNotificationSettings() {
-        return ok(modelMapper.map(userService.buildNotificationSettings(authService.getCurrentUser()), new TypeToken<Set<User.NotificationSetting>>() {
+        Map<NotificationType, User.NotificationToggles> notificationSettings = authService.getCurrentUser().notificationSettings;
+
+        for (NotificationType notificationType : NotificationType.values()) {
+            notificationSettings.putIfAbsent(notificationType, new User.NotificationToggles(notificationType.getDefaultValue()));
+        }
+
+        return ok(modelMapper.map(notificationSettings, new TypeToken<Map<NotificationType, User.NotificationToggles>>() {
         }.getType()));
     }
 
 
-    @RequestMapping(value="/users/current/notifications/settings", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchNotificationSettings(@RequestBody User.NotificationSetting notificationSetting){
+    @RequestMapping(value = "/users/current/notifications/settings/{notificationType}", method = RequestMethod.PATCH)
+    public ResponseEntity<?> patchNotificationSetting(@RequestBody User.NotificationToggles notificationToggles,
+                                                      @PathVariable("notificationType") NotificationType notificationType) {
         User user = authService.getCurrentUser();
         //Find passed in notification setting in user's notification settings and set value of user's setting to passed in value.
-        for(User.NotificationSetting setting : user.notificationSettings){
-            if(setting.getType() == notificationSetting.getType()){
-                setting.setEmailEnabled(notificationSetting.isEmailEnabled());
-            }
-        }
-        user = userRepository.save(user);
-        return ok(modelMapper.map(user.notificationSettings, new TypeToken<Set<User.NotificationSetting>>() {
-        }.getType()));
+        if (user.notificationSettings.containsKey(notificationType))
+            user.notificationSettings.get(notificationType).setEmailEnabled(notificationToggles.isEmailEnabled());
+        else
+            user.notificationSettings.put(notificationType, new User.NotificationToggles(notificationToggles.isEmailEnabled()));
+
+        userRepository.save(user);
+        return ok(modelMapper.map(user.notificationSettings.get(notificationType), User.NotificationToggles.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)

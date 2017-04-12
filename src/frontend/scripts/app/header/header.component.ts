@@ -28,7 +28,7 @@ export class HeaderComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.authService.getUser().subscribe(user => {
+        this.authService.getCurrentUser().subscribe(user => {
             if (user) {
                 this.user = user;
                 this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {

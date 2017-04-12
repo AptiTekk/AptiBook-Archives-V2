@@ -32,27 +32,12 @@ public class UserService {
         if (notificationType == null)
             throw new IllegalArgumentException("NotificationType is null");
 
-        // Look for the NotificationSetting that pertains to this NotificationType.
-        for (User.NotificationSetting notificationSetting : user.notificationSettings) {
-            if (notificationSetting.getType() == notificationType)
-                return notificationSetting.isEmailEnabled();
-        }
+        // Look for the NotificationToggles that pertains to this NotificationType.
+        if(user.notificationSettings.containsKey(notificationType))
+            return user.notificationSettings.get(notificationType).isEmailEnabled();
 
-        // The NotificationSetting for the given type does not exist for the User. Using the default value instead.
+        // The NotificationToggles for the given type does not exist for the User. Using the default value instead.
         return notificationType.getDefaultValue();
-    }
-
-    /**
-     *
-     * @param user          The User.
-     * @return  Set of NotificationSetting, with default values if value for given type does not exist for the user.
-     */
-    public Set<User.NotificationSetting> buildNotificationSettings(User user) {
-        Set<User.NotificationSetting> userNotificationSettings = new HashSet<>();
-        for (NotificationType notificationType : EnumSet.allOf(NotificationType.class)) {
-            userNotificationSettings.add(new User.NotificationSetting(notificationType, doesUserWantEmailNotifications(user, notificationType)));
-        }
-        return userNotificationSettings;
     }
 
 }

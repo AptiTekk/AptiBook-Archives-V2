@@ -14,5 +14,5 @@ import java.util.Set;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class NotificationSettingDTO {
-    //public Set<Notification.NotificationSetting> notificationSetting;
+    //public Set<Notification.NotificationToggles> notificationSetting;
 }

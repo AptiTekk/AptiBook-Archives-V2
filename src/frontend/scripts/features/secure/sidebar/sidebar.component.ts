@@ -71,7 +71,7 @@ export class SidebarComponent implements OnInit {
     ngOnInit(): void {
 
         // Get the user and their unread notifications
-        this.authService.getUser().subscribe(user => {
+        this.authService.getCurrentUser().subscribe(user => {
             if (user) {
                 this.user = user;
                 this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {

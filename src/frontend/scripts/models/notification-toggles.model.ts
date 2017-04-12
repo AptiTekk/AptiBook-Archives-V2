@@ -1,0 +1,12 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+/**
+ * Booleans that describe which notification methods are enabled for a user.
+ */
+export interface NotificationToggles {
+    emailEnabled: boolean;
+}
