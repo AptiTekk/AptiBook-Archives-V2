@@ -4,6 +4,38 @@
   ~ Proprietary and confidential.
   -->
 
-<div *ngFor="let notificationSetting of notificationSettings">
-	<p>{{notificationSetting}}</p>
+<div *ngIf="notificationSettings">
+	<!-- We only need to show a header here if the user has multiple sections of notification preferences. -->
+	<div *ngIf="currentUser?.admin || currentUser?.userGroups.length > 0">
+		<h4>Personal Notifications</h4>
+		<hr/>
+	</div>
+	<at-notification-toggler [label]="'Your Reservation is Approved'"
+							 [notificationToggles]="notificationSettings.RESERVATION_APPROVED"
+							 (toggle)="saveSetting('RESERVATION_APPROVED')">
+	</at-notification-toggler>
+	<at-notification-toggler [label]="'Your Reservation is Rejected'"
+							 [notificationToggles]="notificationSettings.RESERVATION_REJECTED"
+							 (toggle)="saveSetting('RESERVATION_REJECTED')">
+	</at-notification-toggler>
+	<at-notification-toggler [label]="'Your Reservation is Cancelled'"
+							 [notificationToggles]="notificationSettings.RESERVATION_CANCELLED_USER"
+							 (toggle)="saveSetting('RESERVATION_CANCELLED_USER')">
+	</at-notification-toggler>
+	
+	<!-- Notification Preferences for Reservation Management (Users with 1 or more assigned groups) -->
+	<div *ngIf="currentUser?.admin || currentUser?.userGroups.length > 0">
+		<br/>
+		<h4>Reservation Management Notifications</h4>
+		<hr/>
+		<at-notification-toggler [label]="'A Reservation is Requested'"
+								 [notificationToggles]="notificationSettings.RESERVATION_REQUESTED"
+								 (toggle)="saveSetting('RESERVATION_REQUESTED')">
+		</at-notification-toggler>
+	</div>
 </div>
+
+<alert #infoAlert
+	   [severity]="'info'"></alert>
+<alert #dangerAlert
+	   [severity]="'danger'"></alert>

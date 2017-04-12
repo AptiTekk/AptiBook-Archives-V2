@@ -122,7 +122,7 @@ public class DemoTenantBuilder {
 
         // Notification Settings
         Map<NotificationType, User.NotificationToggles> notificationSettings = new HashMap<>();
-        notificationSettings.put(NotificationType.TYPE_APPROVAL_REQUEST, new User.NotificationToggles(true));
+        notificationSettings.put(NotificationType.APPROVAL_REQUEST, new User.NotificationToggles(true));
 
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(

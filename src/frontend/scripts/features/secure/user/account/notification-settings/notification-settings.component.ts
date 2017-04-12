@@ -4,15 +4,23 @@
  * Proprietary and confidential.
  */
 
-import {Component, OnInit} from "@angular/core";
+import {Component, OnInit, ViewChild} from "@angular/core";
 import {CurrentUserService} from "../../../../../core/services/current-user.service";
 import {NotificationSettings} from "../../../../../models/notification-settings.model";
+import {User} from "../../../../../models/user.model";
+import {AlertComponent} from "../../../../../shared/alert/alert.component";
 
 @Component({
     selector: 'at-user-account-notification-settings',
-    templateUrl: 'notification-settings.component.html'
+    templateUrl: 'notification-settings.component.html',
+    styleUrls: ['notification-settings.component.css']
 })
 export class AccountNotificationSettingsComponent implements OnInit {
+
+    @ViewChild('infoAlert') infoAlert: AlertComponent;
+    @ViewChild('dangerAlert') dangerAlert: AlertComponent;
+
+    currentUser: User;
 
     notificationSettings: NotificationSettings;
 
@@ -21,10 +29,33 @@ export class AccountNotificationSettingsComponent implements OnInit {
     }
 
     ngOnInit() {
+        // Subscribe to the current user.
+        this.currentUserService.getCurrentUser()
+            .subscribe(
+                user => this.currentUser = user
+            );
+
         // Subscribe to notification settings changes
         this.currentUserService.getNotificationSettings()
             .subscribe(
                 notificationSettings => this.notificationSettings = notificationSettings
+            );
+    }
+
+    /**
+     * Saves a setting to the server by its name.
+     * @param setting The name of the setting to save.
+     */
+    saveSetting(setting: string): void {
+        this.currentUserService.patchNotificationSetting(setting, this.notificationSettings[setting])
+            .subscribe(
+                response => {
+                    this.currentUserService.fetchNotificationSettings();
+                    this.infoAlert.display("Notification Preferences Updated!");
+                },
+                err => {
+                    this.dangerAlert.display(err, false);
+                }
             );
     }
 

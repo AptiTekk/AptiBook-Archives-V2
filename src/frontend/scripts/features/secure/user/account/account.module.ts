@@ -9,14 +9,16 @@ import {NgModule} from "@angular/core";
 import {AccountComponent} from "./account.component";
 import {AccountNotificationSettingsComponent} from "./notification-settings/notification-settings.component";
 import {SharedModule} from "../../../../shared/shared.module";
+import {AccountNotificationSettingsModule} from "./notification-settings/notification-settings.module";
 
 @NgModule({
     imports: [
-        SharedModule
+        SharedModule,
+
+        AccountNotificationSettingsModule
     ],
     declarations: [
-        AccountComponent,
-        AccountNotificationSettingsComponent
+        AccountComponent
     ],
     exports: [],
     providers: [],

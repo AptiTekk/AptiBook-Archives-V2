@@ -102,7 +102,7 @@ public class NotificationService {
             return;
 
         if (reservation.resource.needsApproval) {
-            sendNotification(NotificationType.TYPE_RESERVATION_REQUESTED,
+            sendNotification(NotificationType.RESERVATION_REQUESTED,
                     "New Reservation Request",
                     "A new Reservation for <b>"
                             + reservation.resource.name
@@ -113,7 +113,7 @@ public class NotificationService {
                             + ".",
                     userGroupService.getHierarchyUp(reservation.resource.owner));
         } else {
-            sendNotification(NotificationType.TYPE_RESERVATION_REQUESTED,
+            sendNotification(NotificationType.RESERVATION_REQUESTED,
                     "New Reservation Approved",
                     "A new Reservation for <b>"
                             + reservation.resource.name
@@ -136,7 +136,7 @@ public class NotificationService {
             return;
 
         if (reservation.status == Reservation.Status.APPROVED) {
-            sendNotification(NotificationType.TYPE_RESERVATION_APPROVED,
+            sendNotification(NotificationType.RESERVATION_APPROVED,
                     "Reservation Approved",
                     "Your Reservation for <b>" + reservation.resource.name
                             + "</b> from <b>"
@@ -146,7 +146,7 @@ public class NotificationService {
                             + "</b> has been Approved!",
                     reservation.user);
         } else if (reservation.status == Reservation.Status.REJECTED) {
-            sendNotification(NotificationType.TYPE_RESERVATION_REJECTED,
+            sendNotification(NotificationType.RESERVATION_REJECTED,
                     "Reservation Rejected",
                     "Your Reservation for <b>" + reservation.resource.name
                             + "</b> from <b>"
@@ -169,7 +169,7 @@ public class NotificationService {
         if (reservation == null || reservation.status != Reservation.Status.CANCELLED)
             return;
 
-        sendNotification(NotificationType.TYPE_RESERVATION_CANCELLED_USER_GROUPS, "Reservation Cancelled",
+        sendNotification(NotificationType.RESERVATION_CANCELLED_USER_GROUPS, "Reservation Cancelled",
                 "The reservation of <b>"
                         + reservation.resource.name
                         + "</b> for <b>"
@@ -184,7 +184,7 @@ public class NotificationService {
                 userGroupService.getHierarchyUp(reservation.resource.owner)
         );
 
-        sendNotification(NotificationType.TYPE_RESERVATION_CANCELLED_USER, "Reservation Cancelled",
+        sendNotification(NotificationType.RESERVATION_CANCELLED_USER, "Reservation Cancelled",
                 "Your reservation of <b>"
                         + reservation.resource.name
                         + "</b> for <b>"
