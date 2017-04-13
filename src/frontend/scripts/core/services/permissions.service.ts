@@ -7,8 +7,10 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {ReplaySubject} from "rxjs/ReplaySubject";
-import {Permission} from "../../models/permission.model";
+import {Permission} from "../../models/permissions/permission.model";
 import {AuthService} from "./auth.service";
+import {UserPermissionAssignments} from "../../models/permissions/permission-assignments";
+import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class PermissionsService {
@@ -48,6 +50,19 @@ export class PermissionsService {
         return this.currentUserPermissions;
     }
 
-
+    /**
+     * Gets a UserPermissionAssignments instance that, for each permission,
+     * lists the users explicity assigned that permission.
+     */
+    public getUsersAssignedToPermissions(): Observable<UserPermissionAssignments> {
+        return Observable.create(listener => {
+            this.apiService.get("permissions/users")
+                .subscribe(
+                    assignments => listener.next(assignments),
+                    err => listener.error(err),
+                    () => listener.complete()
+                );
+        });
+    }
 
 }

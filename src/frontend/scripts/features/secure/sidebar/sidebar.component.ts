@@ -10,8 +10,8 @@ import {Notification} from "../../../models/notification.model";
 import {AuthService} from "../../../core/services/auth.service";
 import {NotificationService} from "../../../core/services/notification.service";
 import {LoaderService} from "../../../core/services/loader.service";
-import {PermissionsService} from "../../../core/services/permissions.server";
-import {Permission} from "../../../models/permission.model";
+import {PermissionsService} from "../../../core/services/permissions.service";
+import {Permission} from "../../../models/permissions/permission.model";
 
 @Component({
     selector: 'at-sidebar',

@@ -5,9 +5,10 @@
  */
 
 import {Component, OnInit} from "@angular/core";
-import {PermissionsService} from "../../../../core/services/permissions.server";
+import {PermissionsService} from "../../../../core/services/permissions.service";
 import {PermissionGroup} from "./permission-group.model";
 import {PERMISSION_GROUPS} from "./permission-groups.data";
+import {UserPermissionAssignments} from "../../../../models/permissions/permission-assignments";
 
 @Component({
     selector: 'at-configuration-permissions',
@@ -16,11 +17,17 @@ import {PERMISSION_GROUPS} from "./permission-groups.data";
 export class PermissionsConfigurationComponent implements OnInit {
 
     permissionGroups: PermissionGroup[] = PERMISSION_GROUPS;
+    userPermissionAssignments: UserPermissionAssignments;
 
     constructor(private permissionsService: PermissionsService) {
     }
 
     ngOnInit() {
+        // Get the users assigned to each permission.
+        this.permissionsService.getUsersAssignedToPermissions()
+            .subscribe(
+                assignments => this.userPermissionAssignments = assignments
+            )
     }
 
 }

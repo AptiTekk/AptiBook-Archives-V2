@@ -50,13 +50,18 @@ public class PermissionsController extends APIControllerAbstract {
             return noPermission();
 
         Map<Permissions.Descriptor, List<User>> descriptorMap = new HashMap<>();
-
         for (Permissions.Descriptor descriptor : Permissions.Descriptor.values()) {
             descriptorMap.put(descriptor, this.userRepository.findUsersWithPermission(descriptor));
         }
 
-        return ok(modelMapper.map(descriptorMap, new TypeToken<Map<Permissions.Descriptor, List<UserDTO.WithoutUserGroups>>>() {
-        }.getType()));
+        // We cannot simply modelMap the entire map, we must map each individual list within the map.
+        Map<Permissions.Descriptor, List<UserDTO.WithoutUserGroups>> modelMappedDescriptorMap = new HashMap<>();
+        for (Map.Entry<Permissions.Descriptor, List<User>> entry : descriptorMap.entrySet()) {
+            modelMappedDescriptorMap.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserDTO.WithoutUserGroups>>() {
+            }.getType()));
+        }
+
+        return ok(modelMappedDescriptorMap);
     }
 
     @RequestMapping(value = "/permissions/{descriptor}/users", method = RequestMethod.GET)

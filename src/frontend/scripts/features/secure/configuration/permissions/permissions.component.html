@@ -26,9 +26,13 @@
 						<div class="col-xs-6 col-md-3">
 							<panel [type]="'default'"
 								   [title]="'Assigned Users'">
-								<ul>
-									<li *ngFor=""></li>
-								</ul>
+								<panel-body>
+									<ul *ngIf="userPermissionAssignments">
+										<li *ngFor="let user of userPermissionAssignments[permissionDetails.permission.descriptor]">
+											{{user.emailAddress}}
+										</li>
+									</ul>
+								</panel-body>
 							</panel>
 						</div>
 						<div class="col-xs-6 col-md-3">
