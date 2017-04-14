@@ -10,7 +10,7 @@ import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
+import com.aptitekk.aptibook.core.services.stripe.StripeService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -44,8 +44,6 @@ public class DemoTenantBuilder {
 
     private final ReservationRepository reservationRepository;
 
-    private final TenantIntegrityService tenantIntegrityService;
-
     private final NotificationRepository notificationRepository;
 
     private final LogService logService;
@@ -60,7 +58,6 @@ public class DemoTenantBuilder {
                              TagRepository tagRepository,
                              ReservationDecisionRepository reservationDecisionRepository,
                              ReservationRepository reservationRepository,
-                             TenantIntegrityService tenantIntegrityService,
                              NotificationRepository notificationRepository,
                              LogService logService) {
         this.tenantRepository = tenantRepository;
@@ -72,7 +69,6 @@ public class DemoTenantBuilder {
         this.tagRepository = tagRepository;
         this.reservationDecisionRepository = reservationDecisionRepository;
         this.reservationRepository = reservationRepository;
-        this.tenantIntegrityService = tenantIntegrityService;
         this.notificationRepository = notificationRepository;
         this.logService = logService;
     }
@@ -93,26 +89,34 @@ public class DemoTenantBuilder {
         logService.logDebug(getClass(), "Rebuilding Demo Tenant...");
 
         //Find and delete old demo tenant
-        demoTenant = tenantRepository.findTenantBySlug("demo");
+        demoTenant = tenantRepository.findTenantByDomain("demo");
         if (demoTenant != null) {
             tenantRepository.delete(demoTenant);
         }
 
         //Create new demo tenant
         demoTenant = new Tenant();
-        demoTenant.slug = "demo";
-        demoTenant.tier = Tenant.Tier.PLATINUM;
-        demoTenant.subscriptionId = -1;
-        demoTenant.setActive(true);
-        demoTenant.adminEmail = null;
+        demoTenant.domain = "demo";
+        demoTenant.stripeSubscriptionId = "demo";
+        demoTenant.stripeStatus = StripeService.Status.ACTIVE;
+        demoTenant.stripePlan = StripeService.Plan.PLATINUM;
         demoTenant = tenantRepository.save(demoTenant);
-        tenantIntegrityService.initializeNewTenant(demoTenant);
 
-        User adminUser = userRepository.findByEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS, demoTenant);
-        if (adminUser != null) {
-            adminUser.hashedPassword = PasswordUtils.encodePassword("demo");
-            userRepository.save(adminUser);
-        }
+        // Create the root group.
+        UserGroup rootGroup = new UserGroup();
+        rootGroup.setName(UserGroupRepository.ROOT_GROUP_NAME);
+        rootGroup.tenant = demoTenant;
+        rootGroup = userGroupRepository.save(rootGroup);
+
+        // Create the admin user
+        User admin = new User();
+        admin.setEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS);
+        admin.tenant = demoTenant;
+        admin.userGroups.add(rootGroup);
+        admin.hashedPassword = PasswordUtils.encodePassword("demo");
+        admin.verified = true;
+        admin.userState = User.State.APPROVED;
+        userRepository.save(admin);
 
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
@@ -132,7 +136,6 @@ public class DemoTenantBuilder {
                 librariansUserGroup,
                 null
         );
-
 
         //Add Users
         User administrator = createUser(
@@ -158,7 +161,7 @@ public class DemoTenantBuilder {
         );
 
         //Add Resource Categories
-        ResourceCategory rooms = resourceCategoryRepository.findByName("Rooms", demoTenant);
+        ResourceCategory rooms = createResourceCategory("Rooms");
         ResourceCategory equipment = createResourceCategory("Equipment");
 
         //Add Tags

@@ -65,6 +65,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Everyone can access the basic Tenant details.
                 .antMatchers(HttpMethod.GET, "/api/tenant").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/tenant/name").permitAll()
 
                 // Everyone can register.
                 .antMatchers(HttpMethod.POST, "/api/register").permitAll()

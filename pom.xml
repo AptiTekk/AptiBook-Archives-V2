@@ -222,6 +222,14 @@
         <!-- End Testing -->
         <!-- End Spring Boot-->
 
+        <!-- Stripe Subscriptions -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+        <!-- End Stripe -->
+
         <!-- Raygun Exception Handler -->
         <dependency>
             <groupId>com.mindscapehq</groupId>

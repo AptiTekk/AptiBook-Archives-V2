@@ -24,8 +24,9 @@
 						 class="row">
 						<div id="content-container"
 							 class="col-xs-12 col-md-8 col-md-offset-2">
-							<div id="slug-container">
-								&nbsp;{{tenant?.slug}}&nbsp;
+							<div id="slug-container"
+								 *ngIf="tenantName != null">
+								{{tenantName}}
 							</div>
 							<router-outlet></router-outlet>
 						</div>

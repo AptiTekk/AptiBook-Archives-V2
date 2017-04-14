@@ -1,0 +1,37 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <!-- Removes the Property Entity and instead implements a Map inside the Tenant. -->
+    <changeSet id="9" author="MitchTalmadge">
+        <!-- Create the table -->
+        <createTable tableName="tenant_properties">
+            <column name="tenant_id" type="BIGINT">
+                <constraints foreignKeyName="fk_tenant_id"/>
+            </column>
+            <column name="key" type="TEXT"/>
+            <column name="value" type="TEXT"/>
+        </createTable>
+
+        <!-- Add the foreign key constraint -->
+        <addForeignKeyConstraint baseTableName="tenant_properties"
+                                 baseColumnNames="tenant_id"
+                                 constraintName="fk_tenant_id"
+                                 referencedTableName="tenant"
+                                 referencedColumnNames="id"/>
+
+        <!-- Move the data from the old property table to the new table -->
+        <sql>INSERT INTO tenant_properties(tenant_id, key, value) SELECT tenant_id, propertykey, propertyvalue FROM property</sql>
+
+        <!-- Drop the old table. -->
+        <dropTable tableName="property"/>
+    </changeSet>
+
+</databaseChangeLog>

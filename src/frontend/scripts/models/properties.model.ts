@@ -4,8 +4,11 @@
  * Proprietary and confidential.
  */
 
-export interface Property {
-    propertyValue?: string;
-    defaultValue?: string;
-    keyName?: string;
+export interface Properties {
+
+    GOOGLE_SIGN_IN_ENABLED: string,
+    GOOGLE_SIGN_IN_WHITELIST: string,
+    PERSONALIZATION_ORGANIZATION_NAME: string,
+    REGISTRATION_ENABLED: string
+
 }

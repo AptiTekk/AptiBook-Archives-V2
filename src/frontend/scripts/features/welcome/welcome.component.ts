@@ -4,9 +4,8 @@
  * Proprietary and confidential.
  */
 
-import {Component, OnInit} from "@angular/core";
+import {AfterViewInit, Component, OnInit} from "@angular/core";
 import {TenantService} from "../../core/services/tenant.service";
-import {OAuthService} from "../../core/services/oauth.service";
 import {Tenant} from "../../models/tenant.model";
 
 @Component({
@@ -14,14 +13,16 @@ import {Tenant} from "../../models/tenant.model";
     templateUrl: 'welcome.component.html',
     styleUrls: ['welcome.component.css']
 })
-export class WelcomeComponent implements OnInit {
+export class WelcomeComponent implements AfterViewInit {
 
     tenant: Tenant;
+    tenantName: string;
 
     constructor(private tenantService: TenantService) {
     }
 
-    ngOnInit(): void {
+    ngAfterViewInit(): void {
         this.tenantService.getTenant().subscribe(response => this.tenant = response);
+        this.tenantService.getTenantName().subscribe(name => this.tenantName = name);
     }
 }

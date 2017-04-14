@@ -4,30 +4,20 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain.entities;
-
+package com.aptitekk.aptibook.core.domain.entities.enums;
 
 import com.aptitekk.aptibook.ApplicationContextProvider;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.BooleanPropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.MaxLengthPropertyValidator;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
-import com.aptitekk.aptibook.core.util.EqualsHelper;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.springframework.context.ApplicationContext;
 
-import javax.persistence.*;
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-public class Property extends MultiTenantEntity implements Serializable {
-
-
+public class Property {
 
     public enum Group {
-
         PERSONALIZATION(null),
         REGISTRATION(null),
         GOOGLE_SIGN_IN(null);
@@ -63,7 +53,6 @@ public class Property extends MultiTenantEntity implements Serializable {
     }
 
     public enum Key {
-
         PERSONALIZATION_ORGANIZATION_NAME(null, Group.PERSONALIZATION, new MaxLengthPropertyValidator(64)),
 
         REGISTRATION_ENABLED("true", Group.REGISTRATION, new BooleanPropertyValidator()),
@@ -94,42 +83,4 @@ public class Property extends MultiTenantEntity implements Serializable {
         }
     }
 
-    @Id
-    @GeneratedValue
-    public Long id;
-
-    @JsonIgnore
-    @Enumerated(EnumType.STRING)
-    public Key propertyKey;
-
-    public String getKeyName() {
-        return this.propertyKey.name();
-    }
-
-    public String propertyValue;
-
-
-
-    public String getDefaultValue() {
-        return this.propertyKey.getDefaultValue();
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-
-        if (o == null) return false;
-
-        if (!(o instanceof Property)) return false;
-
-        Property other = (Property) o;
-
-        return EqualsHelper.areEquals(propertyKey, other.propertyKey)
-                && EqualsHelper.areEquals(propertyValue, other.propertyValue);
-    }
-
-    @Override
-    public int hashCode() {
-        return EqualsHelper.calculateHashCode(propertyKey, propertyValue);
-    }
 }

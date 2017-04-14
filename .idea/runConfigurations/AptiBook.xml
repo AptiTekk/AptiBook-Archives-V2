@@ -12,6 +12,7 @@
       <env name="WOOCOMMERCE_CK" value="ck_d9f38a0a886d962609f98c3de96eb868224f4b6c" />
       <env name="WOOCOMMERCE_CS" value="cs_829136f6e72a6a70436ebb38e22055bfb2635d0e" />
       <env name="RAYGUN_APIKEY" value="rMmd5yP+v01YmLU3ivhorA==" />
+      <env name="STRIPE_SECRET_KEY" value="sk_test_NphelNWGykn9Q6lz0AjjSYN6" />
     </envs>
     <method />
   </configuration>

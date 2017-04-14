@@ -1,0 +1,29 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<databaseChangeLog xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+                   xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+                   xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
+                            http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
+
+    <!-- Modifies the Tenant table to be compatible with Stripe. -->
+    <changeSet id="8" author="MitchTalmadge">
+        <renameColumn tableName="tenant" oldColumnName="slug" newColumnName="domain"/>
+        <renameColumn tableName="tenant" oldColumnName="tier" newColumnName="stripeplan"/>
+
+        <renameColumn tableName="tenant" oldColumnName="subscriptionid" newColumnName="stripesubscriptionid"/>
+        <modifyDataType tableName="tenant" columnName="stripesubscriptionid" newDataType="TEXT"/>
+
+        <dropColumn tableName="tenant" columnName="timesetinactive"/>
+        <dropColumn tableName="tenant" columnName="active"/>
+        <addColumn tableName="tenant">
+            <column name="stripestatus" type="TEXT" defaultValue="UNPAID"/>
+        </addColumn>
+
+        <dropColumn tableName="tenant" columnName="adminemail"/>
+    </changeSet>
+
+</databaseChangeLog>

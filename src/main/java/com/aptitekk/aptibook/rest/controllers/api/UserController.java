@@ -35,25 +35,16 @@ public class UserController extends APIControllerAbstract {
 
     private final UserRepository userRepository;
     private final UserValidator userValidator;
-    private final UserGroupRepository userGroupRepository;
-    private final UserGroupService userGroupService;
     private final EmailService emailService;
-    private final NotificationService notificationService;
 
     @Autowired
     public UserController(
             UserRepository userRepository,
             UserValidator userValidator,
-            UserGroupRepository userGroupRepository,
-            UserGroupService userGroupService,
-            EmailService emailService,
-            NotificationService notificationService) {
+            EmailService emailService) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
-        this.userGroupRepository = userGroupRepository;
-        this.userGroupService = userGroupService;
         this.emailService = emailService;
-        this.notificationService = notificationService;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -118,7 +109,7 @@ public class UserController extends APIControllerAbstract {
                 "Welcome to AptiBook!",
                 "Hello! An account has been created for you on AptiBook."
                         + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>My Account</b> on the navigation bar.<br>"
-                        + webURIBuilderService.buildURI("/" + newUser.tenant.slug, null) + "</p>"
+                        + "https://" + newUser.tenant.domain + ".aptibook.net</p>"
                         + "<center>"
                         + "Email Address: <b>" + newUser.getEmailAddress() + "</b> <br>"
                         + "Password: <b>" + newPassword + "</b>"

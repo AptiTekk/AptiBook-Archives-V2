@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
 /**
- * Extracts the tenant slug from the url (if applicable) and stores the tenant in the request for later use.
+ * Extracts the tenant domain from the url (if applicable) and stores the tenant in the request for later use.
  */
 @Component
 public class TenantDiscoveryFilter extends OncePerRequestFilter {
@@ -37,12 +37,12 @@ public class TenantDiscoveryFilter extends OncePerRequestFilter {
         String[] serverNameParts = request.getServerName().split("\\.");
 
         // "demo.aptibook.net" -> ["demo", "aptibook", "net"]
-        String tenantSlug = serverNameParts[0].toLowerCase();
+        String tenantDomain = serverNameParts[0].toLowerCase();
 
-        // Ensure the slug is allowed
-        if (tenantManagementService.getAllowedTenantSlugs().contains(tenantSlug))
-            // Store the tenant for use elsewhere in the application.
-            request.setAttribute(TENANT_ATTRIBUTE, tenantManagementService.getTenantBySlug(tenantSlug));
+        // Ensure the domain is allowed
+        if (tenantManagementService.getAllowedTenantDomains().contains(tenantDomain))
+            // Store the Tenant ID for use elsewhere in the application.
+            request.setAttribute(TENANT_ATTRIBUTE, tenantManagementService.getTenantByDomain(tenantDomain).id);
 
         filterChain.doFilter(request, response);
     }

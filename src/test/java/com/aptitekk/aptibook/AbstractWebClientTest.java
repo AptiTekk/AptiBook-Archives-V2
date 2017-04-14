@@ -13,13 +13,11 @@ import org.apache.commons.io.IOUtils;
 import org.json.JSONException;
 import org.json.JSONObject;
 import org.junit.Before;
-import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
 import org.openqa.selenium.htmlunit.HtmlUnitDriver;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.AutoConfigureDataJpa;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.jdbc.Sql;
@@ -63,7 +61,7 @@ public abstract class AbstractWebClientTest {
 
         // Set up the JUnit Tenant and mock it as the current tenant.
         tenantManagementService.refresh();
-        this.jUnitTenant = tenantManagementService.getTenantBySlug("junit");
+        this.jUnitTenant = tenantManagementService.getTenantByDomain("junit");
         given(tenantManagementService.getTenant()).willReturn(jUnitTenant);
     }
 

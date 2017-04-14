@@ -22,7 +22,6 @@ export class WelcomeGuard implements CanActivate {
         return Observable.create(listener => {
             this.tenantService.getTenant().take(1).subscribe(
                 tenant => {
-                    if (tenant) {
                         this.authService.getUser().take(1).subscribe(
                             user => {
                                 if (user) {
@@ -32,10 +31,10 @@ export class WelcomeGuard implements CanActivate {
                                     listener.next(true);
                                 }
                             });
-                    } else {
-                        this.router.navigate(['', 'inactive'], {skipLocationChange: true});
-                        listener.next(false);
-                    }
+                    },
+                err => {
+                    this.router.navigate(['', 'inactive'], {skipLocationChange: true});
+                    listener.next(false);
                 });
         }).take(1);
     }

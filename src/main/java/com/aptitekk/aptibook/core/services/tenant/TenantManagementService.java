@@ -45,15 +45,19 @@ public class TenantManagementService {
         allowedTenants = new HashMap<>();
 
         for (Tenant tenant : tenantRepository.findAll()) {
-            if (tenant.isActive())
-                allowedTenants.put(tenant.slug, tenant);
+            switch (tenant.stripeStatus) {
+                case ACTIVE:
+                case TRIALING:
+                    allowedTenants.put(tenant.domain, tenant);
+                    break;
+            }
         }
     }
 
     /**
      * @return A Set of valid tenant slugs.
      */
-    public Set<String> getAllowedTenantSlugs() {
+    public Set<String> getAllowedTenantDomains() {
         return allowedTenants.keySet();
     }
 
@@ -63,7 +67,7 @@ public class TenantManagementService {
      * @param tenantSlug The slug of the Tenant.
      * @return The Tenant with the corresponding slug, or null.
      */
-    public Tenant getTenantBySlug(String tenantSlug) {
+    public Tenant getTenantByDomain(String tenantSlug) {
         return allowedTenants.get(tenantSlug);
     }
 
@@ -76,9 +80,9 @@ public class TenantManagementService {
     public Tenant getTenant() {
         try {
             if (request != null) {
-                Object attribute = request.getAttribute(TenantDiscoveryFilter.TENANT_ATTRIBUTE);
-                if (attribute != null && attribute instanceof Tenant)
-                    return (Tenant) attribute;
+                Object tenantId = request.getAttribute(TenantDiscoveryFilter.TENANT_ATTRIBUTE);
+                if (tenantId != null && tenantId instanceof Long)
+                    return tenantRepository.find((Long) tenantId);
             }
         } catch (Exception ignored) {
             //No request

@@ -8,6 +8,7 @@ import { NgModule } from '@angular/core';
 import {FileUploadModule} from "ng2-file-upload";
 import {ImageUploaderComponent} from "./image-uploader.component";
 import {CommonModule} from "@angular/common";
+import {CookieService} from "ng2-cookies";
 
 @NgModule({
     imports: [
@@ -20,6 +21,8 @@ import {CommonModule} from "@angular/common";
     exports: [
         ImageUploaderComponent
     ],
-    providers: [],
+    providers: [
+        CookieService
+    ],
 })
 export class ImageUploaderModule { }
