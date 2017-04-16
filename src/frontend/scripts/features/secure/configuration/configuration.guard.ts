@@ -32,14 +32,14 @@ export class ConfigurationGuard implements CanActivate {
                                     permissions => {
                                         if (permissions.length > 0) {
                                             listener.next(true);
-                                            return;
+                                        } else {
+                                            this.router.navigate(['', 'secure']);
+                                            listener.next(false);
                                         }
                                     }
                                 );
                         }
                     }
-                    this.router.navigate(['', 'secure']);
-                    listener.next(false);
                 }
             );
         }).take(1);
