@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
-import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
@@ -202,7 +202,7 @@ public class ReservationController extends APIControllerAbstract {
 
     @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
-        if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL)) {
+        if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
             Reservation reservation = new Reservation();
             reservation.tenant = tenantManagementService.getTenant();
             reservation.user = userRepository.findInCurrentTenant(id);

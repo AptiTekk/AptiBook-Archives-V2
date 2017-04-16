@@ -9,7 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
-import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
@@ -65,7 +65,7 @@ public class ResourceController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
     public ResponseEntity<?> addResource(@RequestBody ResourceDTO.WithoutReservations resourceDTO) {
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.RESOURCES_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCES_MODIFY_ALL))
             return noPermission();
 
         Resource resource = new Resource();

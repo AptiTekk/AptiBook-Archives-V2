@@ -9,14 +9,24 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
 
+    <!-- Migrates the notification type settings for a User into a Map -->
     <changeSet id="7" author="PashaShestakov">
+        <!-- Drop the old table -->
         <dropColumn tableName="user" columnName="notificationtypesettings"/>
 
+        <!-- Add the new table -->
         <createTable tableName="user_notification_settings">
             <column name="user_id" type="BIGINT"/>
             <column name="type" type="TEXT"/>
             <column name="email_enabled" type="boolean"/>
         </createTable>
+
+        <!-- Add the foreign key constraint -->
+        <addForeignKeyConstraint baseTableName="user_notification_settings"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_id"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

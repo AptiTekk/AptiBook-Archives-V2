@@ -8,7 +8,7 @@ package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
 import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
-import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.LogService;
@@ -120,14 +120,14 @@ public class DemoTenantBuilder {
         admin.userState = User.State.APPROVED;
         userRepository.save(admin);
 
-        // Full Permissions
-        Set<Permissions.Descriptor> fullPermissions = new HashSet<>();
-        fullPermissions.add(Permissions.Descriptor.GENERAL_FULL_PERMISSIONS);
+        // Full Permission
+        Set<Permission.Descriptor> fullPermissions = new HashSet<>();
+        fullPermissions.add(Permission.Descriptor.GENERAL_FULL_PERMISSIONS);
 
-        // Some Permissions
-        Set<Permissions.Descriptor> somePermissions = new HashSet<>();
-        somePermissions.add(Permissions.Descriptor.PROPERTIES_MODIFY_ALL);
-        somePermissions.add(Permissions.Descriptor.GROUPS_MODIFY_ALL);
+        // Some Permission
+        Set<Permission.Descriptor> somePermissions = new HashSet<>();
+        somePermissions.add(Permission.Descriptor.PROPERTIES_MODIFY_ALL);
+        somePermissions.add(Permission.Descriptor.GROUPS_MODIFY_ALL);
 
         // Notification Settings
         Map<NotificationType, User.NotificationToggles> notificationSettings = new HashMap<>();
@@ -352,7 +352,7 @@ public class DemoTenantBuilder {
      */
     private UserGroup createUserGroup(String name,
                                       UserGroup parent,
-                                      Set<Permissions.Descriptor> permissions) {
+                                      Set<Permission.Descriptor> permissions) {
         UserGroup userGroup = new UserGroup();
         userGroup.tenant = demoTenant;
         userGroup.setName(name);
@@ -378,7 +378,7 @@ public class DemoTenantBuilder {
                             String firstName,
                             String lastName,
                             String password,
-                            Set<Permissions.Descriptor> permissions,
+                            Set<Permission.Descriptor> permissions,
                             Map<NotificationType, User.NotificationToggles> notificationSettings,
                             UserGroup... userGroups) {
         User user = new User();

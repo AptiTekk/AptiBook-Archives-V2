@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
-import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ResourceDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
@@ -49,7 +49,7 @@ public class UserGroupController extends APIControllerAbstract {
 
     @RequestMapping(value = "/userGroups", method = RequestMethod.POST)
     public ResponseEntity<?> addNewUserGroup(@RequestBody UserGroupDTO userGroupDTO) {
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.GROUPS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
         UserGroup userGroup = new UserGroup();
@@ -88,8 +88,8 @@ public class UserGroupController extends APIControllerAbstract {
         if (userGroup == null)
             return notFound("No user groups were found with the ID: " + id);
 
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL)
-                && !authService.doesCurrentUserHavePermission(Permissions.Descriptor.GROUPS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)
+                && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
         return ok(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
@@ -102,8 +102,8 @@ public class UserGroupController extends APIControllerAbstract {
         if (userGroup == null)
             return notFound("No user groups were found with the ID: " + id);
 
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.USERS_MODIFY_ALL)
-                && !authService.doesCurrentUserHavePermission(Permissions.Descriptor.GROUPS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)
+                && !authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
         return ok(modelMapper.map(userGroup.getResources(), new TypeToken<List<ResourceDTO.WithoutReservations>>() {
@@ -112,7 +112,7 @@ public class UserGroupController extends APIControllerAbstract {
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchUserGroup(@PathVariable Long id, @RequestBody UserGroupDTO.WithoutParentOrChildren userGroupDTO) {
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.GROUPS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
@@ -130,7 +130,7 @@ public class UserGroupController extends APIControllerAbstract {
 
     @RequestMapping(value = "/userGroups/{id}/move", method = RequestMethod.PATCH)
     public ResponseEntity<?> moveUserGroup(@PathVariable Long id, @PathParam("newParentId") Long newParentId) {
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.GROUPS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
         // Make sure that the selected User Group exists.
@@ -167,7 +167,7 @@ public class UserGroupController extends APIControllerAbstract {
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteUserGroup(@PathVariable Long id) {
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.GROUPS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL))
             return noPermission();
 
         UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);

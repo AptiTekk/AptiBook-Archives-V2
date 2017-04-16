@@ -21,13 +21,13 @@ public enum NotificationType {
     // Email when a Reservation is Cancelled
     RESERVATION_CANCELLED_USER_GROUPS(true, true, null),
     // Email when a New User Registers
-    APPROVAL_REQUEST(true, false, Permissions.Descriptor.USERS_MODIFY_ALL);
+    APPROVAL_REQUEST(true, false, Permission.Descriptor.USERS_MODIFY_ALL);
 
     private final boolean defaultValue;
     private final boolean userGroupRequired;
-    private final Permissions.Descriptor requiredPermissionDescriptor;
+    private final Permission.Descriptor requiredPermissionDescriptor;
 
-    NotificationType(boolean defaultValue, boolean userGroupRequired, Permissions.Descriptor requiredPermissionDescriptor) {
+    NotificationType(boolean defaultValue, boolean userGroupRequired, Permission.Descriptor requiredPermissionDescriptor) {
         this.defaultValue = defaultValue;
         this.userGroupRequired = userGroupRequired;
         this.requiredPermissionDescriptor = requiredPermissionDescriptor;
@@ -41,7 +41,7 @@ public enum NotificationType {
         return userGroupRequired;
     }
 
-    public Permissions.Descriptor getRequiredPermissionDescriptor() {
+    public Permission.Descriptor getRequiredPermissionDescriptor() {
         return requiredPermissionDescriptor;
     }
 

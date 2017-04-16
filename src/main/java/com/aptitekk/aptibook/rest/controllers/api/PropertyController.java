@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.entities.enums.Property;
 import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
 import com.aptitekk.aptibook.core.services.entity.PropertyService;

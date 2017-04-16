@@ -9,7 +9,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
-import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
@@ -36,19 +36,15 @@ public class UserController extends APIControllerAbstract {
     private final UserRepository userRepository;
     private final UserValidator userValidator;
     private final EmailService emailService;
-    private final UserService userService;
 
     @Autowired
     public UserController(
             UserRepository userRepository,
             UserValidator userValidator,
             EmailService emailService) {
-            EmailService emailService,
-            UserService userService) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.emailService = emailService;
-        this.userService = userService;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)

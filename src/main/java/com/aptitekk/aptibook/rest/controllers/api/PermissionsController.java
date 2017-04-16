@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.services.entity.PermissionsService;
@@ -39,24 +39,24 @@ public class PermissionsController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/current/permissions", method = RequestMethod.GET)
     public ResponseEntity<?> getCurrentUserPermissions() {
-        Set<Permissions.Descriptor> allPermissionsForUser = permissionsService.getAllPermissionsForUser(authService.getCurrentUser());
-        return ok(modelMapper.map(allPermissionsForUser, new TypeToken<Set<Permissions.Descriptor>>() {
+        Set<Permission.Descriptor> allPermissionsForUser = permissionsService.getAllPermissionsForUser(authService.getCurrentUser());
+        return ok(modelMapper.map(allPermissionsForUser, new TypeToken<Set<Permission.Descriptor>>() {
         }.getType()));
     }
 
     @RequestMapping(value = "/permissions/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsersWithPermissions() {
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.PERMISSIONS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PERMISSIONS_MODIFY_ALL))
             return noPermission();
 
-        Map<Permissions.Descriptor, List<User>> descriptorMap = new HashMap<>();
-        for (Permissions.Descriptor descriptor : Permissions.Descriptor.values()) {
+        Map<Permission.Descriptor, List<User>> descriptorMap = new HashMap<>();
+        for (Permission.Descriptor descriptor : Permission.Descriptor.values()) {
             descriptorMap.put(descriptor, this.userRepository.findUsersWithPermission(descriptor));
         }
 
         // We cannot simply modelMap the entire map, we must map each individual list within the map.
-        Map<Permissions.Descriptor, List<UserDTO.WithoutUserGroups>> modelMappedDescriptorMap = new HashMap<>();
-        for (Map.Entry<Permissions.Descriptor, List<User>> entry : descriptorMap.entrySet()) {
+        Map<Permission.Descriptor, List<UserDTO.WithoutUserGroups>> modelMappedDescriptorMap = new HashMap<>();
+        for (Map.Entry<Permission.Descriptor, List<User>> entry : descriptorMap.entrySet()) {
             modelMappedDescriptorMap.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserDTO.WithoutUserGroups>>() {
             }.getType()));
         }
@@ -65,8 +65,8 @@ public class PermissionsController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/permissions/{descriptor}/users", method = RequestMethod.GET)
-    public ResponseEntity<?> getUsersWithPermission(@PathVariable("descriptor") Permissions.Descriptor descriptor) {
-        if (!authService.doesCurrentUserHavePermission(Permissions.Descriptor.PERMISSIONS_MODIFY_ALL))
+    public ResponseEntity<?> getUsersWithPermission(@PathVariable("descriptor") Permission.Descriptor descriptor) {
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PERMISSIONS_MODIFY_ALL))
             return noPermission();
 
         List<User> usersWithPermission = this.userRepository.findUsersWithPermission(descriptor);

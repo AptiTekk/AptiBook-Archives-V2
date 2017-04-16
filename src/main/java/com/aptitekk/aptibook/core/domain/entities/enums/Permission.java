@@ -10,9 +10,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Permissions for the application.
+ * Permission for the application.
  */
-public class Permissions {
+public class Permission {
 
     /**
      * Defines the groups of permissions.

@@ -12,10 +12,12 @@
     <!-- Removes the Permission Entity, which is no longer used. (Enums are used instead). -->
     <!-- Additionally, adds the permissions columns to User and UserGroup -->
     <changeSet id="6" author="MitchTalmadge">
+        <!-- Drop the old tables -->
         <dropTable tableName="user_permission"/>
         <dropTable tableName="usergroup_permission"/>
         <dropTable tableName="permission"/>
 
+        <!-- Add the new tables -->
         <createTable tableName="user_permissions">
             <column name="user_id" type="BIGINT" />
             <column name="descriptor" type="TEXT" />
@@ -25,6 +27,19 @@
             <column name="usergroup_id" type="BIGINT" />
             <column name="descriptor" type="TEXT" />
         </createTable>
+
+        <!-- Add the foreign key constraints -->
+        <addForeignKeyConstraint baseTableName="user_permissions"
+                                 baseColumnNames="user_id"
+                                 constraintName="fk_user_id"
+                                 referencedTableName="user"
+                                 referencedColumnNames="id"/>
+
+        <addForeignKeyConstraint baseTableName="usergroup_permissions"
+                                 baseColumnNames="usergroup_id"
+                                 constraintName="fk_usergroup_id"
+                                 referencedTableName="usergroup"
+                                 referencedColumnNames="id"/>
     </changeSet>
 
 </databaseChangeLog>

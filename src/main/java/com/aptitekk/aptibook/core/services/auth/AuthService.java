@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.core.services.auth;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.entity.PermissionsService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
@@ -58,7 +58,7 @@ public class AuthService {
      * @param descriptor The permission descriptor to check for.
      * @return True if they have permission, false if they do not or the current user is null.
      */
-    public boolean doesCurrentUserHavePermission(Permissions.Descriptor descriptor) {
+    public boolean doesCurrentUserHavePermission(Permission.Descriptor descriptor) {
         User currentUser = getCurrentUser();
         return currentUser != null && permissionsService.userHasPermission(currentUser, descriptor);
     }
@@ -69,7 +69,7 @@ public class AuthService {
      * @param group The permission group to look for permissions within.
      * @return True if they have one or more permissions, false if they do not or the current user is null.
      */
-    public boolean doesCurrentUserHavePermissionOfGroup(Permissions.Group group) {
+    public boolean doesCurrentUserHavePermissionOfGroup(Permission.Group group) {
         User currentUser = getCurrentUser();
         return currentUser != null && permissionsService.userHasPermissionOfGroup(currentUser, group);
     }
