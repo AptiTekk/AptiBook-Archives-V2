@@ -124,6 +124,11 @@ public class DemoTenantBuilder {
         Set<Permissions.Descriptor> fullPermissions = new HashSet<>();
         fullPermissions.add(Permissions.Descriptor.GENERAL_FULL_PERMISSIONS);
 
+        // Some Permissions
+        Set<Permissions.Descriptor> somePermissions = new HashSet<>();
+        somePermissions.add(Permissions.Descriptor.PROPERTIES_MODIFY_ALL);
+        somePermissions.add(Permissions.Descriptor.GROUPS_MODIFY_ALL);
+
         // Notification Settings
         Map<NotificationType, User.NotificationToggles> notificationSettings = new HashMap<>();
         notificationSettings.put(NotificationType.APPROVAL_REQUEST, new User.NotificationToggles(true));
@@ -153,6 +158,7 @@ public class DemoTenantBuilder {
                 "Jill",
                 "Administrator",
                 "demo",
+                null,
                 notificationSettings,
                 administratorsUserGroup);
 
@@ -162,6 +168,7 @@ public class DemoTenantBuilder {
                 "Teacher",
                 "demo",
                 null,
+                null,
                 teachersUserGroup);
 
         User librarian = createUser(
@@ -169,6 +176,7 @@ public class DemoTenantBuilder {
                 "Julia",
                 "Librarian",
                 "demo",
+                somePermissions,
                 null,
                 librariansUserGroup
         );
@@ -361,6 +369,7 @@ public class DemoTenantBuilder {
      * @param firstName            The user's first name.
      * @param lastName             The user's last name.
      * @param password             The user's password (not hashed)
+     * @param permissions           Any permissions to assign to the user.
      * @param notificationSettings A set of NotificationSettings for the user.
      * @param userGroups           Any user groups the user should be assigned to.
      * @return A new, saved User.
@@ -369,6 +378,7 @@ public class DemoTenantBuilder {
                             String firstName,
                             String lastName,
                             String password,
+                            Set<Permissions.Descriptor> permissions,
                             Map<NotificationType, User.NotificationToggles> notificationSettings,
                             UserGroup... userGroups) {
         User user = new User();
@@ -379,6 +389,7 @@ public class DemoTenantBuilder {
         user.verified = true;
         user.userState = User.State.APPROVED;
         user.hashedPassword = PasswordUtils.encodePassword(password);
+        user.permissions = permissions;
         user.notificationSettings = notificationSettings;
         user.userGroups.addAll(Arrays.asList(userGroups));
         return userRepository.save(user);
