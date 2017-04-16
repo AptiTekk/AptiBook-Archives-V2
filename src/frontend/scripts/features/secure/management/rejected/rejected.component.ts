@@ -51,7 +51,7 @@ export class RejectedComponent {
     ngOnInit(): void {
         this.loaderService.startLoading();
         this.authService
-            .getUser()
+            .getCurrentUser()
             .subscribe(user => {
                 this.user = user;
                 if (user) {

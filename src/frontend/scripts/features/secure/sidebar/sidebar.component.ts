@@ -11,6 +11,8 @@ import {Notification} from "../../../models/notification.model";
 import {AuthService} from "../../../core/services/auth.service";
 import {NotificationService} from "../../../core/services/notification.service";
 import {LoaderService} from "../../../core/services/loader.service";
+import {PermissionsService} from "../../../core/services/permissions.service";
+import {Permission} from "../../../models/permission.model";
 
 @Component({
     selector: 'at-sidebar',
@@ -43,6 +45,11 @@ export class SidebarComponent implements OnInit {
      */
     user: User;
 
+    /**
+     * The permissions for the currently signed in user.
+     */
+    userPermissions: Permission[] = [];
+
     //noinspection JSMismatchedCollectionQueryUpdate
     /**
      * Contains the currently signed in user's unread notifications.
@@ -55,6 +62,7 @@ export class SidebarComponent implements OnInit {
     swipedOpen: boolean = false;
 
     constructor(private authService: AuthService,
+                private permissionsService: PermissionsService,
                 private notificationService: NotificationService,
                 private loaderService: LoaderService,
                 private router: Router) {
@@ -63,7 +71,7 @@ export class SidebarComponent implements OnInit {
     ngOnInit(): void {
 
         // Get the user and their unread notifications
-        this.authService.getUser().subscribe(user => {
+        this.authService.getCurrentUser().subscribe(user => {
             if (user) {
                 this.user = user;
                 this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
@@ -71,6 +79,11 @@ export class SidebarComponent implements OnInit {
                 });
             }
         });
+
+        // Get the user's permissions
+        this.permissionsService.getCurrentUserPermissions().subscribe(
+            permissions => this.userPermissions = permissions
+        )
     }
 
     onSwipeRight() {

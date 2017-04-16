@@ -6,10 +6,10 @@
 
 package com.aptitekk.aptibook.core.services.auth;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.services.entity.PermissionService;
+import com.aptitekk.aptibook.core.services.entity.PermissionsService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final PermissionService permissionService;
+    private final PermissionsService permissionsService;
 
     @Autowired
     public AuthService(UserRepository userRepository,
-                       PermissionService permissionService) {
+                       PermissionsService permissionsService) {
         this.userRepository = userRepository;
-        this.permissionService = permissionService;
+        this.permissionsService = permissionsService;
     }
 
     /**
@@ -58,9 +58,9 @@ public class AuthService {
      * @param descriptor The permission descriptor to check for.
      * @return True if they have permission, false if they do not or the current user is null.
      */
-    public boolean doesCurrentUserHavePermission(Permission.Descriptor descriptor) {
+    public boolean doesCurrentUserHavePermission(Permissions.Descriptor descriptor) {
         User currentUser = getCurrentUser();
-        return currentUser != null && permissionService.userHasPermission(currentUser, descriptor);
+        return currentUser != null && permissionsService.userHasPermission(currentUser, descriptor);
     }
 
     /**
@@ -69,9 +69,9 @@ public class AuthService {
      * @param group The permission group to look for permissions within.
      * @return True if they have one or more permissions, false if they do not or the current user is null.
      */
-    public boolean doesCurrentUserHavePermissionOfGroup(Permission.Group group) {
+    public boolean doesCurrentUserHavePermissionOfGroup(Permissions.Group group) {
         User currentUser = getCurrentUser();
-        return currentUser != null && permissionService.userHasPermissionOfGroup(currentUser, group);
+        return currentUser != null && permissionsService.userHasPermissionOfGroup(currentUser, group);
     }
 
 }

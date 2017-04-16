@@ -42,7 +42,8 @@
 								  [label]="'My Account'">
 			</accordion-navigation>
 			<accordion-navigation [icon]="'calendar-check-o'"
-								  [label]="'Reservation Management'">
+								  [label]="'Reservation Management'"
+								  *ngIf="user?.admin || user?.userGroups?.length > 0">
 				<accordion-navigation [link]="['', 'secure', 'management', 'queue']"
 									  [icon]="'hourglass-half'"
 									  [label]="'Approval Queue'">
@@ -61,7 +62,8 @@
 				</accordion-navigation>
 			</accordion-navigation>
 			<accordion-navigation [icon]="'cogs'"
-								  [label]="'AptiBook Configuration'">
+								  [label]="'AptiBook Configuration'"
+								  *ngIf="user?.admin || userPermissions.length > 0">
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'resources']"
 									  [icon]="'tags'"
 									  [label]="'Resources'">

@@ -6,15 +6,16 @@
 
 package com.aptitekk.aptibook.core.domain.entities;
 
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 
 @SuppressWarnings("JpaDataSourceORMInspection")
@@ -52,8 +53,11 @@ public class User extends MultiTenantEntity implements Serializable {
         PENDING;
     }
 
-    @SuppressWarnings("JpaAttributeTypeInspection")
-    public Map<Notification.Type, Boolean> notificationTypeSettings = new HashMap<>();
+    @ElementCollection(targetClass = NotificationToggles.class)
+    @CollectionTable(name = "user_notification_settings", joinColumns = @JoinColumn(name = "user_id"))
+    @MapKeyColumn(name = "type")
+    @MapKeyEnumerated(EnumType.STRING)
+    public Map<NotificationType, NotificationToggles> notificationSettings;
 
     @ManyToMany
     public List<UserGroup> userGroups = new ArrayList<>();
@@ -68,8 +72,11 @@ public class User extends MultiTenantEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     public List<Notification> notifications = new ArrayList<>();
 
-    @ManyToMany
-    public List<Permission> permissions;
+    @ElementCollection(targetClass = Permissions.Descriptor.class)
+    @CollectionTable(name = "user_permissions", joinColumns = @JoinColumn(name = "user_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "descriptor")
+    public Set<Permissions.Descriptor> permissions;
 
     public Long getId() {
         return this.id;
@@ -127,6 +134,42 @@ public class User extends MultiTenantEntity implements Serializable {
     @Override
     public int hashCode() {
         return EqualsHelper.calculateHashCode(emailAddress, firstName, lastName, phoneNumber, location, hashedPassword, verificationCode, verified);
+    }
+
+    /**
+     * Describes the different toggleable notification methods.
+     */
+    @Embeddable
+    public static class NotificationToggles implements Serializable {
+
+        /**
+         * Whether or not email notifications are enabled.
+         */
+        @Column(name = "email_enabled")
+        private boolean emailEnabled;
+
+        /**
+         * Constructs a new instance with the given parameters.
+         *
+         * @param emailEnabled Whether or not email notifications are enabled.
+         */
+        public NotificationToggles(boolean emailEnabled) {
+            this.emailEnabled = emailEnabled;
+        }
+
+        /**
+         * Constructs a new instance with false enabled fields.
+         */
+        public NotificationToggles() {
+        }
+
+        public boolean isEmailEnabled() {
+            return emailEnabled;
+        }
+
+        public void setEmailEnabled(boolean enabled) {
+            this.emailEnabled = enabled;
+        }
     }
 
 }

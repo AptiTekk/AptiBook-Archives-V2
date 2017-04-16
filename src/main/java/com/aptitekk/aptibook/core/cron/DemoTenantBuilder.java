@@ -7,6 +7,8 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.LogService;
@@ -118,11 +120,19 @@ public class DemoTenantBuilder {
         admin.userState = User.State.APPROVED;
         userRepository.save(admin);
 
+        // Full Permissions
+        Set<Permissions.Descriptor> fullPermissions = new HashSet<>();
+        fullPermissions.add(Permissions.Descriptor.GENERAL_FULL_PERMISSIONS);
+
+        // Notification Settings
+        Map<NotificationType, User.NotificationToggles> notificationSettings = new HashMap<>();
+        notificationSettings.put(NotificationType.APPROVAL_REQUEST, new User.NotificationToggles(true));
+
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
                 "Administrators",
                 userGroupRepository.findRootGroup(demoTenant),
-                null
+                fullPermissions
         );
 
         UserGroup librariansUserGroup = createUserGroup(
@@ -143,6 +153,7 @@ public class DemoTenantBuilder {
                 "Jill",
                 "Administrator",
                 "demo",
+                notificationSettings,
                 administratorsUserGroup);
 
         User teacher = createUser(
@@ -150,6 +161,7 @@ public class DemoTenantBuilder {
                 "John",
                 "Teacher",
                 "demo",
+                null,
                 teachersUserGroup);
 
         User librarian = createUser(
@@ -157,6 +169,7 @@ public class DemoTenantBuilder {
                 "Julia",
                 "Librarian",
                 "demo",
+                null,
                 librariansUserGroup
         );
 
@@ -331,7 +344,7 @@ public class DemoTenantBuilder {
      */
     private UserGroup createUserGroup(String name,
                                       UserGroup parent,
-                                      List<Permission> permissions) {
+                                      Set<Permissions.Descriptor> permissions) {
         UserGroup userGroup = new UserGroup();
         userGroup.tenant = demoTenant;
         userGroup.setName(name);
@@ -344,17 +357,19 @@ public class DemoTenantBuilder {
     /**
      * Creates a User.
      *
-     * @param emailAddress The user's email address.
-     * @param firstName    The user's first name.
-     * @param lastName     The user's last name.
-     * @param password     The user's password (not hashed)
-     * @param userGroups   Any user groups the user should be assigned to.
+     * @param emailAddress         The user's email address.
+     * @param firstName            The user's first name.
+     * @param lastName             The user's last name.
+     * @param password             The user's password (not hashed)
+     * @param notificationSettings A set of NotificationSettings for the user.
+     * @param userGroups           Any user groups the user should be assigned to.
      * @return A new, saved User.
      */
     private User createUser(String emailAddress,
                             String firstName,
                             String lastName,
                             String password,
+                            Map<NotificationType, User.NotificationToggles> notificationSettings,
                             UserGroup... userGroups) {
         User user = new User();
         user.tenant = demoTenant;
@@ -364,7 +379,7 @@ public class DemoTenantBuilder {
         user.verified = true;
         user.userState = User.State.APPROVED;
         user.hashedPassword = PasswordUtils.encodePassword(password);
-
+        user.notificationSettings = notificationSettings;
         user.userGroups.addAll(Arrays.asList(userGroups));
         return userRepository.save(user);
     }

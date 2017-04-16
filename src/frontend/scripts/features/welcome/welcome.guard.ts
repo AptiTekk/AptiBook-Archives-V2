@@ -22,7 +22,7 @@ export class WelcomeGuard implements CanActivate {
         return Observable.create(listener => {
             this.tenantService.getTenant().take(1).subscribe(
                 tenant => {
-                        this.authService.getUser().take(1).subscribe(
+                        this.authService.getCurrentUser().take(1).subscribe(
                             user => {
                                 if (user) {
                                     this.router.navigate(['', 'secure']);

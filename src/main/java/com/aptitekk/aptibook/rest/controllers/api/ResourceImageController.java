@@ -59,7 +59,7 @@ public class ResourceImageController extends APIControllerAbstract {
     public ResponseEntity<?> setImage(@PathVariable Long id, @RequestPart("file") MultipartFile multipartFile) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
-        if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
+        if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
         if (multipartFile == null)
@@ -119,7 +119,7 @@ public class ResourceImageController extends APIControllerAbstract {
         if (resource == null)
             return noPermission();
 
-        if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
+        if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
         File imageFile = resource.image;

@@ -3,7 +3,7 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
 import {User} from "../../../../../models/user.model";
 import {UserService} from "../../../../../core/services/user.service";
 import {AuthService} from "../../../../../core/services/auth.service";
@@ -15,7 +15,7 @@ import {DataTableComponent} from "../../../../../shared/datatable/datatable.comp
     templateUrl: 'all-users.component.html',
     styleUrls: ['all-users.component.css']
 })
-export class AllUsersComponent implements OnInit {
+export class AllUsersComponent implements AfterViewInit {
 
     @ViewChild(DataTableComponent) dataTable: DataTableComponent;
 
@@ -61,7 +61,7 @@ export class AllUsersComponent implements OnInit {
             });
 
         this.authService.reloadUser();
-        this.authService.getUser().take(1).subscribe(user => {
+        this.authService.getCurrentUser().take(1).subscribe(user => {
             this.currentUser = user;
         });
 
@@ -73,6 +73,11 @@ export class AllUsersComponent implements OnInit {
             location: null,
             userGroups: null
         });
+    }
+
+    ngAfterViewInit(): void {
+        // Fetch the Users.
+        this.userService.fetchUsers();
     }
 
     private selectRowByUser(user: User) {

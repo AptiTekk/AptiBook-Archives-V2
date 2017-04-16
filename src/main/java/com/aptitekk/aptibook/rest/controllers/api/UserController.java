@@ -6,16 +6,15 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
-import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permissions;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
-import com.aptitekk.aptibook.core.services.entity.NotificationService;
-import com.aptitekk.aptibook.core.services.entity.UserGroupService;
+import com.aptitekk.aptibook.core.services.entity.UserService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
@@ -29,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.websocket.server.PathParam;
 import java.util.List;
+import java.util.Map;
 
 @APIController
 public class UserController extends APIControllerAbstract {
@@ -36,15 +36,19 @@ public class UserController extends APIControllerAbstract {
     private final UserRepository userRepository;
     private final UserValidator userValidator;
     private final EmailService emailService;
+    private final UserService userService;
 
     @Autowired
     public UserController(
             UserRepository userRepository,
             UserValidator userValidator,
             EmailService emailService) {
+            EmailService emailService,
+            UserService userService) {
         this.userRepository = userRepository;
         this.userValidator = userValidator;
         this.emailService = emailService;
+        this.userService = userService;
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
@@ -138,6 +142,34 @@ public class UserController extends APIControllerAbstract {
                 return noPermission();
 
         return ok(modelMapper.map(user, UserDTO.class));
+    }
+
+
+    @RequestMapping(value = "/users/current/notifications/settings", method = RequestMethod.GET)
+    public ResponseEntity<?> getNotificationSettings() {
+        Map<NotificationType, User.NotificationToggles> notificationSettings = authService.getCurrentUser().notificationSettings;
+
+        for (NotificationType notificationType : NotificationType.values()) {
+            notificationSettings.putIfAbsent(notificationType, new User.NotificationToggles(notificationType.getDefaultValue()));
+        }
+
+        return ok(modelMapper.map(notificationSettings, new TypeToken<Map<NotificationType, User.NotificationToggles>>() {
+        }.getType()));
+    }
+
+
+    @RequestMapping(value = "/users/current/notifications/settings/{notificationType}", method = RequestMethod.PATCH)
+    public ResponseEntity<?> patchNotificationSetting(@RequestBody User.NotificationToggles notificationToggles,
+                                                      @PathVariable("notificationType") NotificationType notificationType) {
+        User user = authService.getCurrentUser();
+        //Find passed in notification setting in user's notification settings and set value of user's setting to passed in value.
+        if (user.notificationSettings.containsKey(notificationType))
+            user.notificationSettings.get(notificationType).setEmailEnabled(notificationToggles.isEmailEnabled());
+        else
+            user.notificationSettings.put(notificationType, new User.NotificationToggles(notificationToggles.isEmailEnabled()));
+
+        userRepository.save(user);
+        return ok(modelMapper.map(user.notificationSettings.get(notificationType), User.NotificationToggles.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)

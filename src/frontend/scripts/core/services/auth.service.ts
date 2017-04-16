@@ -13,26 +13,29 @@ import {User} from "../../models/user.model";
 @Injectable()
 export class AuthService {
 
-    private user: ReplaySubject<User> = new ReplaySubject<User>(1);
+    /**
+     * The user currently signed into the application. May be null if no user is signed in.
+     */
+    private currentUser: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     constructor(private apiService: APIService) {
         this.reloadUser();
     }
 
     /**
-     * Forces a reload of the user from the REST API
+     * Forces a reload of the current user from the REST API
      */
     public reloadUser(): void {
         this.apiService.get("users/current").subscribe(
-            response => this.user.next(response),
-            err => this.user.next(undefined));
+            response => this.currentUser.next(response),
+            err => this.currentUser.next(undefined));
     }
 
     /**
      * @returns The User ReplaySubject which is updated infrequently.
      */
-    public getUser(): ReplaySubject<User> {
-        return this.user;
+    public getCurrentUser(): ReplaySubject<User> {
+        return this.currentUser;
     }
 
     /**
@@ -47,11 +50,11 @@ export class AuthService {
                 "Authorization": "Basic " + btoa(emailAddress + ":" + password)
             })).subscribe(
                 response => {
-                    this.user.next(response);
+                    this.currentUser.next(response);
                     listener.next(response);
                 },
                 err => {
-                    this.user.next(undefined);
+                    this.currentUser.next(undefined);
                     listener.error(err);
                 }
             );
@@ -66,7 +69,7 @@ export class AuthService {
         return Observable.create(listener => {
             this.apiService.get("sign-out").subscribe(
                 response => {
-                    this.user.next(undefined);
+                    this.currentUser.next(undefined);
                     listener.next()
                 },
                 err => {
