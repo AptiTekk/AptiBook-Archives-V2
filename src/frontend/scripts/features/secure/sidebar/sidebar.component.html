@@ -74,11 +74,11 @@
 									  [label]="'Users'"
 									  *ngIf="hasPermission(['USERS_MODIFY_ALL', 'GROUPS_MODIFY_ALL'])">
 				</accordion-navigation>
-				<accordion-navigation [link]="['', 'secure', 'configuration', 'permissions']"
+				<!--<accordion-navigation [link]="['', 'secure', 'configuration', 'permissions']"
 									  [icon]="'unlock'"
 									  [label]="'Permissions'"
 									  *ngIf="hasPermission(['PERMISSIONS_MODIFY_ALL'])">
-				</accordion-navigation>
+				</accordion-navigation>-->
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'properties']"
 									  [icon]="'cog'"
 									  [label]="'Properties'"
