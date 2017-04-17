@@ -14,8 +14,8 @@ import {SearchResultsModule} from "./search-results/search-results.module";
 import {SidebarComponent} from "./sidebar/sidebar.component";
 import {FooterModule} from "../../app/footer/footer.module";
 import {SecureRoutesModule} from "./secure.routes";
-import {UserModule} from "./user/user.module";
 import {ConfigurationModule} from "./configuration/configuration.module";
+import {AccountModule} from "./account/account.module";
 
 /**
  * The secure section is off-limits to the users who have not signed in.
@@ -32,7 +32,7 @@ import {ConfigurationModule} from "./configuration/configuration.module";
         ConfigurationModule,
         ManagementModule,
         SearchResultsModule,
-        UserModule,
+        AccountModule,
         FooterModule
     ],
     declarations: [

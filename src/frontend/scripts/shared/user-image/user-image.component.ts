@@ -5,6 +5,7 @@
  */
 import {Component, Input} from "@angular/core";
 import {User} from "../../models/user.model";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
     selector: 'user-image',
@@ -12,7 +13,7 @@ import {User} from "../../models/user.model";
 })
 export class UserImageComponent {
 
-    noImageUrl: string = require("../../../resources/user-no-image.svg");
+    noImagePlaceholder: SafeUrl = this.santizer.bypassSecurityTrustUrl(require("!url-loader!../../../resources/user-no-image.svg"));
 
     @Input() user: User;
 
@@ -20,7 +21,7 @@ export class UserImageComponent {
 
     @Input() width: string;
 
-    constructor() {
+    constructor(private santizer: DomSanitizer) {
     }
 
 }

@@ -8,6 +8,7 @@ import {Resource} from "../../models/resource.model";
 import {APIService} from "../../core/services/api.service";
 import {ImageUploaderComponent} from "../image-uploader/image-uploader.component";
 import {Observable} from "rxjs";
+import {DomSanitizer, SafeUrl} from "@angular/platform-browser";
 
 @Component({
     selector: 'resource-image',
@@ -15,7 +16,7 @@ import {Observable} from "rxjs";
 })
 export class ResourceImageComponent {
 
-    noImageUrl: string = require("../../../resources/resource-no-image.svg");
+    noImagePlaceholder: SafeUrl = this.sanitizer.bypassSecurityTrustUrl(require("!url-loader!../../../resources/resource-no-image.svg"));
 
     @Input() resource: Resource;
 
@@ -26,7 +27,8 @@ export class ResourceImageComponent {
 
     @Input() width: string;
 
-    constructor(private apiService: APIService) {
+    constructor(private apiService: APIService,
+                private sanitizer: DomSanitizer) {
     }
 
     public clearImage() {

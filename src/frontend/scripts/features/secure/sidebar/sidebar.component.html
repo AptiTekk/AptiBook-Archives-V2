@@ -18,8 +18,7 @@
 	
 	<div id="notifications"
 		 [class.unread]="unreadNotifications.length > 0"
-		 [routerLink]="['', 'secure', 'user', 'notifications']"
-		 [routerLinkActive]="'active'">
+		 [routerLink]="['', 'secure', 'account', 'notifications']">
 		<i class="fa fa-bell"
 		   aria-hidden="true"></i>
 		<span id="notifications-count-label">{{(unreadNotifications.length > 0 ? unreadNotifications.length + ' Unread Notification' : '0 Unread Notification')
@@ -32,12 +31,8 @@
 								  [icon]="'dashboard'"
 								  [label]="'Dashboard'"
 								  [exactLinkMatching]="true">
-				<accordion-navigation [link]="['', 'secure', 'dashboard', 'upcoming']"
-									  [icon]="'list'"
-									  [label]="'Upcoming Reservations'">
-				</accordion-navigation>
 			</accordion-navigation>
-			<accordion-navigation [link]="['', 'secure', 'user', 'account']"
+			<accordion-navigation [link]="['', 'secure', 'account']"
 								  [icon]="'user'"
 								  [label]="'My Account'">
 			</accordion-navigation>

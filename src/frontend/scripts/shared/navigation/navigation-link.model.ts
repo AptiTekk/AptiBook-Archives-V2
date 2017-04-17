@@ -7,7 +7,7 @@
 export interface NavigationLink {
 
     label: string;
-    icon: string;
+    icon?: string;
     path: string[];
     exact?: boolean;
 

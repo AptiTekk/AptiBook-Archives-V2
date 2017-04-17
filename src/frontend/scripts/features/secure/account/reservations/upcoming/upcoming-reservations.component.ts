@@ -5,12 +5,12 @@
  */
 
 import {Component} from "@angular/core";
-import {Reservation} from "../../../../models/reservation/reservation.model";
-import {AuthService} from "../../../../core/services/auth.service";
-import {ReservationService} from "../../../../core/services/reservation.service";
+import {Reservation} from "../../../../../models/reservation/reservation.model";
+import {AuthService} from "../../../../../core/services/auth.service";
+import {ReservationService} from "../../../../../core/services/reservation.service";
 
 @Component({
-    selector: 'upcoming-reservations',
+    selector: 'at-upcoming-reservations',
     templateUrl: 'upcoming-reservations.component.html',
     styleUrls: ['upcoming-reservations.component.css']
 })

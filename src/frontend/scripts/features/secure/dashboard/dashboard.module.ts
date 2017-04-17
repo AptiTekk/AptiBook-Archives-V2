@@ -4,11 +4,10 @@
  * Proprietary and confidential.
  */
 
-import { NgModule } from '@angular/core';
+import {NgModule} from "@angular/core";
 
-import { DashboardComponent } from './dashboard.component';
+import {DashboardComponent} from "./dashboard.component";
 import {NewReservationModalComponent} from "./new-reservation-modal/new-reservation-modal.component";
-import {UpcomingReservationsComponent} from "./upcoming-reservations/upcoming-reservations.component";
 import {SharedModule} from "../../../shared/shared.module";
 import {CommonModule} from "@angular/common";
 
@@ -19,10 +18,10 @@ import {CommonModule} from "@angular/common";
     ],
     declarations: [
         DashboardComponent,
-        NewReservationModalComponent,
-        UpcomingReservationsComponent
+        NewReservationModalComponent
     ],
     exports: [],
     providers: [],
 })
-export class DashboardModule { }
+export class DashboardModule {
+}
