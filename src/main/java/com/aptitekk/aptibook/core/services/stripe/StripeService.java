@@ -7,12 +7,12 @@
 package com.aptitekk.aptibook.core.services.stripe;
 
 import com.aptitekk.aptibook.core.services.LogService;
+import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import com.stripe.model.SubscriptionCollection;
-import com.stripe.net.RequestOptions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,14 +26,21 @@ public class StripeService {
     private static final String SECRET_KEY = System.getenv("STRIPE_SECRET_KEY");
 
     private final LogService logService;
+    private final SpringProfileService springProfileService;
 
     @Autowired
-    public StripeService(LogService logService) {
+    public StripeService(LogService logService,
+                         SpringProfileService springProfileService) {
         this.logService = logService;
+        this.springProfileService = springProfileService;
     }
 
     @PostConstruct
     private void init() {
+        // Don't bother setting up Stripe for JUnit Testing.
+        if (springProfileService.isProfileActive(SpringProfileService.Profile.TESTING))
+            return;
+
         if (SECRET_KEY == null || SECRET_KEY.isEmpty()) {
             throw new IllegalStateException("Stripe Secret Key Environment Variable not Found!");
         }
@@ -48,7 +55,7 @@ public class StripeService {
      * @return True if ready, false otherwise.
      */
     public boolean isReady() {
-        return SECRET_KEY != null;
+        return Stripe.apiKey != null;
     }
 
     /**

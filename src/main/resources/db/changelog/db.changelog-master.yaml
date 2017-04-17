@@ -12,7 +12,7 @@ databaseChangeLog:
   - include:
       file: db/changelog/changeSets/6__Remove_Permission_Entity.xml
   - include:
-      file: db/changelog/changeSets/7_Add_Notification_Setting_Table.xml
+      file: db/changelog/changeSets/7__Add_Notification_Setting_Table.xml
   - include:
       file: db/changelog/changeSets/8__Update_Tenant_For_Stripe.xml
   - include:

@@ -8,9 +8,6 @@
     <envs>
       <env name="SPARKPOST_API_KEY" value="0bdd338ba5de5083cef4c6908eb6719e0c20caae" />
       <env name="SPARKPOST_API_URL" value="https://api.sparkpost.com/api/v1" />
-      <env name="WOOCOMMERCE_URL" value="https://dev.aptitekk.com/wp/wc-api/v3/" />
-      <env name="WOOCOMMERCE_CK" value="ck_d9f38a0a886d962609f98c3de96eb868224f4b6c" />
-      <env name="WOOCOMMERCE_CS" value="cs_829136f6e72a6a70436ebb38e22055bfb2635d0e" />
       <env name="RAYGUN_APIKEY" value="rMmd5yP+v01YmLU3ivhorA==" />
       <env name="STRIPE_SECRET_KEY" value="sk_test_NphelNWGykn9Q6lz0AjjSYN6" />
     </envs>
