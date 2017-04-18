@@ -19,7 +19,7 @@ export interface User {
     location?: string;
 
     notifications?: number[];
-    notificationTypeSettings?;
+    notificationTypeSettings?: string[][];
 
     permissions?;
     userGroups?: UserGroup[];

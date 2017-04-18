@@ -18,17 +18,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 public class TenantControllerTest extends AbstractWebClientTest {
 
-    @Autowired
-    private TenantRepository tenantRepository;
-
-    @Autowired
-    private TenantManagementService tenantManagementService;
-
     @Test
     public void testGetTenant() throws Exception {
         this.mockMvc.perform(get("/api/tenant"))
                 .andExpect(jsonPath("$.id", is(getJUnitTenant().id.intValue())))
-                .andExpect(jsonPath("$.slug", is(getJUnitTenant().slug)));
+                .andExpect(jsonPath("$.domain", is(getJUnitTenant().domain)));
     }
 
 }

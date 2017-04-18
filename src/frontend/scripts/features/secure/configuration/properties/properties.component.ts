@@ -4,18 +4,14 @@
  * Proprietary and confidential.
  */
 
-import {
-    Component, Directive, ElementRef, forwardRef, Input, OnChanges, OnInit, AfterViewInit, QueryList, SimpleChanges, ViewChild,
-    ViewChildren
-} from "@angular/core";
+import {AfterViewInit, Component, forwardRef, OnInit, QueryList, ViewChild, ViewChildren} from "@angular/core";
 import {PropertiesService} from "../../../../core/services/properties-service";
-import {Property} from "../../../../models/property.model";
 import {FormBuilder, FormGroup} from "@angular/forms";
 import {AlertComponent} from "../../../../shared/alert/alert.component";
 import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
-import { ActivatedRoute, Router } from "@angular/router";
-import { Observable } from "rxjs/Observable";
+import {ActivatedRoute, Router} from "@angular/router";
 import {PropertiesSectionComponent} from "./properties-section/properties-section.component";
+import {Properties} from "../../../../models/properties.model";
 
 @Component({
     selector: 'at-configuration-properties',
@@ -26,10 +22,10 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
     @ViewChild('successAlert')
     successAlert: AlertComponent;
 
-    @ViewChild('warnAlert')
-    warnAlert: AlertComponent;
+    @ViewChild('dangerAlert')
+    dangerAlert: AlertComponent;
 
-    public properties: Property[];
+    public properties: Properties;
 
     sectionLinks: NavigationLink[] = [
         {
@@ -49,7 +45,7 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
     formGroup: FormGroup;
 
     constructor(private router: Router,
-            private activatedRoute: ActivatedRoute,
+                private activatedRoute: ActivatedRoute,
                 private propertiesService: PropertiesService,
                 private formBuilder: FormBuilder) {
     }
@@ -75,11 +71,11 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
             // Iterate through each section to see if a section exists with this path name.
             let pathIsValid: boolean = false;
             this.propertySections.forEach(section => {
-                if(section.getSectionPath() === sectionPath)
-                pathIsValid = true;
+                if (section.getSectionPath() === sectionPath)
+                    pathIsValid = true;
             });
 
-            if(!pathIsValid) // If no section with the path name exists, redirect to root.
+            if (!pathIsValid) // If no section with the path name exists, redirect to root.
                 this.router.navigate(['', 'secure', 'configuration', 'properties']);
             else // Otherwise, show the section.
                 this.showSection(sectionPath);
@@ -103,60 +99,42 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
 
     buildForm() {
         this.formGroup = this.formBuilder.group(
-            // This will turn the array of properties into an object with keys named by the property key names, and values of the properties' values.
-            this.properties.reduce((map, property) => {
-                map[property.keyName] = property.propertyValue;
-                return map;
-            }, {})
+            this.properties
         );
     }
 
     reset() {
-        let patches: Observable<Property>[] = [];
+        //let patches: Observable<Property>[] = [];
 
-        this.properties.forEach(property => {
-            property.propertyValue = property.defaultValue;
-            patches.push(this.propertiesService.patchProperty(property));
-        });
+        //TODO: make a reset properties endpoint
+        /*this.properties.forEach(property => {
+         property.propertyValue = property.defaultValue;
+         patches.push(this.propertiesService.patchProperty(property));
+         });*/
 
-        // Run all the patches at the same time.
-        Observable.zip(...patches, () => null).subscribe(
-            response => this.propertiesService.fetchProperties()
-        );
+        /*// Run all the patches at the same time.
+         Observable.zip(...patches, () => null).subscribe(
+         response => this.propertiesService.fetchProperties()
+         );*/
 
         this.successAlert.display("Properties have been reset!");
     }
 
     onSubmit() {
-        let madeChange = false;
-
-        let patches: Observable<Property>[] = [];
-
         for (let controlName in this.formGroup.controls) {
-            if (this.formGroup.controls[controlName].dirty) {
-                madeChange = true;
-
-                let propertyPatch: Property = {
-                    propertyValue: this.formGroup.controls[controlName].value,
-                    keyName: controlName
-                };
-
-                patches.push(this.propertiesService.patchProperty(propertyPatch));
-            }
+            this.properties[controlName] = this.formGroup.controls[controlName].value;
         }
 
-        // Run all the patches at the same time.
-        Observable.zip(...patches, () => null).subscribe(
-            response => this.propertiesService.fetchProperties()
-        );
-
-        if (madeChange) {
-            this.successAlert.display("Changes have been saved!");
-        } else {
-            this.warnAlert.display("No changes detected.");
-        }
-        madeChange = false;
-
+        this.propertiesService.patchProperties(this.properties)
+            .subscribe(
+                properties => {
+                    this.propertiesService.fetchProperties();
+                    this.successAlert.display("Changes have been saved!");
+                },
+                err => {
+                    this.dangerAlert.display(err);
+                }
+            );
     }
 
 }

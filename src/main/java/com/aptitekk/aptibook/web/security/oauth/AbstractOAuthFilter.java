@@ -6,12 +6,12 @@
 
 package com.aptitekk.aptibook.web.security.oauth;
 
-import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
+import com.aptitekk.aptibook.core.domain.entities.enums.Property;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.SpringProfileService;
+import com.aptitekk.aptibook.core.services.entity.PropertyService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -53,7 +53,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
     private SpringProfileService springProfileService;
 
     @Autowired
-    private PropertiesRepository propertiesRepository;
+    private PropertyService propertyService;
 
     @Autowired
     private LogService logService;
@@ -177,8 +177,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
             if (currentTenant != null) {
 
                 // Check if the OAuth Property is Enabled.
-                Property oAuthProperty = propertiesRepository.findPropertyByKey(propertyKey);
-                if (Boolean.parseBoolean(oAuthProperty.propertyValue)) {
+                if (Boolean.parseBoolean(propertyService.getProperty(propertyKey))) {
                     // OAuth is Enabled.
 
                     // Build the Service

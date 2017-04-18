@@ -12,15 +12,20 @@ import {NotificationsComponent} from "./notifications/notifications.component";
 import {SharedModule} from "../../../shared/shared.module";
 import {CommonModule} from "@angular/common";
 import {UserRoutesModule} from "./user.routes";
+import {AccountModule} from "./account/account.module";
 
 @NgModule({
     imports: [
         SharedModule,
-        UserRoutesModule
+
+        // Routes
+        UserRoutesModule,
+
+        // Components
+        AccountModule
     ],
     declarations: [
         UserComponent,
-        AccountComponent,
         NotificationsComponent
     ],
     exports: [],

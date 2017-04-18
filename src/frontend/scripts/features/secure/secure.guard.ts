@@ -17,7 +17,7 @@ export class SecureGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
         return Observable.create(listener => {
-            this.authService.getUser().take(1).subscribe(
+            this.authService.getCurrentUser().take(1).subscribe(
                 user => {
                     if (user) {
                         listener.next(true);

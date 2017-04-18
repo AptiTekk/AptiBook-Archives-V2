@@ -9,6 +9,8 @@ import {FileItem} from "ng2-file-upload/file-upload/file-item.class";
 import {FileUploader, FileUploaderOptions} from "ng2-file-upload";
 import {Observable} from "rxjs";
 import {APIService} from "../../core/services/api.service";
+import {Http} from "@angular/http";
+import {CookieService} from "ng2-cookies";
 
 @Component({
     selector: 'image-uploader',
@@ -31,7 +33,7 @@ export class ImageUploaderComponent implements OnInit {
      */
     fileOverImage: boolean;
 
-    constructor() {
+    constructor(private cookieService: CookieService) {
     }
 
     ngOnInit(): void {
@@ -84,6 +86,13 @@ export class ImageUploaderComponent implements OnInit {
                 //Set up listeners
                 this.fileUploader.onSuccessItem = () => listener.next(true);
                 this.fileUploader.onErrorItem = () => listener.next(false);
+
+                this.fileUploader.setOptions({
+                    headers: [{
+                        name: "X-XSRF-TOKEN",
+                        value: this.cookieService.get("XSRF-TOKEN")
+                    }]
+                });
 
                 //Upload the first image in the queue
                 this.fileUploader.uploadItem(this.fileUploader.queue[0]);

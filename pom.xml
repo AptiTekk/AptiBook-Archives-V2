@@ -222,6 +222,14 @@
         <!-- End Testing -->
         <!-- End Spring Boot-->
 
+        <!-- Stripe Subscriptions -->
+        <dependency>
+            <groupId>com.stripe</groupId>
+            <artifactId>stripe-java</artifactId>
+            <version>4.3.0</version>
+        </dependency>
+        <!-- End Stripe -->
+
         <!-- Raygun Exception Handler -->
         <dependency>
             <groupId>com.mindscapehq</groupId>
@@ -250,7 +258,7 @@
         <dependency>
             <groupId>com.sparkpost</groupId>
             <artifactId>sparkpost-lib</artifactId>
-            <version>0.16.1</version>
+            <version>0.17</version>
         </dependency>
         <dependency>
             <groupId>commons-validator</groupId>

@@ -6,11 +6,14 @@
 
 package com.aptitekk.aptibook.core.domain.entities;
 
+import com.aptitekk.aptibook.core.domain.entities.enums.Property;
+import com.aptitekk.aptibook.core.services.stripe.StripeService;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 
 import javax.persistence.*;
-import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Entity
 public class Tenant extends GlobalEntity {
@@ -19,75 +22,24 @@ public class Tenant extends GlobalEntity {
     @GeneratedValue
     public Long id;
 
-    private boolean active;
-
-    public String adminEmail;
-
-    public LocalDateTime timeSetInactive;
-
     @Column(nullable = false, unique = true)
-    public int subscriptionId;
-
-    @Column(nullable = false, unique = true)
-    public String slug;
-
-    public enum Tier {
-        BRONZE("aptibook-bronze", 25, 5, 50),
-        SILVER("aptibook-silver", 100, 10, 100),
-        PLATINUM("aptibook-platinum", -1, -1, 200);
-
-        private String sku;
-        private final int allowedResources;
-        private final int allowedResourceCategories;
-        private final int allowedUsers;
-
-        Tier(String sku, int allowedResources, int allowedResourceCategories, int allowedUsers) {
-            this.sku = sku;
-            this.allowedResources = allowedResources;
-            this.allowedResourceCategories = allowedResourceCategories;
-            this.allowedUsers = allowedUsers;
-        }
-
-        public String getSku() {
-            return sku;
-        }
-
-        /**
-         * Returns the number of Allowed Resources for this Tier.
-         * A value of -1 means "Unlimited."
-         */
-        public int getAllowedResources() {
-            return allowedResources;
-        }
-
-        /**
-         * Returns the number of Allowed Resource Categories for this Tier.
-         * A value of -1 means "Unlimited."
-         */
-        public int getAllowedResourceCategories() {
-            return allowedResourceCategories;
-        }
-
-        /**
-         * Returns the number of Allowed Users for this Tier.
-         * A value of -1 means "Unlimited."
-         */
-        public int getAllowedUsers() {
-            return allowedUsers;
-        }
-
-        public static Tier getTierBySku(String sku) {
-            for (Tier tier : values()) {
-                if (tier.getSku().equals(sku))
-                    return tier;
-            }
-
-            return null;
-        }
-    }
+    public String stripeSubscriptionId;
 
     @Enumerated(EnumType.STRING)
-    public Tier tier;
+    public StripeService.Plan stripePlan;
+
+    @Enumerated(EnumType.STRING)
+    public StripeService.Status stripeStatus;
+
+    @Column(nullable = false, unique = true)
+    public String domain;
+
+    @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
+    @CollectionTable(name = "tenant_properties", joinColumns = @JoinColumn(name = "tenant_id"))
+    @MapKeyEnumerated(EnumType.STRING)
+    @MapKeyColumn(name = "key")
+    @Column(name = "value")
+    public Map<Property.Key, String> properties = new HashMap<>();
 
     // ---- Tenant Dependent Entities ---- //
 
@@ -99,12 +51,6 @@ public class Tenant extends GlobalEntity {
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
     private List<File> files;
-
-    @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
-    private List<Permission> permissions;
-
-    @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
-    private List<Property> properties;
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
     private List<Reservation> reservations;
@@ -129,18 +75,6 @@ public class Tenant extends GlobalEntity {
 
     // ---- End Tenant Dependent Entities ---- //
 
-    public boolean isActive() {
-        return active;
-    }
-
-    public void setActive(boolean active) {
-        this.active = active;
-        if (active)
-            timeSetInactive = null;
-        else
-            timeSetInactive = LocalDateTime.now();
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -151,15 +85,14 @@ public class Tenant extends GlobalEntity {
 
         Tenant other = (Tenant) o;
 
-        return EqualsHelper.areEquals(active, other.active)
-                && EqualsHelper.areEquals(timeSetInactive, other.timeSetInactive)
-                && EqualsHelper.areEquals(subscriptionId, other.subscriptionId)
-                && EqualsHelper.areEquals(slug, other.slug)
-                && EqualsHelper.areEquals(tier, other.tier);
+        return EqualsHelper.areEquals(stripeSubscriptionId, other.stripeSubscriptionId)
+                && EqualsHelper.areEquals(stripePlan, other.stripePlan)
+                && EqualsHelper.areEquals(stripeStatus, other.stripeStatus)
+                && EqualsHelper.areEquals(domain, other.domain);
     }
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(active, timeSetInactive, subscriptionId, slug, tier);
+        return EqualsHelper.calculateHashCode(stripeSubscriptionId, stripePlan, stripeStatus, domain);
     }
 }

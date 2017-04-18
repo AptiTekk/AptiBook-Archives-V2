@@ -159,12 +159,14 @@
 				</div>
 			</div>
 			
-			<div class="row">
+			<!-- Admins can't receive emails. -->
+			<div class="row"
+				 *ngIf="!user?.admin">
 				<div class="col-xs-12">
 					<panel [type]="'primary'"
-						   [title]="'Email Notification Preferences'">
+						   [title]="'Notification Preferences'">
 						<panel-body>
-						
+							<at-user-account-notification-settings></at-user-account-notification-settings>
 						</panel-body>
 					</panel>
 				</div>

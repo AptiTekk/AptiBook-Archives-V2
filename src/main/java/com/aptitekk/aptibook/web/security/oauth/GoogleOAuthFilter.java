@@ -6,11 +6,11 @@
 
 package com.aptitekk.aptibook.web.security.oauth;
 
-import com.aptitekk.aptibook.core.domain.entities.Property;
 import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.repositories.PropertiesRepository;
+import com.aptitekk.aptibook.core.domain.entities.enums.Property;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.LogService;
+import com.aptitekk.aptibook.core.services.entity.PropertyService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.apis.GoogleApi20;
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -37,16 +37,16 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
     private static final String GOOGLE_REVOKE_URL = "https://accounts.google.com/o/oauth2/revoke";
 
     private final UserRepository userRepository;
-    private final PropertiesRepository propertiesRepository;
+    private final PropertyService propertyService;
     private final LogService logService;
 
     @Autowired
     public GoogleOAuthFilter(UserRepository userRepository,
-                             PropertiesRepository propertiesRepository,
+                             PropertyService propertyService,
                              LogService logService) {
         super("google", Property.Key.GOOGLE_SIGN_IN_ENABLED, API_KEY, API_SECRET);
         this.userRepository = userRepository;
-        this.propertiesRepository = propertiesRepository;
+        this.propertyService = propertyService;
         this.logService = logService;
     }
 
@@ -77,8 +77,7 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
 
         if (googleUserInfo != null) {
             // Check to make sure their email domain is whitelisted.
-            Property property = propertiesRepository.findPropertyByKey(Property.Key.GOOGLE_SIGN_IN_WHITELIST);
-            String[] allowedDomains = property.propertyValue.split(",");
+            String[] allowedDomains = propertyService.getProperty(Property.Key.GOOGLE_SIGN_IN_WHITELIST).split(",");
 
             boolean domainWhitelisted = false;
             // Compare each whitelisted domain to the email

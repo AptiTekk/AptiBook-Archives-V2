@@ -8,6 +8,7 @@ import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {User} from "../../models/user.model";
 import {Observable, ReplaySubject} from "rxjs";
+import {NotificationToggles} from "../../models/notification-toggles.model";
 
 @Injectable()
 export class UserService {
@@ -15,7 +16,6 @@ export class UserService {
     users: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
 
     constructor(private apiService: APIService) {
-        this.fetchUsers();
     }
 
     public fetchUsers() {
@@ -24,7 +24,7 @@ export class UserService {
             .take(1)
             .subscribe(
                 response => this.users.next(response),
-                err => this.users.next(undefined)
+                err => this.users.next([])
             )
     }
 

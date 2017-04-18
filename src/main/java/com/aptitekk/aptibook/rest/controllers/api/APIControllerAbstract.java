@@ -8,7 +8,7 @@ package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.auth.AuthService;
-import com.aptitekk.aptibook.core.services.entity.PermissionService;
+import com.aptitekk.aptibook.core.services.entity.PermissionsService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import com.aptitekk.aptibook.rest.RestOperations;
 import com.aptitekk.aptibook.web.util.WebURIBuilderService;
@@ -30,7 +30,7 @@ public abstract class APIControllerAbstract implements RestOperations {
     LogService logService;
 
     @Autowired
-    PermissionService permissionService;
+    PermissionsService permissionsService;
 
     @SuppressWarnings("WeakerAccess")
     @Autowired

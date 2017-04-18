@@ -8,31 +8,40 @@ package com.aptitekk.aptibook.core.domain.repositories;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
-import org.springframework.beans.factory.config.BeanDefinition;
-import org.springframework.context.annotation.Scope;
-import org.springframework.stereotype.Service;
 
 import javax.persistence.PersistenceException;
 
 @EntityRepository
 public class TenantRepository extends GlobalEntityRepositoryAbstract<Tenant> {
 
-    public Tenant findTenantBySubscriptionId(int subscriptionId) {
+    /**
+     * Finds a Tenant in the database by its Stripe Subscription ID.
+     *
+     * @param stripeSubscriptionId The ID to lookup.
+     * @return The Tenant, if found. Null otherwise.
+     */
+    public Tenant findTenantByStripeSubscriptionId(String stripeSubscriptionId) {
         try {
             return entityManager
-                    .createQuery("SELECT t FROM Tenant t WHERE t.subscriptionId = ?1", Tenant.class)
-                    .setParameter(1, subscriptionId)
+                    .createQuery("SELECT t FROM Tenant t WHERE t.stripeSubscriptionId = ?1", Tenant.class)
+                    .setParameter(1, stripeSubscriptionId)
                     .getSingleResult();
         } catch (PersistenceException e) {
             return null;
         }
     }
 
-    public Tenant findTenantBySlug(String slug) {
+    /**
+     * Finds a Tenant in the database by its domain.
+     *
+     * @param domain The domain to lookup.
+     * @return The Tenant, if found. Null otherwise.
+     */
+    public Tenant findTenantByDomain(String domain) {
         try {
             return entityManager
-                    .createQuery("SELECT t FROM Tenant t WHERE t.slug = ?1", Tenant.class)
-                    .setParameter(1, slug)
+                    .createQuery("SELECT t FROM Tenant t WHERE t.domain = ?1", Tenant.class)
+                    .setParameter(1, domain)
                     .getSingleResult();
         } catch (PersistenceException e) {
             return null;

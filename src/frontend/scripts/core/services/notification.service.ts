@@ -20,7 +20,7 @@ export class NotificationService {
     private readNotifications: ReplaySubject<Notification[]> = new ReplaySubject<Notification[]>(1);
 
     constructor(private apiService: APIService, private authService: AuthService) {
-        this.authService.getUser().subscribe(user => {
+        this.authService.getCurrentUser().subscribe(user => {
             if (user != undefined) {
                 this.user = user;
                 this.reloadNotifications();

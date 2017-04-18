@@ -52,7 +52,7 @@ export class ApprovedComponent {
     ngOnInit(): void {
         this.loaderService.startLoading();
         this.authService
-            .getUser()
+            .getCurrentUser()
             .subscribe(user => {
                 this.user = user;
                 if (user) {

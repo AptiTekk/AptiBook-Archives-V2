@@ -4,8 +4,10 @@
  * Proprietary and confidential.
  */
 
-export interface Property {
-    propertyValue?: string;
-    defaultValue?: string;
-    keyName?: string;
+package com.aptitekk.aptibook.core.domain.rest.dtos;
+
+public class PermissionDTO {
+
+
+
 }

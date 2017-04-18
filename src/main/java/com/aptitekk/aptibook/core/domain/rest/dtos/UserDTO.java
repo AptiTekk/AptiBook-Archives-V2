@@ -6,11 +6,15 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
+import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class UserDTO {
@@ -30,6 +34,8 @@ public class UserDTO {
     public boolean verified;
 
     public List<UserGroupDTO.WithoutParentOrChildren> userGroups;
+
+    //public Set<Notification.NotificationToggles> notificationSetting;
 
     public String fullName;
 

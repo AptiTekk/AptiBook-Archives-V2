@@ -55,7 +55,7 @@ public class WebURIBuilderService {
             endpoint = endpoint.substring(1);
 
         //Add on the tenant url
-        endpoint = tenant.slug + "/" + endpoint;
+        endpoint = tenant.domain + "/" + endpoint;
 
         return buildURI("api/" + endpoint, queryParams);
     }

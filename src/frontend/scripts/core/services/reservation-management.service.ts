@@ -36,7 +36,7 @@ export class ReservationManagementService {
                 private authService: AuthService,
                 private userGroupService: UserGroupService) {
 
-        authService.getUser().subscribe(user => this.user = user);
+        authService.getCurrentUser().subscribe(user => this.user = user);
         userGroupService.getRootUserGroup().subscribe(root => this.rootUserGroup = root);
     }
 
