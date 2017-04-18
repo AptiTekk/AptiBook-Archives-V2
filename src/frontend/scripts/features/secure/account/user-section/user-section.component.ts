@@ -46,7 +46,7 @@ export class UserSectionComponent implements OnInit {
 
     ngOnInit() {
         this.authService.reloadUser();
-        this.authService.getUser().subscribe(user => {
+        this.authService.getCurrentUser().subscribe(user => {
             this.user = user;
             if (user)
                 this.resetFormGroup();

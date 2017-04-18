@@ -12,11 +12,13 @@ import {AccountRoutesModule} from "./account.routes";
 import {NotificationsComponent} from "./notifications/notifications.component";
 import {UpcomingReservationsComponent} from "./reservations/upcoming/upcoming-reservations.component";
 import {UserSectionComponent} from "./user-section/user-section.component";
+import {AccountNotificationSettingsModule} from "./notifications/notification-settings/notification-settings.module";
 
 @NgModule({
     imports: [
         SharedModule,
-        AccountRoutesModule
+        AccountRoutesModule,
+        AccountNotificationSettingsModule
     ],
     declarations: [
         AccountComponent,
