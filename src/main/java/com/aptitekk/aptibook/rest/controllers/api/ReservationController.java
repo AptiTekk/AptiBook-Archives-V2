@@ -12,6 +12,7 @@ import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationDecisionDTO;
 import com.aptitekk.aptibook.core.domain.rest.dtos.ReservationWithDecisionsDTO;
+import com.aptitekk.aptibook.core.services.entity.NotificationService;
 import com.aptitekk.aptibook.core.services.entity.ReservationService;
 import com.aptitekk.aptibook.core.services.entity.UserGroupService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
@@ -37,6 +38,7 @@ public class ReservationController extends APIControllerAbstract {
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
     private final ReservationDecisionRepository reservationDecisionRepository;
+    private final NotificationService notificationService;
 
     @Autowired
     public ReservationController(ReservationRepository reservationRepository,
@@ -45,7 +47,8 @@ public class ReservationController extends APIControllerAbstract {
                                  ReservationService reservationService,
                                  UserGroupRepository userGroupRepository,
                                  UserGroupService userGroupService,
-                                 ReservationDecisionRepository reservationDecisionRepository) {
+                                 ReservationDecisionRepository reservationDecisionRepository,
+                                 NotificationService notificationService) {
         this.reservationRepository = reservationRepository;
         this.resourceRepository = resourceRepository;
         this.userRepository = userRepository;
@@ -53,6 +56,7 @@ public class ReservationController extends APIControllerAbstract {
         this.userGroupRepository = userGroupRepository;
         this.userGroupService = userGroupService;
         this.reservationDecisionRepository = reservationDecisionRepository;
+        this.notificationService = notificationService;
     }
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
@@ -176,6 +180,7 @@ public class ReservationController extends APIControllerAbstract {
         // Save the new decision.
         reservationDecision = reservationDecisionRepository.save(reservationDecision);
 
+
         // If this group is at the top of the hierarchy,
         // then we have made a final decision on the reservation.
         if (decidingFor.isRoot() || decidingFor.getParent().isRoot()) {
@@ -242,6 +247,7 @@ public class ReservationController extends APIControllerAbstract {
             }
 
             reservation = reservationRepository.save(reservation);
+            notificationService.sendNewReservationNotifications(reservation);
             return ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
             }.getType()));
         }

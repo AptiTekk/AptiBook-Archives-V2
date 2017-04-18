@@ -102,6 +102,7 @@ public class EmailService {
         // Set Recipients
         List<RecipientAttributes> recipientArray = new ArrayList<>();
         for (String recipient : recipients) {
+            System.out.println("recipient: " + recipient);
             RecipientAttributes recipientAttribs = new RecipientAttributes();
             recipientAttribs.setAddress(new AddressAttributes(recipient));
             recipientArray.add(recipientAttribs);
