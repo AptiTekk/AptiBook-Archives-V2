@@ -9,3 +9,11 @@ databaseChangeLog:
       file: db/changelog/changeSets/4__Rename_Reservation_Columns.xml
   - include:
       file: db/changelog/changeSets/5__Remove_TimeZone_Property.xml
+  - include:
+      file: db/changelog/changeSets/6__Remove_Permission_Entity.xml
+  - include:
+      file: db/changelog/changeSets/7__Add_Notification_Setting_Table.xml
+  - include:
+      file: db/changelog/changeSets/8__Update_Tenant_For_Stripe.xml
+  - include:
+      file: db/changelog/changeSets/9__Move_Properties_Into_Tenant.xml

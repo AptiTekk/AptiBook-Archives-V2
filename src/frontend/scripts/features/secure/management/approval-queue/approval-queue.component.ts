@@ -52,7 +52,7 @@ export class ApprovalQueueComponent implements OnInit {
         this.loaderService.startLoading();
 
         this.authService
-            .getUser()
+            .getCurrentUser()
             .subscribe(user => {
                 this.user = user;
 

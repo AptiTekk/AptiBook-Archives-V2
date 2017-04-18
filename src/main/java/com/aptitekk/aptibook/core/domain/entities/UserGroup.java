@@ -6,12 +6,14 @@
 
 package com.aptitekk.aptibook.core.domain.entities;
 
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 
 import javax.persistence.*;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Set;
 
 @Entity
 public class UserGroup extends MultiTenantEntity implements Serializable {
@@ -35,8 +37,11 @@ public class UserGroup extends MultiTenantEntity implements Serializable {
     @OrderBy("name ASC")
     private List<UserGroup> children = new ArrayList<>();
 
-    @ManyToMany(fetch = FetchType.EAGER)
-    private List<Permission> permissions;
+    @ElementCollection(targetClass = Permission.Descriptor.class)
+    @CollectionTable(name = "usergroup_permissions", joinColumns = @JoinColumn(name = "usergroup_id"))
+    @Enumerated(EnumType.STRING)
+    @Column(name = "descriptor")
+    private Set<Permission.Descriptor> permissions;
 
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.REMOVE)
     private List<ReservationDecision> reservationDecisions = new ArrayList<>();
@@ -85,11 +90,11 @@ public class UserGroup extends MultiTenantEntity implements Serializable {
         this.children = children;
     }
 
-    public List<Permission> getPermissions() {
+    public Set<Permission.Descriptor> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(List<Permission> permissions) {
+    public void setPermissions(Set<Permission.Descriptor> permissions) {
         this.permissions = permissions;
     }
 

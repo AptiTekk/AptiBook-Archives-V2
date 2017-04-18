@@ -11,12 +11,15 @@ import {UsersConfigurationComponent} from "./users/users.component";
 import {AllUsersComponent} from "./users/all-users/all-users.component";
 import {GroupsComponent} from "./users/groups/groups.component";
 import {PropertiesConfigurationComponent} from "./properties/properties.component";
+import {PermissionsConfigurationComponent} from "./permissions/permissions.component";
+import {ConfigurationGuard} from "./configuration.guard";
 
 const routes: Routes = [
     {
         path: '',
+        canActivate: [ConfigurationGuard],
         children: [
-            {
+            { //TODO: Resources Guard
                 path: 'resources',
                 component: ResourcesConfigurationComponent
             },
@@ -24,7 +27,7 @@ const routes: Routes = [
                 path: 'resources/:resourceCategory',
                 component: ResourcesConfigurationComponent,
             },
-            {
+            { //TODO: User and User Group Guards
                 path: 'users',
                 component: UsersConfigurationComponent,
                 children: [
@@ -42,9 +45,13 @@ const routes: Routes = [
                     }
                 ]
             },
-            {
+            /*{ //TODO: Permissions Page and Guard
+                path: 'permissions',
+                component: PermissionsConfigurationComponent
+            },*/
+            { //TODO: Properties Guard
                 path: 'properties/:section',
-                component: PropertiesConfigurationComponent,
+                component: PropertiesConfigurationComponent
             },
             {
                 path: 'properties',
@@ -64,6 +71,9 @@ const routes: Routes = [
     ],
     exports: [
         RouterModule
+    ],
+    providers: [
+        ConfigurationGuard
     ]
 })
 export class ConfigurationRoutesModule {

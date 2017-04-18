@@ -14,6 +14,6 @@ public class TenantDTO {
 
     public Long id;
 
-    public String slug;
+    public String domain;
 
 }

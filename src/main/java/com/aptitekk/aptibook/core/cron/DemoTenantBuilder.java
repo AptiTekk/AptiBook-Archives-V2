@@ -7,10 +7,12 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.tenant.TenantIntegrityService;
+import com.aptitekk.aptibook.core.services.stripe.StripeService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Async;
@@ -44,8 +46,6 @@ public class DemoTenantBuilder {
 
     private final ReservationRepository reservationRepository;
 
-    private final TenantIntegrityService tenantIntegrityService;
-
     private final NotificationRepository notificationRepository;
 
     private final LogService logService;
@@ -60,7 +60,6 @@ public class DemoTenantBuilder {
                              TagRepository tagRepository,
                              ReservationDecisionRepository reservationDecisionRepository,
                              ReservationRepository reservationRepository,
-                             TenantIntegrityService tenantIntegrityService,
                              NotificationRepository notificationRepository,
                              LogService logService) {
         this.tenantRepository = tenantRepository;
@@ -72,7 +71,6 @@ public class DemoTenantBuilder {
         this.tagRepository = tagRepository;
         this.reservationDecisionRepository = reservationDecisionRepository;
         this.reservationRepository = reservationRepository;
-        this.tenantIntegrityService = tenantIntegrityService;
         this.notificationRepository = notificationRepository;
         this.logService = logService;
     }
@@ -93,32 +91,53 @@ public class DemoTenantBuilder {
         logService.logDebug(getClass(), "Rebuilding Demo Tenant...");
 
         //Find and delete old demo tenant
-        demoTenant = tenantRepository.findTenantBySlug("demo");
+        demoTenant = tenantRepository.findTenantByDomain("demo");
         if (demoTenant != null) {
             tenantRepository.delete(demoTenant);
         }
 
         //Create new demo tenant
         demoTenant = new Tenant();
-        demoTenant.slug = "demo";
-        demoTenant.tier = Tenant.Tier.PLATINUM;
-        demoTenant.subscriptionId = -1;
-        demoTenant.setActive(true);
-        demoTenant.adminEmail = null;
+        demoTenant.domain = "demo";
+        demoTenant.stripeSubscriptionId = "demo";
+        demoTenant.stripeStatus = StripeService.Status.ACTIVE;
+        demoTenant.stripePlan = StripeService.Plan.PLATINUM;
         demoTenant = tenantRepository.save(demoTenant);
-        tenantIntegrityService.initializeNewTenant(demoTenant);
 
-        User adminUser = userRepository.findByEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS, demoTenant);
-        if (adminUser != null) {
-            adminUser.hashedPassword = PasswordUtils.encodePassword("demo");
-            userRepository.save(adminUser);
-        }
+        // Create the root group.
+        UserGroup rootGroup = new UserGroup();
+        rootGroup.setName(UserGroupRepository.ROOT_GROUP_NAME);
+        rootGroup.tenant = demoTenant;
+        rootGroup = userGroupRepository.save(rootGroup);
+
+        // Create the admin user
+        User admin = new User();
+        admin.setEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS);
+        admin.tenant = demoTenant;
+        admin.userGroups.add(rootGroup);
+        admin.hashedPassword = PasswordUtils.encodePassword("demo");
+        admin.verified = true;
+        admin.userState = User.State.APPROVED;
+        userRepository.save(admin);
+
+        // Full Permission
+        Set<Permission.Descriptor> fullPermissions = new HashSet<>();
+        fullPermissions.add(Permission.Descriptor.GENERAL_FULL_PERMISSIONS);
+
+        // Some Permission
+        Set<Permission.Descriptor> somePermissions = new HashSet<>();
+        somePermissions.add(Permission.Descriptor.PROPERTIES_MODIFY_ALL);
+        somePermissions.add(Permission.Descriptor.GROUPS_MODIFY_ALL);
+
+        // Notification Settings
+        Map<NotificationType, User.NotificationToggles> notificationSettings = new HashMap<>();
+        notificationSettings.put(NotificationType.APPROVAL_REQUEST, new User.NotificationToggles(true));
 
         //Add User Groups
         UserGroup administratorsUserGroup = createUserGroup(
                 "Administrators",
                 userGroupRepository.findRootGroup(demoTenant),
-                null
+                fullPermissions
         );
 
         UserGroup librariansUserGroup = createUserGroup(
@@ -133,13 +152,14 @@ public class DemoTenantBuilder {
                 null
         );
 
-
         //Add Users
         User administrator = createUser(
                 "admin@aptitekk.com",
                 "Jill",
                 "Administrator",
                 "demo",
+                null,
+                notificationSettings,
                 administratorsUserGroup);
 
         User teacher = createUser(
@@ -147,6 +167,8 @@ public class DemoTenantBuilder {
                 "John",
                 "Teacher",
                 "demo",
+                null,
+                null,
                 teachersUserGroup);
 
         User librarian = createUser(
@@ -154,11 +176,13 @@ public class DemoTenantBuilder {
                 "Julia",
                 "Librarian",
                 "demo",
+                somePermissions,
+                null,
                 librariansUserGroup
         );
 
         //Add Resource Categories
-        ResourceCategory rooms = resourceCategoryRepository.findByName("Rooms", demoTenant);
+        ResourceCategory rooms = createResourceCategory("Rooms");
         ResourceCategory equipment = createResourceCategory("Equipment");
 
         //Add Tags
@@ -328,7 +352,7 @@ public class DemoTenantBuilder {
      */
     private UserGroup createUserGroup(String name,
                                       UserGroup parent,
-                                      List<Permission> permissions) {
+                                      Set<Permission.Descriptor> permissions) {
         UserGroup userGroup = new UserGroup();
         userGroup.tenant = demoTenant;
         userGroup.setName(name);
@@ -341,17 +365,21 @@ public class DemoTenantBuilder {
     /**
      * Creates a User.
      *
-     * @param emailAddress The user's email address.
-     * @param firstName    The user's first name.
-     * @param lastName     The user's last name.
-     * @param password     The user's password (not hashed)
-     * @param userGroups   Any user groups the user should be assigned to.
+     * @param emailAddress         The user's email address.
+     * @param firstName            The user's first name.
+     * @param lastName             The user's last name.
+     * @param password             The user's password (not hashed)
+     * @param permissions           Any permissions to assign to the user.
+     * @param notificationSettings A set of NotificationSettings for the user.
+     * @param userGroups           Any user groups the user should be assigned to.
      * @return A new, saved User.
      */
     private User createUser(String emailAddress,
                             String firstName,
                             String lastName,
                             String password,
+                            Set<Permission.Descriptor> permissions,
+                            Map<NotificationType, User.NotificationToggles> notificationSettings,
                             UserGroup... userGroups) {
         User user = new User();
         user.tenant = demoTenant;
@@ -361,7 +389,8 @@ public class DemoTenantBuilder {
         user.verified = true;
         user.userState = User.State.APPROVED;
         user.hashedPassword = PasswordUtils.encodePassword(password);
-
+        user.permissions = permissions;
+        user.notificationSettings = notificationSettings;
         user.userGroups.addAll(Arrays.asList(userGroups));
         return userRepository.save(user);
     }

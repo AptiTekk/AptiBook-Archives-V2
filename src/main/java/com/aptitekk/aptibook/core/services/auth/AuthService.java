@@ -6,10 +6,10 @@
 
 package com.aptitekk.aptibook.core.services.auth;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.services.entity.PermissionService;
+import com.aptitekk.aptibook.core.services.entity.PermissionsService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -20,13 +20,13 @@ import org.springframework.stereotype.Service;
 public class AuthService {
 
     private final UserRepository userRepository;
-    private final PermissionService permissionService;
+    private final PermissionsService permissionsService;
 
     @Autowired
     public AuthService(UserRepository userRepository,
-                       PermissionService permissionService) {
+                       PermissionsService permissionsService) {
         this.userRepository = userRepository;
-        this.permissionService = permissionService;
+        this.permissionsService = permissionsService;
     }
 
     /**
@@ -60,7 +60,7 @@ public class AuthService {
      */
     public boolean doesCurrentUserHavePermission(Permission.Descriptor descriptor) {
         User currentUser = getCurrentUser();
-        return currentUser != null && permissionService.userHasPermission(currentUser, descriptor);
+        return currentUser != null && permissionsService.userHasPermission(currentUser, descriptor);
     }
 
     /**
@@ -71,7 +71,7 @@ public class AuthService {
      */
     public boolean doesCurrentUserHavePermissionOfGroup(Permission.Group group) {
         User currentUser = getCurrentUser();
-        return currentUser != null && permissionService.userHasPermissionOfGroup(currentUser, group);
+        return currentUser != null && permissionsService.userHasPermissionOfGroup(currentUser, group);
     }
 
 }

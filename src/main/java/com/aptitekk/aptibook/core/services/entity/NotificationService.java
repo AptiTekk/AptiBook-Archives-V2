@@ -6,71 +6,103 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.*;
+import com.aptitekk.aptibook.core.domain.entities.Notification;
+import com.aptitekk.aptibook.core.domain.entities.Reservation;
+import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.repositories.NotificationRepository;
-import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.EmailService;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
 import com.aptitekk.aptibook.core.util.TimeCommons;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.List;
+import java.util.Collection;
 
 @EntityService
 public class NotificationService {
 
     private final NotificationRepository notificationRepository;
-
+    private final UserService userService;
     private final UserGroupService userGroupService;
-
     private final EmailService emailService;
 
-    private final UserRepository userRepository;
-
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository, UserGroupService userGroupService, EmailService emailService, UserRepository userRepository) {
+    public NotificationService(NotificationRepository notificationRepository,
+                               UserService userService,
+                               UserGroupService userGroupService,
+                               EmailService emailService) {
         this.notificationRepository = notificationRepository;
+        this.userService = userService;
         this.userGroupService = userGroupService;
         this.emailService = emailService;
-        this.userRepository = userRepository;
     }
 
-    public void sendNotification(Notification.Type type, String subject, String body, List<UserGroup> userGroupList) {
-        if (subject == null || body == null || userGroupList == null)
+    /**
+     * Sends a Notification to everyone in the provided collection of User Groups.
+     *
+     * @param notificationType The type of Notification being sent.
+     *                         Used to ensure that Users do not receive notifications in ways they do not want.
+     *                         May be null to force a notification to be sent to the web interface.
+     * @param subject          The subject of the notification.
+     * @param body             The body of the notification.
+     * @param userGroups       The collection of User Groups whose Users should receive the Notification.
+     */
+    public void sendNotification(NotificationType notificationType, String subject, String body, Collection<UserGroup> userGroups) {
+        if (subject == null || body == null || userGroups == null)
             return;
 
-        for (UserGroup userGroup : userGroupList) {
+        // For every User Group...
+        for (UserGroup userGroup : userGroups) {
+            // Send the Notification to each User in the Group.
             for (User user : userGroup.getUsers()) {
-                sendNotification(type, subject, body, user);
+                sendNotification(notificationType, subject, body, user);
             }
         }
     }
 
-    public void sendNotification(Notification.Type type, String subject, String body, User user) {
+    /**
+     * Sends a Notification to a specific User.
+     *
+     * @param notificationType The type of Notification being sent.
+     *                         Used to ensure that Users do not receive notifications in ways they do not want.
+     *                         May be null to force a notification to be sent to the web interface.
+     * @param subject          The subject of the notification.
+     * @param body             The body of the notification.
+     * @param user             The User that should receive the Notification.
+     */
+    public void sendNotification(NotificationType notificationType, String subject, String body, User user) {
+        // Create a new Notification entity.
         Notification notification = new Notification(user, subject, body);
+
+        // Save the Notification entity to the database.
         notification = notificationRepository.save(notification);
-        if (!user.isAdmin() && (type == null || user.notificationTypeSettings.get(type)))
+
+        // Don't send emails to the admin User. (They have no email).
+        if (user.isAdmin())
+            return;
+
+        // Don't force a Notification to be sent by email.
+        if (notificationType == null)
+            return;
+
+        // Check that the User wants email Notifications of this type.
+        if (userService.doesUserWantEmailNotifications(user, notificationType))
             emailService.sendEmailNotification(notification);
     }
 
-    public void sendNewUserRegistrationNotifications(User newUser) {
-        List<User> recipients = userRepository.findUsersWithPermission(Permission.Descriptor.USERS_MODIFY_ALL);
-        for (User user : recipients) {
-            sendNotification(Notification.Type.TYPE_APPROVAL_REQUEST,
-                    "New User Registration",
-                    "A new user, <b>" + newUser.getFullName() +
-                            "</b>, has registered for AptiBook, and is waiting for approval to sign in. " +
-                            "Please approve or reject this user.",
-                    user);
-        }
-    }
-
+    /**
+     * Sends Notifications to the involved Users when a new Reservation is made.
+     * Notifications are sent to the Hierarchy-Up of Users who manage the Resource.
+     *
+     * @param reservation The Reservation that was created.
+     */
     public void sendNewReservationNotifications(Reservation reservation) {
         if (reservation == null)
             return;
 
         if (reservation.resource.needsApproval) {
-            sendNotification(Notification.Type.TYPE_RESERVATION_REQUESTED,
+            sendNotification(NotificationType.RESERVATION_REQUESTED,
                     "New Reservation Request",
                     "A new Reservation for <b>"
                             + reservation.resource.name
@@ -81,7 +113,7 @@ public class NotificationService {
                             + ".",
                     userGroupService.getHierarchyUp(reservation.resource.owner));
         } else {
-            sendNotification(Notification.Type.TYPE_RESERVATION_REQUESTED,
+            sendNotification(NotificationType.RESERVATION_REQUESTED,
                     "New Reservation Approved",
                     "A new Reservation for <b>"
                             + reservation.resource.name
@@ -94,12 +126,17 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Sends a Notification to the User who made a Reservation when a concluding Reservation Decision is made upon it.
+     *
+     * @param reservation The reservation that was decided upon.
+     */
     public void sendReservationDecisionNotification(Reservation reservation) {
         if (reservation == null)
             return;
 
         if (reservation.status == Reservation.Status.APPROVED) {
-            sendNotification(Notification.Type.TYPE_RESERVATION_APPROVED,
+            sendNotification(NotificationType.RESERVATION_APPROVED,
                     "Reservation Approved",
                     "Your Reservation for <b>" + reservation.resource.name
                             + "</b> from <b>"
@@ -109,7 +146,7 @@ public class NotificationService {
                             + "</b> has been Approved!",
                     reservation.user);
         } else if (reservation.status == Reservation.Status.REJECTED) {
-            sendNotification(Notification.Type.TYPE_RESERVATION_REJECTED,
+            sendNotification(NotificationType.RESERVATION_REJECTED,
                     "Reservation Rejected",
                     "Your Reservation for <b>" + reservation.resource.name
                             + "</b> from <b>"
@@ -121,11 +158,18 @@ public class NotificationService {
         }
     }
 
+    /**
+     * Sends Notifications to the involved Users when a Reservation is cancelled.
+     * Notifications are sent to the Hierarchy-Up of Users who manage the Resource, as well as the User
+     * who reserved the Resource.
+     *
+     * @param reservation The Reservation that was cancelled.
+     */
     public void sendReservationCancelledNotifications(Reservation reservation) {
         if (reservation == null || reservation.status != Reservation.Status.CANCELLED)
             return;
 
-        sendNotification(Notification.Type.TYPE_RESERVATION_CANCELLED_USER_GROUPS, "Reservation Cancelled",
+        sendNotification(NotificationType.RESERVATION_CANCELLED_USER_GROUPS, "Reservation Cancelled",
                 "The reservation of <b>"
                         + reservation.resource.name
                         + "</b> for <b>"
@@ -140,7 +184,7 @@ public class NotificationService {
                 userGroupService.getHierarchyUp(reservation.resource.owner)
         );
 
-        sendNotification(Notification.Type.TYPE_RESERVATION_CANCELLED_USER, "Reservation Cancelled",
+        sendNotification(NotificationType.RESERVATION_CANCELLED_USER, "Reservation Cancelled",
                 "Your reservation of <b>"
                         + reservation.resource.name
                         + "</b> for <b>"

@@ -11,11 +11,13 @@ import {ApprovalQueueComponent} from "./approval-queue/approval-queue.component"
 import {ApprovedComponent} from "./approved/approved.component";
 import {RejectedComponent} from "./rejected/rejected.component";
 import {CalendarComponent} from "./calendar/calendar.component";
+import {ManagementGuard} from "./management.guard";
 
 const routes: Routes = [
     {
         path: '',
         component: ManagementComponent,
+        canActivate: [ManagementGuard],
         children: [
             {
                 path: 'queue',
@@ -47,6 +49,9 @@ const routes: Routes = [
     ],
     exports: [
         RouterModule
+    ],
+    providers: [
+        ManagementGuard
     ]
 })
 export class ManagementRoutesModule {

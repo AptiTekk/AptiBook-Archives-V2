@@ -37,7 +37,8 @@
 								  [label]="'My Account'">
 			</accordion-navigation>
 			<accordion-navigation [icon]="'calendar-check-o'"
-								  [label]="'Reservation Management'">
+								  [label]="'Reservation Management'"
+								  *ngIf="user?.admin || user?.userGroups?.length > 0">
 				<accordion-navigation [link]="['', 'secure', 'management', 'queue']"
 									  [icon]="'hourglass-half'"
 									  [label]="'Approval Queue'">
@@ -56,22 +57,27 @@
 				</accordion-navigation>
 			</accordion-navigation>
 			<accordion-navigation [icon]="'cogs'"
-								  [label]="'AptiBook Configuration'">
+								  [label]="'AptiBook Configuration'"
+								  *ngIf="user?.admin || userPermissions.length > 0">
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'resources']"
 									  [icon]="'tags'"
-									  [label]="'Resources'">
+									  [label]="'Resources'"
+									  *ngIf="hasPermission(['RESOURCE_CATEGORIES_MODIFY_ALL', 'RESOURCES_MODIFY_OWN', 'RESOURCES_MODIFY_HIERARCHY', 'RESOURCES_MODIFY_ALL'])">
 				</accordion-navigation>
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'users']"
 									  [icon]="'user'"
-									  [label]="'Users'">
+									  [label]="'Users'"
+									  *ngIf="hasPermission(['USERS_MODIFY_ALL', 'GROUPS_MODIFY_ALL'])">
 				</accordion-navigation>
-				<accordion-navigation [link]="['', 'secure', 'configuration', 'permissions']"
+				<!--<accordion-navigation [link]="['', 'secure', 'configuration', 'permissions']"
 									  [icon]="'unlock'"
-									  [label]="'Permissions'">
-				</accordion-navigation>
+									  [label]="'Permissions'"
+									  *ngIf="hasPermission(['PERMISSIONS_MODIFY_ALL'])">
+				</accordion-navigation>-->
 				<accordion-navigation [link]="['', 'secure', 'configuration', 'properties']"
 									  [icon]="'cog'"
-									  [label]="'Properties'">
+									  [label]="'Properties'"
+									  *ngIf="hasPermission(['PROPERTIES_MODIFY_ALL'])">
 				</accordion-navigation>
 			</accordion-navigation>
 		</accordion-navigation>

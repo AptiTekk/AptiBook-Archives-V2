@@ -39,7 +39,7 @@ export class DashboardComponent implements OnInit {
 
     ngOnInit(): void {
         // Get the currently signed in user.
-        this.authService.getUser().subscribe(user => this.currentUser = user);
+        this.authService.getCurrentUser().subscribe(user => this.currentUser = user);
 
         // Get all the resource categories for the calendar filters.
         this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategories => {

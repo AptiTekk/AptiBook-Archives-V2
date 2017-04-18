@@ -6,10 +6,10 @@
 
 package com.aptitekk.aptibook.rest.controllers.api;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.core.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
@@ -119,7 +119,7 @@ public class ResourceController extends APIControllerAbstract {
         if (resource == null)
             return noPermission();
 
-        if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
+        if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
         if (resourceDTO.resourceCategory != null) {
@@ -165,7 +165,7 @@ public class ResourceController extends APIControllerAbstract {
     public ResponseEntity<?> deleteResource(@PathVariable Long id) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
-        if (!permissionService.canUserEditResource(resource, authService.getCurrentUser()))
+        if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
         resourceRepository.delete(resource);

@@ -6,20 +6,23 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.Permission;
 import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
+import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @EntityService
-public class PermissionService {
+public class PermissionsService {
 
     private final UserGroupService userGroupService;
 
     @Autowired
-    public PermissionService(UserGroupService userGroupService) {
+    public PermissionsService(UserGroupService userGroupService) {
         this.userGroupService = userGroupService;
     }
 
@@ -27,7 +30,7 @@ public class PermissionService {
      * Determines if the User has the permission supplied.
      * Will take into account the User Groups that the User is part of.
      * <p>
-     * A user with Full Permissions will return true for all permissions.
+     * A user with Full Permission will return true for all permissions.
      *
      * @param user       The User to check.
      * @param descriptor The Permission Descriptor to look for.
@@ -41,17 +44,24 @@ public class PermissionService {
         if (user.isAdmin())
             return true;
 
+        // Check for full permissions.
+        if (user.permissions.contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+            return true;
 
-        for (Permission permission : user.permissions) {
-            if (permission.descriptor == descriptor || permission.descriptor == Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
-                return true;
-        }
+        // Check for the specific descriptor.
+        if (user.permissions.contains(descriptor))
+            return true;
 
+        // Check if the User inherits permissions from their groups.
         for (UserGroup userGroup : user.userGroups) {
-            for (Permission permission : userGroup.getPermissions()) {
-                if (permission.descriptor == descriptor || permission.descriptor == Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
-                    return true;
-            }
+
+            // Check for full permissions.
+            if (userGroup.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+                return true;
+
+            // Check for the specific descriptor.
+            if (userGroup.getPermissions().contains(descriptor))
+                return true;
         }
 
         return false;
@@ -60,10 +70,10 @@ public class PermissionService {
     /**
      * Determines if the User has any permissions within the specified Permission Group.
      * <p>
-     * A user with Full Permissions will return true for all permissions.
+     * A user with Full Permission will return true for all permissions.
      *
      * @param user  The User to check.
-     * @param group The Permission Group that one or more of the User's Permissions should belong to.
+     * @param group The Permission Group that one or more of the User's Permission should belong to.
      * @return true if the User has a Permission in the Group, false otherwise.
      */
     public boolean userHasPermissionOfGroup(User user, Permission.Group group) {
@@ -74,19 +84,46 @@ public class PermissionService {
         if (user.isAdmin())
             return true;
 
-        for (Permission permission : user.permissions) {
-            if (permission.descriptor.getGroup() == group || permission.descriptor == Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
-                return true;
-        }
+        // Check for full permissions.
+        if (user.permissions.contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+            return true;
 
+        // Check if the User has any permissions from the group.
+        for (Permission.Descriptor permissionDescriptor : group.getDescriptors())
+            if (user.permissions.contains(permissionDescriptor))
+                return true;
+
+        // Check if the User inherits permissions from their groups.
         for (UserGroup userGroup : user.userGroups) {
-            for (Permission permission : userGroup.getPermissions()) {
-                if (permission.descriptor.getGroup() == group || permission.descriptor == Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
+
+            // Check for full permissions.
+            if (userGroup.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+                return true;
+
+            // Check if the UserGroup has any permissions from the group.
+            for (Permission.Descriptor permissionDescriptor : group.getDescriptors())
+                if (userGroup.getPermissions().contains(permissionDescriptor))
                     return true;
-            }
         }
 
         return false;
+    }
+
+    /**
+     * Gets the total Permission for a User, including those inherited from User Groups.
+     *
+     * @param user The User.
+     * @return A Set containing all the User's inherited and non-inherited Permission.
+     */
+    public Set<Permission.Descriptor> getAllPermissionsForUser(User user) {
+        Set<Permission.Descriptor> permissions = new HashSet<>();
+        permissions.addAll(user.permissions);
+
+        for (UserGroup userGroup : user.userGroups) {
+            permissions.addAll(userGroup.getPermissions());
+        }
+
+        return permissions;
     }
 
     /**

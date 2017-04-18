@@ -2,7 +2,7 @@
 -- Data for Name: tenant; Type: TABLE DATA; Schema: public; Owner: aptibook
 --
 
-INSERT INTO tenant (id, active, slug, subscriptionid, timesetinactive, tier, adminemail) VALUES (20000, true, 'junit', -2, NULL, 'PLATINUM', NULL);
+INSERT INTO tenant (id, domain, stripesubscriptionid, stripeplan, stripestatus) VALUES (20000, 'junit', 'junit', 'PLATINUM', 'ACTIVE');
 
 --
 -- Data for Name: file; Type: TABLE DATA; Schema: public; Owner: aptibook
@@ -12,10 +12,10 @@ INSERT INTO tenant (id, active, slug, subscriptionid, timesetinactive, tier, adm
 -- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: aptibook
 --
 
-INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, location, notificationtypesettings, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20100, 'admin', NULL, 'sha1:64000:18:EWBWPv0POW6Y/idPNSqGRGei5IrsjQEo:ZaDEoB+GmH1qiQTykMmHuvNE', NULL, NULL, 'TYPE_RESERVATION_APPROVED:true;TYPE_RESERVATION_CANCELLED_USER:true;TYPE_APPROVAL_REQUEST:true;TYPE_RESERVATION_REJECTED:true;TYPE_RESERVATION_CANCELLED_USER_GROUPS:true;TYPE_RESERVATION_REQUESTED:true;TYPE_RESERVATION_REQUEST_AUTO_APPROVED:false;', NULL, 'APPROVED', NULL, true, 20000);
-INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, location, notificationtypesettings, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20101, 'admin@aptitekk.com', 'Jill', 'sha1:64000:18:0CEV3+Y9ZOyTw7Az7qFRwAYQcNA9FU0a:lKBIK0mA9INq3oBa5GbGm/pm', 'Administrator', NULL, '', NULL, 'APPROVED', NULL, true, 20000);
-INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, location, notificationtypesettings, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20102, 'teacher@aptitekk.com', 'John', 'sha1:64000:18:JVorXJZvsVt1QqaklJV+288mOISorajN:GzW+E13xzmNlz27oUKYKJDVK', 'Teacher', NULL, '', NULL, 'APPROVED', NULL, true, 20000);
-INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, location, notificationtypesettings, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20103, 'librarian@aptitekk.com', 'Julia', 'sha1:64000:18:4QcTGJym6dWyin+R0nu6gI+yYqV5xUEd:lfTEmIIDnccVoSU/voNBBoqc', 'Librarian', NULL, '', NULL, 'APPROVED', NULL, true, 20000);
+INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, location, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20100, 'admin', NULL, 'sha1:64000:18:EWBWPv0POW6Y/idPNSqGRGei5IrsjQEo:ZaDEoB+GmH1qiQTykMmHuvNE', NULL, NULL, NULL, 'APPROVED', NULL, true, 20000);
+INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, location, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20101, 'admin@aptitekk.com', 'Jill', 'sha1:64000:18:0CEV3+Y9ZOyTw7Az7qFRwAYQcNA9FU0a:lKBIK0mA9INq3oBa5GbGm/pm', 'Administrator', NULL, NULL, 'APPROVED', NULL, true, 20000);
+INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, location, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20102, 'teacher@aptitekk.com', 'John', 'sha1:64000:18:JVorXJZvsVt1QqaklJV+288mOISorajN:GzW+E13xzmNlz27oUKYKJDVK', 'Teacher', NULL, NULL, 'APPROVED', NULL, true, 20000);
+INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, location, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20103, 'librarian@aptitekk.com', 'Julia', 'sha1:64000:18:4QcTGJym6dWyin+R0nu6gI+yYqV5xUEd:lfTEmIIDnccVoSU/voNBBoqc', 'Librarian', NULL, NULL, 'APPROVED', NULL, true, 20000);
 
 
 --
@@ -24,33 +24,7 @@ INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, locat
 
 INSERT INTO notification (id, body, creation, notif_read, subject, tenant_id, user_id) VALUES (20420, 'Lorem ipsum', '2017-02-21 09:07:53.864', false, 'Test Notification', 20000, 20102);
 
-
 --
--- Data for Name: permission; Type: TABLE DATA; Schema: public; Owner: aptibook
---
-
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20200, 'GENERAL_FULL_PERMISSIONS', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20201, 'RESOURCE_CATEGORIES_MODIFY_ALL', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20202, 'RESOURCES_MODIFY_OWN', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20203, 'RESOURCES_MODIFY_HIERARCHY', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20204, 'RESOURCES_MODIFY_ALL', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20205, 'RESERVATIONS_MODIFY_ALL', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20206, 'USERS_MODIFY_ALL', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20207, 'GROUPS_MODIFY_ALL', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20208, 'PERMISSIONS_MODIFY_ALL', 20000);
-INSERT INTO permission (id, descriptor, tenant_id) VALUES (20209, 'PROPERTIES_MODIFY_ALL', 20000);
-
-
---
--- Data for Name: property; Type: TABLE DATA; Schema: public; Owner: aptibook
---
-
-INSERT INTO property (id, propertykey, propertyvalue, tenant_id) VALUES (20250, 'PERSONALIZATION_ORGANIZATION_NAME', NULL, 20000);
-INSERT INTO property (id, propertykey, propertyvalue, tenant_id) VALUES (20251, 'REGISTRATION_ENABLED', 'true', 20000);
-INSERT INTO property (id, propertykey, propertyvalue, tenant_id) VALUES (20252, 'GOOGLE_SIGN_IN_ENABLED', 'false', 20000);
-INSERT INTO property (id, propertykey, propertyvalue, tenant_id) VALUES (20253, 'GOOGLE_SIGN_IN_WHITELIST', 'gmail.com, example.org', 20000);
-
-
 --
 -- Data for Name: resourcecategory; Type: TABLE DATA; Schema: public; Owner: aptibook
 --

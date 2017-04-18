@@ -19,7 +19,7 @@ export class UpcomingReservationsComponent {
     reservations: Reservation[];
 
     constructor(authService: AuthService, reservationService: ReservationService) {
-        authService.getUser().subscribe(user => {
+        authService.getCurrentUser().subscribe(user => {
             if (user)
                 reservationService.getUpcomingUserReservations(user).subscribe(reservations => this.reservations = reservations);
         });

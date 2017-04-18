@@ -137,8 +137,9 @@ public class RegistrationController extends APIControllerAbstract {
      * @param verified            If the verification succeeded or not.
      */
     private void redirectToSignIn(HttpServletResponse httpServletResponse, boolean verified) {
+        //FIXME: Verification using wrong sign in domain.
         httpServletResponse.setStatus(HttpStatus.TEMPORARY_REDIRECT.value());
-        httpServletResponse.setHeader("Location", "/" + this.tenantManagementService.getTenant().slug + "/sign-in?verified=" + verified);
+        httpServletResponse.setHeader("Location", "/" + this.tenantManagementService.getTenant().domain + "/sign-in?verified=" + verified);
     }
 
 }

@@ -5,6 +5,5 @@
  */
 
 export interface Tenant {
-    slug: string;
-    timezone: string;
+    domain: string;
 }

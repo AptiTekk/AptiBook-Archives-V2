@@ -42,7 +42,7 @@ export class ReservationDetailsComponent {
             title: [null, Validators.compose([Validators.required, Validators.maxLength(100), Validators.pattern("[^<>;=]*")])]
         });
 
-        authService.getUser().subscribe(user => {
+        authService.getCurrentUser().subscribe(user => {
             if (user != undefined) {
                 this.user = user;
             }
