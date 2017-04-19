@@ -25,8 +25,7 @@ export class AccountComponent implements OnInit {
         },
         {
             label: 'Notifications',
-            path: ['', 'secure', 'account', 'notifications'],
-            exact: true
+            path: ['', 'secure', 'account', 'notifications']
         }
     ];
 

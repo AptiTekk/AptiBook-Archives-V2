@@ -7,8 +7,9 @@
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
 import {AccountComponent} from "./account.component";
-import {NotificationsComponent} from "./notifications/notifications.component";
+import {AccountNotificationsComponent} from "./notifications/notifications.component";
 import {UpcomingReservationsComponent} from "./reservations/upcoming/upcoming-reservations.component";
+import {AccountNotificationSettingsComponent} from "./notifications/notification-settings/notification-settings.component";
 
 const routes: Routes = [
     {
@@ -21,7 +22,11 @@ const routes: Routes = [
             },
             {
                 path: 'notifications',
-                component: NotificationsComponent
+                component: AccountNotificationsComponent
+            },
+            {
+                path: 'notifications/settings',
+                component: AccountNotificationSettingsComponent
             }
         ]
     },

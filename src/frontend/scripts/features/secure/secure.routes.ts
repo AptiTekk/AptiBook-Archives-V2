@@ -9,7 +9,7 @@ import {RouterModule, Routes} from "@angular/router";
 import {SecureComponent} from "./secure.component";
 import {DashboardComponent} from "./dashboard/dashboard.component";
 import {AccountComponent} from "./account/account.component";
-import {NotificationsComponent} from "./account/notifications/notifications.component";
+import {AccountNotificationsComponent} from "./account/notifications/notifications.component";
 import {ResourcesConfigurationComponent} from "./configuration/resources/resources.component";
 import {UsersConfigurationComponent} from "./configuration/users/users.component";
 import {AllUsersComponent} from "./configuration/users/all-users/all-users.component";

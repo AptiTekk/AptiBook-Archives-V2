@@ -4,6 +4,9 @@
   ~ Proprietary and confidential.
   -->
 
+<i id="close-icon"
+   class="fa fa-close fa-2x pull-right"
+   [routerLink]="['', 'secure', 'account', 'notifications']"></i>
 <div *ngIf="notificationSettings">
 	<!-- We only need to show a header here if the user has multiple sections of notification preferences. -->
 	<div *ngIf="currentUser?.admin || currentUser?.userGroups.length > 0">

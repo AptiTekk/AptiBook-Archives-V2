@@ -9,7 +9,7 @@ import {NgModule} from '@angular/core';
 import {AccountComponent}   from './account.component';
 import {SharedModule} from "../../../shared/shared.module";
 import {AccountRoutesModule} from "./account.routes";
-import {NotificationsComponent} from "./notifications/notifications.component";
+import {AccountNotificationsComponent} from "./notifications/notifications.component";
 import {UpcomingReservationsComponent} from "./reservations/upcoming/upcoming-reservations.component";
 import {UserSectionComponent} from "./user-section/user-section.component";
 import {AccountNotificationSettingsModule} from "./notifications/notification-settings/notification-settings.module";
@@ -23,7 +23,7 @@ import {AccountNotificationSettingsModule} from "./notifications/notification-se
     declarations: [
         AccountComponent,
         UserSectionComponent,
-        NotificationsComponent,
+        AccountNotificationsComponent,
         UpcomingReservationsComponent
     ],
     exports: [],

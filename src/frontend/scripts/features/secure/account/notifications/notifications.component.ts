@@ -4,20 +4,34 @@
  * Proprietary and confidential.
  */
 
-import {Component} from "@angular/core";
+import {Component, OnInit} from "@angular/core";
 import {Notification} from "../../../../models/notification.model";
 import {AuthService} from "../../../../core/services/auth.service";
 import {NotificationService} from "../../../../core/services/notification.service";
 import * as moment from "moment";
 import Moment = moment.Moment;
+import {CurrentUserService} from "../../../../core/services/current-user.service";
+import {User} from "../../../../models/user.model";
 @Component({
-    selector: 'at-user-notifications',
+    selector: 'at-account-notifications',
     templateUrl: 'notifications.component.html',
     styleUrls: ['notifications.component.css']
 })
-export class NotificationsComponent {
+export class AccountNotificationsComponent implements OnInit {
 
+    /**
+     * The currently signed-in User.
+     */
+    private currentUser: User;
+
+    /**
+     * All the notifications for the User.
+     */
     notifications: Notification[] = [];
+
+    /**
+     * Only the unread notifications for the User.
+     */
     unreadNotifications: Notification[] = [];
 
     //noinspection JSMethodCanBeStatic
@@ -26,14 +40,20 @@ export class NotificationsComponent {
             return moment(unreadNotification.creation).fromNow();
     }
 
-    constructor(authService: AuthService, notificationService: NotificationService) {
-        notificationService.reloadNotifications();
-        notificationService.getNotifications().take(1).subscribe(notifications => {
+    constructor(private currentUserService: CurrentUserService,
+        private notificationService: NotificationService) {
+    }
+
+    ngOnInit() {
+        this.currentUserService.getCurrentUser().subscribe(user => this.currentUser = user);
+
+        this.notificationService.reloadNotifications();
+        this.notificationService.getNotifications().take(1).subscribe(notifications => {
                 this.notifications = notifications;
-                notificationService.markAllRead();
+                this.notificationService.markAllRead();
             }
         );
-        notificationService.getUnreadNotifications().take(1).subscribe(unreadNotifications => {
+        this.notificationService.getUnreadNotifications().take(1).subscribe(unreadNotifications => {
                 this.unreadNotifications = unreadNotifications;
             }
         );

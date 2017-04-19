@@ -5,34 +5,38 @@
   -->
 
 <div *ngIf="reservations">
-	<panel *ngFor="let reservation of reservations">
-		<panel-body>
-			<!-- Reservation Title Label -->
-			<h4 style="margin: 5px 0;">{{reservation.title}}</h4>
-			
-			<!-- Status Label -->
-			<span class="label label-{{getStatusLabelClassSuffix(reservation)}} pull-right"
-				  style="margin-top: -30px;">{{getStatusLabelText(reservation)}}</span>
-			
-			<!-- Resource Name Label -->
-			<div style="font-weight: bold">{{reservation.resource.name}}</div>
-			
-			<!-- Start Time Label -->
-			<span class="label label-default">Start</span>
-			{{reservation.start | date:'EEEE, MMM dd, yyyy, h:mm a'}}
-			<br/>
-			
-			<!-- End Time Label -->
-			<span class="label label-default">End</span>
-			{{reservation.end | date:'EEEE, MMM dd, yyyy, h:mm a'}}
-		</panel-body>
-		<panel-footer>
-			<!-- Details Button-->
-			<button class="btn btn-default"
-					(click)="infoModal.display(reservation)">Details
-			</button>
-		</panel-footer>
-	</panel>
+	<div *ngFor="let reservation of reservations">
+		<!-- Reservation Title Label -->
+		<h4 style="margin: 5px 0;">{{reservation.title}}</h4>
+		
+		<div class="row">
+			<div class="hidden-xs col-sm-2 col-md-4 col-lg-2">
+				<resource-image [resource]="reservation.resource"
+								[maxWidth]="'100px'"
+								[width]="'100%'">
+				</resource-image>
+			</div>
+			<div class="col-xs-12 col-sm-10 col-md-8 col-lg-10">
+				<!-- Status Label -->
+				<span class="label label-{{getStatusLabelClassSuffix(reservation)}} pull-right"
+					  style="margin-top: -20px;">{{getStatusLabelText(reservation)}}</span>
+				
+				<!-- Resource Name Label -->
+				<div style="font-weight: bold">{{reservation.resource.name}}</div>
+				
+				<!-- Start and End Times -->
+				<p>{{reservation.start | date:'EEEE, MMM dd, yyyy, h:mm a'}}
+				   {{reservation.end | date:'EEEE, MMM dd, yyyy, h:mm a'}}</p>
+				
+				<!-- Details Button-->
+				<button class="btn btn-default pull-right"
+						(click)="infoModal.display(reservation)">Details
+				</button>
+			</div>
+		</div>
+		
+		<hr/>
+	</div>
 </div>
 
 <div *ngIf="!reservations || reservations.length === 0">
