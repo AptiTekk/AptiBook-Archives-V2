@@ -1,0 +1,15 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+:host /deep/ #info-panel>.panel {
+    margin-bottom: 0;
+}
+
+:host /deep/ #info-panel>.panel>.panel-body {
+    /* 100vh - footer - breadcrumbs - top/bottom padding */
+    height: calc(100vh - 50px - 60px - 30px);
+    overflow-y: auto;
+}

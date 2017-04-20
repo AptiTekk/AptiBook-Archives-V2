@@ -4,6 +4,15 @@
  * Proprietary and confidential.
  */
 
+#settings-icon {
+    color: #aaaaaa;
+    cursor: pointer;
+}
+
+#settings-icon:hover {
+    color: #666;
+}
+
 .notification {
     padding-top: 15px;
 }

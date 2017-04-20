@@ -1,0 +1,46 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<i id="settings-icon"
+   class="fa fa-gear fa-2x pull-right"
+   *ngIf="!currentUser?.admin"
+   [routerLink]="['', 'secure', 'account', 'notifications', 'settings']"></i>
+<!-- Unread Notifications Count Label -->
+<div *ngIf="unreadNotifications?.length > 0">
+	<h4>
+		{{unreadNotifications?.length}}
+		Unread
+		{{unreadNotifications?.length === 1 ? 'Notification' : 'Notifications'}}
+	</h4>
+</div>
+<div *ngIf="unreadNotifications?.length === 0">
+	<h4>No Unread Notifications</h4>
+</div>
+
+<h5 class="text-muted">Previously Read Notifications will be deleted after 3 days</h5>
+
+<hr/>
+
+<!-- Notifications -->
+<div *ngFor="let notification of notifications"
+	 class="notification"
+	 [ngClass]="{'read-notification': notification.read}">
+	<panel>
+		<panel-body>
+			<div class="notification-icon">
+				<i class="fa fa-{{notification.read ? 'envelope-open' : 'envelope'}}"></i>
+			</div>
+			<div class="notification-content">
+				<h4 style="margin-top: 0">{{notification.subject}}</h4>
+				<p>{{notification.body}}</p>
+			</div>
+		</panel-body>
+		<panel-footer>
+			<i style="color:#808080">{{getTimeAgo(notification)}}</i>
+		</panel-footer>
+	</panel>
+</div>
+
