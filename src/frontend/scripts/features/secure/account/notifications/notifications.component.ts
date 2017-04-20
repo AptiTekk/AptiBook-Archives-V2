@@ -22,7 +22,7 @@ export class AccountNotificationsComponent implements OnInit {
     /**
      * The currently signed-in User.
      */
-    private currentUser: User;
+    currentUser: User;
 
     /**
      * All the notifications for the User.
