@@ -11,7 +11,7 @@ import {User} from "../../../../../models/user.model";
 import {AlertComponent} from "../../../../../shared/alert/alert.component";
 
 @Component({
-    selector: 'at-user-account-notification-settings',
+    selector: 'at-account-notification-settings',
     templateUrl: 'notification-settings.component.html',
     styleUrls: ['notification-settings.component.css']
 })

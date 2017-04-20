@@ -1,0 +1,158 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<form [formGroup]="formGroup"
+	  (submit)="onFinishEditingAccount()"
+	  *ngIf="user != null">
+	<panel [type]="'primary'"
+		   id="user-panel">
+		<panel-body>
+			<alert #infoAlert
+				   [severity]="'info'"></alert>
+			<alert #errorAlert
+				   [severity]="'danger'"></alert>
+			<div *ngIf="!editingAccount">
+				<section class="text-center">
+					<user-image *ngIf="user"
+								[width]="'50%'"
+								[maxWidth]="'130px'"
+								[user]="user"></user-image>
+					<h3>{{user.fullName}}</h3>
+					<h4 class="text-muted">{{user.emailAddress}}</h4>
+				</section>
+				
+				<section>
+					<hr/>
+					
+					<h4>Contact Information</h4>
+					<label>Phone Number:</label>
+					<p><i class="fa fa-phone"
+						  style="margin-right: 10px;"></i>{{user.phoneNumber ? user.phoneNumber : 'Not Specified'}}</p>
+					<label>Location:</label>
+					<p><i class="fa fa-map-marker"
+						  style="margin-right: 10px;"></i>{{user.location ? user.location : 'Not Specified'}}</p>
+				</section>
+				
+				<section *ngIf="!user.admin && user.userGroups.length > 0">
+					<hr/>
+					
+					<h4>Assigned Groups</h4>
+					<p style="font-weight: bold">Your assigned groups are highlighted.</p>
+					<tree [selectable]="false"
+						  [ngModel]="user.userGroups" [ngModelOptions]="{standalone: true}">
+					</tree>
+				</section>
+				
+			</div>
+			
+			<div *ngIf="editingAccount">
+				<section class="text-center">
+					<user-image *ngIf="user"
+								[width]="'50%'"
+								[maxWidth]="'130px'"
+								[user]="user"></user-image>
+					<div class="row">
+						<div class="col-xs-12 col-md-6">
+							<form-group [control]="formGroup.controls['firstName']"
+										[label]="'First Name'"
+										[errorMessages]="
+                                            {
+                                            pattern: 'These characters are not allowed:  < > ; =',
+                                            maxlength: 'This must be 30 characters or less.'
+                                            }">
+							</form-group>
+						</div>
+						<div class="col-xs-12 col-md-6">
+							<form-group [control]="formGroup.controls['lastName']"
+										[label]="'Last Name'"
+										[errorMessages]="
+                                            {
+                                            pattern: 'These characters are not allowed:  < > ; =',
+                                            maxlength: 'This must be 30 characters or less.'
+                                            }">
+							</form-group>
+						</div>
+					</div>
+					<form-group [value]="user.emailAddress"
+								[label]="'Email Address'"
+								[faIconName]="'at'"
+								[readOnly]="true">
+					</form-group>
+				</section>
+				
+				<section>
+					<hr/>
+					
+					<h4>Contact Information</h4>
+					<form-group [control]="formGroup.controls['phoneNumber']"
+								[label]="'Phone Number'"
+								[faIconName]="'phone'"
+								[errorMessages]="
+                                    {
+                                    pattern: 'These characters are not allowed:  < > ; =',
+                                    maxlength: 'This must be 30 characters or less.'
+                                    }">
+					</form-group>
+					
+					<form-group [control]="formGroup.controls['location']"
+								[label]="'Location'"
+								[faIconName]="'map-marker'"
+								[errorMessages]="
+                                    {
+                                    pattern: 'These characters are not allowed:  < > ; =',
+                                    maxlength: 'This must be 250 characters or less.'
+                                    }">
+					</form-group>
+				</section>
+				
+				<section>
+					<hr/>
+					
+					<h4>Change Password</h4>
+					<alert [severity]="'danger'"
+						   [displayed]="!doPasswordsMatch()"
+						   #passwordErrorAlert>The passwords do not match.
+					</alert>
+					<form-group [control]="formGroup.controls['newPassword']"
+								[inputType]="'password'"
+								[label]="'New Password'"
+								[faIconName]="'asterisk'"
+								[errorMessages]="
+                                    {
+                                    maxlength: 'This must be 30 characters or less.'
+                                    }">
+					</form-group>
+					<form-group [control]="formGroup.controls['confirmPassword']"
+								[inputType]="'password'"
+								[label]="'Confirm Password'"
+								[faIconName]="'asterisk'"
+								[errorMessages]="
+                                    {
+                                    maxlength: 'This must be 30 characters or less.'
+                                    }">
+					</form-group>
+				</section>
+			</div>
+		</panel-body>
+		<panel-footer>
+			<button class="btn btn-default"
+					*ngIf="!editingAccount"
+					type="button"
+					(click)="onStartEditingAccount()">Edit Account
+			</button>
+			<button class="btn btn-default"
+					*ngIf="editingAccount"
+					type="button"
+					(click)="onCancelEditingAccount()">Cancel
+			</button>
+			<button class="btn btn-primary"
+					*ngIf="editingAccount"
+					type="submit"
+					[disabled]="formGroup.invalid || !doPasswordsMatch()">Save Changes
+			</button>
+		</panel-footer>
+	</panel>
+</form>

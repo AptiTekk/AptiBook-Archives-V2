@@ -1,0 +1,30 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<ol class="breadcrumb">
+	<li class="active">My Account</li>
+</ol>
+
+<div class="container-fluid">
+	<div class="row">
+		<div class="col-xs-12 col-md-5 col-lg-4">
+			<at-account-user-section>
+			</at-account-user-section>
+		</div>
+		<div class="col-xs-12 col-md-7 col-lg-8">
+			<panel [type]="'primary'"
+				   id="info-panel">
+				<panel-body>
+					<navigation [horizontal]="true"
+								[links]="infoNavigationLinks">
+					</navigation>
+					
+					<router-outlet></router-outlet>
+				</panel-body>
+			</panel>
+		</div>
+	</div>
+</div>

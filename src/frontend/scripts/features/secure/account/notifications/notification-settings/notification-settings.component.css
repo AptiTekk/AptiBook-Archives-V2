@@ -3,12 +3,18 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component} from "@angular/core";
 
-@Component({
-    selector: 'at-user',
-    templateUrl: 'user.component.html'
-})
-export class UserComponent {
 
+#close-icon {
+    color: #aaaaaa;
+    cursor: pointer;
+}
+
+#close-icon:hover {
+    color: #666;
+}
+
+:host /deep/ alert > div {
+    margin-top: 20px;
+    margin-bottom: 0;
 }

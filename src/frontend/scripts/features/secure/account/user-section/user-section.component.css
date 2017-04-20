@@ -4,7 +4,12 @@
  * Proprietary and confidential.
  */
 
-:host /deep/ alert > div {
-    margin-top: 20px;
+:host /deep/ #user-panel>.panel {
     margin-bottom: 0;
+}
+
+:host /deep/ #user-panel>.panel>.panel-body {
+    /* 100vh - footer - breadcrumbs - top/bottom padding - panel footer */
+    height: calc(100vh - 50px - 60px - 30px - 54px);
+    overflow-y: auto;
 }

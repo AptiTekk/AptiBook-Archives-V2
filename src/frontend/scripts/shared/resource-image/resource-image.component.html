@@ -5,10 +5,10 @@
   -->
 
 <img *ngIf="!useUploader"
-	 [src]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : noImageUrl"
+	 [src]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : noImagePlaceholder"
 	 [style.width]="width ? width : '150px'"
 	 [style.maxWidth]="maxWidth ? maxWidth : null"
 	 draggable="false"/>
 <image-uploader *ngIf="useUploader"
-				[noImageUrl]="noImageUrl"
+				[noImageUrl]="noImagePlaceholder"
 				[currentImageUrl]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : null"></image-uploader>

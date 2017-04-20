@@ -26,7 +26,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
-import javax.websocket.server.PathParam;
 import java.util.List;
 import java.util.Map;
 
@@ -169,7 +168,7 @@ public class UserController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO, @PathParam("passwordOnly") boolean passwordOnly) {
+    public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO) {
         if (userDTO == null)
             return badRequest("The User data was not supplied.");
 
@@ -181,34 +180,32 @@ public class UserController extends APIControllerAbstract {
             if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
                 return noPermission();
 
-        // If Password Only is true, then we do not need to worry about updating this data.
-        if (!passwordOnly) {
-            if (userDTO.emailAddress != null) {
-                userValidator.validateEmailAddress(userDTO.emailAddress, currentUser);
-                currentUser.setEmailAddress(userDTO.emailAddress);
-            }
-
-            if (userDTO.firstName != null) {
-                userValidator.validateFirstName(userDTO.firstName);
-                currentUser.firstName = userDTO.firstName;
-            }
-
-            if (userDTO.lastName != null) {
-                userValidator.validateLastName(userDTO.lastName);
-                currentUser.lastName = userDTO.lastName;
-            }
-
-            if (userDTO.phoneNumber != null) {
-                userValidator.validatePhoneNumber(userDTO.phoneNumber);
-                currentUser.phoneNumber = userDTO.phoneNumber;
-            }
-
-            if (userDTO.location != null) {
-                userValidator.validateLocation(userDTO.location);
-                currentUser.location = userDTO.location;
-            }
+        if (userDTO.emailAddress != null) {
+            userValidator.validateEmailAddress(userDTO.emailAddress, currentUser);
+            currentUser.setEmailAddress(userDTO.emailAddress);
         }
 
+        if (userDTO.firstName != null) {
+            userValidator.validateFirstName(userDTO.firstName);
+            currentUser.firstName = userDTO.firstName;
+        }
+
+        if (userDTO.lastName != null) {
+            userValidator.validateLastName(userDTO.lastName);
+            currentUser.lastName = userDTO.lastName;
+        }
+
+        if (userDTO.phoneNumber != null) {
+            userValidator.validatePhoneNumber(userDTO.phoneNumber);
+            currentUser.phoneNumber = userDTO.phoneNumber;
+        }
+
+        if (userDTO.location != null) {
+            userValidator.validateLocation(userDTO.location);
+            currentUser.location = userDTO.location;
+        }
+
+        //TODO: A patch method specifically for the current user, which also allows password changing (and ignores user groups). This method shouldn't allow password changing.
         if (userDTO.newPassword != null) {
             userValidator.validatePassword(userDTO.newPassword);
             currentUser.hashedPassword = PasswordUtils.encodePassword(userDTO.newPassword);
