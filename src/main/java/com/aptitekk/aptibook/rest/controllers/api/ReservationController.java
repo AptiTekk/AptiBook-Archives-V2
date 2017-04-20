@@ -187,6 +187,7 @@ public class ReservationController extends APIControllerAbstract {
             //TODO: Allow for changes after the final decision has already been made?
             reservation.status = approved ? Reservation.Status.APPROVED : Reservation.Status.REJECTED;
             reservationRepository.save(reservation);
+            notificationService.sendReservationDecisionNotification(reservation);
         }
 
         return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
