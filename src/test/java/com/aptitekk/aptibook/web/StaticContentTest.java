@@ -19,7 +19,7 @@ public class StaticContentTest extends AbstractWebClientTest {
     public void testIndexHtml() throws Exception {
         this.mockMvc.perform(get("/index.html"))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.OK_200))
-                .andExpect(MockMvcResultMatchers.forwardedUrl("index.html"));
+                .andExpect(MockMvcResultMatchers.content().contentType("text/html"));
     }
 
 }
