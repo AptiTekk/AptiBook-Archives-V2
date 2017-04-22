@@ -18,7 +18,7 @@ config.module.rules.unshift(
 
 config.devtool = 'source-map';
 config.output = {
-    path: path.join(__dirname, '../src/main/resources/static/'),
+    path: path.join(__dirname, '../target/classes/static/'),
     filename: './resources/scripts/[name]-[chunkhash].js',
     sourceMapFilename: './resources/scripts/[name]-[chunkhash].map',
     chunkFilename: './resources/scripts/[id].chunk.js'
