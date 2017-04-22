@@ -7,7 +7,7 @@
     <facet type="web" name="Web">
       <configuration>
         <webroots>
-          <root url="file://$MODULE_DIR$/src/main/webapp" relative="/" />
+          <root url="file://$MODULE_DIR$/src/main/resources/static" relative="/" />
         </webroots>
         <sourceRoots>
           <root url="file://$MODULE_DIR$/src/main/java" />
@@ -37,11 +37,13 @@
       <sourceFolder url="file://$MODULE_DIR$/src/test/resources" type="java-test-resource" />
       <excludeFolder url="file://$MODULE_DIR$/.awcache" />
       <excludeFolder url="file://$MODULE_DIR$/lib" />
-      <excludeFolder url="file://$MODULE_DIR$/src/main/webapp" />
+      <excludeFolder url="file://$MODULE_DIR$/src/main/resources/static" />
       <excludeFolder url="file://$MODULE_DIR$/target" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />
+    <orderEntry type="library" name="Maven: com.stripe:stripe-java:4.3.0" level="project" />
+    <orderEntry type="library" name="Maven: com.sparkpost:sparkpost-lib:0.17" level="project" />
     <orderEntry type="library" name="Maven: com.stripe:stripe-java:4.3.0" level="project" />
     <orderEntry type="library" name="Maven: com.sparkpost:sparkpost-lib:0.17" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter-web:1.5.2.RELEASE" level="project" />

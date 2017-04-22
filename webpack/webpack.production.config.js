@@ -24,7 +24,7 @@ config.plugins.push(
 );
 
 config.output = {
-    path: path.join(__dirname, '../src/main/webapp/'),
+    path: path.join(__dirname, '../src/main/resources/static/'),
     filename: './resources/scripts/[name]-[chunkhash].js',
     chunkFilename: './resources/scripts/[id].chunk.js'
 };
