@@ -75,7 +75,7 @@ const config = {
         new HtmlWebpackPlugin({
             template: path.join(__dirname, '../src/frontend/index.html.ejs'),
             favicon: path.join(__dirname, '../src/frontend/resources/favicons/favicon.ico'),
-            filename: path.join(__dirname, '../src/main/resources/static/index.html'),
+            filename: path.join(__dirname, '../target/classes/static/index.html'),
             inject: 'body',
             minify: {
                 minifyCSS: true,
@@ -87,7 +87,7 @@ const config = {
             chunksSortMode: 'dependency'
         }),
         new CleanWebpackPlugin(['resources'], {
-            root: path.join(__dirname, '../src/main/resources/static')
+            root: path.join(__dirname, '../target/classes/static')
         })
     ],
 

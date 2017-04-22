@@ -44,11 +44,16 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
             return new ResponseEntity<>(new RestError("The URL you have reached is not in service at this time. (404)"), HttpStatus.NOT_FOUND);
         else {
             // For non-API calls, try to load the resource they asked for
-            Resource resource = this.resourceLoader.getResource(ex.getRequestURL());
+            Resource resource = this.resourceLoader.getResource("classpath:static" + ex.getRequestURL());
 
             // If it doesn't exist, load index.html
-            if (!resource.exists())
-                resource = this.resourceLoader.getResource("index.html");
+            if (!resource.exists()) {
+                resource = this.resourceLoader.getResource("classpath:static/index.html");
+
+                // If index.html doesn't exist, that's not good.
+                if (!resource.exists())
+                    return new ResponseEntity<Object>("Could not load AptiBook. Please contact support at https://support.aptitekk.com/", HttpStatus.INTERNAL_SERVER_ERROR);
+            }
 
             // Send the resource.
             return new ResponseEntity<>(resource, HttpStatus.OK);
