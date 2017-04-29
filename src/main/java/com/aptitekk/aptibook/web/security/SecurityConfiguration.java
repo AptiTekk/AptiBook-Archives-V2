@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
+import com.aptitekk.aptibook.web.security.cas.CASTicketFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
 import com.aptitekk.aptibook.web.security.oauth.GoogleOAuthFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
@@ -29,18 +30,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CSRFCookieFilter csrfCookieFilter;
     private final CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
     private final GoogleOAuthFilter googleOAuthFilter;
+    private final CASTicketFilter casTicketFilter;
 
     @Autowired
     public SecurityConfiguration(APIAuthenticationEntryPoint apiAuthenticationEntryPoint,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
                                  CSRFCookieFilter csrfCookieFilter,
                                  CustomBasicAuthenticationFilter customBasicAuthenticationFilter,
-                                 GoogleOAuthFilter googleOAuthFilter) {
+                                 GoogleOAuthFilter googleOAuthFilter,
+                                 CASTicketFilter casTicketFilter) {
         this.apiAuthenticationEntryPoint = apiAuthenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.csrfCookieFilter = csrfCookieFilter;
         this.customBasicAuthenticationFilter = customBasicAuthenticationFilter;
         this.googleOAuthFilter = googleOAuthFilter;
+        this.casTicketFilter = casTicketFilter;
     }
 
     @Override
@@ -57,6 +61,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Add the Google OAuth Filter
                 .addFilterBefore(googleOAuthFilter, BasicAuthenticationFilter.class)
+
+                // Add the CAS Ticket Filter
+                .addFilterBefore(casTicketFilter, BasicAuthenticationFilter.class)
 
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
