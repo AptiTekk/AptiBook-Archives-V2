@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
-import com.aptitekk.aptibook.web.security.cas.CASTicketFilter;
+import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
 import com.aptitekk.aptibook.web.security.oauth.GoogleOAuthFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
@@ -30,7 +30,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CSRFCookieFilter csrfCookieFilter;
     private final CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
     private final GoogleOAuthFilter googleOAuthFilter;
-    private final CASTicketFilter casTicketFilter;
+    private final CASCallbackFilter casCallbackFilter;
 
     @Autowired
     public SecurityConfiguration(APIAuthenticationEntryPoint apiAuthenticationEntryPoint,
@@ -38,13 +38,13 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                                  CSRFCookieFilter csrfCookieFilter,
                                  CustomBasicAuthenticationFilter customBasicAuthenticationFilter,
                                  GoogleOAuthFilter googleOAuthFilter,
-                                 CASTicketFilter casTicketFilter) {
+                                 CASCallbackFilter casCallbackFilter) {
         this.apiAuthenticationEntryPoint = apiAuthenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.csrfCookieFilter = csrfCookieFilter;
         this.customBasicAuthenticationFilter = customBasicAuthenticationFilter;
         this.googleOAuthFilter = googleOAuthFilter;
-        this.casTicketFilter = casTicketFilter;
+        this.casCallbackFilter = casCallbackFilter;
     }
 
     @Override
@@ -63,7 +63,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .addFilterBefore(googleOAuthFilter, BasicAuthenticationFilter.class)
 
                 // Add the CAS Ticket Filter
-                .addFilterBefore(casTicketFilter, BasicAuthenticationFilter.class)
+                .addFilterBefore(casCallbackFilter, BasicAuthenticationFilter.class)
 
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()
