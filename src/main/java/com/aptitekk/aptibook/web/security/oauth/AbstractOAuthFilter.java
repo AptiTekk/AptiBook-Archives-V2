@@ -8,7 +8,7 @@ package com.aptitekk.aptibook.web.security.oauth;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.enums.Property;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.aptitekk.aptibook.core.services.entity.PropertyService;
@@ -34,7 +34,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ExecutionException;
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-abstract class AbstractOAuthFilter extends OncePerRequestFilter {
+public abstract class AbstractOAuthFilter extends OncePerRequestFilter {
 
     private static final Map<String, String> SESSION_ORIGIN_MAP = new ConcurrentHashMap<>();
 
@@ -58,7 +58,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
     @Autowired
     private LogService logService;
 
-    AbstractOAuthFilter(String name, Property.Key propertyKey, String apiKey, String apiSecret) {
+    protected AbstractOAuthFilter(String name, Property.Key propertyKey, String apiKey, String apiSecret) {
         this.name = name;
         this.propertyKey = propertyKey;
         this.apiKey = apiKey;
@@ -231,7 +231,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
      * @param request The current Request.
      * @return A generated OAuth URL that can be redirected to.
      */
-    abstract String generateUrl(OAuth20Service oAuth20Service, HttpServletRequest request);
+    protected abstract String generateUrl(OAuth20Service oAuth20Service, HttpServletRequest request);
 
     /**
      * Creates a ServiceBuilder for the OAuth Request, and populates its API Key, API Secret, Callback, and State attributes.
@@ -290,7 +290,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
      * @param serviceBuilder The pre-filled ServiceBuilder.
      * @return An OAuth20Service instance.
      */
-    abstract OAuth20Service buildOAuthService(ServiceBuilder serviceBuilder);
+    protected abstract OAuth20Service buildOAuthService(ServiceBuilder serviceBuilder);
 
     /**
      * Retrieves an existing or new User from the OAuth Code.
@@ -300,7 +300,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
      * @return The existing or new User. (New Users should be inserted into the database before returning.)
      * @throws EmailDomainNotAllowedException If the email domain for the user is not allowed.
      */
-    abstract User getUserFromOAuthCode(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws EmailDomainNotAllowedException, InterruptedException, ExecutionException, IOException;
+    protected abstract User getUserFromOAuthCode(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws EmailDomainNotAllowedException, InterruptedException, ExecutionException, IOException;
 
     /**
      * Revokes the provided token from the provider.
@@ -308,7 +308,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
      * @param oAuthService The service being used to execute requests.
      * @param accessToken  The token to revoke.
      */
-    abstract void revokeToken(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws InterruptedException, ExecutionException, IOException;
+    protected abstract void revokeToken(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws InterruptedException, ExecutionException, IOException;
 
     /**
      * An exception to be thrown when something goes wrong during the OAuth Callback Request.
@@ -331,7 +331,7 @@ abstract class AbstractOAuthFilter extends OncePerRequestFilter {
      * An exception that should be thrown if the domain name of the email address that the User is signing in with
      * is not allowed.
      */
-    static class EmailDomainNotAllowedException extends Exception {
+    protected static class EmailDomainNotAllowedException extends Exception {
         public EmailDomainNotAllowedException(String domainName) {
             super(domainName);
         }

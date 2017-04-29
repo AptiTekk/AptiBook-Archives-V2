@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain.entities.propertyValidators;
+package com.aptitekk.aptibook.core.domain.entities.enums.property.validators;
 
 public class MaxLengthPropertyValidator extends PropertyValidator {
 

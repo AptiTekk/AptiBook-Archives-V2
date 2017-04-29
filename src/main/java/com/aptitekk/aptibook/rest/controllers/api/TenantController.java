@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.entities.enums.Property;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
 import com.aptitekk.aptibook.core.domain.rest.dtos.TenantDTO;
 import com.aptitekk.aptibook.core.services.entity.PropertyService;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;

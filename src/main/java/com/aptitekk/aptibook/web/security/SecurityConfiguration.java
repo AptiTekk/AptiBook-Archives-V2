@@ -9,7 +9,7 @@ package com.aptitekk.aptibook.web.security;
 import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
-import com.aptitekk.aptibook.web.security.oauth.GoogleOAuthFilter;
+import com.aptitekk.aptibook.web.security.oauth.google.GoogleOAuthFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;

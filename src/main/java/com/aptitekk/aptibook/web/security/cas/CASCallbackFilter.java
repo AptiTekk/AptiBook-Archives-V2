@@ -7,6 +7,8 @@
 package com.aptitekk.aptibook.web.security.cas;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.AuthenticationMethod;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.json.JSONException;
@@ -49,6 +51,14 @@ public class CASCallbackFilter extends OncePerRequestFilter {
                 // Make sure we are accessing from a Tenant.
                 if (currentTenant == null)
                     throw new CASCallbackException("The CAS Callback must be accessed from a Tenant.");
+
+                // Check that CAS is enabled.
+                String authenticationMethod = currentTenant.properties.get(Property.Key.AUTHENTICATION_METHOD);
+                if (authenticationMethod == null || AuthenticationMethod.valueOf(authenticationMethod) != AuthenticationMethod.CAS) {
+                    response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
+                    response.getWriter().println("CAS Authentication is not enabled.");
+                    return;
+                }
 
                 // Check for a Ticket
                 String ticketParam = request.getParameter("ticket");

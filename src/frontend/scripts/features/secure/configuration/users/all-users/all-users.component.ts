@@ -70,7 +70,6 @@ export class AllUsersComponent implements AfterViewInit {
             firstName: null,
             lastName: null,
             phoneNumber: null,
-            location: null,
             userGroups: null
         });
     }
@@ -135,7 +134,6 @@ export class AllUsersComponent implements AfterViewInit {
             firstName: [this.selectedUser.firstName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             lastName: [this.selectedUser.lastName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             phoneNumber: [this.selectedUser.phoneNumber, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
-            location: [this.selectedUser.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])],
             userGroups: [this.selectedUser.userGroups]
         });
 
@@ -158,7 +156,6 @@ export class AllUsersComponent implements AfterViewInit {
         this.selectedUser.firstName = this.selectedUserPersonalInformation.controls['firstName'].value;
         this.selectedUser.lastName = this.selectedUserPersonalInformation.controls['lastName'].value;
         this.selectedUser.phoneNumber = this.selectedUserPersonalInformation.controls['phoneNumber'].value;
-        this.selectedUser.location = this.selectedUserPersonalInformation.controls['location'].value;
         this.selectedUser.userGroups = [].concat(this.selectedUserPersonalInformation.controls['userGroups'].value);
 
         this.userService

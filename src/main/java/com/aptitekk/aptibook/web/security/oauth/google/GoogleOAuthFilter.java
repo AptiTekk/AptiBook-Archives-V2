@@ -4,13 +4,14 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.security.oauth;
+package com.aptitekk.aptibook.web.security.oauth.google;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.enums.Property;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.entity.PropertyService;
+import com.aptitekk.aptibook.web.security.oauth.AbstractOAuthFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.apis.GoogleApi20;
 import com.github.scribejava.core.builder.ServiceBuilder;
@@ -51,7 +52,7 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
     }
 
     @Override
-    String generateUrl(OAuth20Service oAuth20Service, HttpServletRequest request) {
+    protected String generateUrl(OAuth20Service oAuth20Service, HttpServletRequest request) {
         final Map<String, String> additionalParams = new HashMap<>();
         additionalParams.put("access_type", "online");
         additionalParams.put("prompt", "consent");
@@ -59,13 +60,13 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
     }
 
     @Override
-    OAuth20Service buildOAuthService(ServiceBuilder serviceBuilder) {
+    protected OAuth20Service buildOAuthService(ServiceBuilder serviceBuilder) {
         serviceBuilder.scope("email");
         return serviceBuilder.build(GoogleApi20.instance());
     }
 
     @Override
-    User getUserFromOAuthCode(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws AbstractOAuthFilter.EmailDomainNotAllowedException, InterruptedException, ExecutionException, IOException {
+    protected User getUserFromOAuthCode(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws AbstractOAuthFilter.EmailDomainNotAllowedException, InterruptedException, ExecutionException, IOException {
         //Get the User Info from Google
         OAuthRequest request = new OAuthRequest(Verb.GET, GOOGLE_USER_INFO_URL);
         oAuthService.signRequest(accessToken, request);
@@ -114,7 +115,7 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
     }
 
     @Override
-    void revokeToken(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws InterruptedException, ExecutionException, IOException {
+    protected void revokeToken(OAuth20Service oAuthService, OAuth2AccessToken accessToken) throws InterruptedException, ExecutionException, IOException {
         OAuthRequest request = new OAuthRequest(Verb.GET, GOOGLE_REVOKE_URL);
         request.addQuerystringParameter("token", accessToken.getAccessToken());
         Response response = oAuthService.execute(request);

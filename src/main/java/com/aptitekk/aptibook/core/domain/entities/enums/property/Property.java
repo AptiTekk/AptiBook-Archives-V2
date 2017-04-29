@@ -4,12 +4,13 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.core.domain.entities.enums;
+package com.aptitekk.aptibook.core.domain.entities.enums.property;
 
 import com.aptitekk.aptibook.ApplicationContextProvider;
-import com.aptitekk.aptibook.core.domain.entities.propertyValidators.BooleanPropertyValidator;
-import com.aptitekk.aptibook.core.domain.entities.propertyValidators.MaxLengthPropertyValidator;
-import com.aptitekk.aptibook.core.domain.entities.propertyValidators.PropertyValidator;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.AuthenticationMethodPropertyValidator;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.BooleanPropertyValidator;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.MaxLengthPropertyValidator;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.PropertyValidator;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
@@ -20,7 +21,8 @@ public class Property {
     public enum Group {
         PERSONALIZATION(null),
         REGISTRATION(null),
-        GOOGLE_SIGN_IN(null);
+        GOOGLE_SIGN_IN(null),
+        CAS_AUTHENTICATION(null);
 
         private Class<? extends ChangeListener> propertyGroupChangeListenerClass;
 
@@ -57,8 +59,12 @@ public class Property {
 
         REGISTRATION_ENABLED("true", Group.REGISTRATION, new BooleanPropertyValidator()),
 
+        AUTHENTICATION_METHOD(AuthenticationMethod.BUILT_IN.name(), null, new AuthenticationMethodPropertyValidator()),
+
         GOOGLE_SIGN_IN_ENABLED("false", Group.GOOGLE_SIGN_IN, new BooleanPropertyValidator()),
-        GOOGLE_SIGN_IN_WHITELIST("gmail.com, example.org", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256));
+        GOOGLE_SIGN_IN_WHITELIST("", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256)),
+
+        CAS_SERVER_PATH("", Group.CAS_AUTHENTICATION, new MaxLengthPropertyValidator(256));
 
         private final String defaultValue;
         private final Group group;
