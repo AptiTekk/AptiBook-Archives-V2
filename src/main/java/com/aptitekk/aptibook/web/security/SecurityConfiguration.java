@@ -15,7 +15,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -23,7 +22,6 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
-@EnableOAuth2Client
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final APIAuthenticationEntryPoint apiAuthenticationEntryPoint;
