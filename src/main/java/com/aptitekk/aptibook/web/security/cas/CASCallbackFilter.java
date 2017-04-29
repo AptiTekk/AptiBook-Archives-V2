@@ -9,6 +9,8 @@ package com.aptitekk.aptibook.web.security.cas;
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import org.json.JSONException;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,8 +24,6 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 @Component
 public class CASCallbackFilter extends OncePerRequestFilter {
@@ -55,11 +55,11 @@ public class CASCallbackFilter extends OncePerRequestFilter {
                 if (ticketParam == null)
                     throw new CASCallbackException("No ticket was supplied.");
 
-                // Validate and get the details of the ticket.
-                String details = getDetailsFromTicket(request, currentTenant, ticketParam);
+                // Validate the ticket and get the CAS User ID.
+                String casUserId = getCASUserIdFromTicket(request, currentTenant, ticketParam);
 
                 System.out.println("CAS Callback Received:");
-                System.out.println(details);
+                System.out.println(casUserId);
                 return;
             } catch (CASCallbackException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
@@ -75,25 +75,37 @@ public class CASCallbackFilter extends OncePerRequestFilter {
     }
 
     /**
-     * Validates the ticket with the CAS server, and returns the details obtained.
+     * Validates the ticket with the CAS server, and returns the CAS User ID obtained.
      *
      * @param request       The request made.
      * @param currentTenant The current Tenant.
      * @param ticket        The ticket received.
-     * @return The details of the validated ticket.
+     * @return The CAS User ID.
      * @throws CASTicketValidationException If the ticket could not be validated.
      */
-    private static String getDetailsFromTicket(HttpServletRequest request, Tenant currentTenant, String ticket) throws CASTicketValidationException {
+    private static String getCASUserIdFromTicket(HttpServletRequest request, Tenant currentTenant, String ticket) throws CASTicketValidationException {
         RestTemplate restTemplate = new RestTemplate();
         //FIXME: Don't hardcode the CAS URL
-        String CASUrl = "https://dev.aptitekk.com/cas";
+        String casUrl = "https://dev.aptitekk.com/cas";
         try {
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(CASUrl + "/serviceValidate?ticket=" + ticket + "&service=" + request.getRequestURL().toString(), String.class);
+            ResponseEntity<String> responseEntity = restTemplate.getForEntity(casUrl + "/serviceValidate?ticket=" + ticket + "&service=" + request.getRequestURL().toString() + "&format=JSON", String.class);
 
+            // Check for OK status
             if (responseEntity.getStatusCode() != HttpStatus.OK)
                 throw new CASTicketValidationException("Status was " + responseEntity.getStatusCode() + ". Body: " + responseEntity.getBody());
 
-            return responseEntity.getBody();
+            try {
+                // Convert response body to JSON
+                JSONObject body = new JSONObject(responseEntity.getBody());
+                // Check for serviceResponse key.
+                JSONObject serviceResponse = body.getJSONObject("serviceResponse");
+                // Check for authenticationSuccess key.
+                JSONObject authenticationSuccess = serviceResponse.getJSONObject("authenticationSuccess");
+                // Get and return User
+                return authenticationSuccess.getString("user");
+            } catch (JSONException e) {
+                throw new CASTicketValidationException("Invalid JSON Format or Authentication Failure.", e);
+            }
         } catch (RestClientException e) {
             throw new CASTicketValidationException("Could not send GET request to CAS service.", e);
         }
