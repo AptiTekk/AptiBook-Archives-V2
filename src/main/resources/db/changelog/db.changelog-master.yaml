@@ -17,3 +17,5 @@ databaseChangeLog:
       file: db/changelog/changeSets/8__Update_Tenant_For_Stripe.xml
   - include:
       file: db/changelog/changeSets/9__Move_Properties_Into_Tenant.xml
+  - include:
+      file: db/changelog/changeSets/10__Update_User_For_CAS.xml

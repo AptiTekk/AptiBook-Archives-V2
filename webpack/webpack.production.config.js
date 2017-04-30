@@ -25,8 +25,9 @@ config.plugins.push(
 
 config.output = {
     path: path.join(__dirname, '../target/classes/static/'),
-    filename: './resources/scripts/[name]-[chunkhash].js',
-    chunkFilename: './resources/scripts/[id].chunk.js'
+    filename: 'resources/scripts/[name]-[chunkhash].js',
+    chunkFilename: 'resources/scripts/[id].chunk.js',
+    publicPath: "https://cdn.aptibook.net/"
 };
 
 module.exports = config;

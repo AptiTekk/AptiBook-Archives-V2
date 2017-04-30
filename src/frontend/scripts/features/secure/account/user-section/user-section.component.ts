@@ -69,7 +69,6 @@ export class UserSectionComponent implements OnInit {
             firstName: [this.user.firstName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             lastName: [this.user.lastName, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
             phoneNumber: [this.user.phoneNumber, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
-            location: [this.user.location, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])],
             newPassword: [this.user.newPassword, Validators.compose([Validators.maxLength(30)])],
             confirmPassword: [this.user.confirmPassword, Validators.compose([Validators.maxLength(30)])]
         });
@@ -92,7 +91,6 @@ export class UserSectionComponent implements OnInit {
         userPatch.firstName = this.formGroup.controls['firstName'].value;
         userPatch.lastName = this.formGroup.controls['lastName'].value;
         userPatch.phoneNumber = this.formGroup.controls['phoneNumber'].value;
-        userPatch.location = this.formGroup.controls['location'].value;
         let newPassword = this.formGroup.controls['newPassword'].value;
         if (newPassword)
             userPatch.newPassword = newPassword;

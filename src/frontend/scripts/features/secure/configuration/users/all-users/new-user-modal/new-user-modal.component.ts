@@ -8,8 +8,6 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ModalComponent} from "../../../../../../shared/modal/modal.component";
 import {LoaderService} from "../../../../../../core/services/loader.service";
 import {UniquenessValidator} from "../../../../../../validators/uniqueness.validator";
-import {UserGroupService} from "../../../../../../core/services/usergroup.service";
-import {UserGroup} from "../../../../../../models/user-group.model";
 import {User} from "../../../../../../models/user.model";
 import {UserService} from "../../../../../../core/services/user.service";
 import {AlertComponent} from "../../../../../../shared/alert/alert.component";
@@ -38,7 +36,6 @@ export class NewUserModalComponent implements OnInit {
             firstName: null,
             lastName: null,
             phoneNumber: null,
-            location: null,
             userGroups: []
         });
     }
@@ -64,7 +61,6 @@ export class NewUserModalComponent implements OnInit {
                         firstName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
                         lastName: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
                         phoneNumber: [null, Validators.compose([Validators.maxLength(30), Validators.pattern("[^<>;=]*")])],
-                        location: [null, Validators.compose([Validators.maxLength(250), Validators.pattern("[^<>;=]*")])],
                         userGroups: [[]]
                     });
                 }
@@ -79,7 +75,6 @@ export class NewUserModalComponent implements OnInit {
             firstName: this.formGroup.controls['firstName'].value,
             lastName: this.formGroup.controls['lastName'].value,
             phoneNumber: this.formGroup.controls['phoneNumber'].value,
-            location: this.formGroup.controls['location'].value,
             userGroups: [].concat(this.formGroup.controls['userGroups'].value)
         };
 

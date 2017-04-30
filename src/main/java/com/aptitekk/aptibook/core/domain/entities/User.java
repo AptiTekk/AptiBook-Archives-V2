@@ -36,8 +36,6 @@ public class User extends MultiTenantEntity implements Serializable {
 
     public String phoneNumber;
 
-    public String location;
-
     @Column(nullable = false)
     public String hashedPassword;
 
@@ -125,7 +123,6 @@ public class User extends MultiTenantEntity implements Serializable {
                 && EqualsHelper.areEquals(firstName, other.firstName)
                 && EqualsHelper.areEquals(lastName, other.lastName)
                 && EqualsHelper.areEquals(phoneNumber, other.phoneNumber)
-                && EqualsHelper.areEquals(location, other.location)
                 && EqualsHelper.areEquals(hashedPassword, other.hashedPassword)
                 && EqualsHelper.areEquals(verificationCode, other.verificationCode)
                 && EqualsHelper.areEquals(verified, other.verified);
@@ -133,7 +130,7 @@ public class User extends MultiTenantEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(emailAddress, firstName, lastName, phoneNumber, location, hashedPassword, verificationCode, verified);
+        return EqualsHelper.calculateHashCode(emailAddress, firstName, lastName, phoneNumber, hashedPassword, verificationCode, verified);
     }
 
     /**

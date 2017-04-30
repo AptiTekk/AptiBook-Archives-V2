@@ -16,7 +16,6 @@ export interface User {
     verified?: boolean;
 
     phoneNumber?: string;
-    location?: string;
 
     notifications?: number[];
     notificationTypeSettings?: string[][];

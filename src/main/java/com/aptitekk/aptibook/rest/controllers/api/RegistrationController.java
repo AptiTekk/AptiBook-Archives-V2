@@ -68,11 +68,6 @@ public class RegistrationController extends APIControllerAbstract {
             newUser.phoneNumber = userDTO.phoneNumber;
         }
 
-        if (userDTO.location != null) {
-            userValidator.validateLocation(userDTO.location);
-            newUser.location = userDTO.location;
-        }
-
         if (userDTO.newPassword == null)
             return badRequest("The New Password was not supplied.");
 

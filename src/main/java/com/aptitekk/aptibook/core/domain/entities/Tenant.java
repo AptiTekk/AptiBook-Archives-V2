@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.core.domain.entities;
 
-import com.aptitekk.aptibook.core.domain.entities.enums.Property;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
 import com.aptitekk.aptibook.core.services.stripe.StripeService;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 

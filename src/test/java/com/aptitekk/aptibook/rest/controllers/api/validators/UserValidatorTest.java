@@ -141,32 +141,6 @@ public class UserValidatorTest extends AbstractWebClientTest {
     }
 
     /**
-     * Tests to make sure an exception is thrown when the location is too long.
-     */
-    @Test(expected = RestValidator.RestValidationException.class)
-    public void testLocationIsTooLong() {
-        // 251 characters
-        userValidator.validateLocation("RhkjKHc44x42mmHoGJgscoy4Y9Acr4WEWntWqHOvLbnR0QFjqunVu7pVoBPFvxTQIzMlPVIq9DpmVRsUgnkb64Rb9wGGxPR15IQOgHIUuYmhVOUXuOskhLXWQ0CXnQJb64UWVUPzPymCvOiJFPxzsbeq6QMqqLMKcrPr16k1jbfABC12mISwXOqCVyjbIRqDKJLe2unU2MRUB7BIYVCXfS5J1tUVge33q8qV8Tmaoxheu8mvg8xECmW7yiZ");
-    }
-
-    /**
-     * Tests to make sure an exception is NOT thrown when the location is an okay length.
-     */
-    @Test
-    public void testLocationIsNotTooLong() {
-        // 250 characters
-        userValidator.validateLocation("RhkjKHc44x42mmHoGJgscoy4Y9Acr4WEWntWqHOvLbnR0QFjqunVu7pVoBPFvxTQIzMlPVIq9DpmVRsUgnkb64Rb9wGGxPR15IQOgHIUuYmhVOUXuOskhLXWQ0CXnQJb64UWVUPzPymCvOiJFPxzsbeq6QMqqLMKcrPr16k1jbfABC12mISwXOqCVyjbIRqDKJLe2unU2MRUB7BIYVCXfS5J1tUVge33q8qV8Tmaoxheu8mvg8xECmW7yi");
-    }
-
-    /**
-     * Tests to make sure an exception is thrown when a location with bad characters is used.
-     */
-    @Test(expected = RestValidator.RestValidationException.class)
-    public void testInvalidCharactersInLocation() {
-        userValidator.validateLocation("<b>Bad Location</b> = test;");
-    }
-
-    /**
      * Tests to make sure an exception is thrown when the password is too long.
      */
     @Test(expected = RestValidator.RestValidationException.class)

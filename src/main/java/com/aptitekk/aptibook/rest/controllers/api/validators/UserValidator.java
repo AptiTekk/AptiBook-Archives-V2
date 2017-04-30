@@ -116,20 +116,6 @@ public class UserValidator extends RestValidator {
     }
 
     /**
-     * Checks if a location is valid for a user.
-     *
-     * @param location The location.
-     * @throws RestValidationException If the location is invalid.
-     */
-    public void validateLocation(String location) throws RestValidationException {
-        if (location != null)
-            if (!location.matches("[^<>;=]*"))
-                throw new RestValidationException(badRequest("The Location cannot contain these characters: < > ; ="));
-            else if (location.length() > 250)
-                throw new RestValidationException(badRequest("The Location must be 250 characters or less."));
-    }
-
-    /**
      * Checks if a password is valid for a user.
      *
      * @param password The password.

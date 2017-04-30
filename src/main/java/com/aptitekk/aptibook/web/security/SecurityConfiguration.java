@@ -7,15 +7,15 @@
 package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
+import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
-import com.aptitekk.aptibook.web.security.oauth.GoogleOAuthFilter;
+import com.aptitekk.aptibook.web.security.oauth.google.GoogleOAuthFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.oauth2.config.annotation.web.configuration.EnableOAuth2Client;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.security.web.context.SecurityContextPersistenceFilter;
 import org.springframework.security.web.csrf.CsrfFilter;
@@ -23,7 +23,6 @@ import org.springframework.security.web.csrf.CsrfTokenRepository;
 import org.springframework.security.web.csrf.HttpSessionCsrfTokenRepository;
 
 @Configuration
-@EnableOAuth2Client
 public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
     private final APIAuthenticationEntryPoint apiAuthenticationEntryPoint;
@@ -31,18 +30,21 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CSRFCookieFilter csrfCookieFilter;
     private final CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
     private final GoogleOAuthFilter googleOAuthFilter;
+    private final CASCallbackFilter casCallbackFilter;
 
     @Autowired
     public SecurityConfiguration(APIAuthenticationEntryPoint apiAuthenticationEntryPoint,
                                  TenantDiscoveryFilter tenantDiscoveryFilter,
                                  CSRFCookieFilter csrfCookieFilter,
                                  CustomBasicAuthenticationFilter customBasicAuthenticationFilter,
-                                 GoogleOAuthFilter googleOAuthFilter) {
+                                 GoogleOAuthFilter googleOAuthFilter,
+                                 CASCallbackFilter casCallbackFilter) {
         this.apiAuthenticationEntryPoint = apiAuthenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.csrfCookieFilter = csrfCookieFilter;
         this.customBasicAuthenticationFilter = customBasicAuthenticationFilter;
         this.googleOAuthFilter = googleOAuthFilter;
+        this.casCallbackFilter = casCallbackFilter;
     }
 
     @Override
@@ -59,6 +61,9 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Add the Google OAuth Filter
                 .addFilterBefore(googleOAuthFilter, BasicAuthenticationFilter.class)
+
+                // Add the CAS Ticket Filter
+                .addFilterBefore(casCallbackFilter, BasicAuthenticationFilter.class)
 
                 // Define the endpoints for which users must be authenticated.
                 .authorizeRequests()

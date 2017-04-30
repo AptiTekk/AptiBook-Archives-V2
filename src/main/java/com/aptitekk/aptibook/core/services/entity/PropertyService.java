@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.core.services.entity;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.entities.enums.Property;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
 import com.aptitekk.aptibook.core.domain.repositories.TenantRepository;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;

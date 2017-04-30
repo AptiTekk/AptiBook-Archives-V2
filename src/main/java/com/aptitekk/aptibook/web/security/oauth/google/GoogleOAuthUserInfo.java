@@ -4,13 +4,15 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.security.oauth;
+package com.aptitekk.aptibook.web.security.oauth.google;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class GoogleOAuthUserInfo {
+
+    private String id;
 
     @JsonProperty("email")
     private String emailAddress;
@@ -23,6 +25,10 @@ public class GoogleOAuthUserInfo {
 
     @JsonProperty("picture")
     private String pictureUrl;
+
+    public String getId() {
+        return id;
+    }
 
     public String getEmailAddress() {
         return emailAddress;

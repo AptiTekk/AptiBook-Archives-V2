@@ -88,11 +88,6 @@ public class UserController extends APIControllerAbstract {
             newUser.phoneNumber = userDTO.phoneNumber;
         }
 
-        if (userDTO.location != null) {
-            userValidator.validateLocation(userDTO.location);
-            newUser.location = userDTO.location;
-        }
-
         if (userDTO.userGroups != null) {
             newUser.userGroups = userValidator.validateUserGroups(userDTO.userGroups, null);
         }
@@ -198,11 +193,6 @@ public class UserController extends APIControllerAbstract {
         if (userDTO.phoneNumber != null) {
             userValidator.validatePhoneNumber(userDTO.phoneNumber);
             currentUser.phoneNumber = userDTO.phoneNumber;
-        }
-
-        if (userDTO.location != null) {
-            userValidator.validateLocation(userDTO.location);
-            currentUser.location = userDTO.location;
         }
 
         //TODO: A patch method specifically for the current user, which also allows password changing (and ignores user groups). This method shouldn't allow password changing.
