@@ -60,13 +60,21 @@ public class CASCallbackFilter extends OncePerRequestFilter {
                     return;
                 }
 
+                // Check for a valid CAS Server Url
+                String casUrl = currentTenant.properties.get(Property.Key.CAS_SERVER_URL);
+                if (casUrl == null || casUrl.isEmpty()) {
+                    response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
+                    response.getWriter().println("CAS Authentication is not properly configured.");
+                    return;
+                }
+
                 // Check for a Ticket
                 String ticketParam = request.getParameter("ticket");
                 if (ticketParam == null)
                     throw new CASCallbackException("No ticket was supplied.");
 
                 // Validate the ticket and get the CAS User ID.
-                String casUserId = getCASUserIdFromTicket(request, currentTenant, ticketParam);
+                String casUserId = getCASUserIdFromTicket(request, casUrl, ticketParam);
 
                 System.out.println("CAS Callback Received:");
                 System.out.println(casUserId);
@@ -87,16 +95,14 @@ public class CASCallbackFilter extends OncePerRequestFilter {
     /**
      * Validates the ticket with the CAS server, and returns the CAS User ID obtained.
      *
-     * @param request       The request made.
-     * @param currentTenant The current Tenant.
-     * @param ticket        The ticket received.
+     * @param request The request made.
+     * @param casUrl  The URL of the CAS server.
+     * @param ticket  The ticket received.
      * @return The CAS User ID.
      * @throws CASTicketValidationException If the ticket could not be validated.
      */
-    private static String getCASUserIdFromTicket(HttpServletRequest request, Tenant currentTenant, String ticket) throws CASTicketValidationException {
+    private static String getCASUserIdFromTicket(HttpServletRequest request, String casUrl, String ticket) throws CASTicketValidationException {
         RestTemplate restTemplate = new RestTemplate();
-        //FIXME: Don't hardcode the CAS URL
-        String casUrl = "https://dev.aptitekk.com/cas";
         try {
             ResponseEntity<String> responseEntity = restTemplate.getForEntity(casUrl + "/serviceValidate?ticket=" + ticket + "&service=" + request.getRequestURL().toString() + "&format=JSON", String.class);
 

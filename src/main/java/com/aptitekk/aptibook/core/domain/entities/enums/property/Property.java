@@ -64,7 +64,7 @@ public class Property {
         GOOGLE_SIGN_IN_ENABLED("false", Group.GOOGLE_SIGN_IN, new BooleanPropertyValidator()),
         GOOGLE_SIGN_IN_WHITELIST("", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256)),
 
-        CAS_SERVER_PATH("", Group.CAS_AUTHENTICATION, new MaxLengthPropertyValidator(256));
+        CAS_SERVER_URL("", Group.CAS_AUTHENTICATION, new MaxLengthPropertyValidator(256));
 
         private final String defaultValue;
         private final Group group;
