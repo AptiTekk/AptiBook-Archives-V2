@@ -6,7 +6,6 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 const config = {
@@ -70,21 +69,6 @@ const config = {
             jQuery: 'jquery',
             $: 'jquery',
             jquery: 'jquery'
-        }),
-        //new webpack.OldWatchingPlugin(),
-        new HtmlWebpackPlugin({
-            template: path.join(__dirname, '../src/frontend/index.html.ejs'),
-            favicon: path.join(__dirname, '../src/frontend/resources/favicons/favicon.ico'),
-            filename: path.join(__dirname, '../target/classes/static/index.html'),
-            inject: 'body',
-            minify: {
-                minifyCSS: true,
-                minifyJS: true,
-                removeComments: true,
-                collapseWhitespace: true,
-                collapseInlineTagWhitespace: true
-            },
-            chunksSortMode: 'dependency'
         }),
         new CleanWebpackPlugin(['resources'], {
             root: path.join(__dirname, '../target/classes/static')
