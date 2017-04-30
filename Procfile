@@ -1,1 +1,1 @@
-web: java -jar target/aptibook.jar
+web: java -jar aptibook.jar

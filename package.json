@@ -3,8 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "build": "webpack --config webpack/webpack.production.config.js",
-    "heroku-postbuild": "webpack --config webpack/webpack.production.config.js -p"
+    "build": "webpack --config webpack/webpack.production.config.js -p"
   },
   "license": "UNLICENSED",
   "dependencies": {
