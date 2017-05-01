@@ -49,7 +49,7 @@ export class AccountNotificationsComponent implements OnInit {
 
         this.notificationService.reloadNotifications();
         this.notificationService.getNotifications().take(1).subscribe(notifications => {
-                this.notifications = notifications;
+                this.notifications = notifications.reverse();
                 this.notificationService.markAllRead();
             }
         );

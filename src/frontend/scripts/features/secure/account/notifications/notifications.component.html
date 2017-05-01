@@ -35,7 +35,7 @@
 			</div>
 			<div class="notification-content">
 				<h4 style="margin-top: 0">{{notification.subject}}</h4>
-				<p>{{notification.body}}</p>
+				<p [innerHtml]="notification.body"></p>
 			</div>
 		</panel-body>
 		<panel-footer>

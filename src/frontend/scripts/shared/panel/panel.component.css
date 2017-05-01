@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-.panel {
+.panel, .panel-heading, .panel-footer {
     border-radius: 0;
 }
 
