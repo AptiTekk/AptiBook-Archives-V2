@@ -29,37 +29,47 @@ public class UserValidatorTest extends AbstractWebClientTest {
     private UserGroupRepository userGroupRepository;
 
     /**
-     * This test makes sure that an exception is thrown if we try to check if the "admin" email address is in use for a new user.
+     * Ensures that the admin cannot change their email.
      */
     @Test(expected = RestValidator.RestValidationException.class)
-    public void testCheckIfAdminEmailAddressIsInUse() {
-        userValidator.checkIfEmailAddressIsInUse("admin", null);
+    public void testAdminCannotChangeEmail() {
+        User adminUser = userRepository.findAdminUser();
+        userValidator.validateEmailAddress("test@test.com", adminUser);
     }
 
     /**
-     * This test makes sure that an exception is NOT thrown if we try to check if the "admin" email address is in use, excluding the admin user.
-     */
-    @Test
-    public void testCheckIfAdminEmailAddressIsInUseExcludingAdminUser() {
-        User adminUser = userRepository.findByEmailAddress("admin");
-        userValidator.checkIfEmailAddressIsInUse("admin", adminUser.getId());
-    }
-
-    /**
-     * Ensures that the admin email address is valid when updating the admin.
-     */
-    @Test
-    public void testAdminEmailIsValidForAdmin() {
-        User adminUser = userRepository.findByEmailAddress("admin");
-        userValidator.validateEmailAddress("admin", adminUser);
-    }
-
-    /**
-     * Ensures that the admin email address is invalid when not updating the admin.
+     * Ensures that non-email style emails are marked invalid.
      */
     @Test(expected = RestValidator.RestValidationException.class)
-    public void testAdminEmailIsInvalidForNonAdmin() {
-        userValidator.validateEmailAddress("admin", null);
+    public void testInvalidEmailWithNoDomain() {
+        userValidator.validateEmailAddress("foobar", null);
+    }
+
+    /**
+     * Ensures that non-email style emails are marked invalid.
+     */
+    @Test(expected = RestValidator.RestValidationException.class)
+    public void testInvalidEmailWithNoTLD() {
+        userValidator.validateEmailAddress("test@test", null);
+    }
+
+    /**
+     * Ensures that non-email style emails are marked invalid.
+     */
+    @Test(expected = RestValidator.RestValidationException.class)
+    public void testInvalidEmailWithInvalidTLD() {
+        userValidator.validateEmailAddress("test@test.notAValidTLD", null);
+    }
+
+    /**
+     * Ensures that valid emails are marked as valid.
+     */
+    @Test
+    public void testValidEmails() {
+        userValidator.validateEmailAddress("test@test.com", null);
+        userValidator.validateEmailAddress("john.doe@microsoft.com", null);
+        userValidator.validateEmailAddress("jane.doe1997@google.ca", null);
+        userValidator.validateEmailAddress("bill.nye@aptitekk.net", null);
     }
 
     /**
