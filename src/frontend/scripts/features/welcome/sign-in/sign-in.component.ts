@@ -9,7 +9,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {OAuthService} from "../../../core/services/oauth.service";
 import {AuthService} from "../../../core/services/auth.service";
 import {AlertComponent} from "../../../shared/alert/alert.component";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {LoaderService} from "../../../core/services/loader.service";
 
 @Component({
@@ -35,8 +35,8 @@ export class SignInComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.signInFormGroup = this.formBuilder.group({
-            emailAddress: [null, Validators.required],
-            password: [null, Validators.required]
+            emailAddress: [null],
+            password: [null]
         });
 
         //Get the Google Sign In URL
@@ -80,7 +80,7 @@ export class SignInComponent implements OnInit, AfterViewInit {
     onSubmit() {
         this.loaderService.startLoading();
         this.authService
-            .signIn(this.signInFormGroup.controls['emailAddress'].value, this.signInFormGroup.controls['password'].value)
+            .signInAsUser(this.signInFormGroup.controls['emailAddress'].value, this.signInFormGroup.controls['password'].value)
             .subscribe(
                 user => this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading()),
                 err => {

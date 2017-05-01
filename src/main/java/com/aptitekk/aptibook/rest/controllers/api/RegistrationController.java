@@ -55,28 +55,28 @@ public class RegistrationController extends APIControllerAbstract {
 
         if (userDTO.firstName != null) {
             userValidator.validateFirstName(userDTO.firstName);
-            newUser.firstName = userDTO.firstName;
+            newUser.setFirstName(userDTO.firstName);
         }
 
         if (userDTO.lastName != null) {
             userValidator.validateLastName(userDTO.lastName);
-            newUser.lastName = userDTO.lastName;
+            newUser.setLastName(userDTO.lastName);
         }
 
         if (userDTO.phoneNumber != null) {
             userValidator.validatePhoneNumber(userDTO.phoneNumber);
-            newUser.phoneNumber = userDTO.phoneNumber;
+            newUser.setPhoneNumber(userDTO.phoneNumber);
         }
 
         if (userDTO.newPassword == null)
             return badRequest("The New Password was not supplied.");
 
         userValidator.validatePassword(userDTO.newPassword);
-        newUser.hashedPassword = PasswordUtils.encodePassword(userDTO.newPassword);
+        newUser.setHashedPassword(PasswordUtils.encodePassword(userDTO.newPassword));
 
         // Create the verification code.
         String verificationCode = PasswordGenerator.generateRandomPassword(16);
-        newUser.verificationCode = verificationCode;
+        newUser.setVerificationCode(verificationCode);
 
         // Save the user to the database.
         newUser = userRepository.save(newUser);
@@ -117,8 +117,8 @@ public class RegistrationController extends APIControllerAbstract {
         }
 
         // Mark the user as verified and save the user.
-        user.verified = true;
-        user.verificationCode = null;
+        user.setVerified(true);
+        user.setVerificationCode(null);
         userRepository.save(user);
 
         // Redirect to Tenant sign-in page.

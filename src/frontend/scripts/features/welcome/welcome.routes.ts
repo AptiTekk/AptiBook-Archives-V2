@@ -11,6 +11,7 @@ import {SignInComponent} from "./sign-in/sign-in.component";
 import {RegisterComponent} from "./register/register.component";
 import {RegisterSuccessComponent} from "./register/success/register-success.component";
 import {WelcomeGuard} from "./welcome.guard";
+import {AdminSignInComponent} from "./admin/admin-sign-in.component";
 
 const routes: Routes = [
     {
@@ -20,6 +21,14 @@ const routes: Routes = [
             {
                 path: 'sign-in',
                 component: SignInComponent
+            },
+            {
+                path: 'admin',
+                redirectTo: 'sign-in/admin'
+            },
+            {
+                path: 'sign-in/admin',
+                component: AdminSignInComponent
             },
             {
                 path: 'register',

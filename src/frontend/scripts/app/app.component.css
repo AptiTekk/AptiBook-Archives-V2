@@ -54,6 +54,10 @@
 
 /* Button Styling */
 
+.app .btn {
+    border-radius: 0;
+}
+
 .app .btn-primary,
 .app .pagination > .active > a,
 .app .pagination > .active > span,
@@ -127,6 +131,16 @@
 .app .ui-widget-content .ui-state-highlight,
 .app .ui-widget-header .ui-state-highlight {
     background-color: #4272b7;
+}
+
+/* Form Styling */
+
+.app .form-control {
+    border-radius: 0;
+}
+
+.app .input-group-addon {
+    border-radius: 0;
 }
 
 /* Scrollbar */

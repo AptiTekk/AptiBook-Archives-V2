@@ -4,6 +4,10 @@
  * Proprietary and confidential.
  */
 
+.panel {
+    border-radius: 0;
+}
+
 .panel.panel-primary {
     box-shadow: #ddd 0 0 8px 2px;
     border: none;

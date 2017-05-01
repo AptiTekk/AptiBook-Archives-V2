@@ -1,0 +1,35 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<form id="loginForm"
+	  [formGroup]="signInFormGroup"
+	  (submit)="onSubmit()">
+	<alert #loginDangerAlert
+		   [severity]="'danger'"></alert>
+	<alert #loginInfoAlert></alert>
+	
+	<h3 class="text-center" style="margin-top: 0"><i class="fa fa-lock"></i> Admin Sign In</h3>
+	<hr/>
+	
+	<form-group [control]="signInFormGroup.controls['password']"
+				[label]="'Password'"
+				[faIconName]="'asterisk'"
+				[inputType]="'password'">
+	</form-group>
+	
+	<div class="form-group">
+		<button class="btn btn-primary btn-large btn-block"
+				[disabled]="signInFormGroup.invalid">Sign In
+		</button>
+	</div>
+</form>
+
+<hr/>
+
+<button [routerLink]="['', 'sign-in']"
+		class="btn btn-default btn-block">
+	Return to Sign In
+</button>

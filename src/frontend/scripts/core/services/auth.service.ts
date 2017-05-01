@@ -39,15 +39,39 @@ export class AuthService {
     }
 
     /**
-     * Signs the user into AptiBook using the credentials provided.
+     * Attempts to sign into AptiBook as a regular user, using the credentials provided.
      * @param emailAddress The email address of the user.
      * @param password The password of the user.
      * @returns An observable that contains the object of the signed in User.
      */
-    public signIn(emailAddress: String, password: String): Observable<User> {
+    public signInAsUser(emailAddress: String, password: String): Observable<User> {
         return Observable.create(listener => {
             this.apiService.get("users/current", new Headers({
-                "Authorization": "Basic " + btoa(emailAddress + ":" + password)
+                "Authorization": "Basic " + btoa(emailAddress + ":" + password),
+                "X-Auth-Type": "user"
+            })).subscribe(
+                response => {
+                    this.currentUser.next(response);
+                    listener.next(response);
+                },
+                err => {
+                    this.currentUser.next(undefined);
+                    listener.error(err);
+                }
+            );
+        });
+    }
+
+    /**
+     * Attempts to sign into AptiBook as the admin, using the credentials provided.
+     * @param password The password of the user.
+     * @returns An observable that contains the object of the signed in User.
+     */
+    public signInAsAdmin(password: String): Observable<User> {
+        return Observable.create(listener => {
+            this.apiService.get("users/current", new Headers({
+                "Authorization": "Basic " + btoa(":" + password),
+                "X-Auth-Type": "admin"
             })).subscribe(
                 response => {
                     this.currentUser.next(response);

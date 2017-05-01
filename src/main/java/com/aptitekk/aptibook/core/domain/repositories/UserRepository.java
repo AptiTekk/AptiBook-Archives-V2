@@ -19,7 +19,21 @@ import java.util.List;
 @EntityRepository
 public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
 
-    public static final String ADMIN_EMAIL_ADDRESS = "admin";
+    /**
+     * Finds the admin user for the current Tenant.
+     *
+     * @return The admin user, or null if one could not be found.
+     */
+    public User findAdminUser() {
+        try {
+            return entityManager
+                    .createQuery("SELECT u FROM User u WHERE u.tenant = ?1 AND u.admin = TRUE", User.class)
+                    .setParameter(1, getTenant())
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * Finds User Entity by its verification code, within all tenants.
@@ -93,8 +107,8 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
                     .setParameter("emailAddress", emailAddress.toLowerCase())
                     .setParameter("tenant", getTenant())
                     .getSingleResult();
-            if (user != null && user.hashedPassword != null) {
-                if (PasswordUtils.passwordsMatch(password, user.hashedPassword))
+            if (user != null && user.getHashedPassword() != null) {
+                if (PasswordUtils.passwordsMatch(password, user.getHashedPassword()))
                     return user;
             }
         } catch (PersistenceException e) {
@@ -132,7 +146,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
                 }
             }
 
-            usersWithPermission.add(findByEmailAddress(ADMIN_EMAIL_ADDRESS));
+            usersWithPermission.add(findAdminUser());
             return usersWithPermission;
 
         } catch (Exception e) {

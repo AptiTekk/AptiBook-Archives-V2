@@ -296,7 +296,7 @@ public class TenantSynchronizer {
 
         // Create the admin user
         User admin = new User();
-        admin.setEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS);
+        admin.setAdmin(true);
         admin.tenant = newTenant;
         admin.userGroups.add(rootGroup);
 
@@ -309,7 +309,7 @@ public class TenantSynchronizer {
             }
 
             String password = PasswordGenerator.generateRandomPassword(10);
-            admin.hashedPassword = PasswordUtils.encodePassword(password);
+            admin.setHashedPassword(PasswordUtils.encodePassword(password));
             //FIXME: Domain in the email may be different if the customer uses a CNAME.
             emailService.sendEmailNotification(customer.getEmail(), "AptiBook Registration",
                     "<p>Thank you for registering with us! We are very excited to hear about how you and your team uses AptiBook.</p>"
@@ -321,10 +321,9 @@ public class TenantSynchronizer {
                             + "</center>"
                             + "<p>Please let us know of any way we can be of assistance, and be sure to check out our knowledge base at https://support.aptitekk.com/.</p>");
         } else {
-            admin.hashedPassword = PasswordUtils.encodePassword("admin");
+            admin.setHashedPassword(PasswordUtils.encodePassword("admin"));
         }
-        admin.verified = true;
-        admin.userState = User.State.APPROVED;
+        admin.setVerified(true);
         userRepository.save(admin);
 
         // Create the Rooms Resource Category

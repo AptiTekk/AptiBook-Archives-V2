@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.web.security.authenticationProviders.DatabaseAuthenticationProvider;
+import com.aptitekk.aptibook.web.security.authenticationProviders.BuiltInAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
@@ -15,17 +15,17 @@ import org.springframework.security.config.annotation.authentication.configurers
 @Configuration
 public class AuthenticationConfiguration extends GlobalAuthenticationConfigurerAdapter {
 
-    private final DatabaseAuthenticationProvider databaseAuthenticationProvider;
+    private final BuiltInAuthenticationProvider builtInAuthenticationProvider;
 
     @Autowired
-    public AuthenticationConfiguration(DatabaseAuthenticationProvider databaseAuthenticationProvider) {
-        this.databaseAuthenticationProvider = databaseAuthenticationProvider;
+    public AuthenticationConfiguration(BuiltInAuthenticationProvider builtInAuthenticationProvider) {
+        this.builtInAuthenticationProvider = builtInAuthenticationProvider;
     }
 
     @Override
     public void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth
-                // Authenticates using the database authentication provider. (Username and Password)
-                .authenticationProvider(databaseAuthenticationProvider);
+                // Authenticates using the built-in authentication provider. (Email Address and Password)
+                .authenticationProvider(builtInAuthenticationProvider);
     }
 }
