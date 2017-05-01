@@ -47,7 +47,7 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
             Resource resource = this.resourceLoader.getResource("classpath:static" + ex.getRequestURL());
 
             // If it doesn't exist, load index.html
-            if (!resource.exists()) {
+            if (!resource.exists() || ex.getRequestURL().equals("/")) {
                 resource = this.resourceLoader.getResource("classpath:static/index.html");
 
                 // If index.html doesn't exist, that's not good.
