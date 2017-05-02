@@ -193,7 +193,7 @@ public class UserValidatorTest extends AbstractWebClientTest {
         administratorsGroup.id = userGroupRepository.findByName("Administrators").getId();
         userGroupDTOs.add(administratorsGroup);
 
-        userValidator.validateUserGroups(userGroupDTOs, userRepository.findByEmailAddress("admin"));
+        userValidator.validateUserGroups(userGroupDTOs, userRepository.findAdminUser());
     }
 
     /**
@@ -202,7 +202,7 @@ public class UserValidatorTest extends AbstractWebClientTest {
     @Test(expected = RestValidator.RestValidationException.class)
     public void testAssignAdminUserToNothing() {
         List<UserGroupDTO> userGroupDTOs = new ArrayList<>();
-        userValidator.validateUserGroups(userGroupDTOs, userRepository.findByEmailAddress("admin"));
+        userValidator.validateUserGroups(userGroupDTOs, userRepository.findAdminUser());
     }
 
     /**
