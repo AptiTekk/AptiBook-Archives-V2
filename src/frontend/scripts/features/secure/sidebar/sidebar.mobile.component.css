@@ -58,4 +58,14 @@
         width: 60px;
     }
 
+    .navigation-link {
+        height: 80px;
+        line-height: 80px;
+    }
+
+    :host /deep/ .navigation-link > svg {
+        width: 30px;
+        height: 30px;
+    }
+
 }
