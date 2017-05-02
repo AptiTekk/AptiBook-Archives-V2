@@ -110,8 +110,14 @@
 							
 							<!-- CAS Server URL -->
 							<form-group [control]="formGroup.controls['CAS_SERVER_URL']"
-										[label]="'CAS Server URL (excluding /login)'"
+										[label]="'CAS Server URL (Excluding /login)'"
 										[placeholder]="'https://example.com/cas'">
+							</form-group>
+							
+							<!-- CAS Callback URL -->
+							<form-group [label]="'CAS Callback URL (For CAS Server Configuration)'"
+										[value]="CAS_CALLBACK_URL"
+										[readOnly]="true">
 							</form-group>
 						</section>
 					</div>

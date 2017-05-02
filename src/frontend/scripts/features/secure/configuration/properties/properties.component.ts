@@ -25,7 +25,9 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
     @ViewChild('dangerAlert')
     dangerAlert: AlertComponent;
 
-    public properties: Properties;
+    properties: Properties;
+
+    CAS_CALLBACK_URL: string = window.location.protocol + '//' + window.location.host + '/api/cas/callback';
 
     sectionLinks: NavigationLink[] = [
         {

@@ -7,11 +7,15 @@
 package com.aptitekk.aptibook.web.security.authenticationProviders;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.AuthenticationMethod;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
+import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
+import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -26,12 +30,15 @@ import javax.servlet.http.HttpServletRequest;
 @Component
 public class BuiltInAuthenticationProvider implements AuthenticationProvider {
 
+    private final TenantManagementService tenantManagementService;
     private final UserRepository userRepository;
     private final HttpServletRequest httpServletRequest;
 
     @Autowired
-    public BuiltInAuthenticationProvider(UserRepository userRepository,
+    public BuiltInAuthenticationProvider(TenantManagementService tenantManagementService,
+                                         UserRepository userRepository,
                                          HttpServletRequest httpServletRequest) {
+        this.tenantManagementService = tenantManagementService;
         this.userRepository = userRepository;
         this.httpServletRequest = httpServletRequest;
     }
@@ -56,6 +63,11 @@ public class BuiltInAuthenticationProvider implements AuthenticationProvider {
                     return new UserIDAuthenticationToken(adminUser.getId());
                 throw new BadCredentialsException("Incorrect Password.");
             } else if (httpServletRequest.getHeader("X-Auth-Type").equalsIgnoreCase("user")) {
+                // Check the authentication method.
+                String authenticationMethod = tenantManagementService.getTenant().properties.get(Property.Key.AUTHENTICATION_METHOD);
+                if (authenticationMethod != null && AuthenticationMethod.valueOf(authenticationMethod) != AuthenticationMethod.BUILT_IN)
+                    throw new AuthenticationServiceException("Built-In Authentication is not Enabled.");
+
                 // Regular User Authentication
                 String emailAddress = authentication.getName();
 
