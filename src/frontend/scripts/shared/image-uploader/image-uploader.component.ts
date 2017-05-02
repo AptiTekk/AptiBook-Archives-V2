@@ -19,7 +19,7 @@ import {CookieService} from "ng2-cookies";
 })
 export class ImageUploaderComponent implements OnInit {
 
-    @Input() noImageUrl;
+    @Input() noImageSrc;
 
     @Input() currentImageUrl: string;
 
