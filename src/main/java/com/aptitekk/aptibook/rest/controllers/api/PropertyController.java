@@ -81,7 +81,8 @@ public class PropertyController extends APIControllerAbstract {
 
         for (Property.Key propertyKey : Property.Key.values()) {
             // Notify change listeners of a change.
-            propertyKey.getGroup().firePropertiesChangedEvent();
+            if (propertyKey.getGroup() != null)
+                propertyKey.getGroup().firePropertiesChangedEvent();
         }
 
         return ok(tenantProperties);
