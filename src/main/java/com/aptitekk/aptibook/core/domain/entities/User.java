@@ -144,7 +144,7 @@ public class User extends MultiTenantEntity implements Serializable {
      */
     public String getFullName() {
         if (admin)
-            return "admin";
+            return "Admin";
 
         if (firstName == null || firstName.isEmpty())
             return getEmailAddress();
