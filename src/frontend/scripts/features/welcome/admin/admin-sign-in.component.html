@@ -11,13 +11,15 @@
 		   [severity]="'danger'"></alert>
 	<alert #loginInfoAlert></alert>
 	
-	<h3 class="text-center" style="margin-top: 0"><i class="fa fa-lock"></i> Admin Sign In</h3>
+	<h3 class="text-center"
+		style="margin-top: 0"><i class="fa fa-lock"></i> Admin Sign In</h3>
 	<hr/>
 	
 	<form-group [control]="signInFormGroup.controls['password']"
 				[label]="'Password'"
 				[faIconName]="'asterisk'"
-				[inputType]="'password'">
+				[inputType]="'password'"
+				[autoFocus]="true">
 	</form-group>
 	
 	<div class="form-group">

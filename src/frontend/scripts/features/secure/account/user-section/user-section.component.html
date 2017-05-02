@@ -24,7 +24,7 @@
 					<h4 class="text-muted">{{user.emailAddress}}</h4>
 				</section>
 				
-				<section>
+				<section *ngIf="!user.admin">
 					<hr/>
 					
 					<h4>Contact Information</h4>
@@ -39,10 +39,11 @@
 					<h4>Assigned Groups</h4>
 					<p style="font-weight: bold">Your assigned groups are highlighted.</p>
 					<tree [selectable]="false"
-						  [ngModel]="user.userGroups" [ngModelOptions]="{standalone: true}">
+						  [ngModel]="user.userGroups"
+						  [ngModelOptions]="{standalone: true}">
 					</tree>
 				</section>
-				
+			
 			</div>
 			
 			<div *ngIf="editingAccount">
@@ -51,7 +52,8 @@
 								[width]="'50%'"
 								[maxWidth]="'130px'"
 								[user]="user"></user-image>
-					<div class="row">
+					<div class="row"
+						 *ngIf="!user.admin">
 						<div class="col-xs-12 col-md-6">
 							<form-group [control]="formGroup.controls['firstName']"
 										[label]="'First Name'"
@@ -73,14 +75,15 @@
 							</form-group>
 						</div>
 					</div>
-					<form-group [value]="user.emailAddress"
+					<form-group *ngIf="!user.admin"
+								[value]="user.emailAddress"
 								[label]="'Email Address'"
 								[faIconName]="'at'"
 								[readOnly]="true">
 					</form-group>
 				</section>
 				
-				<section>
+				<section *ngIf="!user.admin">
 					<hr/>
 					
 					<h4>Contact Information</h4>
