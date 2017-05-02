@@ -16,6 +16,7 @@ import {FooterModule} from "../../app/footer/footer.module";
 import {SecureRoutesModule} from "./secure.routes";
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {AccountModule} from "./account/account.module";
+import {HeaderModule} from "../../app/header/header.module";
 
 /**
  * The secure section is off-limits to the users who have not signed in.
@@ -23,6 +24,7 @@ import {AccountModule} from "./account/account.module";
 @NgModule({
     imports: [
         SharedModule,
+        HeaderModule,
 
         // Routes
         SecureRoutesModule,

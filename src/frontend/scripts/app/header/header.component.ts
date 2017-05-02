@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component, OnInit} from "@angular/core";
+import {Component, Input, OnInit} from "@angular/core";
 import {Router} from "@angular/router";
 import {User} from "../../models/user.model";
 import {AuthService} from "../../core/services/auth.service";
@@ -19,27 +19,12 @@ import {Notification} from "../../models/notification.model";
 
 export class HeaderComponent implements OnInit {
 
-    user: User;
-    unreadNotifications: Notification[] = [];
+    @Input() disableHeaderLink: boolean = false;
 
-    constructor(private router: Router,
-                private authService: AuthService,
-                private  notificationService: NotificationService) {
+    constructor() {
     }
 
     ngOnInit(): void {
-        this.authService.getCurrentUser().subscribe(user => {
-            if (user) {
-                this.user = user;
-                this.notificationService.getUnreadNotifications().subscribe(unreadNotifications => {
-                    this.unreadNotifications = unreadNotifications;
-                });
-            }
-        });
-    }
-
-    onSignOut() {
-        this.authService.signOut().subscribe(response => this.router.navigate(['', 'sign-in']));
     }
 
 }

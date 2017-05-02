@@ -4,17 +4,13 @@
   ~ Proprietary and confidential.
   -->
 
-<ol class="breadcrumb">
-	<li class="active">Dashboard</li>
-</ol>
-
 <div class="container-fluid no-top-padding no-left-padding">
 	
 	<div class="row no-gutter">
 		
 		<!-- Left Calendar Section -->
 		<div class="col-xs-12 col-lg-9">
-			<div class="full-height-breadcrumb">
+			<div class="full-height">
 				<calendar [eventFeedEndpoint]="'reservations'"
 						  [allowDaySelection]="true"
 						  [hiddenStatuses]="['rejected', 'cancelled']"

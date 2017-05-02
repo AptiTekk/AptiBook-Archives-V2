@@ -32,7 +32,7 @@ export class AdminSignInComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.signInFormGroup = this.formBuilder.group({
-            password: [null, Validators.required]
+            password: [null]
         });
     }
 

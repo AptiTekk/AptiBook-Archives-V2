@@ -16,7 +16,7 @@
     }
 
     #sidebar.closed #logo-image {
-        background-image: url('../../../../resources/images/logo.svg');
+        background-image: url('../../../../resources/images/logo-icon.svg');
     }
 
     #sidebar.closed #notifications {

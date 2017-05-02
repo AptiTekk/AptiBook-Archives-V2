@@ -59,7 +59,7 @@ at-app:empty + #splashscreen {
 
     z-index: 10002;
 
-    background: url('logo.svg') no-repeat center center;
+    background: url('../images/logo-icon.svg') no-repeat center center;
     background-size: 15% !important;
 
     animation: fadein 1s;

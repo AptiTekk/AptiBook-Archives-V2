@@ -11,21 +11,6 @@
     padding-left: 0;
 }
 
-.container-fluid:not(.no-top-padding),
-.container:not(.no-top-padding) {
-    padding-top: 15px;
-}
-
-.container-fluid,
-.container {
-    padding-left: 30px;
-}
-
-.container-fluid.no-left-padding > .row,
-.container.no-left-padding > .row {
-    margin-left: -30px;
-}
-
 /* Link and Text Styling */
 
 .app a {
@@ -160,11 +145,11 @@
 /* Spacing Helpers */
 
 .full-height {
-    height: calc(100vh - 50px);
+    height: calc(100vh - 50px - 60px);
 }
 
 .full-height-breadcrumb {
-    height: calc(100vh - 50px - 60px);
+    height: calc(100vh - 50px - 60px - 60px);
 }
 
 .no-padding {
@@ -179,7 +164,8 @@ ol.breadcrumb {
     padding: 15px 30px;
     margin-bottom: 0;
     font-size: 20px;
-    box-shadow: inset 0 -10px 20px -20px black;
+    border-bottom: 1px solid #ddd;
+    border-radius: 0;
     background-color: #fff;
     white-space: nowrap;
     overflow-x: auto;

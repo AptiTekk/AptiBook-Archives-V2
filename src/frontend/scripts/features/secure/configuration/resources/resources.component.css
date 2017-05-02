@@ -14,7 +14,6 @@
     width: 100%;
     padding: 10px;
     font-size: 22px;
-    border-radius: 5px;
     margin-bottom: 10px;
     cursor: pointer;
     border: 1px dashed #666;
@@ -28,6 +27,11 @@
     background-color: #4272b7;
     border: none;
     color: white;
+}
+
+#resource-categories-list > li:active,
+#resource-categories-list > li:focus {
+    outline: none;
 }
 
 .resource-panel resource-image {

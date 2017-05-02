@@ -5,7 +5,7 @@
  */
 
 #sidebar {
-    width: 260px;
+    width: 110px;
     height: 100%;
     position: fixed;
     z-index: 999;
@@ -14,39 +14,12 @@
     transition: width 0.1s ease-in-out;
 }
 
-#header {
-    padding: 7px 0;
-    width: 275px;
-    height: 85px;
-    background-color: #fff;
-    box-shadow: #666 0 0 10px -2px;
-    border-bottom-right-radius: 10px;
-    position: relative;
-    z-index: 1000;
-    overflow: hidden;
-    transition: width 0.1s ease-in-out;
-}
-
-#logo {
-    width: 275px;
-    padding: 10px;
-    height: 70px;
-    display: block;
-}
-
-#logo-image {
-    width: 100%;
-    height: 100%;
-    background-size: contain;
-    background: url('../../../../resources/images/logo.svg') no-repeat center center;
-}
-
 #notifications {
     height: 40px;
-    padding-top: 8px;
-    padding-left: 15px;
     font-size: 16px;
-    color: #666;
+    line-height: 40px;
+    text-align: center;
+    color: #ccc;
     border-bottom: 1px solid #eee;
     position: relative;
     z-index: 999;
@@ -65,8 +38,41 @@
     color: #666;
 }
 
-#content {
-    padding: 10px 0 0 10px;
+#notifications:active,
+#notifications:focus {
+    outline: none;
+}
+
+.navigation-link {
+    fill: #ddd;
+    border-left: 10px solid #ddd;
+    height: 100px;
+    font-size: 30px;
+    line-height: 100px;
+    text-align: center;
+    cursor: pointer;
+}
+
+:host /deep/ .navigation-link > svg {
+    width: 40px;
+    height: 40px;
+    vertical-align: middle;
+}
+
+.navigation-link:hover {
+    fill: #aaa;
+    border-left-color: #ccc;
+    background-color: #f1f1f1;
+}
+
+.navigation-link:focus, .navigation-link:active {
+    outline: none;
+}
+
+.navigation-link.active {
+    fill: #4272b7;
+    border-left-color: #4272b7;
+    background-color: #fff;
 }
 
 :host /deep/ #content accordion-navigation .navigation-block {
@@ -83,15 +89,14 @@
     position: fixed;
     bottom: 50px;
     left: 0;
-    width: 260px;
+    width: 110px;
     transition: width 0.1s ease-in-out;
     white-space: nowrap;
     overflow: hidden;
 }
 
 #sign-out-button {
-    float: right;
-    width: 40px;
+    width: 100%;
     font-size: 20px;
     text-align: center;
     height: 50px;

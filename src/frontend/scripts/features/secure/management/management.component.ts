@@ -4,8 +4,8 @@
  * Proprietary and confidential.
  */
 import {Component, OnInit} from "@angular/core";
-import {HeaderComponent} from "../../../app/header/header.component";
 import {ReservationManagementService} from "../../../core/services/reservation-management.service";
+import {NavigationLink} from "../../../shared/navigation/navigation-link.model";
 
 @Component({
     selector: 'at-management',
@@ -13,7 +13,32 @@ import {ReservationManagementService} from "../../../core/services/reservation-m
 })
 export class ManagementComponent implements OnInit {
 
-    constructor(private reservationManagementService: ReservationManagementService) {}
+    navigationLinks: NavigationLink[] =
+        [
+            {
+                path: ['', 'secure', 'management', 'queue'],
+                label: "Approval Queue",
+                icon: "hourglass-half"
+            },
+            {
+                path: ['', 'secure', 'management', 'approved'],
+                label: "Approved Reservations",
+                icon: "calendar-check-o"
+            },
+            {
+                path: ['', 'secure', 'management', 'rejected'],
+                label: "Rejected Reservations",
+                icon: "calendar-times-o"
+            },
+            {
+                path: ['', 'secure', 'management', 'calendar'],
+                label: "Management Calendar",
+                icon: "calendar"
+            }
+        ];
+
+    constructor(private reservationManagementService: ReservationManagementService) {
+    }
 
     ngOnInit(): void {
         this.reservationManagementService.fetchReservations();
