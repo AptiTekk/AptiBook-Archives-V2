@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {ActivatedRouteSnapshot, RouterStateSnapshot, Router, CanActivate} from "@angular/router";
+import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
 import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {AuthService} from "../../core/services/auth.service";
@@ -22,17 +22,27 @@ export class WelcomeGuard implements CanActivate {
         return Observable.create(listener => {
             this.tenantService.getTenant().take(1).subscribe(
                 tenant => {
-                        this.authService.getCurrentUser().take(1).subscribe(
-                            user => {
-                                if (user) {
-                                    this.router.navigate(['', 'secure']);
-                                    listener.next(false);
-                                } else {
+                    this.authService.getCurrentUser().take(1).subscribe(
+                        user => {
+                            // If the user exists, then they shouldn't be on the welcome page.
+                            if (user) {
+                                this.router.navigate(['', 'secure']);
+                                listener.next(false);
+                            } else { // Otherwise, check the authentication method.
+                                // Built in authentication means we should be on the welcome page.
+                                if (tenant.authenticationMethod === 'BUILT_IN')
                                     listener.next(true);
+                                else // CAS authentication needs to redirect to the server.
+                                {
+                                    // Redirect to CAS endpoint, which will redirect to the correct server.
+                                    window.location.href = "/api/cas/entry";
+                                    listener.next(false);
                                 }
-                            });
-                    },
+                            }
+                        });
+                },
                 err => {
+                    // Tenant could not be found; inactive Tenant.
                     this.router.navigate(['', 'inactive'], {skipLocationChange: true});
                     listener.next(false);
                 });

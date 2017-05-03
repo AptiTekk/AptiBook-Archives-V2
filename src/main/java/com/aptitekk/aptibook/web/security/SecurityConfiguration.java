@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
+import com.aptitekk.aptibook.web.security.cas.CASEntryFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
 import com.aptitekk.aptibook.web.security.oauth.google.GoogleOAuthFilter;
 import com.aptitekk.aptibook.web.security.tenant.TenantDiscoveryFilter;
@@ -30,6 +31,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
     private final CSRFCookieFilter csrfCookieFilter;
     private final CustomBasicAuthenticationFilter customBasicAuthenticationFilter;
     private final GoogleOAuthFilter googleOAuthFilter;
+    private final CASEntryFilter casEntryFilter;
     private final CASCallbackFilter casCallbackFilter;
 
     @Autowired
@@ -38,12 +40,14 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                                  CSRFCookieFilter csrfCookieFilter,
                                  CustomBasicAuthenticationFilter customBasicAuthenticationFilter,
                                  GoogleOAuthFilter googleOAuthFilter,
+                                 CASEntryFilter casEntryFilter,
                                  CASCallbackFilter casCallbackFilter) {
         this.apiAuthenticationEntryPoint = apiAuthenticationEntryPoint;
         this.tenantDiscoveryFilter = tenantDiscoveryFilter;
         this.csrfCookieFilter = csrfCookieFilter;
         this.customBasicAuthenticationFilter = customBasicAuthenticationFilter;
         this.googleOAuthFilter = googleOAuthFilter;
+        this.casEntryFilter = casEntryFilter;
         this.casCallbackFilter = casCallbackFilter;
     }
 
@@ -62,7 +66,10 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Add the Google OAuth Filter
                 .addFilterBefore(googleOAuthFilter, BasicAuthenticationFilter.class)
 
-                // Add the CAS Ticket Filter
+                // Add the CAS Entry Filter
+                .addFilterBefore(casEntryFilter, BasicAuthenticationFilter.class)
+
+                // Add the CAS Callback Filter
                 .addFilterBefore(casCallbackFilter, BasicAuthenticationFilter.class)
 
                 // Define the endpoints for which users must be authenticated.
@@ -70,7 +77,6 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
 
                 // Everyone can access the basic Tenant details.
                 .antMatchers(HttpMethod.GET, "/api/tenant").permitAll()
-                .antMatchers(HttpMethod.GET, "/api/tenant/name").permitAll()
 
                 // Everyone can register.
                 .antMatchers(HttpMethod.POST, "/api/register").permitAll()

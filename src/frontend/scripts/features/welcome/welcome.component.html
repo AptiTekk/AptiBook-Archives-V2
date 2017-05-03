@@ -25,8 +25,8 @@
 						<div id="content-container"
 							 class="col-xs-12 col-md-8 col-md-offset-2">
 							<div id="slug-container"
-								 *ngIf="tenantName != undefined">
-								{{tenantName}}
+								 *ngIf="tenant?.name != undefined">
+								{{tenant?.name}}
 							</div>
 							<router-outlet></router-outlet>
 						</div>
