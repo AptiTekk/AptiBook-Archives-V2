@@ -66,13 +66,32 @@ public class PropertyService {
     }
 
     /**
-     * Sets all the properties for a Tenant to the provided map.
+     * Sets all the properties for the Tenant to the provided map.
      *
      * @param properties The properties to store in the Tenant.
      */
     public void setProperties(Map<Property.Key, String> properties) {
         Tenant tenant = tenantManagementService.getTenant();
+
+        // Overwrite properties
         tenant.properties = properties;
+
+        tenantRepository.save(tenant);
+    }
+
+    /**
+     * Merges the provided properties map into the Tenant, overwriting or adding properties where necessary (no deletions).
+     *
+     * @param properties The properties to merge into the Tenant.
+     */
+    public void mergeProperties(Map<Property.Key, String> properties) {
+        Tenant tenant = tenantManagementService.getTenant();
+
+        // Merge properties
+        for (Map.Entry<Property.Key, String> entry : properties.entrySet()) {
+            tenant.properties.put(entry.getKey(), entry.getValue());
+        }
+
         tenantRepository.save(tenant);
     }
 }

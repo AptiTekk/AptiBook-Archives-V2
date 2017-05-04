@@ -105,6 +105,15 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
         );
     }
 
+    onAuthenticationMethodChanged() {
+        // To ensure that the CAS URL is sent with the patch when CAS is selected...
+        if (this.formGroup.controls['AUTHENTICATION_METHOD'].value === 'CAS') {
+            this.formGroup.controls['CAS_SERVER_URL'].markAsDirty();
+        } else {
+            this.formGroup.controls['CAS_SERVER_URL'].markAsPristine();
+        }
+    }
+
     reset() {
         //let patches: Observable<Property>[] = [];
 
@@ -123,11 +132,15 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
     }
 
     onSubmit() {
+        let propertiesPatch: Properties = {};
+
         for (let controlName in this.formGroup.controls) {
-            this.properties[controlName] = this.formGroup.controls[controlName].value;
+            if (this.formGroup.controls[controlName].dirty)
+                propertiesPatch[controlName] = this.formGroup.controls[controlName].value;
         }
 
-        this.propertiesService.patchProperties(this.properties)
+
+        this.propertiesService.patchProperties(propertiesPatch)
             .subscribe(
                 properties => {
                     this.propertiesService.fetchProperties();

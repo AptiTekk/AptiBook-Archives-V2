@@ -60,30 +60,24 @@ public class PropertyController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "properties", method = RequestMethod.PATCH)
-    public ResponseEntity<?> setPropertyValue(@RequestBody Map<Property.Key, String> properties) {
+    public ResponseEntity<?> setPropertyValue(@RequestBody Map<Property.Key, String> propertiesPatch) {
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
         Map<Property.Key, String> tenantProperties = propertyService.getProperties();
 
         //Check that the submitted value is valid
-        for (Property.Key propertyKey : Property.Key.values()) {
-            PropertyValidator propertyValidator = propertyKey.getPropertyValidator();
-            if (!propertyValidator.isValid(properties.get(propertyKey))) {
+        for (Map.Entry<Property.Key, String> entry : propertiesPatch.entrySet()) {
+            PropertyValidator propertyValidator = entry.getKey().getPropertyValidator();
+            if (!propertyValidator.isValid(propertiesPatch.get(entry.getKey()))) {
                 return badRequest(propertyValidator.getValidationFailedMessage());
             }
 
-            tenantProperties.put(propertyKey, properties.get(propertyKey));
+            tenantProperties.put(entry.getKey(), propertiesPatch.get(entry.getKey()));
         }
 
-        // Update value
-        propertyService.setProperties(tenantProperties);
-
-        for (Property.Key propertyKey : Property.Key.values()) {
-            // Notify change listeners of a change.
-            if (propertyKey.getGroup() != null)
-                propertyKey.getGroup().firePropertiesChangedEvent();
-        }
+        // Update values
+        propertyService.mergeProperties(tenantProperties);
 
         return ok(tenantProperties);
     }
@@ -102,9 +96,6 @@ public class PropertyController extends APIControllerAbstract {
 
         // Update value
         propertyService.setProperty(key, value);
-
-        // Notify change listeners of a change.
-        key.getGroup().firePropertiesChangedEvent();
 
         return ok(value);
     }

@@ -18,7 +18,8 @@
 				<!-- Toolbar -->
 				<div class="btn-toolbar">
 					<button class="btn btn-primary"
-							(click)="onSubmit()">
+							(click)="onSubmit()"
+							[disabled]="formGroup.pristine">
 						Save Changes
 					</button>
 					<button class="btn btn-danger pull-right"
@@ -58,9 +59,10 @@
 						<label for="authenticationMethod">Authentication Method</label>
 						<select id="authenticationMethod"
 								class="form-control"
-								formControlName="AUTHENTICATION_METHOD">
-							<option value="BUILT_IN">Built-In Authentication</option>
-							<option value="CAS">CAS Authentication</option>
+								formControlName="AUTHENTICATION_METHOD"
+								(change)="onAuthenticationMethodChanged()">
+							<option value="BUILT_IN">Built-In (Username and Password)</option>
+							<option value="CAS">CAS (Apereo / Jasig Central Authentication Service)</option>
 						</select>
 						
 						<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'BUILT_IN'">
@@ -115,7 +117,7 @@
 							</form-group>
 							
 							<!-- CAS Callback URL -->
-							<form-group [label]="'CAS Callback URL (For CAS Server Configuration)'"
+							<form-group [label]="'AptiBook Service Callback URL (For CAS Server Configuration)'"
 										[value]="CAS_CALLBACK_URL"
 										[readOnly]="true">
 							</form-group>
