@@ -102,9 +102,8 @@ public class CASCallbackFilter extends OncePerRequestFilter {
      * @throws CASTicketValidationException If the ticket could not be validated.
      */
     private static String getCASUserIdFromTicket(HttpServletRequest request, String casUrl, String ticket) throws CASTicketValidationException {
-        RestTemplate restTemplate = new RestTemplate();
         try {
-            ResponseEntity<String> responseEntity = restTemplate.getForEntity(casUrl + "/serviceValidate?ticket=" + ticket + "&service=" + request.getRequestURL().toString() + "&format=JSON", String.class);
+            ResponseEntity<String> responseEntity = new RestTemplate().getForEntity(casUrl + "/serviceValidate?ticket=" + ticket + "&service=" + request.getRequestURL().toString() + "&format=JSON", String.class);
 
             // Check for OK status
             if (responseEntity.getStatusCode() != HttpStatus.OK)

@@ -7,10 +7,7 @@
 package com.aptitekk.aptibook.core.domain.entities.enums.property;
 
 import com.aptitekk.aptibook.ApplicationContextProvider;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.AuthenticationMethodPropertyValidator;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.BooleanPropertyValidator;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.MaxLengthPropertyValidator;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.PropertyValidator;
+import com.aptitekk.aptibook.core.domain.entities.enums.property.validators.*;
 import org.springframework.context.ApplicationContext;
 
 import java.util.ArrayList;
@@ -64,7 +61,7 @@ public class Property {
         GOOGLE_SIGN_IN_ENABLED("false", Group.GOOGLE_SIGN_IN, new BooleanPropertyValidator()),
         GOOGLE_SIGN_IN_WHITELIST("", Group.GOOGLE_SIGN_IN, new MaxLengthPropertyValidator(256)),
 
-        CAS_SERVER_URL("", Group.CAS_AUTHENTICATION, new MaxLengthPropertyValidator(256));
+        CAS_SERVER_URL("", Group.CAS_AUTHENTICATION, new CASServerUrlPropertyValidator());
 
         private final String defaultValue;
         private final Group group;
