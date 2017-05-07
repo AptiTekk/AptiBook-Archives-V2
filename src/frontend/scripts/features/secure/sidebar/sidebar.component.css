@@ -43,6 +43,16 @@
     outline: none;
 }
 
+#content {
+    overflow-y: auto;
+    /* 100vh - header - notifications - sign out - footer */
+    max-height: calc(100vh - 60px - 40px - 50px - 50px);
+}
+
+#content::-webkit-scrollbar {
+    width: 0;
+}
+
 .navigation-link {
     fill: #ddd;
     border-left: 10px solid #ddd;

@@ -91,12 +91,20 @@ export class SidebarComponent implements OnInit {
                 .length > 0;
     }
 
+    /**
+     * When the sidebar is swiped to the right (swipe open)
+     */
     onSwipeRight() {
-        this.swipedOpen = true;
+        // Uncomment to enable
+        //this.swipedOpen = true;
     }
 
+    /**
+     * When the sidebar is swiped to the left (swipe close)
+     */
     onSwipeLeft() {
-        this.swipedOpen = false;
+        // Uncomment to enable
+        //this.swipedOpen = false;
     }
 
     onSignOut() {
