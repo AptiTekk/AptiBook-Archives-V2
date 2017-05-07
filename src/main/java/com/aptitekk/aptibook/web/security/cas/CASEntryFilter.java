@@ -64,7 +64,7 @@ public class CASEntryFilter extends OncePerRequestFilter {
 
                 String requestPath = request.getRequestURL().toString();
 
-                response.sendRedirect(casUrl + "?service=" + requestPath.substring(0, requestPath.indexOf("cas/") + 4) + "callback");
+                response.sendRedirect(casUrl + "/login?service=" + requestPath.substring(0, requestPath.indexOf("cas/") + 4) + "callback");
                 return;
             } catch (CASEntryException e) {
                 response.setStatus(HttpServletResponse.SC_BAD_REQUEST);

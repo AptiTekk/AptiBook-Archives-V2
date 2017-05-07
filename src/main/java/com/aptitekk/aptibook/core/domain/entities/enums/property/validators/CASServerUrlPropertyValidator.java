@@ -6,12 +6,10 @@
 
 package com.aptitekk.aptibook.core.domain.entities.enums.property.validators;
 
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.client.RestClientException;
-import org.springframework.web.client.RestTemplate;
+import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+
+import javax.xml.parsers.DocumentBuilderFactory;
 
 /**
  * Verifies a CAS Server URL by attempting to "validate" a ticket (and expecting a validation failure).
@@ -25,26 +23,11 @@ public class CASServerUrlPropertyValidator extends PropertyValidator {
     @Override
     public boolean isValid(String inputValue) {
         try {
-            ResponseEntity<String> responseEntity = new RestTemplate().getForEntity(inputValue + "/serviceValidate?format=JSON", String.class);
+            Document casDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(inputValue + "/serviceValidate");
+            casDocument.normalize();
 
-            // Check for OK status
-            if (responseEntity.getStatusCode() != HttpStatus.OK)
-                return false;
-
-            try {
-                // Convert response body to JSON
-                JSONObject body = new JSONObject(responseEntity.getBody());
-
-                // Check for serviceResponse key.
-                JSONObject serviceResponse = body.getJSONObject("serviceResponse");
-
-                // Check for authenticationFailure key.
-                serviceResponse.getJSONObject("authenticationFailure");
-
-                return true;
-            } catch (JSONException e) {
-                return false;
-            }
+            Element documentElement = casDocument.getDocumentElement();
+            return documentElement.getTagName().equals("cas:serviceResponse");
         } catch (Exception e) {
             return false;
         }

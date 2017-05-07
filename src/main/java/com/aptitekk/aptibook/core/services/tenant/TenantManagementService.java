@@ -21,16 +21,25 @@ import java.util.Set;
 @Service
 public class TenantManagementService {
 
-    private final TenantRepository tenantRepository;
-    private final HttpServletRequest request;
+    private TenantRepository tenantRepository;
 
-    private Map<String, Tenant> allowedTenants;
+    private HttpServletRequest request;
 
     @Autowired
-    public TenantManagementService(TenantRepository tenantRepository, HttpServletRequest request) {
+    public void setTenantRepository(TenantRepository tenantRepository) {
         this.tenantRepository = tenantRepository;
+    }
+
+    @Autowired
+    public void setRequest(HttpServletRequest request) {
         this.request = request;
     }
+
+    /**
+     * The Tenants that are allowed access to the application. (To filter out inactive tenants).
+     * Key: Domain, Value: Tenant
+     */
+    private Map<String, Tenant> allowedTenants;
 
     @PostConstruct
     private void init() {
@@ -55,20 +64,22 @@ public class TenantManagementService {
     }
 
     /**
-     * @return A Set of valid tenant slugs.
+     * Determines which Tenant domains are allowed for access to the application, to filter out inactive Tenants.
+     *
+     * @return A Set of valid Tenant domains.
      */
     public Set<String> getAllowedTenantDomains() {
         return allowedTenants.keySet();
     }
 
     /**
-     * Returns a Tenant based on the slug provided.
+     * Returns a Tenant based on the domain provided.
      *
-     * @param tenantSlug The slug of the Tenant.
-     * @return The Tenant with the corresponding slug, or null.
+     * @param domain The domain of the Tenant.
+     * @return The Tenant with the corresponding domain, or null.
      */
-    public Tenant getTenantByDomain(String tenantSlug) {
-        return allowedTenants.get(tenantSlug);
+    public Tenant getTenantByDomain(String domain) {
+        return allowedTenants.get(domain);
     }
 
     /**

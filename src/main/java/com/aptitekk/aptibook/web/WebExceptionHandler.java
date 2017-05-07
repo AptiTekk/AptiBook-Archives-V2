@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.web;
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.rest.controllers.api.validators.RestValidator;
+import org.apache.catalina.connector.ClientAbortException;
 import org.hibernate.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
@@ -85,6 +86,11 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     protected ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
         return new ResponseEntity<>(new RestError("The passed in value for the '" + ex.getName() + "' path variable is not valid."), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(ClientAbortException.class)
+    protected void handleClientAbortException(ClientAbortException e) {
+        logService.logError(getClass(), "A client connection was aborted: " + e.getMessage());
     }
 
     @Override
