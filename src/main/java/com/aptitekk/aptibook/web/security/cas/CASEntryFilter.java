@@ -49,16 +49,14 @@ public class CASEntryFilter extends OncePerRequestFilter {
                 // Check that CAS is enabled.
                 String authenticationMethod = currentTenant.properties.get(Property.Key.AUTHENTICATION_METHOD);
                 if (authenticationMethod == null || AuthenticationMethod.valueOf(authenticationMethod) != AuthenticationMethod.CAS) {
-                    response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
-                    response.getWriter().println("CAS Authentication is not enabled.");
+                    this.redirectBackToSignIn(response, "CAS Authentication is not enabled.");
                     return;
                 }
 
                 // Check for a valid CAS Server Url
                 String casUrl = currentTenant.properties.get(Property.Key.CAS_SERVER_URL);
                 if (casUrl == null || casUrl.isEmpty()) {
-                    response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
-                    response.getWriter().println("CAS Authentication is not properly configured.");
+                    this.redirectBackToSignIn(response, "CAS Authentication is not properly configured.");
                     return;
                 }
 
@@ -67,10 +65,7 @@ public class CASEntryFilter extends OncePerRequestFilter {
                 response.sendRedirect(casUrl + "/login?service=" + requestPath.substring(0, requestPath.indexOf("cas/") + 4) + "callback");
                 return;
             } catch (CASEntryException e) {
-                response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
-                response.getWriter().println("We apologize, but something wen't wrong while logging in. We have been notified of the problem.");
-                response.getWriter().println("We are not sure where you came from, so you must return to the sign in page through your browser's address bar.");
-                response.getWriter().println("Thank you for your understanding!");
+                this.redirectBackToSignIn(response, e.getMessage());
                 this.logService.logException(getClass(), e, "Something went wrong during a CAS Entry Request");
                 return;
             }
@@ -80,26 +75,51 @@ public class CASEntryFilter extends OncePerRequestFilter {
     }
 
     /**
+     * Redirects the request back to the sign in page, if possible.
+     *
+     * @param response The response.
+     * @param message  An optional message to write to the response headers.
+     * @throws IOException If writing to the response fails.
+     */
+    private void redirectBackToSignIn(HttpServletResponse response, String message) throws IOException {
+        // Write message to header
+        if (message != null)
+            response.setHeader("X-CAS-Error-Message", message);
+
+        Tenant currentTenant = tenantManagementService.getTenant();
+        if (currentTenant == null) {
+            // Not sure where they came from.
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            response.getWriter().println("We apologize, but something wen't wrong while logging in. We have been notified of the problem.");
+            response.getWriter().println("We are not sure where you came from, so you must return to the sign in page through your browser's address bar.");
+            response.getWriter().println("Thank you for your understanding!");
+        } else {
+            // Redirect to root of domain, which should be the sign in page.
+            response.sendRedirect("/");
+        }
+    }
+
+    /**
      * Thrown when something happens while processing the entry request.
      */
     private static class CASEntryException extends RuntimeException {
-        public CASEntryException() {
+        CASEntryException() {
             super();
         }
 
-        public CASEntryException(String message) {
+        CASEntryException(String message) {
             super(message);
         }
 
-        public CASEntryException(String message, Throwable cause) {
+        CASEntryException(String message, Throwable cause) {
             super(message, cause);
         }
 
-        public CASEntryException(Throwable cause) {
+        CASEntryException(Throwable cause) {
             super(cause);
         }
 
-        protected CASEntryException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
+        CASEntryException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
             super(message, cause, enableSuppression, writableStackTrace);
         }
     }

@@ -12,6 +12,7 @@ import com.mindscapehq.raygun4java.core.RaygunClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.AutowireCapableBeanFactory;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Service;
 
@@ -39,17 +40,26 @@ public class LogService {
      */
     private static final RaygunClient RAYGUN_CLIENT = RAYGUN_API_KEY != null ? new RaygunClient(RAYGUN_API_KEY) : null;
 
-    private SpringProfileService springProfileService;
-    private TenantManagementService tenantManagementService;
+    private final SpringProfileService springProfileService;
+    private final AutowireCapableBeanFactory autowireCapableBeanFactory;
 
     @Autowired
-    private void setSpringProfileService(SpringProfileService springProfileService) {
+    public LogService(SpringProfileService springProfileService,
+                      AutowireCapableBeanFactory autowireCapableBeanFactory) {
         this.springProfileService = springProfileService;
+        this.autowireCapableBeanFactory = autowireCapableBeanFactory;
     }
 
-    @Autowired
-    public void setTenantManagementService(TenantManagementService tenantManagementService) {
-        this.tenantManagementService = tenantManagementService;
+
+    /**
+     * Gets the current Tenant by using programmatic bean injection to avoid a circular dependency loop.
+     *
+     * @return The current Tenant, or null if there is none.
+     */
+    private Tenant getCurrentTenant() {
+        TenantManagementService tenantManagementService = new TenantManagementService();
+        this.autowireCapableBeanFactory.autowireBean(tenantManagementService);
+        return tenantManagementService.getTenant();
     }
 
     /**
@@ -59,7 +69,7 @@ public class LogService {
      * @param message The message to log.
      */
     public void logInfo(Class clazz, String message) {
-        Tenant currentTenant = tenantManagementService.getTenant();
+        Tenant currentTenant = getCurrentTenant();
         LOGGER.info("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.domain + "] " : "") + message);
     }
 
@@ -70,7 +80,7 @@ public class LogService {
      * @param message The message to log.
      */
     public void logError(Class clazz, String message) {
-        Tenant currentTenant = tenantManagementService.getTenant();
+        Tenant currentTenant = getCurrentTenant();
         LOGGER.error("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.domain + "] " : "") + message);
     }
 
@@ -82,7 +92,7 @@ public class LogService {
      * @param message The message to log.
      */
     public void logException(Class clazz, Throwable t, String message) {
-        Tenant currentTenant = tenantManagementService.getTenant();
+        Tenant currentTenant = getCurrentTenant();
         LOGGER.error("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.domain + "] " : "") + message, t);
         if (RAYGUN_CLIENT != null && springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
             List<String> tags = new ArrayList<>();
@@ -108,7 +118,8 @@ public class LogService {
      * @param message The message to log.
      */
     public void logDebug(Class clazz, String message) {
-        LOGGER.debug("[" + clazz.getSimpleName() + "] " + message);
+        Tenant currentTenant = getCurrentTenant();
+        LOGGER.debug("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.domain + "] " : "") + message);
     }
 
 }
