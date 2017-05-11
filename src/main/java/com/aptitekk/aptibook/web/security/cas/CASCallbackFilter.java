@@ -7,16 +7,24 @@
 package com.aptitekk.aptibook.web.security.cas;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.enums.property.AuthenticationMethod;
 import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
+import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.LogService;
+import com.aptitekk.aptibook.core.services.RegistrationService;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
+import com.google.common.base.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.util.UriUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
+import org.yaml.snakeyaml.util.UriEncoder;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -25,19 +33,26 @@ import javax.servlet.http.HttpServletResponse;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
+import java.net.URLEncoder;
 
 @Component
 public class CASCallbackFilter extends OncePerRequestFilter {
 
-    private final String CALLBACK_PATH = "/api/cas/callback";
+    public final static String CALLBACK_PATH = "/api/cas/callback";
 
     private final TenantManagementService tenantManagementService;
+    private final RegistrationService registrationService;
+    private final UserRepository userRepository;
     private final LogService logService;
 
     @Autowired
     public CASCallbackFilter(TenantManagementService tenantManagementService,
+                             RegistrationService registrationService,
+                             UserRepository userRepository,
                              LogService logService) {
         this.tenantManagementService = tenantManagementService;
+        this.registrationService = registrationService;
+        this.userRepository = userRepository;
         this.logService = logService;
     }
 
@@ -73,9 +88,25 @@ public class CASCallbackFilter extends OncePerRequestFilter {
                 // Validate the ticket and get the CAS User ID.
                 String casUserId = getCASUserIdFromTicket(request, casUrl, ticketParam);
 
-                System.out.println("CAS Callback Received:");
-                System.out.println(casUserId);
-                return;
+                // Look for an existing user with this ID.
+                User user = this.userRepository.findByCASID(casUserId);
+
+                if (user != null) {
+                    // User was found, sign them in.
+                    SecurityContextHolder.getContext().setAuthentication(new UserIDAuthenticationToken(user.getId()));
+
+                    // Redirect back to root.
+                    response.sendRedirect("/");
+                    return;
+                } else {
+                    // Create the CAS User and begin registration.
+                    user = new User();
+                    user.setCasId(casUserId);
+
+                    // This method will call a redirect.
+                    this.registrationService.beginRegistration(user, request, response);
+                    return;
+                }
             } catch (CASCallbackException e) {
                 this.redirectBackToSignIn(response, e.getMessage());
                 this.logService.logException(getClass(), e, "Something went wrong during a CAS Callback Request");
@@ -97,7 +128,7 @@ public class CASCallbackFilter extends OncePerRequestFilter {
      */
     private static String getCASUserIdFromTicket(HttpServletRequest request, String casUrl, String ticket) throws CASTicketValidationException {
         try {
-            Document casDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(casUrl + "/serviceValidate?ticket=" + ticket + "&service=" + request.getRequestURL().toString());
+            Document casDocument = DocumentBuilderFactory.newInstance().newDocumentBuilder().parse(casUrl + "/serviceValidate?ticket=" + ticket + "&service=" + URLEncoder.encode(request.getRequestURL().toString(), "UTF-8"));
             casDocument.normalize();
 
             Element documentElement = casDocument.getDocumentElement();

@@ -44,6 +44,8 @@ public class User extends MultiTenantEntity implements Serializable {
 
     private boolean verified;
 
+    private String casId;
+
     @ManyToMany
     public List<UserGroup> userGroups = new ArrayList<>();
 
@@ -135,6 +137,14 @@ public class User extends MultiTenantEntity implements Serializable {
 
     public void setVerified(boolean verified) {
         this.verified = verified;
+    }
+
+    public String getCasId() {
+        return casId;
+    }
+
+    public void setCasId(String casId) {
+        this.casId = casId;
     }
 
     /**

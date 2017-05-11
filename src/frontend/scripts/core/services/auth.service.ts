@@ -86,20 +86,9 @@ export class AuthService {
     }
 
     /**
-     * Signs the user out of AptiBook
-     * @returns An observable with no data.
+     * Signs the user out of AptiBook by redirect.
      */
-    public signOut(): Observable<void> {
-        return Observable.create(listener => {
-            this.apiService.get("sign-out").subscribe(
-                response => {
-                    this.currentUser.next(undefined);
-                    listener.next()
-                },
-                err => {
-                    listener.error(err);
-                }
-            );
-        });
+    public signOut(): void {
+        window.location.href = "/api/sign-out";
     }
 }

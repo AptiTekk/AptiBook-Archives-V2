@@ -1,0 +1,60 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div class="container-fluid">
+	<at-header></at-header>
+	<div class="row">
+		<div class="col-xs-11 col-sm-8 col-md-6 col-lg-5"
+			 id="left-panel">
+			<h3>You're just one step away from using AptiBook.</h3>
+			<p>Fill out the details below to continue.</p>
+			<hr/>
+			<form (submit)="onSubmit()">
+				<alert #registerAlert
+					   [severity]="'danger'"></alert>
+				
+				<form-group [control]="formGroup?.controls['emailAddress']"
+							[label]="'Email Address'"
+							[faIconName]="'at'"
+							[autoFocus]="true"
+							[errorMessages]="
+                    {
+                    required: 'This is required.',
+                    pattern: 'These characters are not allowed:  < > ; =',
+                    maxlength: 'This must be 100 characters or less.'
+                    }">
+				</form-group>
+				
+				<form-group [control]="formGroup?.controls['firstName']"
+							[label]="'First Name'"
+							[errorMessages]="
+                    {
+                    pattern: 'These characters are not allowed:  < > ; =',
+                    maxlength: 'This must be 30 characters or less.'
+                    }">
+				</form-group>
+				
+				<form-group [control]="formGroup?.controls['lastName']"
+							[label]="'Last Name'"
+							[errorMessages]="
+                    {
+                    pattern: 'These characters are not allowed:  < > ; =',
+                    maxlength: 'This must be 30 characters or less.'
+                    }">
+				</form-group>
+				
+				<button class="btn btn-primary btn-large btn-block"
+						[disabled]="formGroup?.invalid">
+					Finish Registration
+				</button>
+			
+			</form>
+		</div>
+		<div class="col-xs-1 col-sm-4 col-md-6 col-lg-7"
+			 id="right-panel">
+		</div>
+	</div>
+</div>

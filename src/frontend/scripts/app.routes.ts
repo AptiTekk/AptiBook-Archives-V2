@@ -17,6 +17,10 @@ const routes: Routes = [
         loadChildren: './features/inactive-tenant/inactive-tenant.module#InactiveTenantModule'
     },
     {
+        path: 'register',
+        loadChildren: './features/register/register.module#RegisterModule'
+    },
+    {
         path: '',
         loadChildren: './features/welcome/welcome.module#WelcomeModule'
     },

@@ -32,4 +32,43 @@ export class RegistrationService {
             );
         });
     }
+
+    /**
+     * Gets any partially-filled user details for registration.
+     * @param token The token used for registration.
+     * @returns A Promise that gives the partially-filled User.
+     */
+    public getRegistrationDetails(token: string): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("register/details?token=" + token)
+                .subscribe(
+                    user => {
+                        resolve(user);
+                    },
+                    err => {
+                        reject(err);
+                    }
+                )
+        });
+    }
+
+    /**
+     * Registers using the registration token.
+     * @param user The user details for registration.
+     * @param token The token used for registration.
+     * @returns A Promise that gives the newly created User.
+     */
+    public registerSSO(user: User, token: string): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.apiService.post("register/sso?token=" + token, user)
+                .subscribe(
+                    user => {
+                        resolve(user);
+                    },
+                    err => {
+                        reject(err);
+                    }
+                )
+        });
+    }
 }

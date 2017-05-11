@@ -19,6 +19,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.context.request.WebRequest;
@@ -91,6 +92,11 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
     @ExceptionHandler(ClientAbortException.class)
     protected void handleClientAbortException(ClientAbortException e) {
         logService.logError(getClass(), "A client connection was aborted: " + e.getMessage());
+    }
+
+    @Override
+    protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
+        return new ResponseEntity<Object>(new RestError("The request parameter '" + ex.getParameterName() + "' was not supplied."), HttpStatus.BAD_REQUEST);
     }
 
     @Override

@@ -5,7 +5,6 @@
  */
 
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
-import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {AuthService} from "../../../core/services/auth.service";
 
@@ -16,27 +15,23 @@ export class ManagementGuard implements CanActivate {
                 private router: Router) {
     }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        return Observable.create(listener => {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+        return new Promise((resolve, reject) => {
                 this.authService.getCurrentUser().take(1).subscribe(
                     user => {
                         if (user) {
                             if (user.admin) {
-                                listener.next(true);
-                                return;
+                                resolve(true);
                             } else if (user.userGroups.length > 0) {
-                                listener.next(true);
-                                return;
+                                resolve(true);
                             }
+                        } else {
+                            resolve(false);
+                            this.router.navigate(['secure']);
                         }
-
-                        this.router.navigate(['', 'secure']);
-                        listener.next(false);
                     }
                 );
             }
-        ).take(
-            1
         );
     }
 

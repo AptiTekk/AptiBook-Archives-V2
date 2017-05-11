@@ -27,11 +27,13 @@
 		</div>
 		<div class="navigation-link"
 			 [routerLink]="['', 'secure', 'management']"
-			 [routerLinkActive]="'active'" [innerHTML]="MANAGEMENT_ICON">
+			 [routerLinkActive]="'active'" [innerHTML]="MANAGEMENT_ICON"
+			 *ngIf="user?.admin || user?.userGroups?.length > 0">
 		</div>
 		<div class="navigation-link"
 			 [routerLink]="['', 'secure', 'configuration']"
-			 [routerLinkActive]="'active'" [innerHTML]="CONFIGURATION_ICON">
+			 [routerLinkActive]="'active'" [innerHTML]="CONFIGURATION_ICON"
+			 *ngIf="user?.admin || userPermissions.length > 0">
 		</div>
 	</div>
 	

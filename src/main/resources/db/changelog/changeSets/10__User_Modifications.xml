@@ -9,7 +9,7 @@
                    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
                             http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-3.2.xsd">
 
-    <!-- Removes the location and state fields from the User. Adds an admin column for identifying administrators. -->
+    <!-- Removes the location and state fields from the User. Adds an admin column for identifying administrators. Adds a CAS ID column. -->
     <changeSet id="10" author="MitchTalmadge">
         <!-- Remove location from user. -->
         <dropColumn tableName="user" columnName="location"/>
@@ -18,11 +18,17 @@
 
         <!-- Add the admin column -->
         <addColumn tableName="user">
-            <column name="admin" type="BOOLEAN" />
+            <column name="admin" type="BOOLEAN"/>
         </addColumn>
 
+        <!-- Remove admin email address and set admin to true for admins. -->
         <sql>UPDATE "user" SET admin = TRUE WHERE emailaddress = "admin"::TEXT</sql>
         <sql>UPDATE "user" SET emailaddress = NULL WHERE emailaddress = "admin"::TEXT</sql>
+
+        <!-- Add the CAS ID column -->
+        <addColumn tableName="user">
+            <column name="casid" type="TEXT"/>
+        </addColumn>
     </changeSet>
 
 </databaseChangeLog>

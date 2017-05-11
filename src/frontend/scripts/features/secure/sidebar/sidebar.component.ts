@@ -109,11 +109,6 @@ export class SidebarComponent implements OnInit {
 
     onSignOut() {
         this.loaderService.startLoading();
-        this.authService.signOut().subscribe(
-            success => {
-                this.loaderService.stopLoading();
-                this.router.navigate(['', 'sign-in']);
-            }
-        );
+        this.authService.signOut();
     }
 }
