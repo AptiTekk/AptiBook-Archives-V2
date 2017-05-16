@@ -67,14 +67,14 @@ public class CASCallbackFilter extends OncePerRequestFilter {
                     throw new CASCallbackException("The CAS Callback must be accessed from a Tenant.");
 
                 // Check that CAS is enabled.
-                String authenticationMethod = currentTenant.properties.get(Property.Key.AUTHENTICATION_METHOD);
+                String authenticationMethod = currentTenant.getProperties().get(Property.Key.AUTHENTICATION_METHOD);
                 if (authenticationMethod == null || AuthenticationMethod.valueOf(authenticationMethod) != AuthenticationMethod.CAS) {
                     this.redirectBackToSignIn(response, "CAS Authentication is not enabled.");
                     return;
                 }
 
                 // Check for a valid CAS Server Url
-                String casUrl = currentTenant.properties.get(Property.Key.CAS_SERVER_URL);
+                String casUrl = currentTenant.getProperties().get(Property.Key.CAS_SERVER_URL);
                 if (casUrl == null || casUrl.isEmpty()) {
                     this.redirectBackToSignIn(response, "CAS Authentication is not properly configured.");
                     return;

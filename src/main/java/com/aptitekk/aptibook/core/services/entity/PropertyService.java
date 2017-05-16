@@ -38,7 +38,7 @@ public class PropertyService {
      * @return A Map mapping property keys and String values.
      */
     public Map<Property.Key, String> getProperties() {
-        return tenantManagementService.getTenant().properties;
+        return tenantManagementService.getTenant().getProperties();
     }
 
     /**
@@ -48,7 +48,7 @@ public class PropertyService {
      * @return The value stored in the database, or the default if no value is stored.
      */
     public String getProperty(Property.Key key) {
-        String existingValue = tenantManagementService.getTenant().properties.get(key);
+        String existingValue = tenantManagementService.getTenant().getProperties().get(key);
         return existingValue != null ? existingValue : key.getDefaultValue();
     }
 
@@ -61,7 +61,7 @@ public class PropertyService {
     public void setProperty(Property.Key key, String value) {
         Tenant tenant = tenantManagementService.getTenant();
 
-        tenant.properties.put(key, value);
+        tenant.getProperties().put(key, value);
         tenantRepository.save(tenant);
     }
 
@@ -74,7 +74,7 @@ public class PropertyService {
         Tenant tenant = tenantManagementService.getTenant();
 
         // Overwrite properties
-        tenant.properties = properties;
+        tenant.setProperties(properties);
 
         tenantRepository.save(tenant);
     }
@@ -89,7 +89,7 @@ public class PropertyService {
 
         // Merge properties
         for (Map.Entry<Property.Key, String> entry : properties.entrySet()) {
-            tenant.properties.put(entry.getKey(), entry.getValue());
+            tenant.getProperties().put(entry.getKey(), entry.getValue());
         }
 
         tenantRepository.save(tenant);

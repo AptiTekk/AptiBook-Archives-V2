@@ -6,14 +6,14 @@
 
 import {NgModule} from "@angular/core";
 import {RouterModule, Routes} from "@angular/router";
-import {RegisterComponent} from "./register.component";
-import {RegisterGuard} from "./register.guard";
+import {FinishRegistrationComponent} from "./finish-registration.component";
+import {FinishRegistrationGuard} from "./finish-registration.guard";
 
 const routes: Routes = [
     {
         path: '',
-        component: RegisterComponent,
-        canActivate: [RegisterGuard]
+        component: FinishRegistrationComponent,
+        canActivate: [FinishRegistrationGuard]
     }
 ];
 
@@ -25,7 +25,7 @@ const routes: Routes = [
         RouterModule
     ],
     providers: [
-        RegisterGuard
+        FinishRegistrationGuard
     ]
 })
 export class RegisterRoutesModule {

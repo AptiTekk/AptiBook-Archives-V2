@@ -8,7 +8,7 @@ import {Injectable} from "@angular/core";
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
 import {RegistrationService} from "../../core/services/registration.service";
 @Injectable()
-export class RegisterGuard implements CanActivate {
+export class FinishRegistrationGuard implements CanActivate {
 
     constructor(private registrationService: RegistrationService,
                 private router: Router) {

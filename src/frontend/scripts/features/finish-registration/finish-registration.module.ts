@@ -6,10 +6,10 @@
 
 import {NgModule} from "@angular/core";
 
-import {RegisterComponent} from "./register.component";
-import {RegisterRoutesModule} from "./register.routes";
+import {RegisterRoutesModule} from "./finish-registration.routes";
 import {SharedModule} from "../../shared/shared.module";
 import {HeaderModule} from "../../app/header/header.module";
+import {FinishRegistrationComponent} from "./finish-registration.component";
 
 @NgModule({
     imports: [
@@ -19,9 +19,9 @@ import {HeaderModule} from "../../app/header/header.module";
 
         RegisterRoutesModule
     ],
-    declarations: [RegisterComponent],
+    declarations: [FinishRegistrationComponent],
     exports: [],
     providers: [],
 })
-export class RegisterModule {
+export class FinishRegistrationModule {
 }

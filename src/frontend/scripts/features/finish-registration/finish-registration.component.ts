@@ -13,11 +13,11 @@ import {LoaderService} from "../../core/services/loader.service";
 import {AlertComponent} from "../../shared/alert/alert.component";
 
 @Component({
-    selector: 'at-register',
-    templateUrl: 'register.component.html',
-    styleUrls: ['register.component.css']
+    selector: 'at-finish-registration',
+    templateUrl: 'finish-registration.component.html',
+    styleUrls: ['finish-registration.component.css']
 })
-export class RegisterComponent implements OnInit {
+export class FinishRegistrationComponent implements OnInit {
 
     /**
      * The token required for registration.
@@ -79,7 +79,7 @@ export class RegisterComponent implements OnInit {
         };
 
         this.loaderService.startLoading();
-        this.registrationService.registerSSO(newUser, this.token)
+        this.registrationService.finishRegistration(newUser, this.token)
             .then(
                 user => this.router.navigate(['secure']).then(() => this.loaderService.stopLoading())
             )

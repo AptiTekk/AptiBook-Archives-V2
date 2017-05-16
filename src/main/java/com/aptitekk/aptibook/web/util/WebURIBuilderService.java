@@ -56,7 +56,7 @@ public class WebURIBuilderService {
             builder = ServletUriComponentsBuilder.fromCurrentContextPath();
         } catch (IllegalStateException e) {
             // Include subdomain into default url if tenant is not null.
-            builder = UriComponentsBuilder.fromHttpUrl("https://" + (currentTenant != null ? currentTenant.domain + "." : "") + "aptibook.net/");
+            builder = UriComponentsBuilder.fromHttpUrl("https://" + (currentTenant != null ? currentTenant.getDomain() + "." : "") + "aptibook.net/");
         }
 
         // Set the path

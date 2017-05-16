@@ -54,10 +54,10 @@ public class TenantManagementService {
         allowedTenants = new HashMap<>();
 
         for (Tenant tenant : tenantRepository.findAll()) {
-            switch (tenant.stripeStatus) {
+            switch (tenant.getStripeStatus()) {
                 case ACTIVE:
                 case TRIALING:
-                    allowedTenants.put(tenant.domain, tenant);
+                    allowedTenants.put(tenant.getDomain(), tenant);
                     break;
             }
         }

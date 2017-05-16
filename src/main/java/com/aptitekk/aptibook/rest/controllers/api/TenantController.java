@@ -27,8 +27,8 @@ public class TenantController extends APIControllerAbstract {
         }
 
         TenantDTO tenantDTO = modelMapper.map(tenant, TenantDTO.class);
-        tenantDTO.name = tenant.properties.get(Property.Key.PERSONALIZATION_ORGANIZATION_NAME);
-        String authenticationMethod = tenant.properties.get(Property.Key.AUTHENTICATION_METHOD);
+        tenantDTO.name = tenant.getProperties().get(Property.Key.PERSONALIZATION_ORGANIZATION_NAME);
+        String authenticationMethod = tenant.getProperties().get(Property.Key.AUTHENTICATION_METHOD);
         tenantDTO.authenticationMethod = authenticationMethod != null ? AuthenticationMethod.valueOf(authenticationMethod) : AuthenticationMethod.BUILT_IN;
         return ok(tenantDTO);
     }

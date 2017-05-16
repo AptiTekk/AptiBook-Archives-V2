@@ -64,7 +64,7 @@ public class BuiltInAuthenticationProvider implements AuthenticationProvider {
                 throw new BadCredentialsException("Incorrect Password.");
             } else if (httpServletRequest.getHeader("X-Auth-Type").equalsIgnoreCase("user")) {
                 // Check the authentication method.
-                String authenticationMethod = tenantManagementService.getTenant().properties.get(Property.Key.AUTHENTICATION_METHOD);
+                String authenticationMethod = tenantManagementService.getTenant().getProperties().get(Property.Key.AUTHENTICATION_METHOD);
                 if (authenticationMethod != null && AuthenticationMethod.valueOf(authenticationMethod) != AuthenticationMethod.BUILT_IN)
                     throw new AuthenticationServiceException("Built-In Authentication is not Enabled.");
 

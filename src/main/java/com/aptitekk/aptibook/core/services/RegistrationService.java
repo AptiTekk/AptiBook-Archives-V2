@@ -47,7 +47,7 @@ public class RegistrationService {
         httpServletRequest.getSession(true).setAttribute(TOKEN_KEY_NAME, registrationData);
 
         // Redirect to the sign up page with the token as a parameter.
-        httpServletResponse.sendRedirect("/register?token=" + token.toString());
+        httpServletResponse.sendRedirect("/finish-registration?token=" + token.toString());
 
         return token;
     }

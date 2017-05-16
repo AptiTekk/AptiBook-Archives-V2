@@ -58,7 +58,7 @@ export class RegistrationService {
      * @param token The token used for registration.
      * @returns A Promise that gives the newly created User.
      */
-    public registerSSO(user: User, token: string): Promise<User> {
+    public finishRegistration(user: User, token: string): Promise<User> {
         return new Promise((resolve, reject) => {
             this.apiService.post("register/sso?token=" + token, user)
                 .subscribe(

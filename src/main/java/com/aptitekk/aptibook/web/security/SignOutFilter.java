@@ -7,12 +7,15 @@
 package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.core.domain.entities.Tenant;
+import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.enums.property.AuthenticationMethod;
 import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
+import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
 import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
 import com.aptitekk.aptibook.web.util.WebURIBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -30,12 +33,15 @@ public class SignOutFilter extends OncePerRequestFilter {
     private final static String SIGN_OUT_PATH = "/api/sign-out";
     private final TenantManagementService tenantManagementService;
     private final WebURIBuilderService webURIBuilderService;
+    private final UserRepository userRepository;
 
     @Autowired
     public SignOutFilter(TenantManagementService tenantManagementService,
-                         WebURIBuilderService webURIBuilderService) {
+                         WebURIBuilderService webURIBuilderService,
+                         UserRepository userRepository) {
         this.tenantManagementService = tenantManagementService;
         this.webURIBuilderService = webURIBuilderService;
+        this.userRepository = userRepository;
     }
 
     @Override
@@ -46,14 +52,28 @@ public class SignOutFilter extends OncePerRequestFilter {
             // Make sure we're on a Tenant
             Tenant currentTenant = this.tenantManagementService.getTenant();
             if (currentTenant != null) {
+
+                // Check if there is a currently signed in user.
+                User currentUser = null;
+                Authentication currentAuthentication = SecurityContextHolder.getContext().getAuthentication();
+                if(currentAuthentication != null && currentAuthentication instanceof UserIDAuthenticationToken) {
+                    currentUser = userRepository.findInCurrentTenant(((UserIDAuthenticationToken) currentAuthentication).getUserId());
+                }
+
                 // Clear the security context.
                 SecurityContextHolder.clearContext();
 
+                // If the current user is an admin, then we just want to go to the admin sign in page.
+                if(currentUser != null && currentUser.isAdmin()) {
+                    response.sendRedirect("/sign-in/admin");
+                    return;
+                }
+
                 // Check if CAS is enabled.
-                String authenticationMethod = currentTenant.properties.get(Property.Key.AUTHENTICATION_METHOD);
+                String authenticationMethod = currentTenant.getProperties().get(Property.Key.AUTHENTICATION_METHOD);
                 if (authenticationMethod != null && AuthenticationMethod.valueOf(authenticationMethod).equals(AuthenticationMethod.CAS)) {
                     // Redirect to the CAS logout page.
-                    String casServiceUrl = currentTenant.properties.get(Property.Key.CAS_SERVER_URL);
+                    String casServiceUrl = currentTenant.getProperties().get(Property.Key.CAS_SERVER_URL);
                     response.sendRedirect(casServiceUrl + "/logout?service=" + URLEncoder.encode(webURIBuilderService.buildURI(CASCallbackFilter.CALLBACK_PATH, null).toString(), "UTF-8"));
                     return;
                 }

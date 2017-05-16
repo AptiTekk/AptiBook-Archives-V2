@@ -98,10 +98,10 @@ public class DemoTenantBuilder {
 
         //Create new demo tenant
         demoTenant = new Tenant();
-        demoTenant.domain = "demo";
-        demoTenant.stripeSubscriptionId = "demo";
-        demoTenant.stripeStatus = StripeService.Status.ACTIVE;
-        demoTenant.stripePlan = StripeService.Plan.PLATINUM;
+        demoTenant.setDomain("demo");
+        demoTenant.setStripeSubscriptionId("demo");
+        demoTenant.setStripeStatus(StripeService.Status.ACTIVE);
+        demoTenant.setStripePlan(StripeService.Plan.PLATINUM);
         demoTenant = tenantRepository.save(demoTenant);
 
         // Create the root group.

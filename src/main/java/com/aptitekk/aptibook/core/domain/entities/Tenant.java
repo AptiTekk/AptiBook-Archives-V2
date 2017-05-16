@@ -20,26 +20,26 @@ public class Tenant extends GlobalEntity {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     @Column(nullable = false, unique = true)
-    public String stripeSubscriptionId;
+    private String stripeSubscriptionId;
 
     @Enumerated(EnumType.STRING)
-    public StripeService.Plan stripePlan;
+    private StripeService.Plan stripePlan;
 
     @Enumerated(EnumType.STRING)
-    public StripeService.Status stripeStatus;
+    private StripeService.Status stripeStatus;
 
     @Column(nullable = false, unique = true)
-    public String domain;
+    private String domain;
 
     @ElementCollection(targetClass = String.class, fetch = FetchType.EAGER)
     @CollectionTable(name = "tenant_properties", joinColumns = @JoinColumn(name = "tenant_id"))
     @MapKeyEnumerated(EnumType.STRING)
     @MapKeyColumn(name = "key")
     @Column(name = "value")
-    public Map<Property.Key, String> properties = new HashMap<>();
+    private Map<Property.Key, String> properties = new HashMap<>();
 
     // ---- Tenant Dependent Entities ---- //
 
@@ -74,6 +74,51 @@ public class Tenant extends GlobalEntity {
     private List<UserGroup> userGroups;
 
     // ---- End Tenant Dependent Entities ---- //
+
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getStripeSubscriptionId() {
+        return stripeSubscriptionId;
+    }
+
+    public void setStripeSubscriptionId(String stripeSubscriptionId) {
+        this.stripeSubscriptionId = stripeSubscriptionId;
+    }
+
+    public StripeService.Plan getStripePlan() {
+        return stripePlan;
+    }
+
+    public void setStripePlan(StripeService.Plan stripePlan) {
+        this.stripePlan = stripePlan;
+    }
+
+    public StripeService.Status getStripeStatus() {
+        return stripeStatus;
+    }
+
+    public void setStripeStatus(StripeService.Status stripeStatus) {
+        this.stripeStatus = stripeStatus;
+    }
+
+    public String getDomain() {
+        return domain;
+    }
+
+    public void setDomain(String domain) {
+        this.domain = domain;
+    }
+
+    public Map<Property.Key, String> getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Map<Property.Key, String> properties) {
+        this.properties = properties;
+    }
 
     @Override
     public boolean equals(Object o) {

@@ -70,7 +70,7 @@ public class LogService {
      */
     public void logInfo(Class clazz, String message) {
         Tenant currentTenant = getCurrentTenant();
-        LOGGER.info("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.domain + "] " : "") + message);
+        LOGGER.info("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.getDomain() + "] " : "") + message);
     }
 
     /**
@@ -81,7 +81,7 @@ public class LogService {
      */
     public void logError(Class clazz, String message) {
         Tenant currentTenant = getCurrentTenant();
-        LOGGER.error("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.domain + "] " : "") + message);
+        LOGGER.error("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.getDomain() + "] " : "") + message);
     }
 
     /**
@@ -93,13 +93,13 @@ public class LogService {
      */
     public void logException(Class clazz, Throwable t, String message) {
         Tenant currentTenant = getCurrentTenant();
-        LOGGER.error("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.domain + "] " : "") + message, t);
+        LOGGER.error("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.getDomain() + "] " : "") + message, t);
         if (RAYGUN_CLIENT != null && springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {
             List<String> tags = new ArrayList<>();
             //TODO: tags.add("V. " + AptiBookInfoProvider.getVersion());
 
             // Add the current Tenant's specific tag.
-            tags.add("Tenant:" + (currentTenant != null ? currentTenant.domain : "Unknown"));
+            tags.add("Tenant:" + (currentTenant != null ? currentTenant.getDomain() : "Unknown"));
             tags.add(clazz.getSimpleName());
 
             // Add the message as data.
@@ -119,7 +119,7 @@ public class LogService {
      */
     public void logDebug(Class clazz, String message) {
         Tenant currentTenant = getCurrentTenant();
-        LOGGER.debug("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.domain + "] " : "") + message);
+        LOGGER.debug("[" + clazz.getSimpleName() + "] " + (currentTenant != null ? "[Tenant: " + currentTenant.getDomain() + "] " : "") + message);
     }
 
 }
