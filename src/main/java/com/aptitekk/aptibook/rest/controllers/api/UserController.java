@@ -14,7 +14,6 @@ import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.EmailService;
-import com.aptitekk.aptibook.core.services.entity.UserService;
 import com.aptitekk.aptibook.core.util.PasswordGenerator;
 import com.aptitekk.aptibook.rest.controllers.api.annotations.APIController;
 import com.aptitekk.aptibook.rest.controllers.api.validators.UserValidator;
@@ -75,17 +74,17 @@ public class UserController extends APIControllerAbstract {
 
         if (userDTO.firstName != null) {
             userValidator.validateFirstName(userDTO.firstName);
-            newUser.firstName = userDTO.firstName;
+            newUser.setFirstName(userDTO.firstName);
         }
 
         if (userDTO.lastName != null) {
             userValidator.validateLastName(userDTO.lastName);
-            newUser.lastName = userDTO.lastName;
+            newUser.setLastName(userDTO.lastName);
         }
 
         if (userDTO.phoneNumber != null) {
             userValidator.validatePhoneNumber(userDTO.phoneNumber);
-            newUser.phoneNumber = userDTO.phoneNumber;
+            newUser.setPhoneNumber(userDTO.phoneNumber);
         }
 
         if (userDTO.userGroups != null) {
@@ -93,17 +92,16 @@ public class UserController extends APIControllerAbstract {
         }
 
         String newPassword = PasswordGenerator.generateRandomPassword(10);
-        newUser.hashedPassword = PasswordUtils.encodePassword(newPassword);
+        newUser.setHashedPassword(PasswordUtils.encodePassword(newPassword));
 
-        newUser.verified = true;
-        newUser.userState = User.State.APPROVED;
+        newUser.setVerified(true);
         newUser = userRepository.save(newUser);
 
         emailService.sendEmailNotification(newUser.getEmailAddress(),
                 "Welcome to AptiBook!",
                 "Hello! An account has been created for you on AptiBook."
                         + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>My Account</b> on the navigation bar.<br>"
-                        + "https://" + newUser.tenant.domain + ".aptibook.net</p>"
+                        + "https://" + newUser.tenant.getDomain() + ".aptibook.net</p>"
                         + "<center>"
                         + "Email Address: <b>" + newUser.getEmailAddress() + "</b> <br>"
                         + "Password: <b>" + newPassword + "</b>"
@@ -182,23 +180,23 @@ public class UserController extends APIControllerAbstract {
 
         if (userDTO.firstName != null) {
             userValidator.validateFirstName(userDTO.firstName);
-            currentUser.firstName = userDTO.firstName;
+            currentUser.setFirstName(userDTO.firstName);
         }
 
         if (userDTO.lastName != null) {
             userValidator.validateLastName(userDTO.lastName);
-            currentUser.lastName = userDTO.lastName;
+            currentUser.setLastName(userDTO.lastName);
         }
 
         if (userDTO.phoneNumber != null) {
             userValidator.validatePhoneNumber(userDTO.phoneNumber);
-            currentUser.phoneNumber = userDTO.phoneNumber;
+            currentUser.setPhoneNumber(userDTO.phoneNumber);
         }
 
         //TODO: A patch method specifically for the current user, which also allows password changing (and ignores user groups). This method shouldn't allow password changing.
         if (userDTO.newPassword != null) {
             userValidator.validatePassword(userDTO.newPassword);
-            currentUser.hashedPassword = PasswordUtils.encodePassword(userDTO.newPassword);
+            currentUser.setHashedPassword(PasswordUtils.encodePassword(userDTO.newPassword));
         }
 
         if (userDTO.userGroups != null) {

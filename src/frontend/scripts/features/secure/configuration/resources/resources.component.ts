@@ -12,6 +12,7 @@ import {Resource} from "../../../../models/resource.model";
 import {ResourceService} from "../../../../core/services/resource.service";
 import {UserGroup} from "../../../../models/user-group.model";
 import {UserGroupService} from "../../../../core/services/usergroup.service";
+import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
 
 @Component({
     selector: 'at-configuration-resources',
@@ -23,6 +24,8 @@ export class ResourcesConfigurationComponent implements OnInit {
     currentResourceCategory: ResourceCategory;
     resourceCategories: ResourceCategory[];
     rootGroup: UserGroup;
+
+    categoryLinks: NavigationLink[] = [];
 
     resourceForDeletion: Resource;
 
@@ -41,15 +44,26 @@ export class ResourcesConfigurationComponent implements OnInit {
             .subscribe(resourceCategories => {
                 this.resourceCategories = resourceCategories;
 
+                // Configure the category links
+                this.categoryLinks = resourceCategories.map(category => {
+                    return {
+                        label: category.name,
+                        path: ['', 'secure', 'configuration', 'resources', category.name.toLowerCase()]
+                    }
+                });
+
                 this.route.params
                     .subscribe(params => {
                         let resourceCategoryName = params['resourceCategory'];
-                        if (resourceCategoryName) {
+                        if (resourceCategoryName != null) {
                             let filteredCategories = this.resourceCategories.filter(resourceCategory => resourceCategory.name.toLowerCase() === resourceCategoryName.toLowerCase());
                             if (filteredCategories.length > 0) {
                                 this.currentResourceCategory = filteredCategories[0];
                                 return;
                             }
+                        } else {
+                            if (resourceCategories.length > 0)
+                                this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategories[0].name.toLowerCase()])
                         }
 
                         this.currentResourceCategory = this.resourceCategories[0];

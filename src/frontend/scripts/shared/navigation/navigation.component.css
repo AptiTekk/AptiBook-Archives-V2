@@ -19,7 +19,7 @@ ul.nav-pills > li {
 
 ul.nav-pills > li > a {
     color: #777;
-    border-radius: 5px;
+    border-radius: 0;
     border: none;
 }
 
@@ -46,7 +46,7 @@ ul.nav-pills.nav-stacked > li {
 
 ul.nav-pills.nav-stacked > li > a {
     color: #777;
-    border-radius: 5px;
+    border-radius: 0;
 }
 
 ul.nav-pills.nav-stacked > li.active > a,

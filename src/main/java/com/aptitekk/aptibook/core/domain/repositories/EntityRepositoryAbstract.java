@@ -20,10 +20,17 @@ import java.util.List;
 @Transactional
 public abstract class EntityRepositoryAbstract<T> {
 
+    /**
+     * The Class of the current entity.
+     */
     Class<T> entityType;
 
+    protected LogService logService;
+
     @Autowired
-    LogService logService;
+    private void setLogService(LogService logService) {
+        this.logService = logService;
+    }
 
     @PostConstruct
     private void init() {
@@ -46,12 +53,29 @@ public abstract class EntityRepositoryAbstract<T> {
         return this.entityManager.merge(entity);
     }
 
+    /**
+     * Finds an entity from the database by its ID.
+     * Searches through all Tenants.
+     *
+     * @param id The ID to find.
+     * @return The entity with the ID, if one was found. Null if not found.
+     */
     public T find(Long id) {
         return this.entityManager.find(this.entityType, id);
     }
 
+    /**
+     * Finds all entities from the database.
+     *
+     * @return A List of all entities of the current type.
+     */
     public abstract List<T> findAll();
 
+    /**
+     * Deletes an entity from the database.
+     *
+     * @param entity The entity to delete.
+     */
     public void delete(T entity) {
         entityManager.remove(entityManager.contains(entity) ? entity : entityManager.merge(entity));
     }

@@ -12,6 +12,7 @@ import {NotificationService} from "../../../core/services/notification.service";
 import {LoaderService} from "../../../core/services/loader.service";
 import {PermissionsService} from "../../../core/services/permissions.service";
 import {Permission} from "../../../models/permissions/permission.model";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
 @Component({
     selector: 'at-sidebar',
@@ -41,11 +42,17 @@ export class SidebarComponent implements OnInit {
      */
     swipedOpen: boolean = false;
 
+    DASHBOARD_ICON: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(require("!raw-loader!./dashboard.svg"));
+    ACCOUNT_ICON: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(require("!raw-loader!./account.svg"));
+    MANAGEMENT_ICON: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(require("!raw-loader!./management.svg"));
+    CONFIGURATION_ICON: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(require("!raw-loader!./configuration.svg"));
+
     constructor(private authService: AuthService,
                 private permissionsService: PermissionsService,
                 private notificationService: NotificationService,
                 private loaderService: LoaderService,
-                private router: Router) {
+                private router: Router,
+                private sanitizer: DomSanitizer) {
     }
 
     ngOnInit(): void {
@@ -84,21 +91,24 @@ export class SidebarComponent implements OnInit {
                 .length > 0;
     }
 
+    /**
+     * When the sidebar is swiped to the right (swipe open)
+     */
     onSwipeRight() {
-        this.swipedOpen = true;
+        // Uncomment to enable
+        //this.swipedOpen = true;
     }
 
+    /**
+     * When the sidebar is swiped to the left (swipe close)
+     */
     onSwipeLeft() {
-        this.swipedOpen = false;
+        // Uncomment to enable
+        //this.swipedOpen = false;
     }
 
     onSignOut() {
         this.loaderService.startLoading();
-        this.authService.signOut().subscribe(
-            success => {
-                this.loaderService.stopLoading();
-                this.router.navigate(['', 'sign-in']);
-            }
-        );
+        this.authService.signOut();
     }
 }

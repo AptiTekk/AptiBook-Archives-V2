@@ -30,14 +30,18 @@
     padding: 15px 0;
 }
 
+#logo-container {
+    padding: 0;
+}
+
 #logo-container img {
     width: 100%;
 }
 
-#content-container, #logo-container {
+#content-container {
     box-shadow: #aaa 0 0 10px 0;
     background-color: #fff;
-    border-radius: 10px;
+    border-top: 10px solid #4272b7;
     padding: 15px;
 }
 

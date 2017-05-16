@@ -98,10 +98,10 @@ public class DemoTenantBuilder {
 
         //Create new demo tenant
         demoTenant = new Tenant();
-        demoTenant.domain = "demo";
-        demoTenant.stripeSubscriptionId = "demo";
-        demoTenant.stripeStatus = StripeService.Status.ACTIVE;
-        demoTenant.stripePlan = StripeService.Plan.PLATINUM;
+        demoTenant.setDomain("demo");
+        demoTenant.setStripeSubscriptionId("demo");
+        demoTenant.setStripeStatus(StripeService.Status.ACTIVE);
+        demoTenant.setStripePlan(StripeService.Plan.PLATINUM);
         demoTenant = tenantRepository.save(demoTenant);
 
         // Create the root group.
@@ -112,12 +112,11 @@ public class DemoTenantBuilder {
 
         // Create the admin user
         User admin = new User();
-        admin.setEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS);
+        admin.setAdmin(true);
         admin.tenant = demoTenant;
         admin.userGroups.add(rootGroup);
-        admin.hashedPassword = PasswordUtils.encodePassword("demo");
-        admin.verified = true;
-        admin.userState = User.State.APPROVED;
+        admin.setHashedPassword(PasswordUtils.encodePassword("demo"));
+        admin.setVerified(true);
         userRepository.save(admin);
 
         // Full Permission
@@ -384,11 +383,10 @@ public class DemoTenantBuilder {
         User user = new User();
         user.tenant = demoTenant;
         user.setEmailAddress(emailAddress);
-        user.firstName = firstName;
-        user.lastName = lastName;
-        user.verified = true;
-        user.userState = User.State.APPROVED;
-        user.hashedPassword = PasswordUtils.encodePassword(password);
+        user.setFirstName(firstName);
+        user.setLastName(lastName);
+        user.setVerified(true);
+        user.setHashedPassword(PasswordUtils.encodePassword(password));
         user.permissions = permissions;
         user.notificationSettings = notificationSettings;
         user.userGroups.addAll(Arrays.asList(userGroups));

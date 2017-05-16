@@ -14,3 +14,4 @@ import "./datetimepicker";
 import "./fullcalendar";
 import "./hammerjs";
 import "./jsog";
+import "./fonts";

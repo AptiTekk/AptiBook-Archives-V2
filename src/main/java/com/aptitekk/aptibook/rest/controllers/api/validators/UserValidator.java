@@ -59,12 +59,8 @@ public class UserValidator extends RestValidator {
     public void validateEmailAddress(String emailAddress, @Nullable User existingUser) throws RestValidationException {
         if (emailAddress != null) {
 
-            if (existingUser != null && existingUser.isAdmin()) {
-                if (emailAddress.equals("admin"))
-                    return; // Nothing else to check.
-                else
-                    throw new RestValidationException(badRequest("The admin user cannot change their Email Address."));
-            }
+            if (existingUser != null && existingUser.isAdmin())
+                throw new RestValidationException(badRequest("The admin user cannot change their Email Address."));
 
             if (!EmailValidator.getInstance().isValid(emailAddress))
                 throw new RestValidationException(badRequest("The Email Address is invalid."));

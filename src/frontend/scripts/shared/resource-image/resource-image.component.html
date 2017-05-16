@@ -10,5 +10,5 @@
 	 [style.maxWidth]="maxWidth ? maxWidth : null"
 	 draggable="false"/>
 <image-uploader *ngIf="useUploader"
-				[noImageUrl]="noImagePlaceholder"
+				[noImageSrc]="noImagePlaceholder"
 				[currentImageUrl]="resource?.hasImage ? apiService.getApiUrlFromEndpoint('resources/' + resource.id + '/image') : null"></image-uploader>

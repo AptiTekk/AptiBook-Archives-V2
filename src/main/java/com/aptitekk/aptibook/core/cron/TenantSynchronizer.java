@@ -143,26 +143,26 @@ public class TenantSynchronizer {
 
         // Check for deleted Tenants.
         for (Tenant tenant : tenantRepository.findAll()) {
-            if (tenant.stripeStatus == StripeService.Status.CANCELED) {
+            if (tenant.getStripeStatus() == StripeService.Status.CANCELED) {
                 //TODO: check timer and delete Tenant if necessary.
                 continue;
             }
 
             // If the Subscription still exists (cancelled, active, or otherwise), then it will have been encountered.
-            if (encounteredSubscriptionIds.contains(tenant.stripeSubscriptionId))
+            if (encounteredSubscriptionIds.contains(tenant.getStripeSubscriptionId()))
                 continue;
 
             // Don't delete the demo.
-            if (tenant.domain.equalsIgnoreCase("demo"))
+            if (tenant.getDomain().equalsIgnoreCase("demo"))
                 continue;
 
             // Set the Tenant to Cancelled.
-            tenant.stripeStatus = StripeService.Status.CANCELED;
+            tenant.setStripeStatus(StripeService.Status.CANCELED);
             // Set the domain to the Subscription ID to free up the domain for other Tenants.
-            tenant.domain = tenant.stripeSubscriptionId;
+            tenant.setDomain(tenant.getStripeSubscriptionId());
             logService.logInfo(getClass(), "Set Tenant status to CANCELED. Will be deleted in 30 days.\n" +
-                    "\tSubscription ID: " + tenant.stripeSubscriptionId + "\n" +
-                    "\tDomain: " + tenant.domain);
+                    "\tSubscription ID: " + tenant.getStripeSubscriptionId() + "\n" +
+                    "\tDomain: " + tenant.getDomain());
 
             tenantRepository.save(tenant);
             // TODO: start deletion timer (30 days?)
@@ -184,7 +184,7 @@ public class TenantSynchronizer {
         if (domain == null || domain.isEmpty())
             throw new IllegalArgumentException("Domain was null or empty.");
 
-        if (!tenant.domain.equalsIgnoreCase(domain)) {
+        if (!tenant.getDomain().equalsIgnoreCase(domain)) {
 
             // Check for conflicts.
             Tenant tenantByDomain = tenantRepository.findTenantByDomain(domain);
@@ -194,11 +194,11 @@ public class TenantSynchronizer {
             }
 
             logService.logInfo(getClass(), "Tenant Domain Updated.\n" +
-                    "\tSubscription ID: " + tenant.stripeSubscriptionId + "\n" +
-                    "\tOld Domain: " + tenant.domain + "\n" +
+                    "\tSubscription ID: " + tenant.getStripeSubscriptionId() + "\n" +
+                    "\tOld Domain: " + tenant.getDomain() + "\n" +
                     "\tNew Domain: " + domain);
 
-            tenant.domain = domain.toLowerCase();
+            tenant.setDomain(domain.toLowerCase());
             tenantRepository.save(tenant);
         }
     }
@@ -215,14 +215,14 @@ public class TenantSynchronizer {
         if (status == null)
             throw new IllegalArgumentException("Status was null.");
 
-        if (tenant.stripeStatus != status) {
+        if (tenant.getStripeStatus() != status) {
 
             logService.logInfo(getClass(), "Tenant Status Updated.\n" +
-                    "\tSubscription ID: " + tenant.stripeSubscriptionId + "\n" +
-                    "\tOld Status: " + tenant.stripeStatus + "\n" +
+                    "\tSubscription ID: " + tenant.getStripeSubscriptionId() + "\n" +
+                    "\tOld Status: " + tenant.getStripeStatus() + "\n" +
                     "\tNew Status: " + status);
 
-            tenant.stripeStatus = status;
+            tenant.setStripeStatus(status);
             tenantRepository.save(tenant);
         }
     }
@@ -239,14 +239,14 @@ public class TenantSynchronizer {
         if (plan == null)
             throw new IllegalArgumentException("Plan was null.");
 
-        if (tenant.stripePlan != plan) {
+        if (tenant.getStripePlan() != plan) {
 
             logService.logInfo(getClass(), "Tenant Plan Updated.\n" +
-                    "\tSubscription ID: " + tenant.stripeSubscriptionId + "\n" +
-                    "\tOld Plan: " + tenant.stripePlan + "\n" +
+                    "\tSubscription ID: " + tenant.getStripeSubscriptionId() + "\n" +
+                    "\tOld Plan: " + tenant.getStripePlan() + "\n" +
                     "\tNew Plan: " + plan);
 
-            tenant.stripePlan = plan;
+            tenant.setStripePlan(plan);
             tenantRepository.save(tenant);
         }
     }
@@ -273,10 +273,10 @@ public class TenantSynchronizer {
             throw new IllegalArgumentException("Plan was null.");
 
         Tenant newTenant = new Tenant();
-        newTenant.stripeSubscriptionId = subscriptionId;
-        newTenant.domain = domain;
-        newTenant.stripeStatus = status;
-        newTenant.stripePlan = plan;
+        newTenant.setStripeSubscriptionId(subscriptionId);
+        newTenant.setDomain(domain);
+        newTenant.setStripeStatus(status);
+        newTenant.setStripePlan(plan);
 
         // Check for domain conflicts.
         Tenant tenantByDomain = tenantRepository.findTenantByDomain(domain);
@@ -296,7 +296,7 @@ public class TenantSynchronizer {
 
         // Create the admin user
         User admin = new User();
-        admin.setEmailAddress(UserRepository.ADMIN_EMAIL_ADDRESS);
+        admin.setAdmin(true);
         admin.tenant = newTenant;
         admin.userGroups.add(rootGroup);
 
@@ -309,7 +309,7 @@ public class TenantSynchronizer {
             }
 
             String password = PasswordGenerator.generateRandomPassword(10);
-            admin.hashedPassword = PasswordUtils.encodePassword(password);
+            admin.setHashedPassword(PasswordUtils.encodePassword(password));
             //FIXME: Domain in the email may be different if the customer uses a CNAME.
             emailService.sendEmailNotification(customer.getEmail(), "AptiBook Registration",
                     "<p>Thank you for registering with us! We are very excited to hear about how you and your team uses AptiBook.</p>"
@@ -321,10 +321,9 @@ public class TenantSynchronizer {
                             + "</center>"
                             + "<p>Please let us know of any way we can be of assistance, and be sure to check out our knowledge base at https://support.aptitekk.com/.</p>");
         } else {
-            admin.hashedPassword = PasswordUtils.encodePassword("admin");
+            admin.setHashedPassword(PasswordUtils.encodePassword("admin"));
         }
-        admin.verified = true;
-        admin.userState = User.State.APPROVED;
+        admin.setVerified(true);
         userRepository.save(admin);
 
         // Create the Rooms Resource Category
@@ -334,17 +333,17 @@ public class TenantSynchronizer {
         resourceCategoryRepository.save(rooms);
 
         logService.logInfo(getClass(), "Created New Tenant.\n" +
-                "\tSubscription ID: " + newTenant.stripeSubscriptionId + "\n" +
-                "\tDomain: " + newTenant.domain + "\n" +
-                "\tStatus: " + newTenant.stripeStatus + "\n" +
-                "\tPlan: " + newTenant.stripePlan + "\n");
+                "\tSubscription ID: " + newTenant.getStripeSubscriptionId() + "\n" +
+                "\tDomain: " + newTenant.getDomain() + "\n" +
+                "\tStatus: " + newTenant.getStripeStatus() + "\n" +
+                "\tPlan: " + newTenant.getStripePlan() + "\n");
     }
 
     private void deleteTenant(Tenant tenant) {
         if (tenant == null)
             throw new IllegalArgumentException("Tenant was null.");
 
-        logService.logInfo(getClass(), "Deleting the Tenant with Subscription ID: " + tenant.stripeSubscriptionId + " and domain: " + tenant.domain);
+        logService.logInfo(getClass(), "Deleting the Tenant with Subscription ID: " + tenant.getStripeSubscriptionId() + " and domain: " + tenant.getDomain());
 
         this.tenantRepository.delete(tenant);
     }
@@ -356,8 +355,8 @@ public class TenantSynchronizer {
         TenantDomainConflictException(String domain, Tenant ownerTenant, Tenant otherTenant) {
             super("Tried to assign an existing domain to a Tenant! " +
                     "Domain: " + domain + "; " +
-                    "Owner Tenant Subscription ID: " + ownerTenant.stripeSubscriptionId + "; " +
-                    "Other Tenant Subscription ID: " + otherTenant.stripeSubscriptionId);
+                    "Owner Tenant Subscription ID: " + ownerTenant.getStripeSubscriptionId() + "; " +
+                    "Other Tenant Subscription ID: " + otherTenant.getStripeSubscriptionId());
         }
     }
 

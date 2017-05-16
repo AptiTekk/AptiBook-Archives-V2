@@ -29,9 +29,7 @@ public interface RestOperations {
     default ResponseEntity<?> created(Object entity, String endpoint) {
         MultiValueMap<String, String> headers = new LinkedMultiValueMap<>();
 
-        String uriString = getWebURIBuilderService().buildAPIURI(getTenantManagementService().getTenant(), endpoint, null).toString();
-
-        headers.put("Location", Collections.singletonList(uriString));
+        headers.put("Location", Collections.singletonList(endpoint));
 
         return new ResponseEntity<>(entity, headers, HttpStatus.CREATED);
     }

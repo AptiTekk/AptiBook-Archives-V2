@@ -5,7 +5,6 @@
  */
 
 import {ActivatedRouteSnapshot, CanActivate, Router, RouterStateSnapshot} from "@angular/router";
-import {Observable} from "rxjs";
 import {Injectable} from "@angular/core";
 import {PermissionsService} from "../../../core/services/permissions.service";
 import {AuthService} from "../../../core/services/auth.service";
@@ -18,31 +17,30 @@ export class ConfigurationGuard implements CanActivate {
                 private router: Router) {
     }
 
-    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Observable<boolean> {
-        return Observable.create(listener => {
+    canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
+        return new Promise((resolve, reject) => {
             this.authService.getCurrentUser().take(1).subscribe(
                 user => {
                     if (user) {
                         if (user.admin) {
-                            listener.next(true);
-                            return;
+                            resolve(true);
                         } else {
                             this.permissionsService.getCurrentUserPermissions()
-                                .subscribe(
-                                    permissions => {
-                                        if (permissions.length > 0) {
-                                            listener.next(true);
-                                        } else {
-                                            this.router.navigate(['', 'secure']);
-                                            listener.next(false);
-                                        }
+                                .take(1).subscribe(
+                                permissions => {
+                                    if (permissions.length > 0) {
+                                        resolve(true);
+                                    } else {
+                                        this.router.navigate(['secure']);
+                                        resolve(false);
                                     }
-                                );
+                                }
+                            );
                         }
                     }
                 }
             );
-        }).take(1);
+        });
     }
 
 }

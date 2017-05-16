@@ -26,9 +26,6 @@ public class RegistrationControllerTest extends AbstractWebClientTest {
     @Autowired
     private UserRepository userRepository;
 
-    @Autowired
-    private TenantRepository tenantRepository;
-
     @Test
     public void testRegisterAndVerify() throws Exception {
 
@@ -44,13 +41,13 @@ public class RegistrationControllerTest extends AbstractWebClientTest {
 
         User user = userRepository.findByEmailAddress(newUserJson.getString("emailAddress"), getJUnitTenant());
         assertNotNull("The registered user was not created.", user);
-        assertFalse("The user was already verified.", user.verified);
-        assertNotNull("The user does not have a verification code.", user.verificationCode);
+        assertFalse("The user was already verified.", user.isVerified());
+        assertNotNull("The user does not have a verification code.", user.getVerificationCode());
 
-        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/register/verify?code=" + user.verificationCode))
+        this.mockMvc.perform(MockMvcRequestBuilders.get("/api/register/verify?code=" + user.getVerificationCode()))
                 .andExpect(MockMvcResultMatchers.status().is(HttpStatus.TEMPORARY_REDIRECT.value()));
 
-        assertTrue("The user is not verified.", user.verified);
-        assertNull("The user still has a verification code.", user.verificationCode);
+        assertTrue("The user is not verified.", user.isVerified());
+        assertNull("The user still has a verification code.", user.getVerificationCode());
     }
 }

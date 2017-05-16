@@ -27,35 +27,24 @@ public class User extends MultiTenantEntity implements Serializable {
     @GeneratedValue
     private Long id;
 
-    @Column(nullable = false)
+    private boolean admin;
+
     private String emailAddress;
 
-    public String firstName;
+    private String firstName;
 
-    public String lastName;
+    private String lastName;
 
-    public String phoneNumber;
+    private String phoneNumber;
 
     @Column(nullable = false)
-    public String hashedPassword;
+    private String hashedPassword;
 
-    public String verificationCode;
+    private String verificationCode;
 
-    public boolean verified;
+    private boolean verified;
 
-    @Enumerated(EnumType.STRING)
-    public State userState;
-
-    public enum State {
-        APPROVED,
-        PENDING;
-    }
-
-    @ElementCollection(targetClass = NotificationToggles.class)
-    @CollectionTable(name = "user_notification_settings", joinColumns = @JoinColumn(name = "user_id"))
-    @MapKeyColumn(name = "type")
-    @MapKeyEnumerated(EnumType.STRING)
-    public Map<NotificationType, NotificationToggles> notificationSettings;
+    private String casId;
 
     @ManyToMany
     public List<UserGroup> userGroups = new ArrayList<>();
@@ -70,6 +59,12 @@ public class User extends MultiTenantEntity implements Serializable {
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     public List<Notification> notifications = new ArrayList<>();
 
+    @ElementCollection(targetClass = NotificationToggles.class)
+    @CollectionTable(name = "user_notification_settings", joinColumns = @JoinColumn(name = "user_id"))
+    @MapKeyColumn(name = "type")
+    @MapKeyEnumerated(EnumType.STRING)
+    public Map<NotificationType, NotificationToggles> notificationSettings;
+
     @ElementCollection(targetClass = Permission.Descriptor.class)
     @CollectionTable(name = "user_permissions", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
@@ -80,6 +75,14 @@ public class User extends MultiTenantEntity implements Serializable {
         return this.id;
     }
 
+    public boolean isAdmin() {
+        return this.admin;
+    }
+
+    public void setAdmin(boolean admin) {
+        this.admin = admin;
+    }
+
     public String getEmailAddress() {
         return emailAddress;
     }
@@ -88,13 +91,60 @@ public class User extends MultiTenantEntity implements Serializable {
         this.emailAddress = emailAddress;
     }
 
-    /**
-     * Determines if the user is the admin.
-     *
-     * @return True if the user is the admin, false otherwise.
-     */
-    public boolean isAdmin() {
-        return emailAddress.equalsIgnoreCase("admin");
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    public void setPhoneNumber(String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public String getHashedPassword() {
+        return hashedPassword;
+    }
+
+    public void setHashedPassword(String hashedPassword) {
+        this.hashedPassword = hashedPassword;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public boolean isVerified() {
+        return verified;
+    }
+
+    public void setVerified(boolean verified) {
+        this.verified = verified;
+    }
+
+    public String getCasId() {
+        return casId;
+    }
+
+    public void setCasId(String casId) {
+        this.casId = casId;
     }
 
     /**
@@ -103,10 +153,13 @@ public class User extends MultiTenantEntity implements Serializable {
      * @return The user's full name.
      */
     public String getFullName() {
+        if (admin)
+            return "Admin";
+
         if (firstName == null || firstName.isEmpty())
             return getEmailAddress();
-        else
-            return firstName + (lastName == null ? "" : " " + lastName);
+
+        return firstName + (lastName == null ? "" : " " + lastName);
     }
 
     @Override
@@ -120,6 +173,7 @@ public class User extends MultiTenantEntity implements Serializable {
         User other = (User) o;
 
         return EqualsHelper.areEquals(emailAddress, other.emailAddress)
+                && EqualsHelper.areEquals(admin, other.admin)
                 && EqualsHelper.areEquals(firstName, other.firstName)
                 && EqualsHelper.areEquals(lastName, other.lastName)
                 && EqualsHelper.areEquals(phoneNumber, other.phoneNumber)
@@ -130,7 +184,7 @@ public class User extends MultiTenantEntity implements Serializable {
 
     @Override
     public int hashCode() {
-        return EqualsHelper.calculateHashCode(emailAddress, firstName, lastName, phoneNumber, hashedPassword, verificationCode, verified);
+        return EqualsHelper.calculateHashCode(emailAddress, admin, firstName, lastName, phoneNumber, hashedPassword, verificationCode, verified);
     }
 
     /**

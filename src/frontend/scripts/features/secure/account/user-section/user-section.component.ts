@@ -88,9 +88,13 @@ export class UserSectionComponent implements OnInit {
         let userPatch: User = {};
 
         userPatch.id = this.user.id;
-        userPatch.firstName = this.formGroup.controls['firstName'].value;
-        userPatch.lastName = this.formGroup.controls['lastName'].value;
-        userPatch.phoneNumber = this.formGroup.controls['phoneNumber'].value;
+        // Admins don't change their name or contact info.
+        if (!this.user.admin) {
+            userPatch.firstName = this.formGroup.controls['firstName'].value;
+            userPatch.lastName = this.formGroup.controls['lastName'].value;
+            userPatch.phoneNumber = this.formGroup.controls['phoneNumber'].value;
+        }
+
         let newPassword = this.formGroup.controls['newPassword'].value;
         if (newPassword)
             userPatch.newPassword = newPassword;

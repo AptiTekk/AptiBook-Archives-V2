@@ -10,16 +10,28 @@ import {WelcomeComponent} from "./welcome.component";
 import {SignInComponent} from "./sign-in/sign-in.component";
 import {RegisterComponent} from "./register/register.component";
 import {RegisterSuccessComponent} from "./register/success/register-success.component";
+import {AdminSignInComponent} from "./admin/admin-sign-in.component";
+import {SignInGuard} from "./sign-in/sign-in.guard";
 import {WelcomeGuard} from "./welcome.guard";
 
 const routes: Routes = [
     {
         path: '',
         component: WelcomeComponent,
+        canActivate: [WelcomeGuard],
         children: [
             {
                 path: 'sign-in',
-                component: SignInComponent
+                component: SignInComponent,
+                canActivate: [SignInGuard]
+            },
+            {
+                path: 'admin',
+                redirectTo: 'sign-in/admin'
+            },
+            {
+                path: 'sign-in/admin',
+                component: AdminSignInComponent
             },
             {
                 path: 'register',
@@ -33,8 +45,7 @@ const routes: Routes = [
                 path: '**',
                 redirectTo: 'sign-in'
             }
-        ],
-        canActivate: [WelcomeGuard]
+        ]
     }
 ];
 
@@ -46,7 +57,8 @@ const routes: Routes = [
         RouterModule
     ],
     providers: [
-        WelcomeGuard
+        WelcomeGuard,
+        SignInGuard
     ]
 })
 export class WelcomeRoutesModule {

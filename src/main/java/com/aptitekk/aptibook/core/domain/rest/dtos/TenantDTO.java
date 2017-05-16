@@ -6,6 +6,7 @@
 
 package com.aptitekk.aptibook.core.domain.rest.dtos;
 
+import com.aptitekk.aptibook.core.domain.entities.enums.property.AuthenticationMethod;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
@@ -15,5 +16,9 @@ public class TenantDTO {
     public Long id;
 
     public String domain;
+
+    public String name;
+
+    public AuthenticationMethod authenticationMethod;
 
 }

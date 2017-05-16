@@ -12,8 +12,8 @@
     <meta name="viewport"
           content="width=device-width, initial-scale=1"/>
 
-	<base href="/"/>
-	
+    <base href="/"/>
+
     <!-- Favicon -->
     <link rel="apple-touch-icon"
           sizes="180x180"
@@ -43,9 +43,8 @@
           content="#ffffff">
 
     <!-- Fonts -->
-    <link href="https://fonts.googleapis.com/css?family=Droid+Sans|Roboto:300,400|Ubuntu"
-          rel="stylesheet">
 
+    <% if(!htmlWebpackPlugin.options.dev) { %>
     <!--suppress CommaExpressionJS -->
     <script type="text/javascript">
         (function (i, s, o, g, r, a, m) {
@@ -60,9 +59,10 @@
             m.parentNode.insertBefore(a, m)
         })(window, document, 'script', 'https://www.google-analytics.com/analytics.js', 'ga');
 
-        ga('create', 'UA-46481658-2', 'auto');
+        ga('create', 'UA-46481658-2', {'cookieDomain': 'none'});
         ga('send', 'pageview');
     </script>
+    <% } %>
 
     <style type="text/css">
         <%= require("!to-string-loader!css-loader!./resources/splashscreen/style.css") %>

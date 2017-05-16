@@ -4,16 +4,11 @@
   ~ Proprietary and confidential.
   -->
 
-<ol class="breadcrumb">
-	<li class="active">Configuration</li>
-	<li class="active">Properties</li>
-</ol>
-
 <div class="container-fluid">
 	<div *ngIf="properties != undefined">
 		<div class="row">
 			
-			<div class="col-xs-12 col-md-8">
+			<div class="col-xs-12">
 				
 				<alert #successAlert
 					   [severity]="'success'"></alert>
@@ -22,7 +17,9 @@
 				
 				<!-- Toolbar -->
 				<div class="btn-toolbar">
-					<button class="btn btn-primary" (click)="onSubmit()">
+					<button class="btn btn-primary"
+							(click)="onSubmit()"
+							[disabled]="formGroup.pristine">
 						Save Changes
 					</button>
 					<button class="btn btn-danger pull-right"
@@ -40,7 +37,7 @@
 			</div>
 			
 			<form [formGroup]="formGroup">
-
+				
 				<property-section [sectionPath]="'personalization'">
 					<div class="col-xs-12 col-md-8">
 						<!-- Personalization Section -->
@@ -59,43 +56,72 @@
 				
 				<property-section [sectionPath]="'authentication'">
 					<div class="col-xs-12 col-md-8">
-						<!-- Google Sign In Section -->
-						<h3>Google Sign In</h3>
-						<hr/>
+						<label for="authenticationMethod">Authentication Method</label>
+						<select id="authenticationMethod"
+								class="form-control"
+								formControlName="AUTHENTICATION_METHOD"
+								(change)="onAuthenticationMethodChanged()">
+							<option value="BUILT_IN">Built-In (Username and Password)</option>
+							<option value="CAS">CAS (Apereo / Jasig Central Authentication Service)</option>
+						</select>
 						
-						<!-- Sign In Enabled Toggle Switch -->
-						<div class="from-group">
-							<label>Google Sign-In Enabled</label>
+						<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'BUILT_IN'">
+							<!-- Google Sign In Section -->
+							<h3>Google Sign In</h3>
+							<hr/>
+							
+							<!-- Sign In Enabled Toggle Switch -->
+							<div class="from-group">
+								<label>Google Sign-In Enabled</label>
+								<br/>
+								<toggle-switch #googleSignInEnabledSwitch
+											   [onText]="'Yes'"
+											   [offText]="'No'"
+											   style="margin-right: 10px"
+											   formControlName="GOOGLE_SIGN_IN_ENABLED">
+								</toggle-switch>
+							</div>
 							<br/>
-							<toggle-switch #googleSignInEnabledSwitch
-										   [onText]="'Yes'"
-										   [offText]="'No'"
-										   style="margin-right: 10px"
-										   formControlName="GOOGLE_SIGN_IN_ENABLED">
-							</toggle-switch>
-						</div>
-						<br/>
-						
-						<!-- Allowed Domain Names -->
-						<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
-									[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
-									[readOnly]="!googleSignInEnabledSwitch.isOn()">
-						</form-group>
-						
-						<!-- Registration Section -->
-						<h3>Registration</h3>
-						<hr/>
-						
-						<!-- Registration Enabled Toggle Switch -->
-						<div class="from-group">
-							<label>Registration Enabled</label>
-							<br/>
-							<toggle-switch
-									[onText]="'Yes'"
-									[offText]="'No'"
-									style="margin-right: 10px"
-									formControlName="REGISTRATION_ENABLED"></toggle-switch>
-						</div>
+							
+							<!-- Allowed Domain Names -->
+							<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
+										[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
+										[readOnly]="!googleSignInEnabledSwitch.isOn()"
+										[placeholder]="'gmail.com, example.net, ...'">
+							</form-group>
+							
+							<!-- Registration Section -->
+							<h3>Registration</h3>
+							<hr/>
+							
+							<!-- Registration Enabled Toggle Switch -->
+							<div class="from-group">
+								<label>Registration Enabled</label>
+								<br/>
+								<toggle-switch
+										[onText]="'Yes'"
+										[offText]="'No'"
+										style="margin-right: 10px"
+										formControlName="REGISTRATION_ENABLED"></toggle-switch>
+							</div>
+						</section>
+						<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'CAS'">
+							<!-- CAS Settings Section -->
+							<h3>CAS Settings</h3>
+							<hr/>
+							
+							<!-- CAS Server URL -->
+							<form-group [control]="formGroup.controls['CAS_SERVER_URL']"
+										[label]="'CAS Server URL (Excluding /login)'"
+										[placeholder]="'https://example.com/cas'">
+							</form-group>
+							
+							<!-- CAS Callback URL -->
+							<form-group [label]="'AptiBook Service Callback URL (For CAS Server Configuration)'"
+										[value]="CAS_CALLBACK_URL"
+										[readOnly]="true">
+							</form-group>
+						</section>
 					</div>
 				</property-section>
 			</form>

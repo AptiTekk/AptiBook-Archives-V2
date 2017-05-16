@@ -11,3 +11,17 @@
 .modal.fade.in {
     pointer-events: initial;
 }
+
+.modal-backdrop.in {
+    opacity: 0.4;
+}
+
+.modal-content {
+    border-radius: 0;
+    border: none;
+    box-shadow: none !important;
+}
+
+.modal-header {
+    border-top: 5px solid #4272b7;
+}

@@ -8,79 +8,33 @@
 	 (swiperight)="onSwipeRight()"
 	 (swipeleft)="onSwipeLeft()"
 	 [class.closed]="!swipedOpen">
-	<div id="header">
-		<a href="#"
-		   [routerLink]="['', 'secure', 'dashboard']"
-		   id="logo">
-			<div id="logo-image"></div>
-		</a>
-	</div>
-	
 	<div id="notifications"
 		 [class.unread]="unreadNotifications.length > 0"
 		 [routerLink]="['', 'secure', 'account', 'notifications']">
 		<i class="fa fa-bell"
 		   aria-hidden="true"></i>
-		<span id="notifications-count-label">{{(unreadNotifications.length > 0 ? unreadNotifications.length + ' Unread Notification' : '0 Unread Notification')
-		+ (unreadNotifications.length === 1 ? '' : 's')}}</span>
+		<span id="notifications-count-label">{{unreadNotifications.length + ' Unread'}}</span>
 	</div>
 	
 	<div id="content">
-		<accordion-navigation [canCollapse]="false">
-			<accordion-navigation [link]="['', 'secure', 'dashboard']"
-								  [icon]="'dashboard'"
-								  [label]="'Dashboard'"
-								  [exactLinkMatching]="true">
-			</accordion-navigation>
-			<accordion-navigation [link]="['', 'secure', 'account']"
-								  [icon]="'user'"
-								  [label]="'My Account'">
-			</accordion-navigation>
-			<accordion-navigation [icon]="'calendar-check-o'"
-								  [label]="'Reservation Management'"
-								  *ngIf="user?.admin || user?.userGroups?.length > 0">
-				<accordion-navigation [link]="['', 'secure', 'management', 'queue']"
-									  [icon]="'hourglass-half'"
-									  [label]="'Approval Queue'">
-				</accordion-navigation>
-				<accordion-navigation [link]="['', 'secure', 'management', 'approved']"
-									  [icon]="'calendar-check-o'"
-									  [label]="'Approved Reservations'">
-				</accordion-navigation>
-				<accordion-navigation [link]="['', 'secure', 'management', 'rejected']"
-									  [icon]="'calendar-times-o'"
-									  [label]="'Rejected Reservations'">
-				</accordion-navigation>
-				<accordion-navigation [link]="['', 'secure', 'management', 'calendar']"
-									  [icon]="'calendar'"
-									  [label]="'Reservation Calendar'">
-				</accordion-navigation>
-			</accordion-navigation>
-			<accordion-navigation [icon]="'cogs'"
-								  [label]="'AptiBook Configuration'"
-								  *ngIf="user?.admin || userPermissions.length > 0">
-				<accordion-navigation [link]="['', 'secure', 'configuration', 'resources']"
-									  [icon]="'tags'"
-									  [label]="'Resources'"
-									  *ngIf="hasPermission(['RESOURCE_CATEGORIES_MODIFY_ALL', 'RESOURCES_MODIFY_OWN', 'RESOURCES_MODIFY_HIERARCHY', 'RESOURCES_MODIFY_ALL'])">
-				</accordion-navigation>
-				<accordion-navigation [link]="['', 'secure', 'configuration', 'users']"
-									  [icon]="'user'"
-									  [label]="'Users'"
-									  *ngIf="hasPermission(['USERS_MODIFY_ALL', 'GROUPS_MODIFY_ALL'])">
-				</accordion-navigation>
-				<!--<accordion-navigation [link]="['', 'secure', 'configuration', 'permissions']"
-									  [icon]="'unlock'"
-									  [label]="'Permissions'"
-									  *ngIf="hasPermission(['PERMISSIONS_MODIFY_ALL'])">
-				</accordion-navigation>-->
-				<accordion-navigation [link]="['', 'secure', 'configuration', 'properties']"
-									  [icon]="'cog'"
-									  [label]="'Properties'"
-									  *ngIf="hasPermission(['PROPERTIES_MODIFY_ALL'])">
-				</accordion-navigation>
-			</accordion-navigation>
-		</accordion-navigation>
+		<div class="navigation-link"
+			 [routerLink]="['', 'secure', 'dashboard']"
+			 [routerLinkActive]="'active'" [innerHTML]="DASHBOARD_ICON">
+		</div>
+		<div class="navigation-link"
+			 [routerLink]="['', 'secure', 'account']"
+			 [routerLinkActive]="'active'" [innerHTML]="ACCOUNT_ICON">
+		</div>
+		<div class="navigation-link"
+			 [routerLink]="['', 'secure', 'management']"
+			 [routerLinkActive]="'active'" [innerHTML]="MANAGEMENT_ICON"
+			 *ngIf="user?.admin || user?.userGroups?.length > 0">
+		</div>
+		<div class="navigation-link"
+			 [routerLink]="['', 'secure', 'configuration']"
+			 [routerLinkActive]="'active'" [innerHTML]="CONFIGURATION_ICON"
+			 *ngIf="user?.admin || userPermissions.length > 0">
+		</div>
 	</div>
 	
 	<div id="user">

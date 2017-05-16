@@ -12,10 +12,10 @@ INSERT INTO tenant (id, domain, stripesubscriptionid, stripeplan, stripestatus) 
 -- Data for Name: user; Type: TABLE DATA; Schema: public; Owner: aptibook
 --
 
-INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20100, 'admin', NULL, 'sha1:64000:18:EWBWPv0POW6Y/idPNSqGRGei5IrsjQEo:ZaDEoB+GmH1qiQTykMmHuvNE', NULL, NULL, 'APPROVED', NULL, true, 20000);
-INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20101, 'admin@aptitekk.com', 'Jill', 'sha1:64000:18:0CEV3+Y9ZOyTw7Az7qFRwAYQcNA9FU0a:lKBIK0mA9INq3oBa5GbGm/pm', 'Administrator', NULL, 'APPROVED', NULL, true, 20000);
-INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20102, 'teacher@aptitekk.com', 'John', 'sha1:64000:18:JVorXJZvsVt1QqaklJV+288mOISorajN:GzW+E13xzmNlz27oUKYKJDVK', 'Teacher', NULL, 'APPROVED', NULL, true, 20000);
-INSERT INTO "user" (id, emailaddress, firstname, hashedpassword, lastname, phonenumber, userstate, verificationcode, verified, tenant_id) VALUES (20103, 'librarian@aptitekk.com', 'Julia', 'sha1:64000:18:4QcTGJym6dWyin+R0nu6gI+yYqV5xUEd:lfTEmIIDnccVoSU/voNBBoqc', 'Librarian', NULL, 'APPROVED', NULL, true, 20000);
+INSERT INTO "user" (id, admin, emailaddress, firstname, hashedpassword, lastname, phonenumber, verificationcode, verified, tenant_id) VALUES (20100, true, NULL, NULL, 'sha1:64000:18:EWBWPv0POW6Y/idPNSqGRGei5IrsjQEo:ZaDEoB+GmH1qiQTykMmHuvNE', NULL, NULL, NULL, true, 20000);
+INSERT INTO "user" (id, admin, emailaddress, firstname, hashedpassword, lastname, phonenumber, verificationcode, verified, tenant_id) VALUES (20101, false, 'admin@aptitekk.com', 'Jill', 'sha1:64000:18:0CEV3+Y9ZOyTw7Az7qFRwAYQcNA9FU0a:lKBIK0mA9INq3oBa5GbGm/pm', 'Administrator', NULL, NULL, true, 20000);
+INSERT INTO "user" (id, admin, emailaddress, firstname, hashedpassword, lastname, phonenumber, verificationcode, verified, tenant_id) VALUES (20102, false, 'teacher@aptitekk.com', 'John', 'sha1:64000:18:JVorXJZvsVt1QqaklJV+288mOISorajN:GzW+E13xzmNlz27oUKYKJDVK', 'Teacher', NULL, NULL, true, 20000);
+INSERT INTO "user" (id, admin, emailaddress, firstname, hashedpassword, lastname, phonenumber, verificationcode, verified, tenant_id) VALUES (20103, false, 'librarian@aptitekk.com', 'Julia', 'sha1:64000:18:4QcTGJym6dWyin+R0nu6gI+yYqV5xUEd:lfTEmIIDnccVoSU/voNBBoqc', 'Librarian', NULL, NULL, true, 20000);
 
 
 --

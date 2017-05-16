@@ -13,10 +13,12 @@ import {GroupsComponent} from "./users/groups/groups.component";
 import {PropertiesConfigurationComponent} from "./properties/properties.component";
 import {PermissionsConfigurationComponent} from "./permissions/permissions.component";
 import {ConfigurationGuard} from "./configuration.guard";
+import {ConfigurationComponent} from "./configuration.component";
 
 const routes: Routes = [
     {
         path: '',
+        component: ConfigurationComponent,
         canActivate: [ConfigurationGuard],
         children: [
             { //TODO: Resources Guard

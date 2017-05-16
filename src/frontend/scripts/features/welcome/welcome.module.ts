@@ -13,6 +13,7 @@ import {RegisterModule} from "./register/register.module";
 import {CommonModule} from "@angular/common";
 import {FooterModule} from "../../app/footer/footer.module";
 import {WelcomeRoutesModule} from "./welcome.routes";
+import {AdminSignInComponent} from "./admin/admin-sign-in.component";
 
 /**
  * The welcome section is the page that greets unauthenticated users as they sign in, register, etc.
@@ -26,7 +27,8 @@ import {WelcomeRoutesModule} from "./welcome.routes";
     ],
     declarations: [
         WelcomeComponent,
-        SignInComponent
+        SignInComponent,
+        AdminSignInComponent
     ],
     exports: [],
     providers: [],

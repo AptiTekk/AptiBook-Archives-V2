@@ -6,9 +6,11 @@
 
 export interface Properties {
 
-    GOOGLE_SIGN_IN_ENABLED: string,
-    GOOGLE_SIGN_IN_WHITELIST: string,
-    PERSONALIZATION_ORGANIZATION_NAME: string,
-    REGISTRATION_ENABLED: string
+    PERSONALIZATION_ORGANIZATION_NAME?: string,
+    REGISTRATION_ENABLED?: string,
+    AUTHENTICATION_METHOD?: string,
+    GOOGLE_SIGN_IN_ENABLED?: string,
+    GOOGLE_SIGN_IN_WHITELIST?: string,
+    CAS_SERVER_URL?: string
 
 }

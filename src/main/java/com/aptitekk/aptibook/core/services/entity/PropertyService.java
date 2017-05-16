@@ -38,7 +38,7 @@ public class PropertyService {
      * @return A Map mapping property keys and String values.
      */
     public Map<Property.Key, String> getProperties() {
-        return tenantManagementService.getTenant().properties;
+        return tenantManagementService.getTenant().getProperties();
     }
 
     /**
@@ -48,7 +48,7 @@ public class PropertyService {
      * @return The value stored in the database, or the default if no value is stored.
      */
     public String getProperty(Property.Key key) {
-        String existingValue = tenantManagementService.getTenant().properties.get(key);
+        String existingValue = tenantManagementService.getTenant().getProperties().get(key);
         return existingValue != null ? existingValue : key.getDefaultValue();
     }
 
@@ -61,18 +61,37 @@ public class PropertyService {
     public void setProperty(Property.Key key, String value) {
         Tenant tenant = tenantManagementService.getTenant();
 
-        tenant.properties.put(key, value);
+        tenant.getProperties().put(key, value);
         tenantRepository.save(tenant);
     }
 
     /**
-     * Sets all the properties for a Tenant to the provided map.
+     * Sets all the properties for the Tenant to the provided map.
      *
      * @param properties The properties to store in the Tenant.
      */
     public void setProperties(Map<Property.Key, String> properties) {
         Tenant tenant = tenantManagementService.getTenant();
-        tenant.properties = properties;
+
+        // Overwrite properties
+        tenant.setProperties(properties);
+
+        tenantRepository.save(tenant);
+    }
+
+    /**
+     * Merges the provided properties map into the Tenant, overwriting or adding properties where necessary (no deletions).
+     *
+     * @param properties The properties to merge into the Tenant.
+     */
+    public void mergeProperties(Map<Property.Key, String> properties) {
+        Tenant tenant = tenantManagementService.getTenant();
+
+        // Merge properties
+        for (Map.Entry<Property.Key, String> entry : properties.entrySet()) {
+            tenant.getProperties().put(entry.getKey(), entry.getValue());
+        }
+
         tenantRepository.save(tenant);
     }
 }

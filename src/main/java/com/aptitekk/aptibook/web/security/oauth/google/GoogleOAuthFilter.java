@@ -102,10 +102,9 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
                 //Create a new user from the oauth details.
                 user = new User();
                 user.setEmailAddress(googleUserInfo.getEmailAddress());
-                user.firstName = googleUserInfo.getFirstName();
-                user.lastName = googleUserInfo.getLastName();
-                user.verified = true;
-                user.userState = User.State.APPROVED;
+                user.setFirstName(googleUserInfo.getFirstName());
+                user.setLastName(googleUserInfo.getLastName());
+                user.setVerified(true);
                 user = userRepository.save(user);
             }
 

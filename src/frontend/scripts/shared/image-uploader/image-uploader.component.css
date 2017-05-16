@@ -6,6 +6,7 @@
 
 .image-preview {
     max-width: 100%;
+    width: 100%;
     background: no-repeat center;
     background-size: cover;
     cursor: pointer;
@@ -22,7 +23,7 @@
 
 .image-preview.file-over-image {
     opacity: 0.5;
-    box-shadow: 0 0 10px 0 #4272b7;
+    box-shadow: 0 0 10px 0 #666;
 }
 
 .image-preview-open-icon {
@@ -39,11 +40,11 @@
     transition: opacity 0.1s ease-in-out;
 }
 
-.image-preview:hover:before {
+.image-preview:hover {
     opacity: 0.5;
 }
 
-.image-preview:hover .image-preview-open-icon {
+.image-preview:hover + .image-preview-open-icon {
     opacity: 1;
 }
 
@@ -55,7 +56,6 @@
     padding: 0 5px;
     position: absolute;
     cursor: pointer;
-    border-radius: 2px;
     box-shadow: 0 0 10px 0 #000;
 }
 

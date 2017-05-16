@@ -42,7 +42,7 @@ public class TenantDiscoveryFilter extends OncePerRequestFilter {
         // Ensure the domain is allowed
         if (tenantManagementService.getAllowedTenantDomains().contains(tenantDomain))
             // Store the Tenant ID for use elsewhere in the application.
-            request.setAttribute(TENANT_ATTRIBUTE, tenantManagementService.getTenantByDomain(tenantDomain).id);
+            request.setAttribute(TENANT_ATTRIBUTE, tenantManagementService.getTenantByDomain(tenantDomain).getId());
 
         filterChain.doFilter(request, response);
     }

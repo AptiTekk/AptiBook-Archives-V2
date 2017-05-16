@@ -16,13 +16,11 @@ import {Tenant} from "../../models/tenant.model";
 export class WelcomeComponent implements AfterViewInit {
 
     tenant: Tenant;
-    tenantName: string;
 
     constructor(private tenantService: TenantService) {
     }
 
     ngAfterViewInit(): void {
         this.tenantService.getTenant().subscribe(response => this.tenant = response);
-        this.tenantService.getTenantName().subscribe(name => this.tenantName = name);
     }
 }

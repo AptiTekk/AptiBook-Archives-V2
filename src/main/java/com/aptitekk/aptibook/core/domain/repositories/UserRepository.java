@@ -11,7 +11,6 @@ import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.annotations.EntityRepository;
-import com.aptitekk.aptibook.core.security.PasswordUtils;
 
 import javax.persistence.PersistenceException;
 import java.util.List;
@@ -19,7 +18,21 @@ import java.util.List;
 @EntityRepository
 public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
 
-    public static final String ADMIN_EMAIL_ADDRESS = "admin";
+    /**
+     * Finds the admin user for the current Tenant.
+     *
+     * @return The admin user, or null if one could not be found.
+     */
+    public User findAdminUser() {
+        try {
+            return entityManager
+                    .createQuery("SELECT u FROM User u WHERE u.tenant = ?1 AND u.admin = TRUE", User.class)
+                    .setParameter(1, getTenant())
+                    .getSingleResult();
+        } catch (Exception e) {
+            return null;
+        }
+    }
 
     /**
      * Finds User Entity by its verification code, within all tenants.
@@ -76,31 +89,25 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
     }
 
     /**
-     * Determines if the credentials are correct or not for the current Tenant.
+     * Finds User Entity by its CAS ID, within the current Tenant.
+     * The search is case-sensitive.
      *
-     * @param emailAddress The email address of the user to check.
-     * @param password     The password of the user to check (raw).
-     * @return The User if the credentials are correct, or null if they are not.
+     * @param casId  The CAS ID of the User to search for.
+     * @return A User Entity with the specified CAS ID, or null if one does not exist.
      */
-    public User findUserWithCredentials(String emailAddress, String password) {
-        if (emailAddress == null || password == null || getTenant() == null) {
+    public User findByCASID(String casId) {
+        if (casId == null || getTenant() == null) {
             return null;
         }
-
         try {
-            User user = entityManager
-                    .createQuery("SELECT u FROM User u WHERE LOWER(u.emailAddress) = :emailAddress AND u.tenant = :tenant", User.class)
-                    .setParameter("emailAddress", emailAddress.toLowerCase())
+            return entityManager
+                    .createQuery("SELECT u FROM User u WHERE u.casId = :casId AND u.tenant = :tenant", User.class)
+                    .setParameter("casId", casId)
                     .setParameter("tenant", getTenant())
                     .getSingleResult();
-            if (user != null && user.hashedPassword != null) {
-                if (PasswordUtils.passwordsMatch(password, user.hashedPassword))
-                    return user;
-            }
         } catch (PersistenceException e) {
             return null;
         }
-        return null;
     }
 
     /**
@@ -132,7 +139,7 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
                 }
             }
 
-            usersWithPermission.add(findByEmailAddress(ADMIN_EMAIL_ADDRESS));
+            usersWithPermission.add(findAdminUser());
             return usersWithPermission;
 
         } catch (Exception e) {
