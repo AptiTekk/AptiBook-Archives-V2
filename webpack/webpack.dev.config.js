@@ -41,7 +41,7 @@ config.output = {
     path: path.join(__dirname, '../target/classes/static/'),
     filename: './resources/scripts/[name]-[chunkhash].js',
     sourceMapFilename: './resources/scripts/[name]-[chunkhash].map',
-    chunkFilename: './resources/scripts/[id].chunk.js'
+    chunkFilename: './resources/scripts/[id]-[chunkhash].chunk.js'
 };
 
 module.exports = config;
