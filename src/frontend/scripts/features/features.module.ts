@@ -5,6 +5,10 @@
  */
 
 import {NgModule} from "@angular/core";
+import {FinishRegistrationModule} from "./finish-registration/finish-registration.module";
+import {InactiveTenantModule} from "./inactive-tenant/inactive-tenant.module";
+import {SecureModule} from "./secure/secure.module";
+import {WelcomeModule} from "./welcome/welcome.module";
 
 /**
  * This module groups together modules and components which are part of larger "features."
@@ -13,7 +17,12 @@ import {NgModule} from "@angular/core";
 @NgModule({
     imports: [],
     declarations: [],
-    exports: [],
+    exports: [
+        FinishRegistrationModule,
+        InactiveTenantModule,
+        SecureModule,
+        WelcomeModule
+    ],
     providers: [],
 })
 export class FeaturesModule {

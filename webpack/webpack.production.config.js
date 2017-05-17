@@ -42,7 +42,7 @@ config.plugins.push(
 config.output = {
     path: path.join(__dirname, '../target/classes/static/'),
     filename: 'resources/scripts/[name]-[chunkhash].js',
-    chunkFilename: 'resources/scripts/[id].chunk.js',
+    chunkFilename: 'resources/scripts/[id]-[chunkhash].chunk.js',
     publicPath: "https://cdn.aptibook.net/"
 };
 
