@@ -7,25 +7,11 @@
 <div class="container-fluid no-top-padding no-left-padding">
 	
 	<div class="row no-gutter">
-		
-		<!-- Left Calendar Section -->
-		<div class="col-xs-12 col-lg-9">
-			<div class="full-height">
-				<calendar [eventFeedEndpoint]="'reservations'"
-						  [allowDaySelection]="true"
-						  [hiddenStatuses]="['rejected', 'cancelled']"
-						  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
-						  [filterByResourceCategories]="enabledResourceCategories"
-						  (eventSelected)="reservationInfoModal.display($event)"
-						  (daySelected)="newReservationModal.display($event)"></calendar>
-			</div>
-		</div>
-		
-		<!-- Right Toolbar / Filter Section -->
+		<!-- Left Toolbar / Filter Section -->
 		<div class="col-xs-12 col-lg-3">
 			
 			<!-- Filters Section -->
-			<calendar-header [label]="'Calendar Filters'">
+			<calendar-header>
 			</calendar-header>
 			<div style="padding: 10px 10px">
 				<div class="form-group">
@@ -43,10 +29,34 @@
 					<label>{{resourceCategory.name}}</label>
 				</div>
 			</div>
+		</div>
 		
+		<!-- Right Calendar Section -->
+		<div class="col-xs-12 col-lg-9">
+			<div class="full-height">
+				<!-- Desktops -->
+				<calendar *showItBootstrap="['xl', 'lg']"
+						[eventFeedEndpoint]="'reservations'"
+						  [allowDaySelection]="true"
+						  [hiddenStatuses]="['rejected', 'cancelled']"
+						  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
+						  [filterByResourceCategories]="enabledResourceCategories"
+						  (eventSelected)="reservationInfoModal.display($event)"
+						  (daySelected)="newReservationModal.display($event)"
+						  [view]="'basicWeek'"></calendar>
+				<!-- Mobile -->
+				<calendar *showItBootstrap="['xs', 'sm', 'md']"
+						  [eventFeedEndpoint]="'reservations'"
+						  [allowDaySelection]="true"
+						  [hiddenStatuses]="['rejected', 'cancelled']"
+						  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
+						  [filterByResourceCategories]="enabledResourceCategories"
+						  (eventSelected)="reservationInfoModal.display($event)"
+						  (daySelected)="newReservationModal.display($event)"
+						  [view]="'listWeek'"></calendar>
+			</div>
 		</div>
 	</div>
-
 </div>
 
 <reservation-info-modal #reservationInfoModal></reservation-info-modal>

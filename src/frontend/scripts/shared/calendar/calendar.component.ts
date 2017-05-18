@@ -26,7 +26,7 @@ import {APIService} from "../../core/services/api.service";
 @Component({
     selector: 'calendar',
     templateUrl: 'calendar.component.html',
-    styleUrls: ['calendar.component.css']
+    styleUrls: ['calendar.component.css', 'calendar-month.component.css', 'calendar-week.component.css', 'calendar-list.component.css', 'calendar-events.component.css']
 })
 export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
@@ -140,7 +140,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             eventLimit: true, //"More" link below too many events on a day
             events: this.getEventsToUse(),
             timezone: 'local',
-            view: this.view ? this.view : CalendarComponent.VIEW_CALENDAR,
+
+            defaultView: this.view ? this.view : CalendarComponent.VIEW_CALENDAR,
 
             eventRender: (event: Reservation, element) => {
                 if (event.status) {

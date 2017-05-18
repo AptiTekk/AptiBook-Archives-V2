@@ -36,6 +36,7 @@ import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {ResponsiveModule} from "ng2-responsive";
 
 /**
  * This module is dedicated to highly re-usable components that are used often in feature components (pages, etc)
@@ -46,8 +47,11 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
+        ResponsiveModule,
+
+        // Component modules
         ImageUploaderModule,
-        ModalModule
+        ModalModule,
     ],
     declarations: [
         AccordionComponent, //TODO: make module
@@ -81,6 +85,7 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
+        ResponsiveModule,
 
         // Component modules
         ImageUploaderModule,

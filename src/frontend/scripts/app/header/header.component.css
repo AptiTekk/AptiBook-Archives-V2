@@ -11,7 +11,7 @@
 .navbar {
     height: 60px;
     background-color: #fff !important;
-    box-shadow: #666 0 -5px 20px 1px;
+    box-shadow: 0 0 10px -3px #666;
     font-family: "Roboto", sans-serif;
     font-size: 16px;
     border: none;
