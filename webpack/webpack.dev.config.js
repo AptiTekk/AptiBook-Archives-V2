@@ -16,8 +16,7 @@ config.module.rules.unshift(
         test: /\.ts$/,
         use: ['awesome-typescript-loader', 'angular2-template-loader', 'angular-router-loader'],
         exclude: [/\.(spec|e2e)\.ts$/]
-    },
-
+    }
 );
 
 config.plugins.push(
