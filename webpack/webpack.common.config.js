@@ -58,10 +58,6 @@ const config = {
             {
                 test: /\.(ttf|eot|woff|woff2)(\?v=[\d.]+)?$/,
                 use: 'file-loader?name=./resources/' + buildDir + '/fonts/[hash].[ext]'
-            },
-            {
-                test: /\.json$/,
-                use: "file-loader?name=./resources/" + buildDir + "/json/[hash].[ext]"
             }
         ]
     },
@@ -79,7 +75,7 @@ const config = {
     ],
 
     resolve: {
-        extensions: ['.ts', '.js', '.jsx'],
+        extensions: ['.ts', '.json', '.js', '.jsx'],
         modules: ['node_modules'],
         alias: {
             // Force all modules to use the same jquery version.
