@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.web;
 
 import com.aptitekk.aptibook.core.domain.rest.RestError;
 import com.aptitekk.aptibook.core.services.LogService;
+import com.aptitekk.aptibook.core.services.SpringProfileService;
 import com.aptitekk.aptibook.rest.controllers.api.validators.RestValidator;
 import org.apache.catalina.connector.ClientAbortException;
 import org.hibernate.MappingException;
@@ -31,11 +32,15 @@ import org.springframework.web.servlet.mvc.method.annotation.ResponseEntityExcep
 public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
     private final ResourceLoader resourceLoader;
+    private final SpringProfileService springProfileService;
     private final LogService logService;
 
     @Autowired
-    public WebExceptionHandler(ResourceLoader resourceLoader, LogService logService) {
+    public WebExceptionHandler(ResourceLoader resourceLoader,
+                               SpringProfileService springProfileService,
+                               LogService logService) {
         this.resourceLoader = resourceLoader;
+        this.springProfileService = springProfileService;
         this.logService = logService;
     }
 
@@ -45,7 +50,6 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
             // For API calls, send a rest error.
             return new ResponseEntity<>(new RestError("The URL you have reached is not in service at this time. (404)"), HttpStatus.NOT_FOUND);
         else {
-            // For non-API calls, try to load the resource they asked for
             Resource resource = this.resourceLoader.getResource("classpath:static" + ex.getRequestURL());
 
             // If it doesn't exist, load index.html
