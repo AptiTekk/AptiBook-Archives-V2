@@ -9,13 +9,15 @@ const AotPlugin = require('@ngtools/webpack').AotPlugin;
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
 
 config.module.rules.unshift(
     {
         test: /\.ts$/,
         use: ['awesome-typescript-loader', 'angular2-template-loader', 'angular-router-loader'],
         exclude: [/\.(spec|e2e)\.ts$/]
-    }
+    },
+
 );
 
 config.plugins.push(
@@ -33,15 +35,12 @@ config.plugins.push(
         },
         chunksSortMode: 'dependency',
         dev: true
+    }),
+    new CleanWebpackPlugin(['resources'], {
+        root: path.join(__dirname, '../target/classes/static')
     })
 );
 
 config.devtool = 'source-map';
-config.output = {
-    path: path.join(__dirname, '../target/classes/static/'),
-    filename: './resources/scripts/[name]-[chunkhash].js',
-    sourceMapFilename: './resources/scripts/[name]-[chunkhash].map',
-    chunkFilename: './resources/scripts/[id]-[chunkhash].chunk.js'
-};
 
 module.exports = config;
