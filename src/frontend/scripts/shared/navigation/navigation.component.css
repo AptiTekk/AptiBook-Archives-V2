@@ -6,51 +6,52 @@
 
 /* Horizontal Nav */
 
-ul.nav-pills {
+.nav-pills {
     font-family: "Roboto", sans-serif;
     font-size: 12pt;
     margin-bottom: 20px;
 }
 
-ul.nav-pills > li {
+.nav-item {
     margin-right: 10px;
     margin-bottom: 10px;
 }
 
-ul.nav-pills > li > a {
+.nav-link {
     color: #777;
     border-radius: 0;
     border: none;
 }
 
-ul.nav-pills > li > a:hover {
+.nav-link:hover {
     background-color: #f6f6f6;
 }
 
-ul.nav-pills > li.active > a,
-ul.nav-pills > li.active > a:focus {
+.nav-link.active,
+.nav-link.active:focus {
     background-color: #eeeeee;
+    color: #777;
 }
 
 /* Vertical Nav */
 
-ul.nav-pills.nav-stacked {
+.nav-pills.flex-column {
     font-family: "Roboto", sans-serif;
     font-size: 12pt;
 }
 
-ul.nav-pills.nav-stacked > li {
+.nav-pills.flex-column > .nav-item {
     margin-bottom: 10px;
     margin-right: 0;
 }
 
-ul.nav-pills.nav-stacked > li > a {
+.nav-pills.flex-column > .nav-link {
     color: #777;
     border-radius: 0;
 }
 
-ul.nav-pills.nav-stacked > li.active > a,
-ul.nav-pills.nav-stacked > li.active > a:focus {
+.nav-pills.flex-column > .nav-link,
+.nav-pills.flex-column > .nav-link:focus {
     color: white;
     background-color: #4272b7;
 }
