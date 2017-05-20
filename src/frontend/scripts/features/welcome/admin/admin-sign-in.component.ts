@@ -13,7 +13,8 @@ import {LoaderService} from "../../../core/services/loader.service";
 
 @Component({
     selector: 'at-admin-sign-in',
-    templateUrl: 'admin-sign-in.component.html'
+    templateUrl: 'admin-sign-in.component.html',
+    styleUrls: ['admin-sign-in.component.css']
 })
 export class AdminSignInComponent implements OnInit, AfterViewInit {
 

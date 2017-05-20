@@ -4,22 +4,8 @@
  * Proprietary and confidential.
  */
 
-#vertical-spacer {
-    display: table-cell;
-    vertical-align: middle;
+#main-row {
     background: url('background.png');
-}
-
-#horizontal-spacer {
-    margin-left: auto;
-    margin-right: auto;
-}
-
-#wrapper {
-    display: table;
-    position: absolute;
-    height: 100%;
-    width: 100%;
 }
 
 #content-row {
@@ -61,7 +47,6 @@
 
     #content-row {
         padding: 15px 15px 70px;
-        min-height: calc(100vh - 96px - 50px);
     }
 
     #logo-container {

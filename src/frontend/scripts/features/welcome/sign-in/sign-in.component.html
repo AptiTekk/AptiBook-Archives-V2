@@ -32,7 +32,7 @@
 
 <div class="form-group"
 	 *ngIf="googleSignInUrl">
-	<button class="btn btn-default btn-block"
+	<button class="btn btn-secondary btn-block"
 			(click)="onGoogleSignIn()">
 		<img src="./google-sign-in.svg"
 			 height="18px"/>
@@ -42,14 +42,13 @@
 <hr/>
 
 <!--<button [routerLink]="['', 'register']"
-		class="btn btn-default btn-block">
+		class="btn btn-secondary btn-block">
 	Register
 </button>
 <br/>-->
 <a href="#"
-   style="color: #666"
+   class="text-gray-dark disabled"
    [routerLink]="['', 'forgot-password']"><i class="fa fa-question-circle"></i> Forgotten Password</a>
 <a href="#"
-   class="pull-right"
-   style="color: #666"
+   class="text-gray-dark pull-right"
    [routerLink]="['', 'sign-in', 'admin']"><i class="fa fa-lock"></i> Admin Sign In</a>
