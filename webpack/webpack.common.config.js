@@ -39,9 +39,18 @@ const config = {
                 use: ["to-string-loader", "css-loader"]
             },
             {
+                test: /\.(component|page)\.scss$/,
+                use: ["to-string-loader", "css-loader", "sass-loader"]
+            },
+            {
                 test: /\.css(\?v=[\d\.]+)?$/,
                 use: ["style-loader", "css-loader"],
                 exclude: [/\.(component|page)\.css$/]
+            },
+            {
+                test: /\.scss(\?v=[\d\.]+)?$/,
+                use: ["style-loader", "css-loader", "sass-loader"],
+                exclude: [/\.(component|page)\.scss$/]
             },
             {
                 test: /\.xml$/,

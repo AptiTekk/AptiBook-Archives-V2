@@ -4,6 +4,11 @@
  * Proprietary and confidential.
  */
 
+#at-app {
+    /* 100 - footer */
+    height: calc(100vh - 50px);
+}
+
 /* Container, Column, and Row Styling */
 
 .no-gutter > [class*='col-'] {
@@ -13,16 +18,25 @@
 
 /* Link and Text Styling */
 
-.app a {
+#at-app a {
     color: #4272b7;
 }
 
-.app a.disabled {
+/* Make disabled links appear grey */
+#at-app a.disabled {
     color: grey !important;
     pointer-events: none;
 }
 
-.app .text-primary {
+/* Add pointer cursor to links without href, which Angular uses a lot of. (Becuase of the click event) */
+#at-app a:not([href]) {
+    cursor: pointer;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    user-select: none
+}
+
+#at-app .text-primary {
     color: #4272b7;
 }
 
@@ -44,40 +58,40 @@
 
 /* Button Styling */
 
-.app .btn {
+#at-app .btn {
     border-radius: 0;
 }
 
-.app .btn-primary,
-.app .pagination > .active > a,
-.app .pagination > .active > span,
-.app .pagination > .active > a:hover,
-.app .pagination > .active > span:hover,
-.app .pagination > .active > a:focus,
-.app .pagination > .active > span:focus,
-.app .btn-primary.disabled:hover,
-.app .btn-primary[disabled]:hover,
-.app fieldset[disabled] .btn-primary:hover,
-.app .btn-primary.disabled:focus,
-.app .btn-primary[disabled]:focus,
-.app fieldset[disabled] .btn-primary:focus,
-.app .btn-primary.disabled.focus,
-.app .btn-primary[disabled].focus,
-.app fieldset[disabled] .btn-primary.focus {
+#at-app .btn-primary,
+#at-app .pagination > .active > a,
+#at-app .pagination > .active > span,
+#at-app .pagination > .active > a:hover,
+#at-app .pagination > .active > span:hover,
+#at-app .pagination > .active > a:focus,
+#at-app .pagination > .active > span:focus,
+#at-app .btn-primary.disabled:hover,
+#at-app .btn-primary[disabled]:hover,
+#at-app fieldset[disabled] .btn-primary:hover,
+#at-app .btn-primary.disabled:focus,
+#at-app .btn-primary[disabled]:focus,
+#at-app fieldset[disabled] .btn-primary:focus,
+#at-app .btn-primary.disabled.focus,
+#at-app .btn-primary[disabled].focus,
+#at-app fieldset[disabled] .btn-primary.focus {
     background-color: #4272b7;
     border-color: #39629C;
 }
 
-.app .btn-primary:hover {
+#at-app .btn-primary:hover {
     background-color: #39629C;
     border-color: #39629C;
 }
 
-.app .btn:focus {
+#at-app .btn:focus {
     outline: none;
 }
 
-.app .btn.btn-large {
+#at-app .btn.btn-large {
     font-size: 30px;
 }
 
@@ -87,13 +101,13 @@
     background: none;
 }
 
-.app .btn-toolbar .btn {
+#at-app .btn-toolbar .btn {
     margin-bottom: 5px;
 }
 
 /* Select Box Styling */
 
-.app select.big-select {
+#at-app select.big-select {
     display: block;
     font-size: 20px;
     width: 100%;
@@ -102,34 +116,34 @@
     margin-bottom: 10px;
 }
 
-.app select.big-select:disabled {
+#at-app select.big-select:disabled {
     background-color: #eee;
 }
 
-.app select.form-control {
+#at-app select.form-control {
     height: 34px !important;
 }
 
 /* Switch Styling */
 
-.app .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
-.app .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
+#at-app .bootstrap-switch .bootstrap-switch-handle-on.bootstrap-switch-primary,
+#at-app .bootstrap-switch .bootstrap-switch-handle-off.bootstrap-switch-primary {
     background: #4272b7;
 }
 
-.app .ui-state-highlight,
-.app .ui-widget-content .ui-state-highlight,
-.app .ui-widget-header .ui-state-highlight {
+#at-app .ui-state-highlight,
+#at-app .ui-widget-content .ui-state-highlight,
+#at-app .ui-widget-header .ui-state-highlight {
     background-color: #4272b7;
 }
 
 /* Form Styling */
 
-.app .form-control {
+#at-app .form-control {
     border-radius: 0;
 }
 
-.app .input-group-addon {
+#at-app .input-group-addon {
     border-radius: 0;
 }
 

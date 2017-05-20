@@ -4,7 +4,24 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="app">
-	<at-loader></at-loader>
-	<router-outlet></router-outlet>
+<div id="at-app">
+	<div id="at-app-content"
+		 class="h-100">
+		<at-loader></at-loader>
+		<router-outlet></router-outlet>
+	</div>
+	<div id="at-app-landscape"
+		 class="h-100">
+		<div class="container h-100">
+			<div class="row align-items-center justify-content-center h-100">
+				<div class="col">
+					<img src="../../resources/images/logo.svg"/>
+					<hr/>
+					<h3>Your screen is too small to use AptiBook.</h3>
+					<p>If your device is in landscape mode, try rotating it.</p>
+				</div>
+			</div>
+		</div>
+	</div>
+	<at-footer></at-footer>
 </div>

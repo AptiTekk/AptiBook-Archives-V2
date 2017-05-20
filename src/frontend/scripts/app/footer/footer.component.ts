@@ -13,7 +13,4 @@ import {Component, Input} from "@angular/core";
 })
 export class FooterComponent {
 
-    @Input()
-    includeSpacer: boolean = true;
-
 }

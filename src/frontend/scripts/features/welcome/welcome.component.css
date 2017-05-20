@@ -5,7 +5,7 @@
  */
 
 #main-row {
-    background: url('background.png');
+    background: url('../../../resources/images/background.png');
 }
 
 #content-row {
@@ -41,16 +41,12 @@
 
 @media (max-width: 767px) {
 
-    #logo-row {
-        padding: 15px;
-    }
-
     #content-row {
-        padding: 15px 15px 70px;
+        padding: 0 15px 70px;
     }
 
     #logo-container {
-        padding: 15px;
+        padding: 0 15px;
     }
 
 }

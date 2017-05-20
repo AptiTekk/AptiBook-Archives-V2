@@ -1,0 +1,29 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+@import "~bootstrap/scss/bootstrap-grid.scss";
+
+#at-app-landscape {
+  display: none;
+  background: url('../../resources/images/background.png');
+}
+
+#at-app-landscape h3 {
+  font-family: 'Roboto', sans-serif;
+  font-weight: 300;
+}
+
+/* Styles specific to landscape mode on phones. */
+@include media-breakpoint-down(sm) {
+  @media screen and (orientation: landscape) and (min-aspect-ratio: 13/9) {
+    #at-app-content {
+      display: none;
+    }
+
+    #at-app-landscape {
+      display: block;
+    }
+  }
+}
