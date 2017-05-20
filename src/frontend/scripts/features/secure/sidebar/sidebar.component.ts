@@ -17,7 +17,7 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 @Component({
     selector: 'at-sidebar',
     templateUrl: 'sidebar.component.html',
-    styleUrls: ['sidebar.component.css', 'sidebar.mobile.component.css']
+    styleUrls: ['sidebar.component.css', 'sidebar.mobile.component.scss']
 })
 export class SidebarComponent implements OnInit {
 

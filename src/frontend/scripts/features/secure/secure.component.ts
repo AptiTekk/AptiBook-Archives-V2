@@ -9,6 +9,6 @@ import {Component} from '@angular/core';
 @Component({
     selector: 'at-secure',
     templateUrl: 'secure.component.html',
-    styleUrls: ['secure.component.css']
+    styleUrls: ['./secure.component.scss']
 })
 export class SecureComponent {}

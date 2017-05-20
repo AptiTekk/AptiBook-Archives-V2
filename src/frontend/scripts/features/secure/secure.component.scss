@@ -3,15 +3,16 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
+@import '~bootstrap/scss/bootstrap-grid.scss';
 
 #content-container {
-    margin-left: 110px;
+  margin-left: 110px;
 }
 
-@media only screen and (max-width: 768px) {
+@include media-breakpoint-down(sm) {
 
-    #content-container {
-        margin-left: 60px;
-    }
+  #content-container {
+    margin-left: 60px;
+  }
 
 }
