@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component, Input, ViewChild, ElementRef, Output, EventEmitter, OnInit} from "@angular/core";
+import {Component, ElementRef, EventEmitter, Input, OnInit, Output, ViewChild} from "@angular/core";
 
 @Component({
     selector: 'modal',
@@ -99,42 +99,23 @@ export class ModalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.createBackdrop();
-    }
-
-    /**
-     * Creates the backdrop element that displays behind the modal.
-     */
-    private createBackdrop() {
-        this.backdropElement = document.createElement("div");
-        this.backdropElement.classList.add("modal-backdrop");
-        this.backdropElement.classList.add("fade");
-        this.backdropElement.classList.add("in");
     }
 
     /**
      * Displays the modal.
      */
     public openModal() {
-        if (this.isOpen)
-            return;
-
-        this.isOpen = true;
-        document.body.appendChild(this.backdropElement);
-        window.setTimeout(() => this.modalRoot.nativeElement.focus(), 0);
-        document.body.classList.add("modal-open");
+        $(this.modalRoot.nativeElement).modal({
+            backdrop: this.closeOnOutsideClick ? true : 'static',
+            keyboard: this.closeOnEscape
+        });
     }
 
     /**
      * Closes the modal without emitting the onCancel emitter.
      */
     public closeModal() {
-        if (!this.isOpen)
-            return;
-
-        this.isOpen = false;
-        document.body.removeChild(this.backdropElement);
-        document.body.classList.remove("modal-open");
+        $(this.modalRoot.nativeElement).modal('hide');
     }
 
     /**
