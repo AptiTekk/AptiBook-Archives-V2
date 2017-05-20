@@ -6,7 +6,7 @@
 
 #sidebar {
     width: 110px;
-    height: calc(100vh - 60px - 50px);
+    height: calc(100vh - 60px);
     position: fixed;
     z-index: 999;
     box-shadow: -5px 0 20px 0 #666;
@@ -45,8 +45,8 @@
 
 #content {
     overflow-y: auto;
-    /* 100vh - header - notifications - sign out - footer */
-    max-height: calc(100vh - 60px - 40px - 50px - 50px);
+    /* 100vh - header - notifications - sign out */
+    height: calc(100vh - 60px - 40px - 50px);
 }
 
 #content::-webkit-scrollbar {
@@ -88,31 +88,38 @@
     border-radius: 5px 0 0 5px;
 }
 
-#user {
-    height: 50px;
-    padding-top: 10px;
-    padding-left: 15px;
-    background-color: #f1f1f1;
-    font-size: 20px;
-    color: #666;
+#bottom {
     position: fixed;
-    bottom: 50px;
+    bottom: 0;
     left: 0;
     width: 110px;
+    height: 50px;
     transition: width 0.1s ease-in-out;
     white-space: nowrap;
     overflow: hidden;
 }
 
-#sign-out-button {
+#sign-out-button, #help-button {
     width: 100%;
     font-size: 20px;
     text-align: center;
     height: 50px;
-    margin-top: -10px;
-    position: absolute;
-    bottom: 0;
-    right: 0;
+    display: block;
+    background-color: #fff;
+}
+
+#help-button {
+    border-left: 10px solid #ddd;
+    color: #ddd;
+}
+
+#help-button:hover {
+    border-left-color: #ccc;
+    background-color: #f1f1f1;
+    color: #aaa;
+}
+
+#sign-out-button {
     background-color: #f1f1f1;
 }
 

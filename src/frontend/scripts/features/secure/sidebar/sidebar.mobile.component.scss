@@ -46,13 +46,8 @@
     padding-right: 0;
   }
 
-  #sidebar.closed #user {
+  #sidebar.closed #bottom {
     width: 60px;
-  }
-
-  #sidebar.closed #user > .fa-user,
-  #sidebar.closed #user-name {
-    display: none;
   }
 
   #sidebar.closed #sign-out-button {

@@ -5,6 +5,7 @@
  */
 
 #main-row {
+    height: calc(100vh - 50px);
     background: url('../../../resources/images/background.png');
 }
 

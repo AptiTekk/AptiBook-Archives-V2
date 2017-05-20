@@ -5,8 +5,7 @@
  */
 
 #at-app {
-    /* 100 - footer */
-    height: calc(100vh - 50px);
+    height: 100vh;
 }
 
 /* Container, Column, and Row Styling */

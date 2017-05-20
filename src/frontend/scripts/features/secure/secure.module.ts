@@ -17,6 +17,7 @@ import {SecureRoutesModule} from "./secure.routes";
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {AccountModule} from "./account/account.module";
 import {HeaderModule} from "../../app/header/header.module";
+import {HelpModalComponent} from "../../app/footer/help-modal/help-modal.component";
 
 /**
  * The secure section is off-limits to the users who have not signed in.
@@ -24,7 +25,9 @@ import {HeaderModule} from "../../app/header/header.module";
 @NgModule({
     imports: [
         SharedModule,
+
         HeaderModule,
+        FooterModule,
 
         // Routes
         SecureRoutesModule,
@@ -35,7 +38,6 @@ import {HeaderModule} from "../../app/header/header.module";
         ManagementModule,
         SearchResultsModule,
         AccountModule,
-        FooterModule
     ],
     declarations: [
         SecureComponent,
