@@ -6,7 +6,9 @@
 
 const path = require('path');
 const webpack = require('webpack');
-const CleanWebpackPlugin = require('clean-webpack-plugin');
+
+//noinspection JSUnresolvedVariable
+const buildDir = process.env.bamboo_buildNumber !== undefined ? process.env.bamboo_buildNumber : 'dev';
 
 const config = {
     cache: true,
@@ -50,12 +52,12 @@ const config = {
                 use: ["json-loader", "yaml-loader"]
             },
             {
-                test: /\.(png|jpg|gif|svg)(\?v=[\d\.]+)?$/,
-                use: "file-loader?name=./resources/images/[hash].[ext]"
+                test: /\.(png|jpg|gif|svg)(\?v=[\d.]+)?$/,
+                use: "file-loader?name=./resources/" + buildDir + "/images/[hash].[ext]"
             },
             {
-                test: /\.(ttf|eot|woff|woff2)(\?v=[\d\.]+)?$/,
-                use: 'file-loader?name=./resources/fonts/[hash].[ext]'
+                test: /\.(ttf|eot|woff|woff2)(\?v=[\d.]+)?$/,
+                use: 'file-loader?name=./resources/' + buildDir + '/fonts/[hash].[ext]'
             }
         ]
     },
@@ -69,19 +71,23 @@ const config = {
             jQuery: 'jquery',
             $: 'jquery',
             jquery: 'jquery'
-        }),
-        new CleanWebpackPlugin(['resources'], {
-            root: path.join(__dirname, '../target/classes/static')
         })
     ],
 
     resolve: {
-        extensions: ['.ts', '.js', '.json', '.jsx'],
+        extensions: ['.ts', '.json', '.js', '.jsx'],
         modules: ['node_modules'],
         alias: {
             // Force all modules to use the same jquery version.
             'jquery': path.join(__dirname, '../node_modules/jquery/src/jquery')
         }
+    },
+
+    output: {
+        path: path.join(__dirname, '../target/classes/static/'),
+        filename: './resources/' + buildDir + '/scripts/[name]-[chunkhash].js',
+        sourceMapFilename: './resources/' + buildDir + '/scripts/[name]-[chunkhash].map',
+        chunkFilename: './resources/' + buildDir + '/scripts/[id]-[chunkhash].chunk.js'
     },
 
     node: {
