@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component, forwardRef, Input} from "@angular/core";
+import {Component, EventEmitter, forwardRef, Input, Output} from "@angular/core";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {noop} from "rxjs/util/noop";
 
@@ -27,6 +27,8 @@ export class CheckboxComponent implements ControlValueAccessor {
 
     private changeListener: (value: boolean) => void = noop;
 
+    @Output() valueChanged = new EventEmitter<boolean>();
+
     get value(): boolean {
         return this.innerValue;
     }
@@ -34,6 +36,7 @@ export class CheckboxComponent implements ControlValueAccessor {
     set value(value: boolean) {
         this.innerValue = value;
         this.changeListener(value);
+        this.valueChanged.emit(value);
     }
 
     writeValue(value: any): void {
