@@ -12,16 +12,15 @@
 			</at-account-user-section>
 		</div>
 		<div class="col-xs-12 col-md-7 col-lg-8">
-			<panel [type]="'primary'"
-				   id="info-panel">
-				<panel-body>
+			<at-card id="info-card">
+				<at-card-block>
 					<navigation [horizontal]="true"
 								[links]="infoNavigationLinks">
 					</navigation>
 					
 					<router-outlet></router-outlet>
-				</panel-body>
-			</panel>
+				</at-card-block>
+			</at-card>
 		</div>
 	</div>
 </div>

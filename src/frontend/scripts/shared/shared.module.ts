@@ -5,9 +5,6 @@
  */
 
 import {NgModule} from "@angular/core";
-import {AccordionComponent} from "./accordion/accordion.component";
-import {AccordionItemComponent} from "./accordion/accordion-item/accordion-item.component";
-import {AccordionNavigationComponent} from "./accordion-navigation/accordion-navigation.component";
 import {AlertComponent} from "./alert/alert.component";
 import {CalendarComponent} from "./calendar/calendar.component";
 import {CalendarHeaderComponent} from "./calendar/calendar-header/calendar-header.component";
@@ -20,9 +17,6 @@ import {FormGroupComponent} from "./form-group/form-group.component";
 import {ImageUploaderComponent} from "./image-uploader/image-uploader.component";
 import {NavigationComponent} from "./navigation/navigation.component";
 import {NavigationLinkComponent} from "./navigation/navigation-link.component";
-import {PanelComponent} from "./panel/panel.component";
-import {PanelBodyComponent} from "./panel/panel-body/panel-body.component";
-import {PanelFooterComponent} from "./panel/panel-footer/panel-footer.component";
 import {ReservationInfoModalComponent} from "./reservation-info-modal/reservation-info-modal.component";
 import {ResourceImageComponent} from "./resource-image/resource-image.component";
 import {ToggleSwitchComponent} from "./toggle-switch/toggle-switch.component";
@@ -35,8 +29,8 @@ import {ConfirmationModalComponent} from "./confirmation-modal/confirmation-moda
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
-import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
 import {ResponsiveModule} from "ng2-responsive";
+import {CardModule} from "./card/card.module";
 
 /**
  * This module is dedicated to highly re-usable components that are used often in feature components (pages, etc)
@@ -50,13 +44,11 @@ import {ResponsiveModule} from "ng2-responsive";
         ResponsiveModule,
 
         // Component modules
+        CardModule,
         ImageUploaderModule,
         ModalModule,
     ],
     declarations: [
-        AccordionComponent, //TODO: make module
-        AccordionItemComponent,
-        AccordionNavigationComponent,
         AlertComponent,
         CalendarComponent,
         CalendarHeaderComponent, //TODO: make module
@@ -69,9 +61,6 @@ import {ResponsiveModule} from "ng2-responsive";
         FormGroupComponent,
         NavigationComponent,
         NavigationLinkComponent, //TODO: Make module
-        PanelComponent,
-        PanelBodyComponent,
-        PanelFooterComponent, //TODO: Make module
         ReservationInfoModalComponent,
         ResourceImageComponent,
         ToggleSwitchComponent,
@@ -92,11 +81,9 @@ import {ResponsiveModule} from "ng2-responsive";
         ModalModule,
 
         // Components
-        AccordionComponent, //TODO: make module
-        AccordionItemComponent,
-        AccordionNavigationComponent,
         AlertComponent,
         CalendarComponent,
+        CardModule,
         CalendarHeaderComponent, //TODO: make module
         ConfirmationModalComponent,
         DataTableComponent,
@@ -108,9 +95,6 @@ import {ResponsiveModule} from "ng2-responsive";
         ImageUploaderComponent,
         NavigationComponent,
         NavigationLinkComponent, //TODO: Make module
-        PanelComponent,
-        PanelBodyComponent,
-        PanelFooterComponent, //TODO: Make module
         ReservationInfoModalComponent,
         ResourceImageComponent,
         ToggleSwitchComponent,

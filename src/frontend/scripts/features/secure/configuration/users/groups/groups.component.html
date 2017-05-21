@@ -13,10 +13,9 @@
 			</button>
 		</div>
 		<hr/>
-		<panel id="main-groups-panel"
-			   [type]="'primary'"
-			   [title]="'Select a User Group'">
-			<panel-body>
+		<at-card id="main-groups-card"
+				 [title]="'Select a User Group'">
+			<at-card-block>
 				<p *ngIf="rootGroup?.children?.length == 0">There are no User Groups.</p>
 				
 				<tree [selectable]="true"
@@ -24,11 +23,11 @@
 					  (selected)="onUserGroupSelected()"
 					  [(ngModel)]="selectedUserGroups">
 				</tree>
-			</panel-body>
-			<panel-footer>
+			</at-card-block>
+			<at-card-footer>
 				Drag and drop Groups to re-arrange them.
-			</panel-footer>
-		</panel>
+			</at-card-footer>
+		</at-card>
 	</div>
 	<div class="col-xs-12 col-md-9">
 		<div class="btn-toolbar">
@@ -42,9 +41,8 @@
 		<div class="row">
 			<div class="col-xs-12 col-md-4">
 				<form [formGroup]="userGroupDetailsFormGroup">
-					<panel [type]="'primary'"
-						   [title]="'User Group Details'">
-						<panel-body>
+					<at-card [title]="'User Group Details'">
+						<at-card-block>
 							<alert #detailsInfoAlert
 								   [severity]="'info'"></alert>
 							<alert #detailsDangerAlert
@@ -58,8 +56,8 @@
 											maxlength: 'This must be 30 characters or less.'
 											}">
 							</form-group>
-						</panel-body>
-						<panel-footer>
+						</at-card-block>
+						<at-card-footer>
 							<span *ngIf="!selectedUserGroup">Select a User Group by clicking on it.</span>
 							<button class="btn btn-default"
 									*ngIf="selectedUserGroup && !editingDetails"
@@ -77,8 +75,8 @@
 									(click)="onCancelUserGroupDetails()">
 								Cancel
 							</button>
-						</panel-footer>
-					</panel>
+						</at-card-footer>
+					</at-card>
 				</form>
 			</div>
 			<div class="col-xs-12 col-md-8">

@@ -4,11 +4,11 @@
  * Proprietary and confidential.
  */
 
-:host /deep/ #user-panel>.panel {
+:host /deep/ #user-card > .card {
     margin-bottom: 0;
 }
 
-:host /deep/ #user-panel>.panel>.panel-body {
+:host /deep/ #user-card > .card > .card-block {
     /* 100vh - footer - breadcrumbs - top/bottom padding - panel footer */
     height: calc(100vh - 50px - 60px - 30px - 54px);
     overflow-y: auto;

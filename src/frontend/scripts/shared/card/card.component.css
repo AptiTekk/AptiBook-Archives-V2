@@ -4,28 +4,28 @@
  * Proprietary and confidential.
  */
 
-.panel, .panel-heading, .panel-footer {
+.card, .card-header, .card-footer {
     border-radius: 0;
 }
 
-.panel.panel-primary {
+.card {
     box-shadow: #ddd 0 0 8px 2px;
     border: none;
 }
 
-.panel.panel-primary .panel-heading {
+.card .card-header {
     background-color: #4272b7;
     color: white;
     border: none;
 }
 
-.panel.panel-primary .panel-heading a:after {
+.card .card-header a:after {
     color: white;
 }
 
 /* Scrollbar */
 
-.panel ::-webkit-scrollbar {
+.card ::-webkit-scrollbar {
     width: 16px;
     background-color: transparent;
 }

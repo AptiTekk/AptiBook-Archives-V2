@@ -34,11 +34,11 @@
     outline: none;
 }
 
-.resource-panel resource-image {
+.resource-card resource-image {
     float: left;
     padding-right: 20px;
 }
 
-.resource-panel h3 {
+.resource-card h3 {
     margin-top: 0;
 }

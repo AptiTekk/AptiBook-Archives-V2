@@ -33,19 +33,6 @@
     display: none;
   }
 
-  :host /deep/ #sidebar.closed #content accordion-navigation .navigation-block-label,
-  :host /deep/ #sidebar.closed #content accordion-navigation .navigation-block-caret {
-    display: none;
-  }
-
-  :host /deep/ #content accordion-navigation .navigation-block {
-    white-space: nowrap;
-  }
-
-  :host /deep/ #sidebar.closed #content accordion-navigation .navigation-block {
-    padding-right: 0;
-  }
-
   #sidebar.closed #bottom {
     width: 60px;
   }

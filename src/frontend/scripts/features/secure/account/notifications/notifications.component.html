@@ -28,8 +28,8 @@
 <div *ngFor="let notification of notifications"
 	 class="notification"
 	 [ngClass]="{'read-notification': notification.read}">
-	<panel>
-		<panel-body>
+	<at-card>
+		<at-card-block>
 			<div class="notification-icon">
 				<i class="fa fa-{{notification.read ? 'envelope-open' : 'envelope'}}"></i>
 			</div>
@@ -37,10 +37,10 @@
 				<h4 style="margin-top: 0">{{notification.subject}}</h4>
 				<p [innerHtml]="notification.body"></p>
 			</div>
-		</panel-body>
-		<panel-footer>
+		</at-card-block>
+		<at-card-footer>
 			<i style="color:#808080">{{getTimeAgo(notification)}}</i>
-		</panel-footer>
-	</panel>
+		</at-card-footer>
+	</at-card>
 </div>
 

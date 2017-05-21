@@ -6,7 +6,7 @@
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col">
+		<div class="col-12">
 			<!-- Header Buttons -->
 			<div class="btn-toolbar">
 				
@@ -17,14 +17,14 @@
 				</button>
 				
 				<!-- Edit Button -->
-				<button class="btn btn-default"
+				<button class="btn btn-secondary"
 						(click)="editCategoryModal.open(currentResourceCategory)"
 						*ngIf="currentResourceCategory">
 					Edit This Category
 				</button>
 				
 				<!-- Add Button -->
-				<button class="btn btn-primary pull-right"
+				<button class="btn btn-primary ml-auto"
 						[disabled]="!(rootGroup?.children?.length > 0)"
 						(click)="newResourceModal.open(currentResourceCategory)">
 					Add New Resource
@@ -63,19 +63,19 @@
 		</div>-->
 		
 		<!-- Content Area -->
-		<div class="col-xs-12"
+		<div class="col-12"
 			 *ngIf="currentResourceCategory">
 			
 			<!-- Resource Cards -->
 			<div class="row"
 				 *ngIf="currentResourceCategory?.resources.length > 0">
-				<div class="col-xs-12 col-lg-6"
+				<div class="col-12 col-xl-6"
+					 style="padding-bottom: 30px"
 					 *ngFor="let resource of currentResourceCategory.resources">
 					
 					<!-- Resource Card -->
-					<panel [type]="'primary'"
-						   class="resource-panel">
-						<panel-body>
+					<at-card class="resource-card">
+						<at-card-block>
 							<!-- Resource Image -->
 							<resource-image [resource]="resource"></resource-image>
 							
@@ -90,8 +90,8 @@
 										[readOnly]="true"
 										[value]="'Owned by ' + resource.owner.name">
 							</form-group>
-						</panel-body>
-						<panel-footer>
+						</at-card-block>
+						<at-card-footer>
 							
 							<!-- Edit Button -->
 							<button class="btn btn-default"
@@ -103,8 +103,8 @@
 									(click)="resourceForDeletion = resource;resourceDeleteModal.open()">
 								Delete
 							</button>
-						</panel-footer>
-					</panel>
+						</at-card-footer>
+					</at-card>
 				</div>
 			</div>
 			<div *ngIf="currentResourceCategory?.resources.length == 0">

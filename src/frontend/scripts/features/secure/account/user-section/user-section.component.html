@@ -7,9 +7,8 @@
 <form [formGroup]="formGroup"
 	  (submit)="onFinishEditingAccount()"
 	  *ngIf="user != null">
-	<panel [type]="'primary'"
-		   id="user-panel">
-		<panel-body>
+	<at-card id="user-card">
+		<at-card-block>
 			<alert #infoAlert
 				   [severity]="'info'"></alert>
 			<alert #errorAlert
@@ -126,8 +125,8 @@
 					</form-group>
 				</section>
 			</div>
-		</panel-body>
-		<panel-footer>
+		</at-card-block>
+		<at-card-footer>
 			<button class="btn btn-default"
 					*ngIf="!editingAccount"
 					type="button"
@@ -143,6 +142,6 @@
 					type="submit"
 					[disabled]="formGroup.invalid || !doPasswordsMatch()">Save Changes
 			</button>
-		</panel-footer>
-	</panel>
+		</at-card-footer>
+	</at-card>
 </form>

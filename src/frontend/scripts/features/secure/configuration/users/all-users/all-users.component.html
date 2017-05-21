@@ -48,10 +48,9 @@
 	</div>
 	<div class="col-xs-12 col-md-4">
 		<form [formGroup]="selectedUserPersonalInformation">
-			<panel id="selected-user-panel"
-				   [type]="'primary'"
-				   [title]="'User Information'">
-				<panel-body>
+			<at-card id="selected-user-card"
+					 [title]="'User Information'">
+				<at-card-block>
 					<user-image [user]="selectedUser"
 								[width]="'130px'">
 					</user-image>
@@ -105,8 +104,8 @@
 						</tree>
 					
 					</div>
-				</panel-body>
-				<panel-footer>
+				</at-card-block>
+				<at-card-footer>
 					<div *ngIf="!selectedUser">
 						Select a User by clicking on a row in the table.
 					</div>
@@ -134,8 +133,8 @@
 							Delete User
 						</button>
 					</div>
-				</panel-footer>
-			</panel>
+				</at-card-footer>
+			</at-card>
 		</form>
 	</div>
 </div>
