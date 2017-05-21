@@ -11,6 +11,7 @@ import {noop} from "rxjs/util/noop";
 @Component({
     selector: 'at-checkbox',
     templateUrl: 'checkbox.component.html',
+    styleUrls: ['./checkbox.component.css'],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

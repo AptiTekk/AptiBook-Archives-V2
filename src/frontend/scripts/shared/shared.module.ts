@@ -19,7 +19,6 @@ import {NavigationComponent} from "./navigation/navigation.component";
 import {NavigationLinkComponent} from "./navigation/navigation-link.component";
 import {ReservationInfoModalComponent} from "./reservation-info-modal/reservation-info-modal.component";
 import {ResourceImageComponent} from "./resource-image/resource-image.component";
-import {ToggleSwitchComponent} from "./toggle-switch/toggle-switch.component";
 import {TreeComponent} from "./tree/tree.component";
 import {TreeNodeComponent} from "./tree/tree-node/tree-node.component";
 import {UserImageComponent} from "./user-image/user-image.component";
@@ -65,7 +64,6 @@ import {CheckboxModule} from "./checkbox/checkbox.module";
         NavigationLinkComponent, //TODO: Make module
         ReservationInfoModalComponent,
         ResourceImageComponent,
-        ToggleSwitchComponent,
         TreeComponent,
         TreeNodeComponent, //TODO: Make Module
         UserImageComponent
@@ -100,7 +98,6 @@ import {CheckboxModule} from "./checkbox/checkbox.module";
         NavigationLinkComponent, //TODO: Make module
         ReservationInfoModalComponent,
         ResourceImageComponent,
-        ToggleSwitchComponent,
         TreeComponent,
         TreeNodeComponent, //TODO: Make Module
         UserImageComponent
