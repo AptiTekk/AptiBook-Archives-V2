@@ -8,32 +8,36 @@
 	<div class="row">
 		<div class="col-12">
 			<!-- Header Buttons -->
-			<div class="btn-toolbar">
+			<div class="btn-toolbar flex-wrap">
 				
-				<!-- Add Button -->
-				<button class="btn btn-primary"
-						(click)="newCategoryModal.open()">
-					Add New Category
-				</button>
+				<div class="btn-group flex-wrap">
+					<!-- Add Category Button -->
+					<button class="btn btn-primary"
+							(click)="newCategoryModal.open()">
+						Add New Category
+					</button>
+					
+					<!-- Edit Category Button -->
+					<button class="btn btn-secondary"
+							(click)="editCategoryModal.open(currentResourceCategory)"
+							*ngIf="currentResourceCategory">
+						Edit This Category
+					</button>
+				</div>
 				
-				<!-- Edit Button -->
-				<button class="btn btn-secondary"
-						(click)="editCategoryModal.open(currentResourceCategory)"
-						*ngIf="currentResourceCategory">
-					Edit This Category
-				</button>
-				
-				<!-- Add Button -->
-				<button class="btn btn-primary ml-auto"
-						[disabled]="!(rootGroup?.children?.length > 0)"
-						(click)="newResourceModal.open(currentResourceCategory)">
-					Add New Resource
-				</button>
-				
-				<p *ngIf="!(rootGroup?.children?.length > 0)"
-				   class="pull-right">
-					Please add User Groups before adding Resources.
-				</p>
+				<div class="ml-lg-auto">
+					<p *ngIf="!(rootGroup?.children?.length > 0)"
+					   class="pull-right">
+						Please add User Groups before adding Resources.
+					</p>
+					
+					<!-- Add Resource Button -->
+					<button class="btn btn-primary"
+							[disabled]="!(rootGroup?.children?.length > 0)"
+							(click)="newResourceModal.open(currentResourceCategory)">
+						Add New Resource
+					</button>
+				</div>
 			</div>
 			
 			<hr/>
