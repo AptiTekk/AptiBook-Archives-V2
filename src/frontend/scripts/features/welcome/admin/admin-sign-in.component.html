@@ -14,11 +14,11 @@
 	<h3 id="title" class="text-center"><i class="fa fa-lock"></i> Admin Sign In</h3>
 	<hr/>
 	
-	<form-group [control]="signInFormGroup.controls['password']"
+	<form-group #passwordField
+				[control]="signInFormGroup.controls['password']"
 				[label]="'Password'"
 				[faIconName]="'asterisk'"
-				[inputType]="'password'"
-				[autoFocus]="true">
+				[inputType]="'password'">
 	</form-group>
 	
 	<div class="form-group">

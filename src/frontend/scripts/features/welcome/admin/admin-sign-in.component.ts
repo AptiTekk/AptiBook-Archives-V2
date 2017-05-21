@@ -10,6 +10,7 @@ import {AuthService} from "../../../core/services/auth.service";
 import {AlertComponent} from "../../../shared/alert/alert.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {LoaderService} from "../../../core/services/loader.service";
+import {FormGroupComponent} from "../../../shared/form-group/form-group.component";
 
 @Component({
     selector: 'at-admin-sign-in',
@@ -17,6 +18,8 @@ import {LoaderService} from "../../../core/services/loader.service";
     styleUrls: ['admin-sign-in.component.css']
 })
 export class AdminSignInComponent implements OnInit, AfterViewInit {
+
+    @ViewChild('passwordField') passwordField: FormGroupComponent;
 
     @ViewChild('loginDangerAlert') loginDangerAlert: AlertComponent;
     @ViewChild('loginInfoAlert') loginInfoAlert: AlertComponent;
@@ -38,6 +41,7 @@ export class AdminSignInComponent implements OnInit, AfterViewInit {
     }
 
     ngAfterViewInit(): void {
+        this.passwordField.focus();
     }
 
     onSubmit() {

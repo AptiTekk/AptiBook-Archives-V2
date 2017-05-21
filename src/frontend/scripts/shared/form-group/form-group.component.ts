@@ -3,7 +3,7 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, Input, OnChanges, SimpleChanges} from "@angular/core";
+import {Component, ElementRef, Input, OnChanges, SimpleChanges, ViewChild} from "@angular/core";
 import {FormControl} from "@angular/forms";
 import {UUIDGenerator} from "../../utils/UUIDGenerator";
 
@@ -12,6 +12,11 @@ import {UUIDGenerator} from "../../utils/UUIDGenerator";
     templateUrl: 'form-group.component.html'
 })
 export class FormGroupComponent {
+
+    /**
+     * The input field.
+     */
+    @ViewChild('inputField') inputField: ElementRef;
 
     /**
      * The control
@@ -53,6 +58,13 @@ export class FormGroupComponent {
     @Input() faIconName: string;
 
     uuid: string = UUIDGenerator.generateUUID();
+
+    /**
+     * Puts focus on this input field.
+     */
+    focus(): void {
+        $(this.inputField.nativeElement).focus();
+    }
 
     getErrorMessage(): string {
         if (this.errorMessages && this.control) {
