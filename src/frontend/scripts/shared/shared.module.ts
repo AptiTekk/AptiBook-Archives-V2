@@ -31,6 +31,7 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
 import {ResponsiveModule} from "ng2-responsive";
 import {CardModule} from "./card/card.module";
+import {CheckboxModule} from "./checkbox/checkbox.module";
 
 /**
  * This module is dedicated to highly re-usable components that are used often in feature components (pages, etc)
@@ -45,6 +46,7 @@ import {CardModule} from "./card/card.module";
 
         // Component modules
         CardModule,
+        CheckboxModule,
         ImageUploaderModule,
         ModalModule,
     ],
@@ -84,6 +86,7 @@ import {CardModule} from "./card/card.module";
         AlertComponent,
         CalendarComponent,
         CardModule,
+        CheckboxModule,
         CalendarHeaderComponent, //TODO: make module
         ConfirmationModalComponent,
         DataTableComponent,

@@ -77,21 +77,17 @@
 									
 									<!-- Sign In Enabled Toggle Switch -->
 									<div class="from-group">
-										<label>Google Sign-In Enabled</label>
-										<br/>
-										<toggle-switch #googleSignInEnabledSwitch
-													   [onText]="'Yes'"
-													   [offText]="'No'"
-													   style="margin-right: 10px"
-													   formControlName="GOOGLE_SIGN_IN_ENABLED">
-										</toggle-switch>
+										<at-checkbox #googleSignInEnabled
+													 formControlName="GOOGLE_SIGN_IN_ENABLED"
+													 [label]="'Google Sign-In Enabled'">
+										</at-checkbox>
 									</div>
 									<br/>
 									
 									<!-- Allowed Domain Names -->
 									<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
 												[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
-												[readOnly]="!googleSignInEnabledSwitch.isOn()"
+												[readOnly]="googleSignInEnabled.value == false"
 												[placeholder]="'gmail.com, example.net, ...'">
 									</form-group>
 									
@@ -101,13 +97,9 @@
 									
 									<!-- Registration Enabled Toggle Switch -->
 									<div class="from-group">
-										<label>Registration Enabled</label>
-										<br/>
-										<toggle-switch
-												[onText]="'Yes'"
-												[offText]="'No'"
-												style="margin-right: 10px"
-												formControlName="REGISTRATION_ENABLED"></toggle-switch>
+										<at-checkbox formControlName="REGISTRATION_ENABLED"
+													 [label]="'Registration Enabled'">
+										</at-checkbox>
 									</div>
 								</section>
 								<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'CAS'">
