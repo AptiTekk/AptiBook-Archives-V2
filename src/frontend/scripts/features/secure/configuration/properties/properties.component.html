@@ -8,7 +8,7 @@
 	<div *ngIf="properties != undefined">
 		<div class="row">
 			
-			<div class="col-xs-12">
+			<div class="col-12">
 				
 				<alert #successAlert
 					   [severity]="'success'"></alert>
@@ -22,7 +22,8 @@
 							[disabled]="formGroup.pristine">
 						Save Changes
 					</button>
-					<button class="btn btn-danger pull-right"
+					
+					<button class="btn btn-danger ml-auto"
 							type="button"
 							(click)="confirmationModal.open()">
 						Reset All Properties
@@ -36,95 +37,101 @@
 				</navigation>
 			</div>
 			
-			<form [formGroup]="formGroup">
-				
-				<property-section [sectionPath]="'personalization'">
-					<div class="col-xs-12 col-md-8">
-						<!-- Personalization Section -->
-						<h3>Personalization</h3>
-						<hr/>
-						
-						<!-- Organization Name -->
-						<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
-									[label]="'Organization Name'"
-									[placeholder]="'Bingham High School'"
-									[autoFocus]="true">
-						</form-group>
+			<div class="col-12">
+				<form [formGroup]="formGroup">
 					
-					</div>
-				</property-section>
-				
-				<property-section [sectionPath]="'authentication'">
-					<div class="col-xs-12 col-md-8">
-						<label for="authenticationMethod">Authentication Method</label>
-						<select id="authenticationMethod"
-								class="form-control"
-								formControlName="AUTHENTICATION_METHOD"
-								(change)="onAuthenticationMethodChanged()">
-							<option value="BUILT_IN">Built-In (Username and Password)</option>
-							<option value="CAS">CAS (Apereo / Jasig Central Authentication Service)</option>
-						</select>
-						
-						<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'BUILT_IN'">
-							<!-- Google Sign In Section -->
-							<h3>Google Sign In</h3>
-							<hr/>
+					<property-section [sectionPath]="'personalization'">
+						<div class="row">
+							<div class="col-12 col-md-8">
+								<!-- Personalization Section -->
+								<h3>Personalization</h3>
+								<hr/>
+								
+								<!-- Organization Name -->
+								<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
+											[label]="'Organization Name'"
+											[placeholder]="'Bingham High School'"
+											[autoFocus]="true">
+								</form-group>
 							
-							<!-- Sign In Enabled Toggle Switch -->
-							<div class="from-group">
-								<label>Google Sign-In Enabled</label>
-								<br/>
-								<toggle-switch #googleSignInEnabledSwitch
-											   [onText]="'Yes'"
-											   [offText]="'No'"
-											   style="margin-right: 10px"
-											   formControlName="GOOGLE_SIGN_IN_ENABLED">
-								</toggle-switch>
 							</div>
-							<br/>
-							
-							<!-- Allowed Domain Names -->
-							<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
-										[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
-										[readOnly]="!googleSignInEnabledSwitch.isOn()"
-										[placeholder]="'gmail.com, example.net, ...'">
-							</form-group>
-							
-							<!-- Registration Section -->
-							<h3>Registration</h3>
-							<hr/>
-							
-							<!-- Registration Enabled Toggle Switch -->
-							<div class="from-group">
-								<label>Registration Enabled</label>
-								<br/>
-								<toggle-switch
-										[onText]="'Yes'"
-										[offText]="'No'"
-										style="margin-right: 10px"
-										formControlName="REGISTRATION_ENABLED"></toggle-switch>
+						</div>
+					</property-section>
+					
+					<property-section [sectionPath]="'authentication'">
+						<div class="row">
+							<div class="col-12 col-md-8">
+								<label for="authenticationMethod">Authentication Method</label>
+								<select id="authenticationMethod"
+										class="form-control mb-3"
+										formControlName="AUTHENTICATION_METHOD"
+										(change)="onAuthenticationMethodChanged()">
+									<option value="BUILT_IN">Built-In (Username and Password)</option>
+									<option value="CAS">CAS (Apereo / Jasig Central Authentication Service)</option>
+								</select>
+								
+								<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'BUILT_IN'">
+									<!-- Google Sign In Section -->
+									<h3>Google Sign In</h3>
+									<hr/>
+									
+									<!-- Sign In Enabled Toggle Switch -->
+									<div class="from-group">
+										<label>Google Sign-In Enabled</label>
+										<br/>
+										<toggle-switch #googleSignInEnabledSwitch
+													   [onText]="'Yes'"
+													   [offText]="'No'"
+													   style="margin-right: 10px"
+													   formControlName="GOOGLE_SIGN_IN_ENABLED">
+										</toggle-switch>
+									</div>
+									<br/>
+									
+									<!-- Allowed Domain Names -->
+									<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
+												[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
+												[readOnly]="!googleSignInEnabledSwitch.isOn()"
+												[placeholder]="'gmail.com, example.net, ...'">
+									</form-group>
+									
+									<!-- Registration Section -->
+									<h3>Registration</h3>
+									<hr/>
+									
+									<!-- Registration Enabled Toggle Switch -->
+									<div class="from-group">
+										<label>Registration Enabled</label>
+										<br/>
+										<toggle-switch
+												[onText]="'Yes'"
+												[offText]="'No'"
+												style="margin-right: 10px"
+												formControlName="REGISTRATION_ENABLED"></toggle-switch>
+									</div>
+								</section>
+								<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'CAS'">
+									<!-- CAS Settings Section -->
+									<h3>CAS Settings</h3>
+									<hr/>
+									
+									<!-- CAS Server URL -->
+									<form-group [control]="formGroup.controls['CAS_SERVER_URL']"
+												[label]="'CAS Server URL (Excluding /login)'"
+												[placeholder]="'https://example.com/cas'">
+									</form-group>
+									
+									<!-- CAS Callback URL -->
+									<form-group [label]="'AptiBook Service Callback URL (For CAS Server Configuration)'"
+												[value]="CAS_CALLBACK_URL"
+												[readOnly]="true">
+									</form-group>
+								</section>
 							</div>
-						</section>
-						<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'CAS'">
-							<!-- CAS Settings Section -->
-							<h3>CAS Settings</h3>
-							<hr/>
-							
-							<!-- CAS Server URL -->
-							<form-group [control]="formGroup.controls['CAS_SERVER_URL']"
-										[label]="'CAS Server URL (Excluding /login)'"
-										[placeholder]="'https://example.com/cas'">
-							</form-group>
-							
-							<!-- CAS Callback URL -->
-							<form-group [label]="'AptiBook Service Callback URL (For CAS Server Configuration)'"
-										[value]="CAS_CALLBACK_URL"
-										[readOnly]="true">
-							</form-group>
-						</section>
-					</div>
-				</property-section>
-			</form>
+						</div>
+					</property-section>
+				</form>
+			</div>
 		</div>
 	</div>
 </div>

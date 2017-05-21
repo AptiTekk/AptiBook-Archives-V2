@@ -13,7 +13,7 @@
 }
 
 #header h1 {
-    line-height: 20px;
+    line-height: 60px;
     position: absolute;
     top: 0;
     left: 0;
@@ -36,6 +36,10 @@
 
 #header #next {
     float: right;
+}
+
+#header button {
+    cursor: pointer;
 }
 
 #body {

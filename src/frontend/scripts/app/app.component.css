@@ -8,14 +8,12 @@
     height: 100vh;
 }
 
-/* Container, Column, and Row Styling */
-
-.no-gutter > [class*='col-'] {
-    padding-right: 0;
-    padding-left: 0;
-}
-
 /* Link and Text Styling */
+
+.at-app h1, .at-app h2, .at-app h3, .at-app h4, .at-app h5, .at-app h6 {
+    font-family: 'Roboto', sans-serif;
+    font-weight: 300;
+}
 
 .at-app a {
     color: #4272b7;
@@ -164,14 +162,6 @@
 
 .vh-100 {
     height: 100vh !important;
-}
-
-.full-height {
-    height: calc(100vh - 50px - 60px);
-}
-
-.full-height-breadcrumb {
-    height: calc(100vh - 50px - 60px - 60px);
 }
 
 .no-padding {
