@@ -59,7 +59,7 @@
 						</at-card-block>
 						<at-card-footer>
 							<span *ngIf="!selectedUserGroup">Select a User Group by clicking on it.</span>
-							<button class="btn btn-default"
+							<button class="btn btn-secondary"
 									*ngIf="selectedUserGroup && !editingDetails"
 									(click)="onEditUserGroupDetails()">
 								Edit Details
@@ -70,7 +70,7 @@
 									[disabled]="userGroupDetailsFormGroup.invalid">
 								Save Changes
 							</button>
-							<button class="btn btn-default"
+							<button class="btn btn-secondary"
 									*ngIf="editingDetails"
 									(click)="onCancelUserGroupDetails()">
 								Cancel

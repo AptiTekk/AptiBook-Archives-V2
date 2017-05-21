@@ -3,13 +3,3 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-
-:host /deep/ #info-card > .card {
-    margin-bottom: 0;
-}
-
-:host /deep/ #info-card > .card > .card-block {
-    /* 100vh - footer - breadcrumbs - top/bottom padding */
-    height: calc(100vh - 50px - 60px - 30px);
-    overflow-y: auto;
-}

@@ -15,7 +15,7 @@
 		<ng-content select="at-card-block"></ng-content>
 	</div>
 	<div class="card-footer"
-		 [class.hidden]="footer.length === 0">
+		 *ngIf="footer.length > 0">
 		<ng-content select="at-card-footer"></ng-content>
 	</div>
 </div>

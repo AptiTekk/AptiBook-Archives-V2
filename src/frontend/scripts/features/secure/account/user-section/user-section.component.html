@@ -19,8 +19,8 @@
 								[width]="'50%'"
 								[maxWidth]="'130px'"
 								[user]="user"></user-image>
-					<h3>{{user.fullName}}</h3>
-					<h4 class="text-muted">{{user.emailAddress}}</h4>
+					<h3 class="pt-3">{{user.fullName}}</h3>
+					<p class="text-muted">{{user.emailAddress}}</p>
 				</section>
 				
 				<section *ngIf="!user.admin">
@@ -127,12 +127,12 @@
 			</div>
 		</at-card-block>
 		<at-card-footer>
-			<button class="btn btn-default"
+			<button class="btn btn-secondary"
 					*ngIf="!editingAccount"
 					type="button"
 					(click)="onStartEditingAccount()">Edit Account
 			</button>
-			<button class="btn btn-default"
+			<button class="btn btn-secondary"
 					*ngIf="editingAccount"
 					type="button"
 					(click)="onCancelEditingAccount()">Cancel

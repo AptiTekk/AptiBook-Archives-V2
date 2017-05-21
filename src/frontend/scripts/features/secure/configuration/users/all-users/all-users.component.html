@@ -110,7 +110,7 @@
 						Select a User by clicking on a row in the table.
 					</div>
 					<div *ngIf="selectedUser">
-						<button class="btn btn-default"
+						<button class="btn btn-secondary"
 								*ngIf="!editingSelectedUser"
 								(click)="onStartEditingUser()">
 							Edit User
@@ -121,7 +121,7 @@
 								[disabled]="selectedUserPersonalInformation.invalid">
 							Save Changes
 						</button>
-						<button class="btn btn-default"
+						<button class="btn btn-secondary"
 								*ngIf="editingSelectedUser"
 								(click)="onCancelEditingUser()">
 							Cancel
