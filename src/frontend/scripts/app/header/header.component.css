@@ -27,3 +27,8 @@
     background-color: white;
     border-right: 1px solid #ddd;
 }
+
+#logo:active,
+#logo:focus {
+    outline: none;
+}
