@@ -6,11 +6,6 @@ target/
 
 /node_modules/
 
-/src/main/webapp/*
-/src/main/resources/static/*
-/src/frontend/**/*.js
-/src/frontend/**/*.js.map
-
 /src/main/resources/application-development.properties
 
 /.idea/dataSources/
