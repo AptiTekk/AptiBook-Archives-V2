@@ -4,22 +4,18 @@
   ~ Proprietary and confidential.
   -->
 
-<ol class="breadcrumb">
-	<li class="active">Search</li>
-</ol>
-
 <div class="container-fluid">
 	<div id="search-settings"
-		 class="row"
+		 class="row pt-3"
 		 *ngIf="start && end">
-		<div class="col-12 col-md-5">
+		<div class="col-12 col-md-auto">
 			<label for="startTimePicker">Start Time:</label>
 			<date-time-picker id="startTimePicker"
 							  [(ngModel)]="start"
 							  [inline]="false"
 							  [sideBySide]="true"></date-time-picker>
 		</div>
-		<div class="col-12 col-md-5">
+		<div class="col-12 col-md-auto">
 			<label for="startTimePicker">End Time:</label>
 			<date-time-picker id="endTimePicker"
 							  [(ngModel)]="end"
@@ -27,10 +23,7 @@
 							  [inline]="false"
 							  [sideBySide]="true"></date-time-picker>
 		</div>
-		<div class="col-12 col-md-2">
-			<div class="hidden-xs col-sm-12">
-				<label for="search-button">&nbsp;</label>
-			</div>
+		<div class="col-12 col-md">
 			<div id="search-button"
 				 class="btn btn-primary"
 				 (click)="onSearch()">Update
@@ -45,7 +38,7 @@
 		   [message]="'Results Updated'"></alert>
 	
 	<div class="row">
-		<div class="col-12 col-md-3">
+		<div class="col-12 col-md-3 mb-3">
 			<at-card [title]="'Filters'">
 				<at-card-block>
 					<h4>Categories</h4>
@@ -66,7 +59,7 @@
 			<h3 *ngIf="(availableResources | resourceCategoryFilter:resourceCategories).length === 0">
 				There are no available resources! Try adjusting your reservation date or filters.</h3>
 			<div class="row">
-				<div class="col-12 col-md-6"
+				<div class="col-12 col-md-6 mb-3"
 					 *ngFor="let resource of availableResources | resourceCategoryFilter:resourceCategories">
 					<at-card class="resource-result-card">
 						<at-card-block>

@@ -4,16 +4,11 @@
   ~ Proprietary and confidential.
   -->
 
-<ol class="breadcrumb">
-	<li><a [routerLink]="['', 'secure','search-results']">Search</a></li>
-	<li class="active">Request Reservation</li>
-</ol>
-
 <div class="container">
 	
-	<div class="row">
+	<div class="row pt-3">
 		<!-- Sidebar with Resource name and image -->
-		<div class="col-xs-12 col-md-4">
+		<div class="col-12 col-md-4">
 			<at-card class="resource-details-card">
 				<at-card-block>
 					<resource-image [resource]="resource"></resource-image>
@@ -25,7 +20,7 @@
 		</div>
 		
 		<!-- Form Content Area -->
-		<div class="col-xs-12 col-md-8">
+		<div class="col-12 col-md-8">
 			<form (ngSubmit)="reserve()"
 				  [formGroup]="formGroup">
 				<at-card [title]="'Reservation Details'">
@@ -64,13 +59,12 @@
 						</button>
 						<button [routerLink]="['', 'secure', 'search-results']"
 								class="btn btn-secondary"
-								type="button">Cancel
+								type="button">
+							Go Back
 						</button>
 					</at-card-footer>
 				</at-card>
 			</form>
 		</div>
 	</div>
-	
-	<br/>
 </div>
