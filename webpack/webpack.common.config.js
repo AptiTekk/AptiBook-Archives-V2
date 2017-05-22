@@ -61,6 +61,10 @@ const config = {
                 use: ["json-loader", "yaml-loader"]
             },
             {
+                test: /manifest\.json/,
+                use: "file-loader?name=./resources/" + buildDir + "/json/[hash].[ext]"
+            },
+            {
                 test: /\.(png|jpg|gif|svg)(\?v=[\d.]+)?$/,
                 use: "file-loader?name=./resources/" + buildDir + "/images/[hash].[ext]"
             },
