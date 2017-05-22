@@ -22,9 +22,17 @@
     border-left: 4px dotted #4272b7;
 }
 
+:host /deep/ .fc-basicWeek-view .fc-h-event.fc-not-start.pending {
+    border-left-color: #333;
+}
+
 /* Event continuation (not end) styling */
 :host /deep/ .fc-basicWeek-view .fc-h-event.fc-not-end {
     border-right: 4px dotted #4272b7;
+}
+
+:host /deep/ .fc-basicWeek-view .fc-h-event.fc-not-end.pending {
+    border-right-color: #333;
 }
 
 /* Day Title: Size and font adjustments */
