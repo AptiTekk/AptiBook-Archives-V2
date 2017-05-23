@@ -12,11 +12,11 @@
 			   [severity]="'danger'"></alert>
 		<form [formGroup]="formGroup">
 			<div class="row">
-				<div class="col-xs-12 col-md-3">
+				<div class="col-12 col-md-3">
 					<resource-image [resource]="reservation?.resource">
 					</resource-image>
 				</div>
-				<div class="col-xs-12 col-md-9">
+				<div class="col-12 col-md-9">
 					<form-group [label]="'Reservation Title'"
 								[control]="formGroup.controls['title']"
 								[readOnly]="true">
@@ -30,13 +30,13 @@
 								[readOnly]="true">
 					</form-group>
 					<div class="row">
-						<div class="col-xs-12 col-md-6">
+						<div class="col-12 col-md-6">
 							<form-group [label]="'Start Time'"
 										[control]="formGroup.controls['startTime']"
 										[readOnly]="true">
 							</form-group>
 						</div>
-						<div class="col-xs-12 col-md-6">
+						<div class="col-12 col-md-6">
 							<form-group [label]="'End Time'"
 										[control]="formGroup.controls['endTime']"
 										[readOnly]="true">
@@ -47,7 +47,7 @@
 					<hr/>
 					
 					<div class="row">
-						<div class="col-xs-12">
+						<div class="col-12">
 							<p>You are deciding on behalf of the
 								<span style="font-weight: bold">{{reservation?.decidingFor.userGroup.name}}</span> User Group.
 							</p>
@@ -132,7 +132,7 @@
 				(click)="onReject()">
 			Reject
 		</button>
-		<button class="btn btn-default"
+		<button class="btn btn-secondary"
 				(click)="onClose()">
 			Close
 		</button>

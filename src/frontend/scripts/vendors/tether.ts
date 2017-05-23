@@ -4,15 +4,6 @@
  * Proprietary and confidential.
  */
 
-.panel {
-    margin-top: 10px;
-}
+import "tether/dist/js/tether.min.js";
 
-.panel-title > a {
-    color: inherit !important;
-    cursor: pointer;
-}
-
-.panel-collapse {
-    overflow-y: hidden;
-}
+require('tether/dist/css/tether.min.css');

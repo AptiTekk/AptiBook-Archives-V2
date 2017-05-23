@@ -6,20 +6,20 @@
 
 /* Selected User Panel */
 
-:host /deep/ #selected-user-panel .panel {
+:host /deep/ #selected-user-card .card {
     margin-bottom: 0;
 }
 
-:host /deep/ #selected-user-panel > .panel > .panel-body {
+:host /deep/ #selected-user-card > .card > .card-block {
     height: calc(100vh - 361px);
     overflow-y: auto;
 }
 
-:host /deep/ #selected-user-panel user-image img {
+:host /deep/ #selected-user-card user-image img {
     float: left;
     margin-right: 20px;
 }
 
-:host /deep/ #selected-user-panel #user-info form-group:first-child .form-group {
+:host /deep/ #selected-user-card #user-info form-group:first-child .form-group {
     padding-top: 70px;
 }

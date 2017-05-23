@@ -11,7 +11,7 @@ import moment = require("moment");
 @Component({
     selector: 'at-app',
     templateUrl: 'app.component.html',
-    styleUrls: ['app.component.css'],
+    styleUrls: ['app.component.css', 'app.landscape.component.scss'],
     encapsulation: ViewEncapsulation.None
 })
 export class AppComponent {

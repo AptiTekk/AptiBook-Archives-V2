@@ -16,11 +16,11 @@
     min-width: 250px;
 }
 
-.resource-result-panel resource-image {
+.resource-result-card resource-image {
     float: left;
     padding-right: 20px;
 }
 
-.resource-result-panel h3 {
+.resource-result-card h3 {
     margin-top: 0;
 }

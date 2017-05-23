@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component, Input} from "@angular/core";
+import {Component} from "@angular/core";
 
 @Component({
     selector: 'at-footer',
@@ -12,8 +12,5 @@ import {Component, Input} from "@angular/core";
     styleUrls: ['footer.component.css']
 })
 export class FooterComponent {
-
-    @Input()
-    includeSpacer: boolean = true;
 
 }

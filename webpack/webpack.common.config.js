@@ -39,9 +39,18 @@ const config = {
                 use: ["to-string-loader", "css-loader"]
             },
             {
+                test: /\.(component|page)\.scss$/,
+                use: ["to-string-loader", "css-loader", "sass-loader"]
+            },
+            {
                 test: /\.css(\?v=[\d\.]+)?$/,
                 use: ["style-loader", "css-loader"],
                 exclude: [/\.(component|page)\.css$/]
+            },
+            {
+                test: /\.scss(\?v=[\d\.]+)?$/,
+                use: ["style-loader", "css-loader", "sass-loader"],
+                exclude: [/\.(component|page)\.scss$/]
             },
             {
                 test: /\.xml$/,
@@ -74,12 +83,17 @@ const config = {
         new webpack.ProvidePlugin({
             jQuery: 'jquery',
             $: 'jquery',
-            jquery: 'jquery'
+            jquery: 'jquery',
+            "window.jQuery": 'jquery',
+            tether: 'tether',
+            Tether: 'tether',
+            "window.tether": 'tether',
+            "window.Tether": 'tether'
         })
     ],
 
     resolve: {
-        extensions: ['.ts', '.json', '.js', '.jsx'],
+        extensions: ['.ts', '.js', '.json', '.jsx'],
         modules: ['node_modules'],
         alias: {
             // Force all modules to use the same jquery version.

@@ -3,5 +3,12 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
+import {Component} from "@angular/core";
 
-export * from './accordion-navigation.component';
+@Component({
+    selector: 'at-card-header',
+    template: '<ng-content></ng-content>'
+})
+export class CardHeaderComponent {
+
+}

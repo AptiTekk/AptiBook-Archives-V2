@@ -6,110 +6,106 @@
 
 <div class="container-fluid">
 	<div class="row">
-		<div class="col-xs-12">
-			<!-- Header Buttons -->
-			<div class="btn-toolbar">
-				
-				<!-- Add Button -->
-				<button class="btn btn-primary"
-						(click)="newCategoryModal.open()">
-					Add New Category
-				</button>
-				
-				<!-- Edit Button -->
-				<button class="btn btn-default"
-						(click)="editCategoryModal.open(currentResourceCategory)"
-						*ngIf="currentResourceCategory">
-					Edit This Category
-				</button>
-				
-				<!-- Add Button -->
-				<button class="btn btn-primary pull-right"
-						[disabled]="!(rootGroup?.children?.length > 0)"
-						(click)="newResourceModal.open(currentResourceCategory)">
-					Add New Resource
-				</button>
-				
-				<p *ngIf="!(rootGroup?.children?.length > 0)"
-				   class="pull-right">
-					Please add User Groups before adding Resources.
-				</p>
-			</div>
-			
-			<hr/>
-			
-			<navigation [links]="categoryLinks"
-						[horizontal]="true">
-			</navigation>
-		</div>
-		<!--&lt;!&ndash; Resource Categories Selection Sidebar &ndash;&gt;
-		<div class="col-xs-12 col-md-5 col-lg-3">
-			&lt;!&ndash; Categories List &ndash;&gt;
-			<ul id="resource-categories-list"
-				*ngIf="resourceCategories?.length > 0">
-				<li *ngFor="let resourceCategory of resourceCategories"
-					[class.selected]="currentResourceCategory && currentResourceCategory.name === resourceCategory.name"
-					[routerLink]="['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]">
-					{{resourceCategory.name}}
-				</li>
-			</ul>
-			
-			<div *ngIf="resourceCategories?.length == 0">
-				<h4>
-					There are no Categories.
-				</h4>
-			</div>
-		
-		</div>-->
-		
-		<!-- Content Area -->
-		<div class="col-xs-12"
-			 *ngIf="currentResourceCategory">
-			
-			<!-- Resource Cards -->
-			<div class="row"
-				 *ngIf="currentResourceCategory?.resources.length > 0">
-				<div class="col-xs-12 col-lg-6"
-					 *ngFor="let resource of currentResourceCategory.resources">
-					
-					<!-- Resource Card -->
-					<panel [type]="'primary'"
-						   class="resource-panel">
-						<panel-body>
-							<!-- Resource Image -->
-							<resource-image [resource]="resource"></resource-image>
-							
-							<!-- Resource Name -->
-							<h3>{{resource.name}}</h3>
-							<hr/>
-							<form-group [faIconName]="resource.needsApproval ? 'check-square-o' : 'square-o'"
-										[readOnly]="true"
-										[value]="resource.needsApproval ? 'Requires Approval' : 'No Approval Required'">
-							</form-group>
-							<form-group [faIconName]="'sitemap'"
-										[readOnly]="true"
-										[value]="'Owned by ' + resource.owner.name">
-							</form-group>
-						</panel-body>
-						<panel-footer>
-							
-							<!-- Edit Button -->
-							<button class="btn btn-default"
-									(click)="editResourceModal.open(resource)">Edit
-							</button>
-							
-							<!-- Delete Button -->
-							<button class="btn btn-danger pull-right"
-									(click)="resourceForDeletion = resource;resourceDeleteModal.open()">
-								Delete
-							</button>
-						</panel-footer>
-					</panel>
-				</div>
-			</div>
-			<div *ngIf="currentResourceCategory?.resources.length == 0">
-				<h4>There are no Resources in this Category.</h4>
-			</div>
+		<div class="col-12">
+			<at-card [noTopBorder]="true">
+				<at-card-header>
+					<ul class="nav nav-tabs card-header-tabs">
+						<li class="nav-item"
+							*ngFor="let categoryLink of categoryLinks">
+							<a class="nav-link"
+							   [routerLink]="categoryLink.path"
+							   [routerLinkActive]="'active'">
+								{{categoryLink.label}}
+							</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link"
+							   title="Add New Resource Category"
+							   (click)="newCategoryModal.open()">
+								<i class="fa fa-plus text-primary"></i>
+							</a>
+						</li>
+					</ul>
+				</at-card-header>
+				<at-card-block>
+					<h4 *ngIf="!(rootGroup?.children?.length > 0)">
+						Please
+						<a [routerLink]="'/secure/configuration/users/groups'">add User Groups</a> before adding Resources.
+					</h4>
+					<section *ngIf="(rootGroup?.children?.length > 0) && currentResourceCategory != undefined">
+						
+						<!-- Add Resource Button -->
+						<button class="btn btn-primary"
+								(click)="newResourceModal.open(currentResourceCategory)">
+							Add New Resource
+						</button>
+						
+						<hr/>
+						
+						<!-- Resource Cards -->
+						<h4 *ngIf="currentResourceCategory?.resources.length == 0">There are no Resources in this Category.</h4>
+						<div class="row"
+							 *ngIf="currentResourceCategory?.resources.length > 0">
+							<div class="col-12 col-xl-6"
+								 style="padding-bottom: 30px"
+								 *ngFor="let resource of currentResourceCategory.resources">
+								
+								<!-- Resource Card -->
+								<at-card class="resource-card">
+									<at-card-block>
+										<div class="media">
+											<section class="d-flex mr-3">
+												<!-- Resource Image -->
+												<resource-image [resource]="resource"></resource-image>
+											</section>
+											<div class="media-body">
+												<!-- Resource Name -->
+												<h3>{{resource.name}}</h3>
+												<hr/>
+												<form-group [faIconName]="resource.needsApproval ? 'check-square-o' : 'square-o'"
+															[readOnly]="true"
+															[value]="resource.needsApproval ? 'Requires Approval' : 'No Approval Required'">
+												</form-group>
+												<form-group [faIconName]="'sitemap'"
+															[readOnly]="true"
+															[value]="'Owned by ' + resource.owner.name">
+												</form-group>
+											</div>
+										</div>
+									</at-card-block>
+									<at-card-footer>
+										
+										<!-- Edit Button -->
+										<button class="btn btn-secondary"
+												(click)="editResourceModal.open(resource)">Edit
+										</button>
+										
+										<!-- Delete Button -->
+										<button class="btn btn-danger pull-right"
+												(click)="resourceForDeletion = resource;resourceDeleteModal.open()">
+											Delete
+										</button>
+									</at-card-footer>
+								</at-card>
+							</div>
+						</div>
+					</section>
+				</at-card-block>
+				<at-card-footer>
+					<div class="btn-toolbar flex-wrap">
+						<button class="btn btn-secondary"
+								(click)="editCategoryModal.open(currentResourceCategory)"
+								[disabled]="currentResourceCategory == undefined">
+							Edit Category
+						</button>
+						<button class="btn btn-danger ml-md-auto"
+								(click)="categoryDeleteModal.open()"
+								[disabled]="currentResourceCategory == undefined">
+							Delete Category
+						</button>
+					</div>
+				</at-card-footer>
+			</at-card>
 		</div>
 	</div>
 </div>
@@ -130,6 +126,12 @@
 <edit-resource-modal #editResourceModal
 					 (submitted)="onEditResource()">
 </edit-resource-modal>
+
+<deletion-confirmation-modal #categoryDeleteModal
+							 [message]="currentResourceCategory ? 'Are you sure you want to delete the \''+currentResourceCategory.name+'\' Resource Category?' : ''"
+							 [warning]="'All associated Resources and Reservations will be deleted as well!'"
+							 (confirm)="onDeleteCategory()">
+</deletion-confirmation-modal>
 
 <deletion-confirmation-modal #resourceDeleteModal
 							 [message]="resourceForDeletion ? 'Are you sure you want to delete the \'' + resourceForDeletion.name + '\' Resource?' : ''"

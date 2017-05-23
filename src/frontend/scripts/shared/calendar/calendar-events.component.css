@@ -1,0 +1,70 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+/* Event Styling */
+
+:host /deep/ .fc-event {
+    border: 2px solid #ededed;
+    padding: 1px 1px;
+    background-color: #4272b7;
+    color: #fff !important;
+    pointer-events: auto;
+}
+
+:host /deep/ .fc-more {
+    pointer-events: auto;
+}
+
+:host /deep/ .selectable .fc-event {
+    cursor: pointer;
+}
+
+:host /deep/ .fc-list-item-title > a:hover {
+    text-decoration: none;
+}
+
+:host /deep/ .selectable .fc-list-item-title > a {
+    cursor: pointer;
+}
+
+:host /deep/ .fc-time-grid-event .fc-bg {
+    display: none;
+}
+
+:host /deep/ .fc-event-dot {
+    background-color: #4272b7;
+}
+
+/* Event Status Styling */
+
+:host /deep/ .fc-event.pending {
+    background-color: #fff;
+    border: 1px dashed #666;
+}
+
+:host /deep/ .fc-event.pending .fc-content {
+    color: #666;
+}
+
+:host /deep/ .fc-event.rejected {
+    background-color: #f2dede;
+    border: 1px solid #ebccd1;
+}
+
+:host /deep/ .fc-event.rejected .fc-content {
+    color: #333;
+    text-decoration: line-through;
+}
+
+:host /deep/ .fc-event.cancelled {
+    background-color: #ddd;
+    border: 1px solid #333;
+}
+
+:host /deep/ .fc-event.cancelled .fc-content {
+    color: #333;
+    text-decoration: line-through;
+}

@@ -7,9 +7,8 @@
 <form [formGroup]="formGroup"
 	  (submit)="onFinishEditingAccount()"
 	  *ngIf="user != null">
-	<panel [type]="'primary'"
-		   id="user-panel">
-		<panel-body>
+	<at-card id="user-card">
+		<at-card-block>
 			<alert #infoAlert
 				   [severity]="'info'"></alert>
 			<alert #errorAlert
@@ -20,8 +19,8 @@
 								[width]="'50%'"
 								[maxWidth]="'130px'"
 								[user]="user"></user-image>
-					<h3>{{user.fullName}}</h3>
-					<h4 class="text-muted">{{user.emailAddress}}</h4>
+					<h3 class="pt-3">{{user.fullName}}</h3>
+					<p class="text-muted">{{user.emailAddress}}</p>
 				</section>
 				
 				<section *ngIf="!user.admin">
@@ -54,7 +53,7 @@
 								[user]="user"></user-image>
 					<div class="row"
 						 *ngIf="!user.admin">
-						<div class="col-xs-12 col-md-6">
+						<div class="col-12 col-md-6">
 							<form-group [control]="formGroup.controls['firstName']"
 										[label]="'First Name'"
 										[errorMessages]="
@@ -64,7 +63,7 @@
                                             }">
 							</form-group>
 						</div>
-						<div class="col-xs-12 col-md-6">
+						<div class="col-12 col-md-6">
 							<form-group [control]="formGroup.controls['lastName']"
 										[label]="'Last Name'"
 										[errorMessages]="
@@ -126,14 +125,14 @@
 					</form-group>
 				</section>
 			</div>
-		</panel-body>
-		<panel-footer>
-			<button class="btn btn-default"
+		</at-card-block>
+		<at-card-footer>
+			<button class="btn btn-secondary"
 					*ngIf="!editingAccount"
 					type="button"
 					(click)="onStartEditingAccount()">Edit Account
 			</button>
-			<button class="btn btn-default"
+			<button class="btn btn-secondary"
 					*ngIf="editingAccount"
 					type="button"
 					(click)="onCancelEditingAccount()">Cancel
@@ -143,6 +142,6 @@
 					type="submit"
 					[disabled]="formGroup.invalid || !doPasswordsMatch()">Save Changes
 			</button>
-		</panel-footer>
-	</panel>
+		</at-card-footer>
+	</at-card>
 </form>

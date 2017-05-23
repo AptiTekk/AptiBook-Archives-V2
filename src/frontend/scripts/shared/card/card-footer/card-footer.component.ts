@@ -3,6 +3,12 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
+import {Component} from "@angular/core";
 
-export * from './tree.component';
-export * from './tree-node/tree-node.component';
+@Component({
+    selector: 'at-card-footer',
+    template: '<ng-content></ng-content>'
+})
+export class CardFooterComponent {
+
+}

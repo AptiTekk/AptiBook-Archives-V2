@@ -4,24 +4,22 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="container-fluid">
-	<div class="row"
-		 style="margin-top: 15px;">
-		<div class="col-xs-12 col-md-5 col-lg-4">
+<div class="container-fluid h-100">
+	<div class="row pt-3">
+		<div class="col-12 col-md-5 col-lg-4 h-100 pb-3 pb-sm-0">
 			<at-account-user-section>
 			</at-account-user-section>
 		</div>
-		<div class="col-xs-12 col-md-7 col-lg-8">
-			<panel [type]="'primary'"
-				   id="info-panel">
-				<panel-body>
+		<div class="col-12 col-md-7 col-lg-8 h-100 pb-3">
+			<at-card id="info-card">
+				<at-card-block>
 					<navigation [horizontal]="true"
 								[links]="infoNavigationLinks">
 					</navigation>
 					
 					<router-outlet></router-outlet>
-				</panel-body>
-			</panel>
+				</at-card-block>
+			</at-card>
 		</div>
 	</div>
 </div>

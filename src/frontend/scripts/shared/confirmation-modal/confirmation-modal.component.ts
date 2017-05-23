@@ -29,9 +29,9 @@ export class ConfirmationModalComponent {
      * The color of the "Yes" button.
      * Valid choices are:
      * - primary (Blue)
+     * - secondary (Grey)
      * - warning (Yellow)
      * - danger (Red)
-     * - default (Grey)
      *
      * Defaults to "primary".
      */
@@ -47,13 +47,13 @@ export class ConfirmationModalComponent {
      * The color of the "No" button.
      * Valid choices are:
      * - primary (Blue)
+     * - secondary (Grey)
      * - warning (Yellow)
      * - danger (Red)
-     * - default (Grey)
      *
      * Defaults to "default".
      */
-    @Input() noButtonColor: string = "default";
+    @Input() noButtonColor: string = "secondary";
 
     /**
      * Emitted when the user makes a decision.

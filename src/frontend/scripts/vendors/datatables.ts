@@ -5,11 +5,11 @@
  */
 
 require("datatables.net")(window, $);
-require("datatables.net-bs")(window, $);
+require("datatables.net-bs4")(window, $);
 require("datatables.net-responsive")(window, $);
-require("datatables.net-responsive-bs")(window, $);
+require("datatables.net-responsive-bs4")(window, $);
 require("datatables.net-select")(window, $);
 
-require("!style-loader!css-loader!datatables.net-bs/css/dataTables.bootstrap.css");
-require("!style-loader!css-loader!datatables.net-responsive-bs/css/responsive.bootstrap.css");
-require("!style-loader!css-loader!datatables.net-select-bs/css/select.bootstrap.css");
+require("datatables.net-bs4/css/dataTables.bootstrap4.css");
+require("datatables.net-responsive-bs4/css/responsive.bootstrap4.css");
+require("datatables.net-select-bs4/css/select.bootstrap4.css");

@@ -5,40 +5,37 @@
   -->
 
 <div class="container-fluid">
-	<panel [type]="'default'"
-		   *ngFor="let permissionGroup of permissionGroups">
-		<panel-body>
+	<at-card
+			*ngFor="let permissionGroup of permissionGroups">
+		<at-card-block>
 			<div class="row">
-				<div class="col-xs-12">
+				<div class="col-12">
 					<h2>{{permissionGroup.name}}</h2>
 					<hr/>
 					<div class="row"
 						 *ngFor="let permissionDetails of permissionGroup.details">
-						<div class="col-xs-12 col-md-6">
+						<div class="col-12 col-md-6">
 							<h3>{{permissionDetails.name}}</h3>
 							<p [innerHTML]="permissionDetails.description"></p>
 						</div>
-						<div class="col-xs-6 col-md-3">
-							<panel [type]="'default'"
-								   [title]="'Assigned Users'">
-								<panel-body>
+						<div class="col-6 col-md-3">
+							<at-card [title]="'Assigned Users'">
+								<at-card-block>
 									<ul *ngIf="userPermissionAssignments">
 										<li *ngFor="let user of userPermissionAssignments[permissionDetails.permission.descriptor]">
 											{{user.emailAddress}}
 										</li>
 									</ul>
-								</panel-body>
-							</panel>
+								</at-card-block>
+							</at-card>
 						</div>
-						<div class="col-xs-6 col-md-3">
-							<panel [type]="'default'"
-								   [title]="'Assigned Groups'">
-							
-							</panel>
+						<div class="col-6 col-md-3">
+							<at-card [title]="'Assigned Groups'">
+							</at-card>
 						</div>
 					</div>
 				</div>
 			</div>
-		</panel-body>
-	</panel>
+		</at-card-block>
+	</at-card>
 </div>

@@ -1,0 +1,70 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+/* Event styling */
+:host /deep/ .fc-basicWeek-view .fc-event {
+    border: none;
+    border-left: 4px solid #4272b7;
+    padding: 2px 5px;
+    background-color: #fff;
+    color: #666 !important;
+    box-shadow: 0 0 10px -4px #666;
+    border-radius: 0;
+    height: 40px;
+    pointer-events: auto;
+}
+
+/* Event continuation (not start) styling */
+:host /deep/ .fc-basicWeek-view .fc-h-event.fc-not-start {
+    border-left: 4px dotted #4272b7;
+}
+
+:host /deep/ .fc-basicWeek-view .fc-h-event.fc-not-start.pending {
+    border-left-color: #333;
+}
+
+/* Event continuation (not end) styling */
+:host /deep/ .fc-basicWeek-view .fc-h-event.fc-not-end {
+    border-right: 4px dotted #4272b7;
+}
+
+:host /deep/ .fc-basicWeek-view .fc-h-event.fc-not-end.pending {
+    border-right-color: #333;
+}
+
+/* Day Title: Size and font adjustments */
+:host /deep/ .fc-basicWeek-view th.fc-day-header {
+    font-size: 30px;
+    font-weight: 300;
+    font-family: 'Roboto', sans-serif;
+}
+
+/* Remove grey box-shadow between day title and day content */
+:host /deep/ .fc-basicWeek-view td.fc-day {
+    box-shadow: initial !important;
+}
+
+/* Add border between days */
+:host /deep/ .fc-basicWeek-view td.fc-day,
+:host /deep/ .fc-basicWeek-view th.fc-day-header {
+    border-right: 1px solid #ddd;
+}
+
+/* Highlight current day title */
+:host /deep/ .fc-basicWeek-view th.fc-day-header.fc-today {
+    color: #4272b7;
+    font-weight: 500;
+}
+
+/* Highlight current day background */
+:host /deep/ .fc-basicWeek-view .fc-today {
+    background-color: #fafafa !important;
+}
+
+/* Move events off the left border by 5px */
+:host /deep/ .fc-basicWeek-view .fc-event-container {
+    padding-left: 5px;
+}

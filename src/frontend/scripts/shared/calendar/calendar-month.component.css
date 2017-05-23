@@ -1,0 +1,51 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+
+:host /deep/ .fc-day-grid td.fc-day.fc-today {
+    background-color: #fff;
+}
+
+:host /deep/ .fc-basicWeek-view .fc-day-grid td.fc-day,
+:host /deep/ .fc-basicDay-view .fc-day-grid td.fc-day {
+    box-shadow: inset #eee 0 8px 0 0;
+}
+
+:host /deep/ .fc-basicWeek-view .fc-day-grid td.fc-day.fc-today,
+:host /deep/ .fc-basicDay-view .fc-day-grid td.fc-day.fc-today {
+    box-shadow: inset #4272b7 0 8px 0 0;
+}
+
+:host /deep/ .fc-basicWeek-view .fc-event-container,
+:host /deep/ .fc-basicDay-view .fc-event-container {
+    padding-top: 10px;
+}
+
+:host /deep/ .fc th,
+:host /deep/ .fc td {
+    border-width: 0;
+}
+
+:host /deep/ .fc td.fc-day {
+    border-top: 1px solid #eee;
+}
+
+:host /deep/ .fc-day-grid td.fc-day-top.fc-today {
+    border-top: 4px solid #4272b7;
+    color: #4272b7;
+    font-weight: bold;
+}
+
+:host /deep/ td.fc-day-top.fc-today {
+    color: inherit;
+}
+
+:host /deep/ .fc-list-empty {
+    background-color: #fff;
+}
+
+:host /deep/ .fc-scroller {
+    overflow-y: hidden !important;
+}

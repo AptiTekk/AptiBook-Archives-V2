@@ -4,22 +4,28 @@
   ~ Proprietary and confidential.
   -->
 
-<img ng2FileDrop
-	 class="image-preview"
-	 (click)="openImageFileChooser()"
-	 [ngClass]="{'file-over-image': fileOverImage}"
-	 (fileOver)="fileOverImage = $event"
-	 [uploader]="fileUploader"
-	 [src]="imagePreviewSrc ? imagePreviewSrc : currentImageUrl ? currentImageUrl : noImageSrc"/>
-<i class="fa fa-folder-open text-primary image-preview-open-icon"></i>
+<div class="image-container">
+	<img ng2FileDrop
+		 class="image-preview"
+		 (click)="openImageFileChooser()"
+		 (fileOver)="fileOverImage = $event"
+		 [ngClass]="{'file-over': fileOverImage}"
+		 [uploader]="fileUploader"
+		 [src]="imagePreviewSrc ? imagePreviewSrc : currentImageUrl ? currentImageUrl : noImageSrc"/>
+	
+	<a id="file-selector-icon"><span class="fa fa-folder-open text-primary"></span></a>
+	
+	<a id="trash-icon"
+	   (click)="clearImage()"
+	   *ngIf="hasImage()">
+		<span class="fa fa-trash text-danger"></span>
+	</a>
+	
+	<input ng2FileSelect
+		   #imageUploadInput
+		   [uploader]="fileUploader"
+		   type="file"
+		   style="display: none"/>
+</div>
 
-<input ng2FileSelect
-	   #imageUploadInput
-	   [uploader]="fileUploader"
-	   type="file"
-	   style="display: none"/>
-<span (click)="clearImage()"
-	  class="image-preview-trash"
-	  *ngIf="hasImage()">
-    <i class="fa fa-trash text-danger"></i>
-</span>
+

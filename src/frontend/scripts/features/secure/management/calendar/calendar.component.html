@@ -4,38 +4,33 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="container-fluid no-top-padding no-left-padding">
-	<div class="row no-gutter">
-		<!-- Calendar Section -->
-		<div class="col-xs-12 col-lg-9">
-			<div class="full-height-breadcrumb">
-				<calendar [eventFeedEndpoint]="'reservations'"
-						  [hiddenStatuses]="['rejected', 'cancelled']"
-						  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
-						  [filterByResourceCategories]="enabledResourceCategories"
-						  [filterByUserGroupOwners]="userGroupOwnerFilter"
-						  (eventSelected)="reservationInfoModal.display($event)"></calendar>
+<div class="container-fluid h-100">
+	<div class="row no-gutters h-100">
+		
+		<!-- Filter Section -->
+		<div class="col-12 col-lg-3">
+			<calendar-header>
+			</calendar-header>
+			<h4 class="pt-3">Category Filters</h4>
+			<hr/>
+			<div class="form-group"
+				 *ngFor="let resourceCategory of resourceCategories">
+				<at-checkbox [(ngModel)]="resourceCategory.enabled"
+							 (valueChanged)="updateEnabledResourceCategories()"
+							 [label]="resourceCategory.name">
+				</at-checkbox>
 			</div>
 		</div>
 		
-		<div class="col-xs-12 hidden-lg"
-			 style="margin-top: 20px"></div>
-		
-		<!-- Right Toolbar / Filter Section -->
-		<div class="col-xs-12 col-lg-3">
-			<calendar-header [label]="'Calendar Filters'">
-			</calendar-header>
-			<div style="padding: 0 10px">
-				<h4>Category Filters</h4>
-				<hr/>
-				<div class="form-group"
-					 *ngFor="let resourceCategory of resourceCategories">
-					<toggle-switch [(ngModel)]="resourceCategory.enabled"
-								   (onToggle)="updateEnabledResourceCategories()"
-								   style="margin-right: 10px"></toggle-switch>
-					<label>{{resourceCategory.name}}</label>
-				</div>
-			</div>
+		<!-- Calendar Section -->
+		<div class="col-12 col-lg-9 pb-3 pb-sm-0 h-100"
+			 style="overflow-y: hidden;">
+			<calendar [eventFeedEndpoint]="'reservations'"
+					  [hiddenStatuses]="['rejected', 'cancelled']"
+					  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
+					  [filterByResourceCategories]="enabledResourceCategories"
+					  [filterByUserGroupOwners]="userGroupOwnerFilter"
+					  (eventSelected)="reservationInfoModal.display($event)"></calendar>
 		</div>
 	</div>
 </div>

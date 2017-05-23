@@ -4,5 +4,12 @@
  * Proprietary and confidential.
  */
 
-export * from './accordion.component';
-export * from './accordion-item/accordion-item.component';
+import {Component} from "@angular/core";
+
+@Component({
+    selector: 'at-card-block',
+    template: '<ng-content></ng-content>'
+})
+export class CardBlockComponent {
+
+}

@@ -4,12 +4,11 @@
  * Proprietary and confidential.
  */
 
-import {Component} from '@angular/core';
+.custom-control-input:checked ~ .custom-control-indicator {
+    background-color: #4272b7;
+}
 
-@Component({
-    selector: 'panel-body',
-    template: '<ng-content></ng-content>'
-})
-export class PanelBodyComponent {
-
+.custom-control-input:focus ~ .custom-control-indicator {
+    -webkit-box-shadow: none;
+    box-shadow: none;
 }

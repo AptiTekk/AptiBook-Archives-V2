@@ -23,7 +23,8 @@ import {SharedModule} from "../../shared/shared.module";
         InfoModalComponent
     ],
     exports: [
-        FooterComponent
+        FooterComponent,
+        HelpModalComponent,
     ],
     providers: [],
 })

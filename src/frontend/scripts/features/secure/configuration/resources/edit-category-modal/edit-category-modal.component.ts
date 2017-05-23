@@ -80,17 +80,4 @@ export class EditCategoryModalComponent implements OnInit {
         );
     }
 
-    onDeleteCategory() {
-        this.loaderService.startLoading();
-
-        this.resourceCategoryService.deleteResourceCategory(this.resourceCategory).subscribe(
-            response => {
-                this.deleted.emit();
-                this.modal.closeModal();
-
-                this.loaderService.stopLoading();
-            }
-        );
-    }
-
 }

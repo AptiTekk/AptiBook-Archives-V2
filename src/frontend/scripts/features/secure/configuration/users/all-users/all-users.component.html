@@ -5,7 +5,7 @@
   -->
 
 <div class="row">
-	<div class="col-xs-12 col-md-8">
+	<div class="col-12 col-md-8">
 		<div class="btn-toolbar">
 			<button class="btn btn-primary"
 					(click)="newUserModal.open()">Add New User
@@ -46,12 +46,11 @@
 			</datatable-column>
 		</datatable>
 	</div>
-	<div class="col-xs-12 col-md-4">
+	<div class="col-12 col-md-4">
 		<form [formGroup]="selectedUserPersonalInformation">
-			<panel id="selected-user-panel"
-				   [type]="'primary'"
-				   [title]="'User Information'">
-				<panel-body>
+			<at-card id="selected-user-card"
+					 [title]="'User Information'">
+				<at-card-block>
 					<user-image [user]="selectedUser"
 								[width]="'130px'">
 					</user-image>
@@ -105,13 +104,13 @@
 						</tree>
 					
 					</div>
-				</panel-body>
-				<panel-footer>
+				</at-card-block>
+				<at-card-footer>
 					<div *ngIf="!selectedUser">
 						Select a User by clicking on a row in the table.
 					</div>
 					<div *ngIf="selectedUser">
-						<button class="btn btn-default"
+						<button class="btn btn-secondary"
 								*ngIf="!editingSelectedUser"
 								(click)="onStartEditingUser()">
 							Edit User
@@ -122,7 +121,7 @@
 								[disabled]="selectedUserPersonalInformation.invalid">
 							Save Changes
 						</button>
-						<button class="btn btn-default"
+						<button class="btn btn-secondary"
 								*ngIf="editingSelectedUser"
 								(click)="onCancelEditingUser()">
 							Cancel
@@ -134,8 +133,8 @@
 							Delete User
 						</button>
 					</div>
-				</panel-footer>
-			</panel>
+				</at-card-footer>
+			</at-card>
 		</form>
 	</div>
 </div>

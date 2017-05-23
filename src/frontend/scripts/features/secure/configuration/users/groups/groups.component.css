@@ -4,6 +4,6 @@
  * Proprietary and confidential.
  */
 
-:host /deep/ #main-groups-panel .panel-body {
+:host /deep/ #main-groups-card .card-block {
     overflow-x: auto;
 }

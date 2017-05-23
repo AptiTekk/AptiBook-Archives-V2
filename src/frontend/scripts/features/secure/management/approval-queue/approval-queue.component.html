@@ -6,17 +6,17 @@
 
 <div class="container-fluid">
 	
-	<div class="row">
-		<div class="col-xs-12">
-			<h3>Awaiting Your Decision</h3>
-			<hr/>
-			<datatable #awaitingUserTable
-					   [selectableRows]="true"
-					   (rowSelected)="awaitingOthersTable.deselectRows(); onReservationSelected(reservationsAwaitingUser[$event])"
-					   (rowDeselected)="onReservationDeselected()">
-				<datatable-column [orderable]="false"
-								  [width]="'30px'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
+	<div class="row pt-3">
+		<div class="col-12">
+			<at-card [title]="'Awaiting Your Decision'">
+				<at-card-block>
+					<datatable #awaitingUserTable
+							   [selectableRows]="true"
+							   (rowSelected)="awaitingOthersTable.deselectRows(); onReservationSelected(reservationsAwaitingUser[$event])"
+							   (rowDeselected)="onReservationDeselected()">
+						<datatable-column [orderable]="false"
+										  [width]="'30px'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
 						<span class="reservation-icon fa"
 							  [class.fa-hourglass-half]="reservation.pending"
 							  [class.text-primary]="reservation.pending"
@@ -24,88 +24,92 @@
 							  [class.text-success]="reservation.approved"
 							  [class.fa-times-circle]="reservation.rejected"
 							  [class.text-danger]="reservation.rejected"></span>
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Requested Resource'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
-						{{reservation.resource.name}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Requested On'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
-						{{reservation.dateCreated | date:'EEEE, MMM d, yyyy, h:mm a'}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Requested By'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
-						{{reservation.user.fullName}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Title'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
-						{{reservation.title}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Start Time'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
-						{{reservation.start | date:'EEEE, MMM d, yyyy, h:mm a'}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'End Time'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
-						{{reservation.end | date:'EEEE, MMM d, yyyy, h:mm a'}}
-					</datatable-cell>
-				</datatable-column>
-			</datatable>
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Requested Resource'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
+								{{reservation.resource.name}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Requested On'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
+								{{reservation.dateCreated | date:'EEEE, MMM d, yyyy, h:mm a'}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Requested By'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
+								{{reservation.user.fullName}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Title'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
+								{{reservation.title}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Start Time'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
+								{{reservation.start | date:'EEEE, MMM d, yyyy, h:mm a'}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'End Time'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingUser">
+								{{reservation.end | date:'EEEE, MMM d, yyyy, h:mm a'}}
+							</datatable-cell>
+						</datatable-column>
+					</datatable>
+				</at-card-block>
+			</at-card>
 		</div>
-		<div class="col-xs-12">
-			<h3>Awaiting Others' Decisions</h3>
-			<hr/>
-			<datatable #awaitingOthersTable
-					   [selectableRows]="true"
-					   (rowSelected)="awaitingUserTable.deselectRows(); onReservationSelected(reservationsAwaitingOthers[$event]);"
-					   (rowDeselected)="onReservationDeselected()">
-				<datatable-column [orderable]="false"
-								  [width]="'30px'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
+		<div class="col-12 pt-3">
+			<at-card [title]="'Awaiting Others\' Decisions'">
+				<at-card-block>
+					<datatable #awaitingOthersTable
+							   [selectableRows]="true"
+							   (rowSelected)="awaitingUserTable.deselectRows(); onReservationSelected(reservationsAwaitingOthers[$event]);"
+							   (rowDeselected)="onReservationDeselected()">
+						<datatable-column [orderable]="false"
+										  [width]="'30px'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
 						<span class="reservation-icon fa"
 							  [class.fa-check-circle]="reservation['usersDecision'].approved"
 							  [class.text-success]="reservation['usersDecision'].approved"
 							  [class.fa-times-circle]="reservation['usersDecision'].rejected"
 							  [class.text-danger]="reservation['usersDecision'].rejected"></span>
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Requested Resource'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
-						{{reservation.resource.name}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Requested On'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
-						{{reservation.dateCreated | date:'EEEE, MMM d, yyyy, h:mm a'}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Requested By'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
-						{{reservation.user.fullName}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Title'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
-						{{reservation.title}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'Start Time'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
-						{{reservation.start | date:'EEEE, MMM d, yyyy, h:mm a'}}
-					</datatable-cell>
-				</datatable-column>
-				<datatable-column [title]="'End Time'">
-					<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
-						{{reservation.end | date:'EEEE, MMM d, yyyy, h:mm a'}}
-					</datatable-cell>
-				</datatable-column>
-			</datatable>
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Requested Resource'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
+								{{reservation.resource.name}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Requested On'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
+								{{reservation.dateCreated | date:'EEEE, MMM d, yyyy, h:mm a'}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Requested By'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
+								{{reservation.user.fullName}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Title'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
+								{{reservation.title}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'Start Time'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
+								{{reservation.start | date:'EEEE, MMM d, yyyy, h:mm a'}}
+							</datatable-cell>
+						</datatable-column>
+						<datatable-column [title]="'End Time'">
+							<datatable-cell *ngFor="let reservation of reservationsAwaitingOthers">
+								{{reservation.end | date:'EEEE, MMM d, yyyy, h:mm a'}}
+							</datatable-cell>
+						</datatable-column>
+					</datatable>
+				</at-card-block>
+			</at-card>
 		</div>
 	</div>
 

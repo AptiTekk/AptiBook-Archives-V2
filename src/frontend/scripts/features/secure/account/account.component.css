@@ -4,12 +4,7 @@
  * Proprietary and confidential.
  */
 
-:host /deep/ #info-panel>.panel {
-    margin-bottom: 0;
-}
-
-:host /deep/ #info-panel>.panel>.panel-body {
-    /* 100vh - footer - breadcrumbs - top/bottom padding */
-    height: calc(100vh - 50px - 60px - 30px);
+:host /deep/ #info-card .card-block {
     overflow-y: auto;
+    max-height: calc(100vh - 60px - 30px - 8px);
 }

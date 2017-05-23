@@ -17,7 +17,7 @@ import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 @Component({
     selector: 'at-sidebar',
     templateUrl: 'sidebar.component.html',
-    styleUrls: ['sidebar.component.css', 'sidebar.mobile.component.css']
+    styleUrls: ['sidebar.component.css', 'sidebar.mobile.component.scss']
 })
 export class SidebarComponent implements OnInit {
 
@@ -46,6 +46,7 @@ export class SidebarComponent implements OnInit {
     ACCOUNT_ICON: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(require("!raw-loader!./account.svg"));
     MANAGEMENT_ICON: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(require("!raw-loader!./management.svg"));
     CONFIGURATION_ICON: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(require("!raw-loader!./configuration.svg"));
+    HELP_ICON: SafeHtml = this.sanitizer.bypassSecurityTrustHtml(require("!raw-loader!./help.svg"));
 
     constructor(private authService: AuthService,
                 private permissionsService: PermissionsService,

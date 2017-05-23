@@ -5,16 +5,16 @@
  */
 
 import {
-    Component,
     AfterViewInit,
-    ViewChild,
-    Input,
+    Component,
+    ElementRef,
     forwardRef,
+    Input,
     OnChanges,
     SimpleChanges,
-    ElementRef
+    ViewChild
 } from "@angular/core";
-import {NG_VALUE_ACCESSOR, ControlValueAccessor} from "@angular/forms";
+import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import moment = require("moment");
 import Moment = moment.Moment;
 
@@ -101,15 +101,21 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
             sideBySide: this.stacked || this.sideBySide,
             format: this.format ? this.format : false,
             minDate: this.getMinDateToUse(),
-            allowInputToggle: !this.inline
+            allowInputToggle: !this.inline,
+            icons: {
+                time: "fa fa-clock-o",
+                date: "fa fa-calendar",
+                up: "fa fa-arrow-up",
+                down: "fa fa-arrow-down"
+            }
         });
 
         if (this.stacked) {
             this.dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.remove("col-md-6");
-            this.dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.add("col-xs-12");
+            this.dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.add("col-12");
 
             this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.remove("col-md-6");
-            this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.add("col-xs-12");
+            this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.add("col-12");
         }
 
         this.dateTimePicker.on("dp.change", (e: any) => {

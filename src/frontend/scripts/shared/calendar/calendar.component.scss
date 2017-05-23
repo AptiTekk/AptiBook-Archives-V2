@@ -1,0 +1,106 @@
+/*
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+@import "~bootstrap/scss/bootstrap-grid.scss";
+
+/* Header & Body */
+
+#header {
+  height: 60px;
+  background-color: #fff;
+  border-bottom: 2px solid #4272b7;
+}
+
+#header h1 {
+  line-height: 60px;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  text-align: center;
+  pointer-events: none;
+}
+
+#header #prev, #header #next {
+  font-size: 40px;
+  width: 40px;
+  text-align: center;
+  background: none;
+  color: #4272b7;
+}
+
+#header #prev {
+  float: left;
+}
+
+#header #next {
+  float: right;
+}
+
+#header button {
+  cursor: pointer;
+}
+
+#body {
+  height: calc(100% - 60px);
+}
+
+:host /deep/ h3 {
+  margin: 0;
+}
+
+@include media-breakpoint-down('lg') {
+  :host /deep/ h2, :host /deep/ h3 {
+    font-size: 20px;
+  }
+}
+
+@include media-breakpoint-only('sm') {
+  #header h1 {
+    font-size: 26px !important;
+  }
+}
+
+@include media-breakpoint-only('xs') {
+  #header h1 {
+    font-size: 22px !important;
+  }
+}
+
+/* General Styling */
+
+:host /deep/ .fc-day:hover {
+  background-color: #f9f9f9 !important;
+}
+
+:host /deep/ .fc-content-skeleton {
+  pointer-events: none;
+}
+
+/* Button Styling */
+
+:host /deep/ button {
+  border: none;
+  background: #eee none;
+  box-shadow: none;
+}
+
+:host /deep/ button.fc-state-hover {
+  background-color: #ddd;
+}
+
+:host /deep/ button:focus {
+  outline: none;
+}
+
+:host /deep/ button.fc-state-active {
+  background-color: #4272b7;
+  color: #fff;
+  text-shadow: none;
+}
+
+:host /deep/ .fc-button-group > * {
+  margin: 0;
+}

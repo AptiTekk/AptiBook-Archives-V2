@@ -4,34 +4,27 @@
   ~ Proprietary and confidential.
   -->
 
-<ol class="breadcrumb">
-	<li><a [routerLink]="['', 'secure','search-results']">Search</a></li>
-	<li class="active">Request Reservation</li>
-</ol>
-
 <div class="container">
 	
-	<div class="row">
+	<div class="row pt-3">
 		<!-- Sidebar with Resource name and image -->
-		<div class="col-xs-12 col-md-4">
-			<panel [type]="'primary'"
-				   class="resource-details-card">
-				<panel-body>
+		<div class="col-12 col-md-4">
+			<at-card class="resource-details-card">
+				<at-card-block>
 					<resource-image [resource]="resource"></resource-image>
 					<h3>{{resource.name}}</h3>
 					<hr/>
 					Category: <span style="font-weight: bold">{{resource.resourceCategory.name}}</span>
-				</panel-body>
-			</panel>
+				</at-card-block>
+			</at-card>
 		</div>
 		
 		<!-- Form Content Area -->
-		<div class="col-xs-12 col-md-8">
+		<div class="col-12 col-md-8">
 			<form (ngSubmit)="reserve()"
 				  [formGroup]="formGroup">
-				<panel [type]="'primary'"
-					   [title]="'Reservation Details'">
-					<panel-body>
+				<at-card [title]="'Reservation Details'">
+					<at-card-block>
 						<form-group [control]="formGroup.controls['title']"
 									[label]="'Title *'"
 									[placeholder]="'What is this reservation for?'"
@@ -58,22 +51,20 @@
 								   id="end"
 								   value="{{end.calendar()}}">
 						</div>
-					</panel-body>
-					<panel-footer>
-						<button type="submit"
-								class="btn btn-primary"
+					</at-card-block>
+					<at-card-footer>
+						<button class="btn btn-primary"
 								[disabled]="formGroup.invalid">
 							Submit Reservation
 						</button>
 						<button [routerLink]="['', 'secure', 'search-results']"
-								class="btn btn-default"
-								type="button">Cancel
+								class="btn btn-secondary"
+								type="button">
+							Go Back
 						</button>
-					</panel-footer>
-				</panel>
+					</at-card-footer>
+				</at-card>
 			</form>
 		</div>
 	</div>
-	
-	<br/>
 </div>
