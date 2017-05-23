@@ -4,6 +4,14 @@
  * Proprietary and confidential.
  */
 
-.calendar.selectable .fc-list-item {
+:host /deep/ .calendar.selectable .fc-list-item {
     cursor: pointer;
+}
+
+:host /deep/ .fc-list-view {
+    border: none;
+}
+
+:host /deep/ .fc-list-view .fc-scroller {
+    width: 100%;
 }
