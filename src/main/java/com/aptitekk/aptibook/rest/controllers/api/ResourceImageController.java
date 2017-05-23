@@ -77,7 +77,7 @@ public class ResourceImageController extends APIControllerAbstract {
                 bufferedImage = ImageHelper.removeAlpha(bufferedImage);
 
                 // Make sure the image is at max 1024px wide or tall.
-                bufferedImage = ImageHelper.scaleDownImageToBounds(bufferedImage, 1024);
+                bufferedImage = ImageHelper.scaleDownImageToBounds(bufferedImage, 150);
 
                 // Crop the image to a square
                 bufferedImage = ImageHelper.cropToSquare(bufferedImage, Positions.CENTER);
