@@ -25,19 +25,12 @@
 					</button>
 				</div>
 				
-				<div class="ml-lg-auto">
-					<p *ngIf="!(rootGroup?.children?.length > 0)"
-					   class="pull-right">
-						Please add User Groups before adding Resources.
-					</p>
-					
-					<!-- Add Resource Button -->
-					<button class="btn btn-primary"
-							[disabled]="!(rootGroup?.children?.length > 0)"
-							(click)="newResourceModal.open(currentResourceCategory)">
-						Add New Resource
-					</button>
-				</div>
+				<!-- Add Resource Button -->
+				<button class="btn btn-primary ml-lg-auto"
+						[disabled]="!(rootGroup?.children?.length > 0)"
+						(click)="newResourceModal.open(currentResourceCategory)">
+					Add New Resource
+				</button>
 			</div>
 			
 			<hr/>
@@ -67,53 +60,56 @@
 		</div>-->
 		
 		<!-- Content Area -->
-		<div class="col-12"
-			 *ngIf="currentResourceCategory">
-			
-			<!-- Resource Cards -->
-			<div class="row"
-				 *ngIf="currentResourceCategory?.resources.length > 0">
-				<div class="col-12 col-xl-6"
-					 style="padding-bottom: 30px"
-					 *ngFor="let resource of currentResourceCategory.resources">
-					
-					<!-- Resource Card -->
-					<at-card class="resource-card">
-						<at-card-block>
-							<!-- Resource Image -->
-							<resource-image [resource]="resource"></resource-image>
-							
-							<!-- Resource Name -->
-							<h3>{{resource.name}}</h3>
-							<hr/>
-							<form-group [faIconName]="resource.needsApproval ? 'check-square-o' : 'square-o'"
-										[readOnly]="true"
-										[value]="resource.needsApproval ? 'Requires Approval' : 'No Approval Required'">
-							</form-group>
-							<form-group [faIconName]="'sitemap'"
-										[readOnly]="true"
-										[value]="'Owned by ' + resource.owner.name">
-							</form-group>
-						</at-card-block>
-						<at-card-footer>
-							
-							<!-- Edit Button -->
-							<button class="btn btn-secondary"
-									(click)="editResourceModal.open(resource)">Edit
-							</button>
-							
-							<!-- Delete Button -->
-							<button class="btn btn-danger pull-right"
-									(click)="resourceForDeletion = resource;resourceDeleteModal.open()">
-								Delete
-							</button>
-						</at-card-footer>
-					</at-card>
+		<div class="col-12">
+			<h4 *ngIf="!(rootGroup?.children?.length > 0)">
+				Please
+				<a [routerLink]="'/secure/configuration/users/groups'">add User Groups</a> before adding Resources.
+			</h4>
+			<section *ngIf="(rootGroup?.children?.length > 0) && currentResourceCategory != undefined">
+				
+				<!-- Resource Cards -->
+				<h4 *ngIf="currentResourceCategory?.resources.length == 0">There are no Resources in this Category.</h4>
+				<div class="row"
+					 *ngIf="currentResourceCategory?.resources.length > 0">
+					<div class="col-12 col-xl-6"
+						 style="padding-bottom: 30px"
+						 *ngFor="let resource of currentResourceCategory.resources">
+						
+						<!-- Resource Card -->
+						<at-card class="resource-card">
+							<at-card-block>
+								<!-- Resource Image -->
+								<resource-image [resource]="resource"></resource-image>
+								
+								<!-- Resource Name -->
+								<h3>{{resource.name}}</h3>
+								<hr/>
+								<form-group [faIconName]="resource.needsApproval ? 'check-square-o' : 'square-o'"
+											[readOnly]="true"
+											[value]="resource.needsApproval ? 'Requires Approval' : 'No Approval Required'">
+								</form-group>
+								<form-group [faIconName]="'sitemap'"
+											[readOnly]="true"
+											[value]="'Owned by ' + resource.owner.name">
+								</form-group>
+							</at-card-block>
+							<at-card-footer>
+								
+								<!-- Edit Button -->
+								<button class="btn btn-secondary"
+										(click)="editResourceModal.open(resource)">Edit
+								</button>
+								
+								<!-- Delete Button -->
+								<button class="btn btn-danger pull-right"
+										(click)="resourceForDeletion = resource;resourceDeleteModal.open()">
+									Delete
+								</button>
+							</at-card-footer>
+						</at-card>
+					</div>
 				</div>
-			</div>
-			<div *ngIf="currentResourceCategory?.resources.length == 0">
-				<h4>There are no Resources in this Category.</h4>
-			</div>
+			</section>
 		</div>
 	</div>
 </div>
