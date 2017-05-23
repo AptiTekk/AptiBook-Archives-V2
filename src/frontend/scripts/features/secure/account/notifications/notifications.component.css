@@ -17,6 +17,10 @@
     padding-top: 15px;
 }
 
+:host /deep/ .notification .card {
+    border-top: none;
+}
+
 .notification .notification-icon {
     float: left;
     color: #4272b7;

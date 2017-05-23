@@ -9,7 +9,7 @@
 }
 
 :host /deep/ #user-card > .card > .card-block {
-    /* 100vh - header - top/bottom padding - card footer */
-    height: calc(100vh - 60px - 30px - 63px);
+    /* 100vh - header - top/bottom padding - card header/footer */
+    height: calc(100vh - 60px - 30px - 72px);
     overflow-y: auto;
 }

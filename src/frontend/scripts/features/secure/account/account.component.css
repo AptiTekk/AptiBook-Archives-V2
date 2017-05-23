@@ -3,3 +3,8 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
+
+:host /deep/ #info-card .card-block {
+    overflow-y: auto;
+    max-height: calc(100vh - 60px - 30px - 8px);
+}
