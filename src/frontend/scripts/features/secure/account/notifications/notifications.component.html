@@ -28,7 +28,7 @@
 <div *ngFor="let notification of notifications"
 	 class="notification"
 	 [ngClass]="{'read-notification': notification.read}">
-	<at-card>
+	<at-card [noTopBorder]="true">
 		<at-card-block>
 			<div class="notification-icon">
 				<i class="fa fa-{{notification.read ? 'envelope-open' : 'envelope'}}"></i>
