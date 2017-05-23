@@ -26,7 +26,7 @@ import {APIService} from "../../core/services/api.service";
 @Component({
     selector: 'calendar',
     templateUrl: 'calendar.component.html',
-    styleUrls: ['calendar.component.css', 'calendar-month.component.css', 'calendar-week.component.css', 'calendar-list.component.css', 'calendar-events.component.css']
+    styleUrls: ['./calendar.component.scss', 'calendar-month.component.css', 'calendar-week.component.css', 'calendar-list.component.css', 'calendar-events.component.css']
 })
 export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
