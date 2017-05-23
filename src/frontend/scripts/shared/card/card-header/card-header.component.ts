@@ -3,12 +3,12 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
+import {Component} from "@angular/core";
 
-:host /deep/ #main-card > .card {
-    border-top: none;
-}
+@Component({
+    selector: 'at-card-header',
+    template: '<ng-content></ng-content>'
+})
+export class CardHeaderComponent {
 
-:host /deep/ #main-card > .card > .card-block {
-    height: calc(100vh - 60px - 54px - 70px - 30px);
-    overflow-y: auto;
 }

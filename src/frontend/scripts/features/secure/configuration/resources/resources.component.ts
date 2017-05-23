@@ -14,6 +14,7 @@ import {UserGroup} from "../../../../models/user-group.model";
 import {UserGroupService} from "../../../../core/services/usergroup.service";
 import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
 import {Subscription} from "rxjs/Subscription";
+import {LoaderService} from "../../../../core/services/loader.service";
 
 @Component({
     selector: 'at-configuration-resources',
@@ -67,7 +68,8 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                 private route: ActivatedRoute,
                 private resourceCategoryService: ResourceCategoryService,
                 private resourceService: ResourceService,
-                private userGroupService: UserGroupService) {
+                private userGroupService: UserGroupService,
+                private loaderService: LoaderService) {
     }
 
     ngOnInit(): void {
@@ -133,6 +135,14 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     }
 
     onDeleteCategory() {
+        this.loaderService.startLoading();
+
+        this.resourceCategoryService.deleteResourceCategory(this.currentResourceCategory).subscribe(
+            response => {
+                this.loaderService.stopLoading();
+            }
+        );
+
         this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources']);
     }

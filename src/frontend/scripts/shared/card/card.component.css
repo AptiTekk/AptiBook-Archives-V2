@@ -14,16 +14,6 @@
     border-top: 6px solid #4272b7;
 }
 
-.card .card-header {
-    background-color: #4272b7;
-    color: white;
-    border: none;
-}
-
-.card .card-header a:after {
-    color: white;
-}
-
 /* Scrollbar */
 
 .card ::-webkit-scrollbar {
