@@ -34,7 +34,7 @@
 }
 
 .at-app .text-primary {
-    color: #4272b7;
+    color: #4272b7 !important;
 }
 
 .no-select {
