@@ -10,7 +10,7 @@
     border-left: 4px solid #4272b7;
     padding: 2px 5px;
     background-color: #fff;
-    color: #666;
+    color: #666 !important;
     box-shadow: 0 0 10px -4px #666;
     border-radius: 0;
     height: 40px;

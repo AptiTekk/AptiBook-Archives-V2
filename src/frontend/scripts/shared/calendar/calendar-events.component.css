@@ -10,7 +10,7 @@
     border: 2px solid #ededed;
     padding: 1px 1px;
     background-color: #4272b7;
-    color: #fff;
+    color: #fff !important;
     pointer-events: auto;
 }
 

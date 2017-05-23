@@ -29,8 +29,8 @@
 
 .nav-link.active,
 .nav-link.active:focus {
-    background-color: #eeeeee;
-    color: #777;
+    background-color: #4272b7;
+    color: #fff;
 }
 
 /* Vertical Nav */
@@ -52,6 +52,6 @@
 
 .nav-pills.flex-column > .nav-link,
 .nav-pills.flex-column > .nav-link:focus {
-    color: white;
     background-color: #4272b7;
+    color: #fff;
 }
