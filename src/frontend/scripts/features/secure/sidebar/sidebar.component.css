@@ -114,6 +114,7 @@
 
 #sign-out-button {
     background-color: #f1f1f1;
+    color: #777;
 }
 
 #sign-out-button:hover {

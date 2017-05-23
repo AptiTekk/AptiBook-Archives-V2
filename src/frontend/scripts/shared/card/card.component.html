@@ -4,7 +4,8 @@
   ~ Proprietary and confidential.
   -->
 
-<div class="card">
+<div class="card"
+	 [class.no-top-border]="noTopBorder">
 	<div class="card-header"
 		 *ngIf="header.length > 0">
 		<ng-content select="at-card-header"></ng-content>

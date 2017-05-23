@@ -20,4 +20,6 @@ export class CardComponent {
 
     @Input() title: string;
 
+    @Input() noTopBorder: boolean = false;
+
 }
