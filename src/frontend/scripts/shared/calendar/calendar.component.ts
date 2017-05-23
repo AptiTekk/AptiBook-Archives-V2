@@ -142,6 +142,11 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             timezone: 'local',
 
             defaultView: this.view ? this.view : CalendarComponent.VIEW_CALENDAR,
+            views: {
+                week: {
+                    displayEventEnd: true
+                }
+            },
 
             eventRender: (event: Reservation, element) => {
                 if (event.status) {
