@@ -39,8 +39,9 @@
 						[horizontal]="true">
 			</navigation>
 		</div>
+		<!-- Old category selectors -->
 		<!--&lt;!&ndash; Resource Categories Selection Sidebar &ndash;&gt;
-		<div class="col-xs-12 col-md-5 col-lg-3">
+		<div class="col-12 col-md-5 col-lg-3">
 			&lt;!&ndash; Categories List &ndash;&gt;
 			<ul id="resource-categories-list"
 				*ngIf="resourceCategories?.length > 0">
@@ -78,20 +79,25 @@
 						<!-- Resource Card -->
 						<at-card class="resource-card">
 							<at-card-block>
-								<!-- Resource Image -->
-								<resource-image [resource]="resource"></resource-image>
-								
-								<!-- Resource Name -->
-								<h3>{{resource.name}}</h3>
-								<hr/>
-								<form-group [faIconName]="resource.needsApproval ? 'check-square-o' : 'square-o'"
-											[readOnly]="true"
-											[value]="resource.needsApproval ? 'Requires Approval' : 'No Approval Required'">
-								</form-group>
-								<form-group [faIconName]="'sitemap'"
-											[readOnly]="true"
-											[value]="'Owned by ' + resource.owner.name">
-								</form-group>
+								<div class="media">
+									<section class="d-flex mr-3">
+										<!-- Resource Image -->
+										<resource-image [resource]="resource"></resource-image>
+									</section>
+									<div class="media-body">
+										<!-- Resource Name -->
+										<h3>{{resource.name}}</h3>
+										<hr/>
+										<form-group [faIconName]="resource.needsApproval ? 'check-square-o' : 'square-o'"
+													[readOnly]="true"
+													[value]="resource.needsApproval ? 'Requires Approval' : 'No Approval Required'">
+										</form-group>
+										<form-group [faIconName]="'sitemap'"
+													[readOnly]="true"
+													[value]="'Owned by ' + resource.owner.name">
+										</form-group>
+									</div>
+								</div>
 							</at-card-block>
 							<at-card-footer>
 								

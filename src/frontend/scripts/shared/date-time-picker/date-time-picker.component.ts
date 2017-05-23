@@ -112,10 +112,10 @@ export class DateTimePickerComponent implements AfterViewInit, OnChanges, Contro
 
         if (this.stacked) {
             this.dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.remove("col-md-6");
-            this.dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.add("col-xs-12");
+            this.dateTimePicker[0].getElementsByClassName("datepicker")[0].classList.add("col-12");
 
             this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.remove("col-md-6");
-            this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.add("col-xs-12");
+            this.dateTimePicker[0].getElementsByClassName("timepicker")[0].classList.add("col-12");
         }
 
         this.dateTimePicker.on("dp.change", (e: any) => {

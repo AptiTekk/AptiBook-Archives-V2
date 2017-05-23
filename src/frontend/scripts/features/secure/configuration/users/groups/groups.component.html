@@ -5,7 +5,7 @@
   -->
 
 <div class="row">
-	<div class="col-xs-12 col-md-3">
+	<div class="col-12 col-md-3">
 		<div class="btn-toolbar">
 			<button class="btn btn-primary"
 					(click)="newGroupModal.open(selectedUserGroups ? selectedUserGroups[0] : undefined)">
@@ -29,7 +29,7 @@
 			</at-card-footer>
 		</at-card>
 	</div>
-	<div class="col-xs-12 col-md-9">
+	<div class="col-12 col-md-9">
 		<div class="btn-toolbar">
 			<button class="btn btn-danger"
 					[disabled]="!selectedUserGroup"
@@ -39,7 +39,7 @@
 		</div>
 		<hr/>
 		<div class="row">
-			<div class="col-xs-12 col-md-4">
+			<div class="col-12 col-md-4">
 				<form [formGroup]="userGroupDetailsFormGroup">
 					<at-card [title]="'User Group Details'">
 						<at-card-block>
@@ -79,7 +79,7 @@
 					</at-card>
 				</form>
 			</div>
-			<div class="col-xs-12 col-md-8">
+			<div class="col-12 col-md-8">
 				<navigation [horizontal]="true">
 					<navigation-link [label]="'Assigned Users'"
 									 [icon]="'user'"
