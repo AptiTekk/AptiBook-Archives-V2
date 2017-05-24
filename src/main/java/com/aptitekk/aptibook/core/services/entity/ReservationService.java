@@ -49,8 +49,8 @@ public class ReservationService {
             queue.addAll(currentGroup.getChildren());
 
             for (Resource resource : currentGroup.getResources()) {
-                for (Reservation reservation : resource.reservations) {
-                    if (reservation.status == status) {
+                for (Reservation reservation : resource.getReservations()) {
+                    if (reservation.getStatus() == status) {
                         reservationList.add(reservation);
                     }
                 }
@@ -65,13 +65,13 @@ public class ReservationService {
     public List<ReservationDecision> generateReservationDecisions(Reservation reservation) {
         //Traverse up the hierarchy and determine the decisions that have already been made.
         List<ReservationDecision> hierarchyDecisions = new ArrayList<>();
-        List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(reservation.resource.owner);
+        List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(reservation.getResource().getOwner());
 
         //This for loop descends to properly order the groups for display on the page.
         for (int i = hierarchyUp.size() - 1; i >= 0; i--) {
             UserGroup userGroup = hierarchyUp.get(i);
-            for (ReservationDecision decision : reservation.decisions) {
-                if (decision.userGroup.equals(userGroup)) {
+            for (ReservationDecision decision : reservation.getDecisions()) {
+                if (decision.getUserGroup().equals(userGroup)) {
                     hierarchyDecisions.add(decision);
                 }
             }
@@ -112,20 +112,20 @@ public class ReservationService {
      */
     public boolean isResourceAvailableForReservation(Resource resource, LocalDateTime startTime, LocalDateTime endTime) {
         //Iterate over all reservations of the resource and check for intersections
-        for (Reservation reservation : resource.reservations) {
+        for (Reservation reservation : resource.getReservations()) {
             //Ignore rejected reservations.
-            if (reservation.status == Reservation.Status.REJECTED)
+            if (reservation.getStatus() == Reservation.Status.REJECTED)
                 continue;
             //If user canceled reservation, allow resource to be reserved.
-            if (reservation.status == Reservation.Status.CANCELLED)
+            if (reservation.getStatus() == Reservation.Status.CANCELLED)
                 continue;
 
             //If the reservation's end time is before our start time, we're okay.
-            if (reservation.end.isBefore(startTime))
+            if (reservation.getEnd().isBefore(startTime))
                 continue;
 
             //If the reservation's start time is after our end time, we're okay.
-            if (reservation.start.isAfter(endTime))
+            if (reservation.getStart().isAfter(endTime))
                 continue;
 
             //All checks failed, there was a conflict.

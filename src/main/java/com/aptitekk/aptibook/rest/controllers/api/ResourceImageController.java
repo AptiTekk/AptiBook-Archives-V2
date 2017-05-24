@@ -49,10 +49,10 @@ public class ResourceImageController extends APIControllerAbstract {
         if (resource == null)
             return badRequest("Resource not found.");
 
-        if (resource.image == null || resource.image.getData() == null)
+        if (resource.getImage() == null || resource.getImage().getData() == null)
             return noContent();
 
-        return ok(resource.image.getData());
+        return ok(resource.getImage().getData());
     }
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -93,10 +93,10 @@ public class ResourceImageController extends APIControllerAbstract {
                 if (imageFile == null)
                     return serverError("Could not save image.");
 
-                File oldImage = resource.image;
+                File oldImage = resource.getImage();
 
                 // Set and save new image
-                resource.image = imageFile;
+                resource.setImage(imageFile);
                 resource = resourceRepository.save(resource);
 
                 // Delete old image
@@ -105,7 +105,7 @@ public class ResourceImageController extends APIControllerAbstract {
                 }
 
                 // Return the image.
-                return ok(resource.image.getData());
+                return ok(resource.getImage().getData());
             } catch (IOException e) {
                 return badRequest("Could not read image. It may be corrupt.");
             }
@@ -122,10 +122,10 @@ public class ResourceImageController extends APIControllerAbstract {
         if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return noPermission();
 
-        File imageFile = resource.image;
+        File imageFile = resource.getImage();
 
         if (imageFile != null) {
-            resource.image = null;
+            resource.setImage(null);
             fileRepository.delete(imageFile);
         }
 

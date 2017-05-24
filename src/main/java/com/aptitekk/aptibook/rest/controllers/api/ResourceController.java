@@ -78,7 +78,7 @@ public class ResourceController extends APIControllerAbstract {
             if (resourceCategory == null)
                 return badRequest("Category not found.");
             else
-                resource.resourceCategory = resourceCategory;
+                resource.setResourceCategory(resourceCategory);
         }
 
         if (resourceDTO.name == null)
@@ -90,7 +90,7 @@ public class ResourceController extends APIControllerAbstract {
         else if (resourceRepository.findByName(resourceDTO.name, resourceCategory) != null)
             return badRequest("A Resource by that name already exists!");
         else
-            resource.name = resourceDTO.name;
+            resource.setName(resourceDTO.name);
 
         if (resourceDTO.owner == null)
             return badRequest("Owner not supplied.");
@@ -101,13 +101,13 @@ public class ResourceController extends APIControllerAbstract {
             else if (owner.isRoot())
                 return badRequest("Owner cannot be root.");
             else
-                resource.owner = owner;
+                resource.setOwner(owner);
         }
 
-        resource.needsApproval = resourceDTO.needsApproval != null ? resourceDTO.needsApproval : false;
+        resource.setNeedsApproval(resourceDTO.needsApproval != null ? resourceDTO.needsApproval : false);
 
         resource = resourceRepository.save(resource);
-        return created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.id);
+        return created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.getId());
 
     }
 
@@ -127,7 +127,7 @@ public class ResourceController extends APIControllerAbstract {
             if (resourceCategory == null)
                 return badRequest("Category not found.");
             else
-                resource.resourceCategory = resourceCategory;
+                resource.setResourceCategory(resourceCategory);
         }
 
         if (resourceDTO.name != null) {
@@ -138,10 +138,10 @@ public class ResourceController extends APIControllerAbstract {
                 return badRequest("Name includes invalid characters.");
 
             Resource existingResource = resourceRepository.findByName(resourceDTO.name, resourceCategory);
-            if (existingResource != null && !existingResource.id.equals(resourceDTO.id))
+            if (existingResource != null && !existingResource.getId().equals(resourceDTO.id))
                 return badRequest("A Resource by that name already exists!");
 
-            resource.name = resourceDTO.name;
+            resource.setName(resourceDTO.name);
         }
 
         if (resourceDTO.owner != null) {
@@ -151,11 +151,11 @@ public class ResourceController extends APIControllerAbstract {
             else if (owner.isRoot())
                 return badRequest("Owner cannot be root.");
             else
-                resource.owner = owner;
+                resource.setOwner(owner);
         }
 
         if (resourceDTO.needsApproval != null)
-            resource.needsApproval = resourceDTO.needsApproval;
+            resource.setNeedsApproval(resourceDTO.needsApproval);
 
         resource = resourceRepository.save(resource);
         return ok(modelMapper.map(resource, ResourceDTO.class));

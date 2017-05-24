@@ -18,19 +18,55 @@ public class ResourceCategory extends MultiTenantEntity implements Serializable 
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
-    public String name;
+    private String name;
 
     @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     @OrderBy(value = "name")
-    public Set<Resource> resources = new HashSet<>();
+    private Set<Resource> resources = new HashSet<>();
 
     @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    public Set<ReservationField> reservationFields = new HashSet<>();
+    private Set<ReservationField> reservationFields = new HashSet<>();
 
     @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    public Set<Tag> tags = new HashSet<>();
+    private Set<Tag> tags = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public Set<Resource> getResources() {
+        return resources;
+    }
+
+    public void setResources(Set<Resource> resources) {
+        this.resources = resources;
+    }
+
+    public Set<ReservationField> getReservationFields() {
+        return reservationFields;
+    }
+
+    public void setReservationFields(Set<ReservationField> reservationFields) {
+        this.reservationFields = reservationFields;
+    }
+
+    public Set<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(Set<Tag> tags) {
+        this.tags = tags;
+    }
 
     @Override
     public boolean equals(Object o) {

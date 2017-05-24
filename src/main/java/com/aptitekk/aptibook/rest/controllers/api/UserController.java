@@ -101,7 +101,7 @@ public class UserController extends APIControllerAbstract {
                 "Welcome to AptiBook!",
                 "Hello! An account has been created for you on AptiBook."
                         + "<p>You can sign in to AptiBook using the URL and credentials below. Once you sign in, you can change your password by clicking <b>My Account</b> on the navigation bar.<br>"
-                        + "https://" + newUser.tenant.getDomain() + ".aptibook.net</p>"
+                        + "https://" + newUser.getTenant().getDomain() + ".aptibook.net</p>"
                         + "<center>"
                         + "Email Address: <b>" + newUser.getEmailAddress() + "</b> <br>"
                         + "Password: <b>" + newPassword + "</b>"

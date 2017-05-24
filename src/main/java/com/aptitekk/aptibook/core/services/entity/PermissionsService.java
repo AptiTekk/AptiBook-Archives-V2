@@ -147,7 +147,7 @@ public class PermissionsService {
         for (UserGroup userGroup : user.userGroups) {
 
             // True if the User belongs to the User Group that owns the resource.
-            if (resource.owner.equals(userGroup))
+            if (resource.getOwner().equals(userGroup))
                 return true;
 
             // Check every group below the user's own if they have permission.
@@ -156,7 +156,7 @@ public class PermissionsService {
                 for (UserGroup hierarchyGroup : userGroupService.getHierarchyDown(userGroup))
 
                     // True if the User has hierarchy over the User Group that owns the resource.
-                    if (resource.owner.equals(hierarchyGroup))
+                    if (resource.getOwner().equals(hierarchyGroup))
                         return true;
 
         }

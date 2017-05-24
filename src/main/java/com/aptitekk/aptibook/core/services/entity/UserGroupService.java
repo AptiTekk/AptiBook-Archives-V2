@@ -79,7 +79,7 @@ public class UserGroupService {
     public List<Reservation> getHierarchyDownReservations(UserGroup origin) {
         List<Reservation> resourceReservations = new ArrayList<>();
         for (Resource resource : getHierarchyDownResources(origin)) {
-            resourceReservations.addAll(resource.reservations);
+            resourceReservations.addAll(resource.getReservations());
         }
         return resourceReservations;
     }

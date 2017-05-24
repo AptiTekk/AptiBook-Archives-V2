@@ -19,23 +19,67 @@ public class ReservationDecision extends MultiTenantEntity implements Serializab
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     @ManyToOne(optional = false)
-    public User user;
+    private User user;
 
     @ManyToOne(optional = false)
-    public UserGroup userGroup;
+    private UserGroup userGroup;
 
     @ManyToOne(optional = false)
-    public Reservation reservation;
+    private Reservation reservation;
 
-    public boolean approved;
+    private boolean approved;
 
     /**
      * Not used yet
      */
-    public String comment;
+    private String comment;
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public UserGroup getUserGroup() {
+        return userGroup;
+    }
+
+    public void setUserGroup(UserGroup userGroup) {
+        this.userGroup = userGroup;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+    public boolean isApproved() {
+        return approved;
+    }
+
+    public void setApproved(boolean approved) {
+        this.approved = approved;
+    }
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
 
     public boolean isRejected() {
         return !this.approved;

@@ -18,34 +18,94 @@ public class Resource extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     @OneToOne(cascade = CascadeType.REMOVE, fetch = FetchType.LAZY)
-    public File image;
+    private File image;
 
-    public String name;
+    private String name;
 
-    public boolean needsApproval = false;
+    private boolean needsApproval = false;
 
     @OneToMany(mappedBy = "resource", cascade = CascadeType.REMOVE)
     @OrderBy("dateCreated desc")
-    public List<Reservation> reservations = new ArrayList<>();
+    private List<Reservation> reservations = new ArrayList<>();
 
     @ManyToOne
-    public ResourceCategory resourceCategory;
+    private ResourceCategory resourceCategory;
 
     @ManyToOne
-    public UserGroup owner;
+    private UserGroup owner;
 
     @ManyToMany
     @OrderBy("name")
-    public List<Tag> tags = new ArrayList<>();
+    private List<Tag> tags = new ArrayList<>();
 
     public Resource() {
     }
 
     public Resource(String name) {
         this.name = name;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public File getImage() {
+        return image;
+    }
+
+    public void setImage(File image) {
+        this.image = image;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public boolean isNeedsApproval() {
+        return needsApproval;
+    }
+
+    public void setNeedsApproval(boolean needsApproval) {
+        this.needsApproval = needsApproval;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    public ResourceCategory getResourceCategory() {
+        return resourceCategory;
+    }
+
+    public void setResourceCategory(ResourceCategory resourceCategory) {
+        this.resourceCategory = resourceCategory;
+    }
+
+    public UserGroup getOwner() {
+        return owner;
+    }
+
+    public void setOwner(UserGroup owner) {
+        this.owner = owner;
+    }
+
+    public List<Tag> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<Tag> tags) {
+        this.tags = tags;
     }
 
     public boolean getHasImage() {

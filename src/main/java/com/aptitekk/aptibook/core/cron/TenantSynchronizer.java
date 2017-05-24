@@ -291,13 +291,13 @@ public class TenantSynchronizer {
         // Create the root group.
         UserGroup rootGroup = new UserGroup();
         rootGroup.setName(UserGroupRepository.ROOT_GROUP_NAME);
-        rootGroup.tenant = newTenant;
+        rootGroup.setTenant(newTenant);
         rootGroup = userGroupRepository.save(rootGroup);
 
         // Create the admin user
         User admin = new User();
         admin.setAdmin(true);
-        admin.tenant = newTenant;
+        admin.setTenant(newTenant);
         admin.userGroups.add(rootGroup);
 
         // If in Production, we generate a random password and email the admin. Otherwise, we use the password "admin".
@@ -328,8 +328,8 @@ public class TenantSynchronizer {
 
         // Create the Rooms Resource Category
         ResourceCategory rooms = new ResourceCategory();
-        rooms.name = "Rooms";
-        rooms.tenant = newTenant;
+        rooms.setName("Rooms");
+        rooms.setTenant(newTenant);
         resourceCategoryRepository.save(rooms);
 
         logService.logInfo(getClass(), "Created New Tenant.\n" +

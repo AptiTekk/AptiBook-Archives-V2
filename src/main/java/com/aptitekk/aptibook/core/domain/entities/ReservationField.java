@@ -18,21 +18,65 @@ public class ReservationField extends MultiTenantEntity implements Serializable 
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
-    public String title;
+    private String title;
 
-    public String description;
+    private String description;
 
-    public boolean required;
+    private boolean required;
 
     @ManyToOne
-    public ResourceCategory resourceCategory;
+    private ResourceCategory resourceCategory;
 
-    public boolean multiLine = false;
+    private boolean multiLine = false;
 
     @OneToMany(cascade = CascadeType.ALL)
-    public Set<ReservationFieldEntry> reservationFieldEntries = new HashSet<>();
+    private Set<ReservationFieldEntry> reservationFieldEntries = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isRequired() {
+        return required;
+    }
+
+    public void setRequired(boolean required) {
+        this.required = required;
+    }
+
+    public ResourceCategory getResourceCategory() {
+        return resourceCategory;
+    }
+
+    public void setResourceCategory(ResourceCategory resourceCategory) {
+        this.resourceCategory = resourceCategory;
+    }
+
+    public boolean isMultiLine() {
+        return multiLine;
+    }
+
+    public void setMultiLine(boolean multiLine) {
+        this.multiLine = multiLine;
+    }
 
     @Override
     public boolean equals(Object o) {

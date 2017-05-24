@@ -13,7 +13,10 @@ package com.aptitekk.aptibook.core.domain.entities;
 
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
@@ -22,18 +25,18 @@ public class Notification extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     @ManyToOne
-    public User user;
+    private User user;
 
-    public String subject;
+    private String subject;
 
-    public String body;
+    private String body;
 
-    public LocalDateTime creation = LocalDateTime.now();
+    private LocalDateTime creation = LocalDateTime.now();
 
-    public boolean notif_read = false;
+    private boolean notif_read = false;
 
     public Notification() {
         super();
@@ -43,6 +46,38 @@ public class Notification extends MultiTenantEntity implements Serializable {
         this.user = user;
         this.subject = subject;
         this.body = body;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public String getSubject() {
+        return subject;
+    }
+
+    public void setSubject(String subject) {
+        this.subject = subject;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public void setBody(String body) {
+        this.body = body;
+    }
+
+    public LocalDateTime getCreation() {
+        return creation;
     }
 
     public boolean getRead() {

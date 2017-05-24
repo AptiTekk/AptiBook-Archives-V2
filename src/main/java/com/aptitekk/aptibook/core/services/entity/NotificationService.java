@@ -101,28 +101,28 @@ public class NotificationService {
         if (reservation == null)
             return;
 
-        if (reservation.resource.needsApproval) {
+        if (reservation.getResource().isNeedsApproval()) {
             sendNotification(NotificationType.RESERVATION_REQUESTED,
                     "New Reservation Request",
                     "A new Reservation for <b>"
-                            + reservation.resource.name
+                            + reservation.getResource().getName()
                             + "</b> has been requested by "
                             + "<b>"
-                            + reservation.user.getFullName()
+                            + reservation.getUser().getFullName()
                             + "</b>"
                             + ".",
-                    userGroupService.getHierarchyUp(reservation.resource.owner));
+                    userGroupService.getHierarchyUp(reservation.getResource().getOwner()));
         } else {
             sendNotification(NotificationType.RESERVATION_REQUESTED,
                     "New Reservation Approved",
                     "A new Reservation for <b>"
-                            + reservation.resource.name
+                            + reservation.getResource().getName()
                             + "</b> has been automatically <i>approved</i> for "
                             + "<b>"
-                            + reservation.user.getFullName()
+                            + reservation.getUser().getFullName()
                             + "</b>"
                             + ".",
-                    userGroupService.getHierarchyUp(reservation.resource.owner));
+                    userGroupService.getHierarchyUp(reservation.getResource().getOwner()));
         }
     }
 
@@ -135,26 +135,26 @@ public class NotificationService {
         if (reservation == null)
             return;
 
-        if (reservation.status == Reservation.Status.APPROVED) {
+        if (reservation.getStatus() == Reservation.Status.APPROVED) {
             sendNotification(NotificationType.RESERVATION_APPROVED,
                     "Reservation Approved",
-                    "Your Reservation for <b>" + reservation.resource.name
+                    "Your Reservation for <b>" + reservation.getResource().getName()
                             + "</b> from <b>"
-                            + reservation.start.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> to <b>"
-                            + reservation.end.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> has been Approved!",
-                    reservation.user);
-        } else if (reservation.status == Reservation.Status.REJECTED) {
+                    reservation.getUser());
+        } else if (reservation.getStatus() == Reservation.Status.REJECTED) {
             sendNotification(NotificationType.RESERVATION_REJECTED,
                     "Reservation Rejected",
-                    "Your Reservation for <b>" + reservation.resource.name
+                    "Your Reservation for <b>" + reservation.getResource().getName()
                             + "</b> from <b>"
-                            + reservation.start.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> to <b>"
-                            + reservation.end.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                            + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                             + "</b> has been Rejected.",
-                    reservation.user);
+                    reservation.getUser());
         }
     }
 
@@ -166,35 +166,35 @@ public class NotificationService {
      * @param reservation The Reservation that was cancelled.
      */
     public void sendReservationCancelledNotifications(Reservation reservation) {
-        if (reservation == null || reservation.status != Reservation.Status.CANCELLED)
+        if (reservation == null || reservation.getStatus() != Reservation.Status.CANCELLED)
             return;
 
         sendNotification(NotificationType.RESERVATION_CANCELLED_USER_GROUPS, "Reservation Cancelled",
                 "The reservation of <b>"
-                        + reservation.resource.name
+                        + reservation.getResource().getName()
                         + "</b> for <b>"
-                        + reservation.title
+                        + reservation.getTitle()
                         + "</b>, which was requested by <b>"
-                        + reservation.user.getFullName()
+                        + reservation.getUser().getFullName()
                         + "</b> from <b>"
-                        + reservation.start.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> to <b>"
-                        + reservation.end.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b>, has been Cancelled.",
-                userGroupService.getHierarchyUp(reservation.resource.owner)
+                userGroupService.getHierarchyUp(reservation.getResource().getOwner())
         );
 
         sendNotification(NotificationType.RESERVATION_CANCELLED_USER, "Reservation Cancelled",
                 "Your reservation of <b>"
-                        + reservation.resource.name
+                        + reservation.getResource().getName()
                         + "</b> for <b>"
-                        + reservation.title
+                        + reservation.getTitle()
                         + "</b> from <b>"
-                        + reservation.start.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.getStart().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> to <b>"
-                        + reservation.end.format(TimeCommons.FRIENDLY_DATE_FORMATTER)
+                        + reservation.getEnd().format(TimeCommons.FRIENDLY_DATE_FORMATTER)
                         + "</b> has been Cancelled.",
-                reservation.user
+                reservation.getUser()
         );
     }
 }
