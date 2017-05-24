@@ -34,8 +34,8 @@ public class TagRepository extends MultiTenantEntityRepositoryAbstract<Tag> {
     @Override
     public void delete(Tag tag) {
         if (tag != null) {
-            for (Resource resource : tag.resources) {
-                resource.tags.remove(tag);
+            for (Resource resource : tag.getResources()) {
+                resource.getTags().remove(tag);
             }
         }
 

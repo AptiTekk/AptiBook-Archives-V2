@@ -107,13 +107,13 @@ public class DemoTenantBuilder {
         // Create the root group.
         UserGroup rootGroup = new UserGroup();
         rootGroup.setName(UserGroupRepository.ROOT_GROUP_NAME);
-        rootGroup.tenant = demoTenant;
+        rootGroup.setTenant(demoTenant);
         rootGroup = userGroupRepository.save(rootGroup);
 
         // Create the admin user
         User admin = new User();
         admin.setAdmin(true);
-        admin.tenant = demoTenant;
+        admin.setTenant(demoTenant);
         admin.userGroups.add(rootGroup);
         admin.setHashedPassword(PasswordUtils.encodePassword("demo"));
         admin.setVerified(true);
@@ -189,24 +189,24 @@ public class DemoTenantBuilder {
         List<Tag> cart2Tags = new ArrayList<>();
 
         Tag adobeTag = new Tag();
-        adobeTag.name = "adobe";
-        adobeTag.tenant = demoTenant;
-        adobeTag.resourceCategory = equipment;
+        adobeTag.setName("adobe");
+        adobeTag.setTenant(demoTenant);
+        adobeTag.setResourceCategory(equipment);
         adobeTag = tagRepository.save(adobeTag);
         cart1Tags.add(adobeTag);
 
         Tag officeTag = new Tag();
-        officeTag.name = "office";
-        officeTag.tenant = demoTenant;
-        officeTag.resourceCategory = equipment;
+        officeTag.setName("office");
+        officeTag.setTenant(demoTenant);
+        officeTag.setResourceCategory(equipment);
         officeTag = tagRepository.save(officeTag);
         cart1Tags.add(officeTag);
         cart2Tags.add(officeTag);
 
         Tag chromebookTag = new Tag();
-        chromebookTag.name = "chromebook";
-        chromebookTag.tenant = demoTenant;
-        chromebookTag.resourceCategory = equipment;
+        chromebookTag.setName("chromebook");
+        chromebookTag.setTenant(demoTenant);
+        chromebookTag.setResourceCategory(equipment);
         chromebookTag = tagRepository.save(chromebookTag);
         cart1Tags.add(chromebookTag);
 
@@ -214,7 +214,7 @@ public class DemoTenantBuilder {
         availableTags.add(adobeTag);
         availableTags.add(officeTag);
         availableTags.add(chromebookTag);
-        equipment.tags = availableTags;
+        equipment.setTags(availableTags);
         equipment = resourceCategoryRepository.save(equipment);
 
         //Add resources
@@ -329,7 +329,7 @@ public class DemoTenantBuilder {
 
         //Add Notifications
         Notification notification = new Notification(teacher, "Test Notification", "Lorem ipsum");
-        notification.tenant = demoTenant;
+        notification.setTenant(demoTenant);
         notification.setRead(false);
         //TODO: Make method in user repository to get admin user, set admin to get notifications.
         notification = notificationRepository.save(notification);
@@ -353,7 +353,7 @@ public class DemoTenantBuilder {
                                       UserGroup parent,
                                       Set<Permission.Descriptor> permissions) {
         UserGroup userGroup = new UserGroup();
-        userGroup.tenant = demoTenant;
+        userGroup.setTenant(demoTenant);
         userGroup.setName(name);
         userGroup.setParent(parent);
         userGroup.setPermissions(permissions);
@@ -381,7 +381,7 @@ public class DemoTenantBuilder {
                             Map<NotificationType, User.NotificationToggles> notificationSettings,
                             UserGroup... userGroups) {
         User user = new User();
-        user.tenant = demoTenant;
+        user.setTenant(demoTenant);
         user.setEmailAddress(emailAddress);
         user.setFirstName(firstName);
         user.setLastName(lastName);
@@ -401,8 +401,8 @@ public class DemoTenantBuilder {
      */
     private ResourceCategory createResourceCategory(String name) {
         ResourceCategory resourceCategory = new ResourceCategory();
-        resourceCategory.tenant = demoTenant;
-        resourceCategory.name = name;
+        resourceCategory.setTenant(demoTenant);
+        resourceCategory.setName(name);
 
         return resourceCategoryRepository.save(resourceCategory);
     }
@@ -422,12 +422,12 @@ public class DemoTenantBuilder {
                                     boolean requiresApproval,
                                     List<Tag> tags) {
         Resource resource = new Resource();
-        resource.tenant = demoTenant;
-        resource.name = name;
-        resource.resourceCategory = resourceCategory;
-        resource.owner = ownerGroup;
-        resource.needsApproval = requiresApproval;
-        resource.tags = tags;
+        resource.setTenant(demoTenant);
+        resource.setName(name);
+        resource.setResourceCategory(resourceCategory);
+        resource.setOwner(ownerGroup);
+        resource.setNeedsApproval(requiresApproval);
+        resource.setTags(tags);
 
         return resourceRepository.save(resource);
 
@@ -456,11 +456,11 @@ public class DemoTenantBuilder {
                                           int startHour, int startMinute,
                                           int endHour, int endMinute) {
         Reservation reservation = new Reservation();
-        reservation.tenant = demoTenant;
-        reservation.user = user;
-        reservation.title = title;
-        reservation.status = status;
-        reservation.resource = resource;
+        reservation.setTenant(demoTenant);
+        reservation.setUser(user);
+        reservation.setTitle(title);
+        reservation.setStatus(status);
+        reservation.setResource(resource);
         ZonedDateTime start = ZonedDateTime.now(ZoneId.of("America/Denver"))
                 .withDayOfMonth(startDay)
                 .withHour(startHour)
@@ -473,8 +473,8 @@ public class DemoTenantBuilder {
                 .withMinute(endMinute)
                 .withSecond(0)
                 .withZoneSameInstant(ZoneId.systemDefault());
-        reservation.start = start.toLocalDateTime();
-        reservation.end = end.toLocalDateTime();
+        reservation.setStart(start.toLocalDateTime());
+        reservation.setEnd(end.toLocalDateTime());
         return reservationRepository.save(reservation);
     }
 
@@ -492,11 +492,11 @@ public class DemoTenantBuilder {
                                                           User user,
                                                           boolean approved) {
         ReservationDecision reservationDecision = new ReservationDecision();
-        reservationDecision.tenant = demoTenant;
-        reservationDecision.reservation = reservation;
-        reservationDecision.userGroup = userGroup;
-        reservationDecision.user = user;
-        reservationDecision.approved = approved;
+        reservationDecision.setTenant(demoTenant);
+        reservationDecision.setReservation(reservation);
+        reservationDecision.setUserGroup(userGroup);
+        reservationDecision.setUser(user);
+        reservationDecision.setApproved(approved);
         return reservationDecisionRepository.save(reservationDecision);
     }
 

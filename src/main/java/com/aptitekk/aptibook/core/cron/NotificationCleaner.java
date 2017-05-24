@@ -59,7 +59,7 @@ public class NotificationCleaner {
         for (Tenant tenant : tenants) {
             List<Notification> notifications = notificationRepository.findAllForTenant(tenant);
             for (Notification notification : notifications) {
-                if (notification.getRead() && Days.between(notification.creation, ZonedDateTime.now()).getAmount() > 3) {
+                if (notification.getRead() && Days.between(notification.getCreation(), ZonedDateTime.now()).getAmount() > 3) {
                     try {
                         notificationRepository.delete(notification);
                         numNotificationsRemoved++;

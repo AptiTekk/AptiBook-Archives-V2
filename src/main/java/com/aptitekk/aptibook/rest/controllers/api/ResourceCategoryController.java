@@ -57,9 +57,9 @@ public class ResourceCategoryController extends APIControllerAbstract {
             if (resourceCategoryRepository.findByName(resourceCategoryDTO.name) != null)
                 return badRequest("A Category with that name already exists!");
 
-            resourceCategory.name = resourceCategoryDTO.name;
+            resourceCategory.setName(resourceCategoryDTO.name);
             resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
-            return created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/resourceCategories/" + resourceCategory.id);
+            return created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/resourceCategories/" + resourceCategory.getId());
         }
         return noPermission();
     }
@@ -93,10 +93,10 @@ public class ResourceCategoryController extends APIControllerAbstract {
                     return badRequest("The Name cannot contain these characters: < > ; =");
 
                 ResourceCategory existingCategory = resourceCategoryRepository.findByName(resourceCategoryDTO.name);
-                if (existingCategory != null && !existingCategory.id.equals(id))
+                if (existingCategory != null && !existingCategory.getId().equals(id))
                     return badRequest("A Category with that name already exists!");
 
-                resourceCategory.name = resourceCategoryDTO.name;
+                resourceCategory.setName(resourceCategoryDTO.name);
             }
 
             resourceCategory = this.resourceCategoryRepository.save(resourceCategory);

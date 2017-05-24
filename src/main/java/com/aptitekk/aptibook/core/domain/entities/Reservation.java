@@ -33,38 +33,114 @@ public class Reservation extends MultiTenantEntity implements Serializable {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
-    public LocalDateTime dateCreated = LocalDateTime.now();
+    private LocalDateTime dateCreated = LocalDateTime.now();
 
-    public String title;
+    private String title;
 
     @Enumerated(EnumType.STRING)
-    public Status status = Status.PENDING;
+    private Status status = Status.PENDING;
 
     @Column(name="\"start\"")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
-    public LocalDateTime start;
+    private LocalDateTime start;
 
     @Column(name="\"end\"")
     @JsonSerialize(using = LocalDateTimeSerializer.class)
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
-    public LocalDateTime end;
+    private LocalDateTime end;
 
     @ManyToOne
-    public Resource resource;
+    private Resource resource;
 
     @ManyToOne
-    public User user;
+    private User user;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
-    public List<ReservationDecision> decisions;
+    private List<ReservationDecision> decisions;
 
     @OneToMany(mappedBy = "reservation", cascade = CascadeType.REMOVE)
-    public List<ReservationFieldEntry> fieldEntries;
+    private List<ReservationFieldEntry> fieldEntries;
+
+    public Long getId() {
+        return id;
+    }
+
+    public LocalDateTime getDateCreated() {
+        return dateCreated;
+    }
+
+    public void setDateCreated(LocalDateTime dateCreated) {
+        this.dateCreated = dateCreated;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public Status getStatus() {
+        return status;
+    }
+
+    public void setStatus(Status status) {
+        this.status = status;
+    }
+
+    public LocalDateTime getStart() {
+        return start;
+    }
+
+    public void setStart(LocalDateTime start) {
+        this.start = start;
+    }
+
+    public LocalDateTime getEnd() {
+        return end;
+    }
+
+    public void setEnd(LocalDateTime end) {
+        this.end = end;
+    }
+
+    public Resource getResource() {
+        return resource;
+    }
+
+    public void setResource(Resource resource) {
+        this.resource = resource;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<ReservationDecision> getDecisions() {
+        return decisions;
+    }
+
+    public void setDecisions(List<ReservationDecision> decisions) {
+        this.decisions = decisions;
+    }
+
+    public List<ReservationFieldEntry> getFieldEntries() {
+        return fieldEntries;
+    }
+
+    public void setFieldEntries(List<ReservationFieldEntry> fieldEntries) {
+        this.fieldEntries = fieldEntries;
+    }
 
     public boolean isPending() {
         return status == Status.PENDING;

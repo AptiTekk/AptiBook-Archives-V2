@@ -17,15 +17,43 @@ public class Tag extends MultiTenantEntity implements Comparable<Tag> {
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
-    public String name;
+    private String name;
 
     @ManyToOne(optional = false)
-    public ResourceCategory resourceCategory;
+    private ResourceCategory resourceCategory;
 
     @ManyToMany(mappedBy = "tags")
-    public Set<Resource> resources = new HashSet<>();
+    private Set<Resource> resources = new HashSet<>();
+
+    public Long getId() {
+        return id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public ResourceCategory getResourceCategory() {
+        return resourceCategory;
+    }
+
+    public void setResourceCategory(ResourceCategory resourceCategory) {
+        this.resourceCategory = resourceCategory;
+    }
+
+    public Set<Resource> getResources() {
+        return resources;
+    }
+
+    public void setResources(Set<Resource> resources) {
+        this.resources = resources;
+    }
 
     @Override
     public boolean equals(Object o) {

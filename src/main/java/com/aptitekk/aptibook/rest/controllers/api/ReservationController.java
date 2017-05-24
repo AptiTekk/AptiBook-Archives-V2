@@ -154,7 +154,7 @@ public class ReservationController extends APIControllerAbstract {
         User currentUser = authService.getCurrentUser();
 
         UserGroup decidingFor = null;
-        for (UserGroup userGroup : this.userGroupService.getHierarchyUp(reservation.resource.owner)) {
+        for (UserGroup userGroup : this.userGroupService.getHierarchyUp(reservation.getResource().getOwner())) {
             if (currentUser.userGroups.contains(userGroup)) {
                 decidingFor = userGroup;
                 break;
@@ -172,10 +172,10 @@ public class ReservationController extends APIControllerAbstract {
 
         // Create a new decision.
         ReservationDecision reservationDecision = new ReservationDecision();
-        reservationDecision.user = authService.getCurrentUser();
-        reservationDecision.approved = approved;
-        reservationDecision.reservation = reservation;
-        reservationDecision.userGroup = decidingFor;
+        reservationDecision.setUser(authService.getCurrentUser());
+        reservationDecision.setApproved(approved);
+        reservationDecision.setReservation(reservation);
+        reservationDecision.setUserGroup(decidingFor);
 
         // Save the new decision.
         reservationDecision = reservationDecisionRepository.save(reservationDecision);
@@ -185,7 +185,7 @@ public class ReservationController extends APIControllerAbstract {
         // then we have made a final decision on the reservation.
         if (decidingFor.isRoot() || decidingFor.getParent().isRoot()) {
             //TODO: Allow for changes after the final decision has already been made?
-            reservation.status = approved ? Reservation.Status.APPROVED : Reservation.Status.REJECTED;
+            reservation.setStatus(approved ? Reservation.Status.APPROVED : Reservation.Status.REJECTED);
             reservationRepository.save(reservation);
             notificationService.sendReservationDecisionNotification(reservation);
         }
@@ -210,8 +210,8 @@ public class ReservationController extends APIControllerAbstract {
     public ResponseEntity<?> makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
         if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
             Reservation reservation = new Reservation();
-            reservation.tenant = tenantManagementService.getTenant();
-            reservation.user = userRepository.findInCurrentTenant(id);
+            reservation.setTenant(tenantManagementService.getTenant());
+            reservation.setUser(userRepository.findInCurrentTenant(id));
 
             if (reservationDTO.title != null)
                 if (!reservationDTO.title.matches("[^<>;=]*"))
@@ -219,7 +219,7 @@ public class ReservationController extends APIControllerAbstract {
                 else if (reservationDTO.title.length() > 100)
                     return badRequest("The Title must be 100 characters or less.");
                 else
-                    reservation.title = reservationDTO.title;
+                    reservation.setTitle(reservationDTO.title);
 
             Long resourceId = reservationDTO.resource.id;
             Resource resource = resourceRepository.findInCurrentTenant(resourceId);
@@ -237,14 +237,14 @@ public class ReservationController extends APIControllerAbstract {
             if (!available)
                 return badRequest("Resource is not available at specified times.");
 
-            reservation.resource = resource;
-            reservation.start = reservationDTO.start;
-            reservation.end = reservationDTO.end;
+            reservation.setResource(resource);
+            reservation.setStart(reservationDTO.start);
+            reservation.setEnd(reservationDTO.end);
 
-            if (resource.needsApproval) {
-                reservation.status = Reservation.Status.PENDING;
+            if (resource.isNeedsApproval()) {
+                reservation.setStatus(Reservation.Status.PENDING);
             } else {
-                reservation.status = Reservation.Status.APPROVED;
+                reservation.setStatus(Reservation.Status.APPROVED);
             }
 
             reservation = reservationRepository.save(reservation);

@@ -19,15 +19,43 @@ public class ReservationFieldEntry extends MultiTenantEntity implements Serializ
 
     @Id
     @GeneratedValue
-    public Long id;
+    private Long id;
 
     @ManyToOne
-    public Reservation reservation;
+    private Reservation reservation;
 
     @ManyToOne
-    public ReservationField field;
+    private ReservationField field;
 
-    public String content;
+    private String content;
+
+    public Long getId() {
+        return id;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
+    }
+
+    public ReservationField getField() {
+        return field;
+    }
+
+    public void setField(ReservationField field) {
+        this.field = field;
+    }
+
+    public String getContent() {
+        return content;
+    }
+
+    public void setContent(String content) {
+        this.content = content;
+    }
 
     @Override
     public boolean equals(Object o) {

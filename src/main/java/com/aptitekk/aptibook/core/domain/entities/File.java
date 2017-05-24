@@ -25,10 +25,6 @@ public class File extends MultiTenantEntity {
         return id;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
     public byte[] getData() {
         return this.data;
     }
