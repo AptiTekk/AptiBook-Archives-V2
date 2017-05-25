@@ -31,6 +31,7 @@ import {RouterModule} from "@angular/router";
 import {ResponsiveModule} from "ng2-responsive";
 import {CardModule} from "./card/card.module";
 import {CheckboxModule} from "./checkbox/checkbox.module";
+import {Angulartics2Module} from "angulartics2";
 
 /**
  * This module is dedicated to highly re-usable components that are used often in feature components (pages, etc)

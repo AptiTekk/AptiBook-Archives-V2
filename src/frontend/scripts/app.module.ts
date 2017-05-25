@@ -14,6 +14,7 @@ import {FooterModule} from "./app/footer/footer.module";
 import {LoaderModule} from "./app/loader/loader.module";
 import {AppRoutesModule} from "./app.routes";
 import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
+import {Angulartics2GoogleAnalytics, Angulartics2Module} from "angulartics2";
 
 @NgModule({
     imports: [

@@ -13,7 +13,10 @@
 				<div id="logo-container"
 					 class="w-100">
 					<a href="#"
-					   [routerLink]="['sign-in']">
+					   [routerLink]="['sign-in']"
+					   angulartics2On="click"
+					   [angularticsCategory]="'Welcome'"
+					   [angularticsEvent]="'ClickLogo'">
 						<img src="../../../resources/images/logo.svg"/>
 					</a>
 				</div>

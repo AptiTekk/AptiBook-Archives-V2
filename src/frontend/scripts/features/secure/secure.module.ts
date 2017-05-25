@@ -18,12 +18,15 @@ import {ConfigurationModule} from "./configuration/configuration.module";
 import {AccountModule} from "./account/account.module";
 import {HeaderModule} from "../../app/header/header.module";
 import {HelpModalComponent} from "../../app/footer/help-modal/help-modal.component";
+import {Angulartics2, Angulartics2Module} from "angulartics2";
 
 /**
  * The secure section is off-limits to the users who have not signed in.
  */
 @NgModule({
     imports: [
+        Angulartics2Module.forChild(),
+
         SharedModule,
 
         HeaderModule,

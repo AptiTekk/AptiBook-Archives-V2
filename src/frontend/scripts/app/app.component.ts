@@ -5,8 +5,8 @@
  */
 
 import {Component, ViewEncapsulation} from "@angular/core";
-import Moment = moment.Moment;
 import moment = require("moment");
+import {Angulartics2GoogleAnalytics} from "angulartics2";
 
 @Component({
     selector: 'at-app',
@@ -16,7 +16,9 @@ import moment = require("moment");
 })
 export class AppComponent {
 
-    constructor() {
+    constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+
+        // Moment messages
         moment.updateLocale('en', {
             calendar: {
                 lastDay: '[Yesterday at] LT',

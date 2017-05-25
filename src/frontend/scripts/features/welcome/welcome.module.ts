@@ -14,12 +14,14 @@ import {CommonModule} from "@angular/common";
 import {FooterModule} from "../../app/footer/footer.module";
 import {WelcomeRoutesModule} from "./welcome.routes";
 import {AdminSignInComponent} from "./admin/admin-sign-in.component";
+import {Angulartics2Module} from "angulartics2";
 
 /**
  * The welcome section is the page that greets unauthenticated users as they sign in, register, etc.
  */
 @NgModule({
     imports: [
+        Angulartics2Module.forChild(),
         SharedModule,
         WelcomeRoutesModule,
         RegisterModule,

@@ -27,13 +27,15 @@ import {AptiBookErrorHandler} from "./error-handler";
 import {HttpModule} from "@angular/http";
 import {PermissionsService} from "./services/permissions.service";
 import {CurrentUserService} from "./services/current-user.service";
+import {Angulartics2, Angulartics2GoogleAnalytics, Angulartics2Module} from "angulartics2";
 
 /**
  * This module contains the services and other things which should only load once in the application.
  */
 @NgModule({
     imports: [
-        HttpModule
+        HttpModule,
+        Angulartics2Module.forRoot([Angulartics2GoogleAnalytics]),
     ],
     declarations: [],
     exports: [],
