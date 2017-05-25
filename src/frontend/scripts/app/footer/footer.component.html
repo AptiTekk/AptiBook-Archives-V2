@@ -10,7 +10,10 @@
 			<!-- Info Button & Copyright (Large Screens) -->
 			<div class="hidden-sm-down col">
 				<span class="no-decoration">
-					<a (click)="infoModal.openModal()">
+					<a (click)="infoModal.openModal()"
+					   angulartics2On="click"
+					   [angularticsCategory]="'Footer'"
+					   [angularticsEvent]="'ClickInfo'">
 						<span><i class="fa fa-info-circle"></i></span>
 					</a>
 				</span>
@@ -21,7 +24,10 @@
 			<!-- Info Button & Copyright (Small Screens) -->
 			<div class="hidden-md-up col col-auto">
 				<span class="no-decoration">
-					<a (click)="infoModal.openModal()">
+					<a (click)="infoModal.openModal()"
+					   angulartics2On="click"
+					   [angularticsCategory]="'Footer'"
+					   [angularticsEvent]="'ClickInfo'">
 						<span><i class="fa fa-info-circle"></i></span>
 					</a>
 				</span>
@@ -31,7 +37,10 @@
 			
 			<!-- Help Button -->
 			<div class="col text-right">
-				<a (click)="helpModal.openModal()">
+				<a (click)="helpModal.openModal()"
+				   angulartics2On="click"
+				   [angularticsCategory]="'Footer'"
+				   [angularticsEvent]="'ClickHelp'">
 					<span>
 						<i class="fa fa-question-circle"></i>
 					</span>

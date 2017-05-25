@@ -1,0 +1,31 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<modal #modal
+	   [title]="'AptiBook Information'">
+	<modal-body>
+		AptiBook was developed by AptiTekk, LLC.
+		
+		<hr/>
+		
+		<h4>Attributions</h4>
+		Third party library attributions can be found
+		<a href="https://support.aptitekk.com/article/aptibook/attributions/"
+		   target="_blank"
+		   angulartics2On="click"
+		   [angularticsCategory]="'InfoModal'"
+		   [angularticsEvent]="'ClickViewAttributions'">here.</a>
+	</modal-body>
+	<modal-footer>
+		<button class="btn btn-secondary"
+				(click)="modal.closeModal()"
+				angulartics2On="click"
+				[angularticsCategory]="'InfoModal'"
+				[angularticsEvent]="'ClickClose'">
+			Close
+		</button>
+	</modal-footer>
+</modal>

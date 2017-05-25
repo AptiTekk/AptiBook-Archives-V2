@@ -17,8 +17,8 @@ import {SecureRoutesModule} from "./secure.routes";
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {AccountModule} from "./account/account.module";
 import {HeaderModule} from "../../app/header/header.module";
-import {HelpModalComponent} from "../../app/footer/help-modal/help-modal.component";
-import {Angulartics2, Angulartics2Module} from "angulartics2";
+import {Angulartics2Module} from "angulartics2";
+import {HelpModalModule} from "../../app/help-modal/help-modal.module";
 
 /**
  * The secure section is off-limits to the users who have not signed in.
@@ -31,6 +31,7 @@ import {Angulartics2, Angulartics2Module} from "angulartics2";
 
         HeaderModule,
         FooterModule,
+        HelpModalModule,
 
         // Routes
         SecureRoutesModule,
