@@ -30,7 +30,11 @@
 				
 				<!-- Details Button-->
 				<button class="btn btn-secondary pull-right"
-						(click)="infoModal.display(reservation)">Details
+						(click)="infoModal.display(reservation)"
+						angulartics2On="click"
+						[angularticsCategory]="'Account - Reservations'"
+						[angularticsEvent]="'ClickReservationDetails'">
+					Details
 				</button>
 			</div>
 		</div>

@@ -8,9 +8,11 @@ import {NgModule} from "@angular/core";
 
 import {SharedModule} from "../../shared/shared.module";
 import {HeaderComponent} from "./header.component";
+import {Angulartics2Module} from "angulartics2/dist";
 
 @NgModule({
     imports: [
+        Angulartics2Module.forChild(),
         SharedModule
     ],
     declarations: [HeaderComponent],

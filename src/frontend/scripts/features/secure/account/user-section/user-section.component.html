@@ -130,17 +130,26 @@
 			<button class="btn btn-secondary"
 					*ngIf="!editingAccount"
 					type="button"
-					(click)="onStartEditingAccount()">Edit Account
+					(click)="onStartEditingAccount()"
+					angulartics2On="click"
+					[angularticsCategory]="'Account'"
+					[angularticsEvent]="'ClickEditAccount'">Edit Account
 			</button>
 			<button class="btn btn-secondary"
 					*ngIf="editingAccount"
 					type="button"
-					(click)="onCancelEditingAccount()">Cancel
+					(click)="onCancelEditingAccount()"
+					angulartics2On="click"
+					[angularticsCategory]="'Account'"
+					[angularticsEvent]="'ClickCancelEditAccount'">Cancel
 			</button>
 			<button class="btn btn-primary"
 					*ngIf="editingAccount"
-					type="submit"
-					[disabled]="formGroup.invalid || !doPasswordsMatch()">Save Changes
+					[disabled]="formGroup.invalid || !doPasswordsMatch()"
+					angulartics2On="click"
+					[angularticsCategory]="'Account'"
+					[angularticsEvent]="'ClickSaveEditAccount'">
+				Save Changes
 			</button>
 		</at-card-footer>
 	</at-card>

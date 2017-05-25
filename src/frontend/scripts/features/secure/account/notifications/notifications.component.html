@@ -7,7 +7,10 @@
 <i id="settings-icon"
    class="fa fa-gear fa-2x pull-right"
    *ngIf="!currentUser?.admin"
-   [routerLink]="['', 'secure', 'account', 'notifications', 'settings']"></i>
+   [routerLink]="['', 'secure', 'account', 'notifications', 'settings']"
+   angulartics2On="click"
+   [angularticsCategory]="'Account - Notifications'"
+   [angularticsEvent]="'ClickOpenSettings'"></i>
 <!-- Unread Notifications Count Label -->
 <div *ngIf="unreadNotifications?.length > 0">
 	<h4>

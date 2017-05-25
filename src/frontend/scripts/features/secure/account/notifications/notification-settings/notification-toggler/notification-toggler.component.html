@@ -10,6 +10,10 @@
 		<span class="fa fa-envelope"
 			  (click)="onToggleEmail()"
 			  [class.enabled]="notificationToggles.emailEnabled"
-			  [class.disabled]="!notificationToggles.emailEnabled"></span>
+			  [class.disabled]="!notificationToggles.emailEnabled"
+			  angulartics2On="click"
+			  [angularticsCategory]="'Account - Notifications'"
+			  [angularticsEvent]="notificationToggles.emailEnabled ? 'DisableEmailNotification' : 'EnableEmailNotification'"
+			  [angularticsProperties]="{label: label}"></span>
 	</span>
 </div>

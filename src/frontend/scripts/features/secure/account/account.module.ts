@@ -13,9 +13,12 @@ import {AccountNotificationsComponent} from "./notifications/notifications.compo
 import {UpcomingReservationsComponent} from "./reservations/upcoming/upcoming-reservations.component";
 import {UserSectionComponent} from "./user-section/user-section.component";
 import {AccountNotificationSettingsModule} from "./notifications/notification-settings/notification-settings.module";
+import {Angulartics2Module} from "angulartics2";
 
 @NgModule({
     imports: [
+        Angulartics2Module.forChild(),
+
         SharedModule,
         AccountRoutesModule,
         AccountNotificationSettingsModule
