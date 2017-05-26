@@ -4,19 +4,17 @@
  * Proprietary and confidential.
  */
 
-import { NgModule } from '@angular/core';
+import {NgModule} from "@angular/core";
 
-import { AllUsersComponent } from './all-users.component';
+import {AllUsersComponent} from "./all-users.component";
 import {SharedModule} from "../../../../../shared/shared.module";
 import {NewUserModalComponent} from "./new-user-modal/new-user-modal.component";
-import {CommonModule} from "@angular/common";
-import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Angulartics2Module} from "angulartics2";
 
 @NgModule({
     imports: [
-        CommonModule,
-        FormsModule,
-        ReactiveFormsModule,
+        Angulartics2Module.forChild(),
+
         SharedModule
     ],
     declarations: [
@@ -26,4 +24,5 @@ import {FormsModule, ReactiveFormsModule} from "@angular/forms";
     exports: [],
     providers: [],
 })
-export class AllUsersModule { }
+export class AllUsersModule {
+}
