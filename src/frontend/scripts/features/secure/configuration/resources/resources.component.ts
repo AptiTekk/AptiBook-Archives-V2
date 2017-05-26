@@ -15,6 +15,7 @@ import {UserGroupService} from "../../../../core/services/usergroup.service";
 import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
 import {Subscription} from "rxjs/Subscription";
 import {LoaderService} from "../../../../core/services/loader.service";
+import {Angulartics2} from "angulartics2";
 
 @Component({
     selector: 'at-configuration-resources',
@@ -69,7 +70,8 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                 private resourceCategoryService: ResourceCategoryService,
                 private resourceService: ResourceService,
                 private userGroupService: UserGroupService,
-                private loaderService: LoaderService) {
+                private loaderService: LoaderService,
+                private angulartics2Service: Angulartics2) {
     }
 
     ngOnInit(): void {
@@ -125,11 +127,19 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     }
 
     onNewCategory(resourceCategory: ResourceCategory) {
+        this.angulartics2Service.eventTrack.next({
+            action: 'CreateCategory',
+            properties: {category: 'Configuration - Resources'}
+        });
         this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
 
     onEditCategory(resourceCategory: ResourceCategory) {
+        this.angulartics2Service.eventTrack.next({
+            action: 'SaveEditCategory',
+            properties: {category: 'Configuration - Resources'}
+        });
         this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
@@ -139,19 +149,30 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
 
         this.resourceCategoryService.deleteResourceCategory(this.currentResourceCategory).subscribe(
             response => {
+                this.angulartics2Service.eventTrack.next({
+                    action: 'DeleteCategory',
+                    properties: {category: 'Configuration - Resources'}
+                });
                 this.loaderService.stopLoading();
+                this.resourceCategoryService.fetchResourceCategories();
+                this.router.navigate(['', 'secure', 'configuration', 'resources']);
             }
         );
-
-        this.resourceCategoryService.fetchResourceCategories();
-        this.router.navigate(['', 'secure', 'configuration', 'resources']);
     }
 
     onNewResource() {
+        this.angulartics2Service.eventTrack.next({
+            action: 'CreateResource',
+            properties: {category: 'Configuration - Resources'}
+        });
         this.resourceCategoryService.fetchResourceCategories();
     }
 
     onEditResource() {
+        this.angulartics2Service.eventTrack.next({
+            action: 'SaveEditResource',
+            properties: {category: 'Configuration - Resources'}
+        });
         this.resourceCategoryService.fetchResourceCategories();
     }
 
@@ -161,6 +182,10 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
 
         this.resourceService.deleteResource(this.resourceForDeletion).subscribe(
             response => {
+                this.angulartics2Service.eventTrack.next({
+                    action: 'DeleteResource',
+                    properties: {category: 'Configuration - Resources'}
+                });
                 this.resourceCategoryService.fetchResourceCategories();
             }
         )

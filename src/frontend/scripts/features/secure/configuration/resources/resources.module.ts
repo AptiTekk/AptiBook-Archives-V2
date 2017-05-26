@@ -14,9 +14,12 @@ import {NewResourceModalComponent} from "./new-resource-modal/new-resource-modal
 import {SharedModule} from "../../../../shared/shared.module";
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
+import {Angulartics2Module} from "angulartics2";
 
 @NgModule({
     imports: [
+        Angulartics2Module.forChild(),
+
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
