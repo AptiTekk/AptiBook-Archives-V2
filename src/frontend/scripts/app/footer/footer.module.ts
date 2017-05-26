@@ -9,14 +9,11 @@ import {NgModule} from "@angular/core";
 import {FooterComponent} from "./footer.component";
 import {CommonModule} from "@angular/common";
 import {SharedModule} from "../../shared/shared.module";
-import {Angulartics2Module} from "angulartics2";
 import {HelpModalModule} from "../help-modal/help-modal.module";
 import {InfoModalModule} from "../info-modal/info-modal.module";
 
 @NgModule({
     imports: [
-        Angulartics2Module.forChild(),
-
         CommonModule,
         SharedModule,
 

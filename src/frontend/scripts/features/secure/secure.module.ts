@@ -17,7 +17,6 @@ import {SecureRoutesModule} from "./secure.routes";
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {AccountModule} from "./account/account.module";
 import {HeaderModule} from "../../app/header/header.module";
-import {Angulartics2Module} from "angulartics2";
 import {HelpModalModule} from "../../app/help-modal/help-modal.module";
 
 /**
@@ -25,8 +24,6 @@ import {HelpModalModule} from "../../app/help-modal/help-modal.module";
  */
 @NgModule({
     imports: [
-        Angulartics2Module.forChild(),
-
         SharedModule,
 
         HeaderModule,

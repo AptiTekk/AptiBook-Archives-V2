@@ -14,12 +14,9 @@ import {ApprovedComponent} from "./approved/approved.component";
 import {RejectedComponent} from "./rejected/rejected.component";
 import {CalendarComponent} from "./calendar/calendar.component";
 import {ManagementRoutesModule} from "./management.routes";
-import {Angulartics2Module} from "angulartics2";
 
 @NgModule({
     imports: [
-        Angulartics2Module.forChild(),
-
         SharedModule,
 
         //Routes

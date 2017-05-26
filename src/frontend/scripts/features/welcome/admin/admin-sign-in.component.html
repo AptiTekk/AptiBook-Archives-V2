@@ -25,9 +25,7 @@
 	<div class="form-group">
 		<button class="btn btn-primary btn-large btn-block"
 				[disabled]="signInFormGroup.invalid"
-				angulartics2On="click"
-				[angularticsCategory]="'Welcome - Admin Sign In'"
-				[angularticsEvent]="'ClickSignIn'">
+				[at-analytics]="{category: 'Welcome - Admin Sign In', action: 'ClickSignIn'}">
 			Sign In
 		</button>
 	</div>
@@ -37,8 +35,6 @@
 
 <button [routerLink]="['', 'sign-in']"
 		class="btn btn-secondary btn-block"
-		angulartics2On="click"
-		[angularticsCategory]="'Welcome - Admin Sign In'"
-		[angularticsEvent]="'ClickReturnToSignIn'">
+		[at-analytics]="{category: 'Welcome - Admin Sign In', action: 'ClickReturnToSignIn'}">
 	Return to Sign In
 </button>

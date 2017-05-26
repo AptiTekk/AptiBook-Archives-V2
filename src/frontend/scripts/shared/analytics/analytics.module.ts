@@ -6,16 +6,13 @@
 
 import {NgModule} from "@angular/core";
 
-import {HelpModalComponent} from "./help-modal.component";
-import {SharedModule} from "../../shared/shared.module";
+import {AnalyticsDirective} from "./analytics.directive";
 
 @NgModule({
-    imports: [
-        SharedModule
-    ],
-    declarations: [HelpModalComponent],
-    exports: [HelpModalComponent],
+    imports: [],
+    declarations: [AnalyticsDirective],
+    exports: [AnalyticsDirective],
     providers: [],
 })
-export class HelpModalModule {
+export class AnalyticsModule {
 }

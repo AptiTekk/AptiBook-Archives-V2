@@ -14,10 +14,7 @@
 				<li *ngFor="let helpTopic of helpTopics">
 					<a target="_blank"
 					   href="https://support.aptitekk.com/article/aptibook/{{helpTopic.slug}}"
-					   angulartics2On="click"
-					   [angularticsCategory]="'HelpModal'"
-					   [angularticsEvent]="'ClickHelpTopic'"
-					   [angularticsProperties]="{label: helpTopic.slug}">
+					   [at-analytics]="{category: 'HelpModal', action: 'ClickHelpTopic', label: helpTopic.slug}">
 						{{helpTopic.title}}
 					</a>
 				</li>
@@ -35,16 +32,12 @@
 	<modal-footer>
 		<button class="btn btn-primary"
 				(click)="onVisitKnowledgebase()"
-				angulartics2On="click"
-				[angularticsCategory]="'HelpModal'"
-				[angularticsEvent]="'ClickVisitKnowledgebase'">
+				[at-analytics]="{category: 'HelpModal', action: 'ClickVisitKnowledgebase'}">
 			Visit Knowledgebase
 		</button>
 		<button class="btn btn-secondary"
 				(click)="modal.closeModal()"
-				angulartics2On="click"
-				[angularticsCategory]="'HelpModal'"
-				[angularticsEvent]="'ClickClose'">
+				[at-analytics]="{category: 'HelpModal', action: 'ClickClose'}">
 			Close
 		</button>
 	</modal-footer>

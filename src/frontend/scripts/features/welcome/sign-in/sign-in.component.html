@@ -26,9 +26,7 @@
 	<div class="form-group">
 		<button class="btn btn-primary btn-large btn-block"
 				[disabled]="signInFormGroup.invalid"
-				angulartics2On="click"
-				[angularticsCategory]="'Welcome - Sign In'"
-				[angularticsEvent]="'ClickSignIn'">
+				[at-analytics]="{category: 'Welcome - Sign In', action: 'ClickSignIn'}">
 			Sign In
 		</button>
 	</div>
@@ -38,9 +36,7 @@
 	 *ngIf="googleSignInUrl">
 	<button class="btn btn-secondary btn-block"
 			(click)="onGoogleSignIn()"
-			angulartics2On="click"
-			[angularticsCategory]="'Welcome - Sign In'"
-			[angularticsEvent]="'ClickGoogleSignIn'">
+			[at-analytics]="{category: 'Welcome - Sign In', action: 'ClickGoogleSignIn'}">
 		<img src="./google-sign-in.svg"
 			 height="18px"/>
 	</button>
@@ -56,13 +52,9 @@
 <!--<a href="#"
    class="text-gray-dark disabled"
    [routerLink]="['', 'forgot-password']"
-   angulartics2On="click"
-				[angularticsCategory]="'Welcome - Sign In'"
-				[angularticsEvent]="'ClickForgotPassword'"><i class="fa fa-question-circle"></i> Forgotten Password</a>-->
+   [at-analytics]="{category: 'Welcome - Sign In', action: 'ClickForgotPassword'}"><i class="fa fa-question-circle"></i> Forgotten Password</a>-->
 <a class="text-gray-dark pull-right"
    [routerLink]="['', 'sign-in', 'admin']"
-   angulartics2On="click"
-   [angularticsCategory]="'Welcome - Sign In'"
-   [angularticsEvent]="'ClickAdminSignIn'">
+   [at-analytics]="{category: 'Welcome - Sign In', action: 'ClickAdminSignIn'}">
 	<i class="fa fa-lock"></i> Admin Sign In
 </a>

@@ -5,15 +5,11 @@
  */
 
 import {NgModule} from "@angular/core";
-
-import {Angulartics2Module} from "angulartics2";
 import {SharedModule} from "../../shared/shared.module";
 import {InfoModalComponent} from "./info-modal.component";
 
 @NgModule({
     imports: [
-        Angulartics2Module.forChild(),
-
         SharedModule
     ],
     declarations: [InfoModalComponent],

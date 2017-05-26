@@ -5,8 +5,10 @@
  */
 
 import {Component, ViewEncapsulation} from "@angular/core";
+import {AnalyticsService} from "../core/services/analytics.service";
 import moment = require("moment");
-import {Angulartics2GoogleAnalytics} from "angulartics2";
+
+declare const ga: Function;
 
 @Component({
     selector: 'at-app',
@@ -16,7 +18,8 @@ import {Angulartics2GoogleAnalytics} from "angulartics2";
 })
 export class AppComponent {
 
-    constructor(angulartics2GoogleAnalytics: Angulartics2GoogleAnalytics) {
+    constructor(analyticsService: AnalyticsService) {
+        // Note: Don't remove the un-used import, as it initializes the service.
 
         // Moment messages
         moment.updateLocale('en', {

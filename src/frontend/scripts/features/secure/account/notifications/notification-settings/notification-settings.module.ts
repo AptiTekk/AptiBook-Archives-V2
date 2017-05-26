@@ -9,12 +9,9 @@ import {NgModule} from "@angular/core";
 import {NotificationTogglerComponent} from "./notification-toggler/notification-toggler.component";
 import {SharedModule} from "../../../../../shared/shared.module";
 import {AccountNotificationSettingsComponent} from "./notification-settings.component";
-import {Angulartics2Module} from "angulartics2";
 
 @NgModule({
     imports: [
-        Angulartics2Module.forChild(),
-
         SharedModule
     ],
     declarations: [

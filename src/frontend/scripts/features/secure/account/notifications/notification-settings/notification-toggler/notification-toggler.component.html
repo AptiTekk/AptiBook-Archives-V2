@@ -11,9 +11,6 @@
 			  (click)="onToggleEmail()"
 			  [class.enabled]="notificationToggles.emailEnabled"
 			  [class.disabled]="!notificationToggles.emailEnabled"
-			  angulartics2On="click"
-			  [angularticsCategory]="'Account - Notifications'"
-			  [angularticsEvent]="notificationToggles.emailEnabled ? 'DisableEmailNotification' : 'EnableEmailNotification'"
-			  [angularticsProperties]="{label: label}"></span>
+			  [at-analytics]="{category: 'Account - Notifications', action: notificationToggles.emailEnabled ? 'DisableEmailNotification' : 'EnableEmailNotification', label: label}"></span>
 	</span>
 </div>

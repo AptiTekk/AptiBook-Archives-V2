@@ -14,9 +14,7 @@
 					 class="w-100">
 					<a href="#"
 					   [routerLink]="['sign-in']"
-					   angulartics2On="click"
-					   [angularticsCategory]="'Welcome'"
-					   [angularticsEvent]="'ClickLogo'">
+					   [at-analytics]="{category: 'Welcome', action: 'ClickLogo'}">
 						<img src="../../../resources/images/logo.svg"/>
 					</a>
 				</div>

@@ -11,7 +11,5 @@
 		 draggable="false"
 		 [routerLink]="disableHeaderLink ? null : ['', 'secure']"
 		 [style.cursor]="disableHeaderLink ? 'default' : 'pointer'"
-		 angulartics2On="click"
-		 [angularticsCategory]="'Header'"
-		 [angularticsEvent]="'ClickLogo'"/>
+		 [at-analytics]="{category: 'Header', action: 'ClickLogo'}"/>
 </div>

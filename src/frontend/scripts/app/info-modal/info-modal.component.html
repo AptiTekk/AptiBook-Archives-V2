@@ -15,16 +15,12 @@
 		Third party library attributions can be found
 		<a href="https://support.aptitekk.com/article/aptibook/attributions/"
 		   target="_blank"
-		   angulartics2On="click"
-		   [angularticsCategory]="'InfoModal'"
-		   [angularticsEvent]="'ClickViewAttributions'">here.</a>
+		   [at-analytics]="{category: 'InfoModal', action: 'ClickViewAttributions'}">here.</a>
 	</modal-body>
 	<modal-footer>
 		<button class="btn btn-secondary"
 				(click)="modal.closeModal()"
-				angulartics2On="click"
-				[angularticsCategory]="'InfoModal'"
-				[angularticsEvent]="'ClickClose'">
+				[at-analytics]="{category: 'InfoModal', action: 'ClickClose'}">
 			Close
 		</button>
 	</modal-footer>
