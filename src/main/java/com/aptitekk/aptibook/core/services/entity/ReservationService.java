@@ -40,7 +40,7 @@ public class ReservationService {
         ArrayList<Reservation> reservationList = new ArrayList<>();
 
         Queue<UserGroup> queue = new LinkedList<>();
-        queue.addAll(authService.getCurrentUser().userGroups);
+        queue.addAll(authService.getCurrentUser().getUserGroups());
 
         //Traverse down the hierarchy and determine which reservations are approved.
         //Then, build details about each reservation and store it in the reservationDetailsMap.

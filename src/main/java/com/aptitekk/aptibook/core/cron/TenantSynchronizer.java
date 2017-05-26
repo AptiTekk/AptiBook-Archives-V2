@@ -298,7 +298,7 @@ public class TenantSynchronizer {
         User admin = new User();
         admin.setAdmin(true);
         admin.setTenant(newTenant);
-        admin.userGroups.add(rootGroup);
+        admin.getUserGroups().add(rootGroup);
 
         // If in Production, we generate a random password and email the admin. Otherwise, we use the password "admin".
         if (springProfileService.isProfileActive(SpringProfileService.Profile.PRODUCTION)) {

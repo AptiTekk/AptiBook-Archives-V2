@@ -47,29 +47,29 @@ public class User extends MultiTenantEntity implements Serializable {
     private String casId;
 
     @ManyToMany
-    public List<UserGroup> userGroups = new ArrayList<>();
+    private List<UserGroup> userGroups = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
     @OrderBy("dateCreated desc")
-    public List<Reservation> reservations = new ArrayList<>();
+    private List<Reservation> reservations = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    public List<ReservationDecision> reservationDecisions = new ArrayList<>();
+    private List<ReservationDecision> reservationDecisions = new ArrayList<>();
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
-    public List<Notification> notifications = new ArrayList<>();
+    private List<Notification> notifications = new ArrayList<>();
 
     @ElementCollection(targetClass = NotificationToggles.class)
     @CollectionTable(name = "user_notification_settings", joinColumns = @JoinColumn(name = "user_id"))
     @MapKeyColumn(name = "type")
     @MapKeyEnumerated(EnumType.STRING)
-    public Map<NotificationType, NotificationToggles> notificationSettings;
+    private Map<NotificationType, NotificationToggles> notificationSettings;
 
     @ElementCollection(targetClass = Permission.Descriptor.class)
     @CollectionTable(name = "user_permissions", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
     @Column(name = "descriptor")
-    public Set<Permission.Descriptor> permissions;
+    private Set<Permission.Descriptor> permissions;
 
     public Long getId() {
         return this.id;
@@ -145,6 +145,54 @@ public class User extends MultiTenantEntity implements Serializable {
 
     public void setCasId(String casId) {
         this.casId = casId;
+    }
+
+    public List<UserGroup> getUserGroups() {
+        return userGroups;
+    }
+
+    public void setUserGroups(List<UserGroup> userGroups) {
+        this.userGroups = userGroups;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
+
+    public List<ReservationDecision> getReservationDecisions() {
+        return reservationDecisions;
+    }
+
+    public void setReservationDecisions(List<ReservationDecision> reservationDecisions) {
+        this.reservationDecisions = reservationDecisions;
+    }
+
+    public List<Notification> getNotifications() {
+        return notifications;
+    }
+
+    public void setNotifications(List<Notification> notifications) {
+        this.notifications = notifications;
+    }
+
+    public Map<NotificationType, NotificationToggles> getNotificationSettings() {
+        return notificationSettings;
+    }
+
+    public void setNotificationSettings(Map<NotificationType, NotificationToggles> notificationSettings) {
+        this.notificationSettings = notificationSettings;
+    }
+
+    public Set<Permission.Descriptor> getPermissions() {
+        return permissions;
+    }
+
+    public void setPermissions(Set<Permission.Descriptor> permissions) {
+        this.permissions = permissions;
     }
 
     /**

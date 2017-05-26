@@ -106,7 +106,7 @@ public class ReservationController extends APIControllerAbstract {
     @RequestMapping(value = "/reservations/pending", method = RequestMethod.GET)
     public ResponseEntity<?> getPendingReservations() {
 
-        if (authService.getCurrentUser().userGroups.size() == 0)
+        if (authService.getCurrentUser().getUserGroups().size() == 0)
             return noPermission();
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
@@ -118,7 +118,7 @@ public class ReservationController extends APIControllerAbstract {
     @RequestMapping(value = "/reservations/approved", method = RequestMethod.GET)
     public ResponseEntity<?> getApprovedReservations() {
 
-        if (authService.getCurrentUser().userGroups.size() == 0)
+        if (authService.getCurrentUser().getUserGroups().size() == 0)
             return noPermission();
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.APPROVED);
@@ -130,7 +130,7 @@ public class ReservationController extends APIControllerAbstract {
     @RequestMapping(value = "/reservations/rejected", method = RequestMethod.GET)
     public ResponseEntity<?> getRejectedReservations() {
 
-        if (authService.getCurrentUser().userGroups.size() == 0)
+        if (authService.getCurrentUser().getUserGroups().size() == 0)
             return noPermission();
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.REJECTED);
@@ -141,7 +141,7 @@ public class ReservationController extends APIControllerAbstract {
 
     @RequestMapping(value = "/reservations/{id}/decision", method = RequestMethod.PATCH)
     public ResponseEntity<?> approveReservation(@PathVariable Long id, @RequestBody Boolean approved) {
-        if (authService.getCurrentUser().userGroups.size() == 0)
+        if (authService.getCurrentUser().getUserGroups().size() == 0)
             return noPermission();
 
         if (approved == null)
@@ -155,7 +155,7 @@ public class ReservationController extends APIControllerAbstract {
 
         UserGroup decidingFor = null;
         for (UserGroup userGroup : this.userGroupService.getHierarchyUp(reservation.getResource().getOwner())) {
-            if (currentUser.userGroups.contains(userGroup)) {
+            if (currentUser.getUserGroups().contains(userGroup)) {
                 decidingFor = userGroup;
                 break;
             }

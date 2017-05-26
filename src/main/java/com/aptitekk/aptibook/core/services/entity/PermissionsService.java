@@ -45,15 +45,15 @@ public class PermissionsService {
             return true;
 
         // Check for full permissions.
-        if (user.permissions.contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+        if (user.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
             return true;
 
         // Check for the specific descriptor.
-        if (user.permissions.contains(descriptor))
+        if (user.getPermissions().contains(descriptor))
             return true;
 
         // Check if the User inherits permissions from their groups.
-        for (UserGroup userGroup : user.userGroups) {
+        for (UserGroup userGroup : user.getUserGroups()) {
 
             // Check for full permissions.
             if (userGroup.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
@@ -85,16 +85,16 @@ public class PermissionsService {
             return true;
 
         // Check for full permissions.
-        if (user.permissions.contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+        if (user.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
             return true;
 
         // Check if the User has any permissions from the group.
         for (Permission.Descriptor permissionDescriptor : group.getDescriptors())
-            if (user.permissions.contains(permissionDescriptor))
+            if (user.getPermissions().contains(permissionDescriptor))
                 return true;
 
         // Check if the User inherits permissions from their groups.
-        for (UserGroup userGroup : user.userGroups) {
+        for (UserGroup userGroup : user.getUserGroups()) {
 
             // Check for full permissions.
             if (userGroup.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
@@ -117,9 +117,9 @@ public class PermissionsService {
      */
     public Set<Permission.Descriptor> getAllPermissionsForUser(User user) {
         Set<Permission.Descriptor> permissions = new HashSet<>();
-        permissions.addAll(user.permissions);
+        permissions.addAll(user.getPermissions());
 
-        for (UserGroup userGroup : user.userGroups) {
+        for (UserGroup userGroup : user.getUserGroups()) {
             permissions.addAll(userGroup.getPermissions());
         }
 
@@ -144,7 +144,7 @@ public class PermissionsService {
             return false;
 
         // Check every group the user belongs to.
-        for (UserGroup userGroup : user.userGroups) {
+        for (UserGroup userGroup : user.getUserGroups()) {
 
             // True if the User belongs to the User Group that owns the resource.
             if (resource.getOwner().equals(userGroup))
