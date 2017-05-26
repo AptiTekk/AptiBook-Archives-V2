@@ -9,7 +9,6 @@ import {APIService} from "./api.service";
 import {Observable, ReplaySubject} from "rxjs";
 import {Headers} from "@angular/http";
 import {User} from "../../models/user.model";
-import {Angulartics2} from "angulartics2";
 
 @Injectable()
 export class AuthService {
@@ -19,8 +18,7 @@ export class AuthService {
      */
     private currentUser: ReplaySubject<User> = new ReplaySubject<User>(1);
 
-    constructor(private apiService: APIService,
-                private angulartics2Service: Angulartics2) {
+    constructor(private apiService: APIService) {
         this.reloadUser();
     }
 
@@ -29,8 +27,13 @@ export class AuthService {
      */
     public reloadUser(): void {
         this.apiService.get("users/current").subscribe(
-            response => this.currentUser.next(response),
-            err => this.currentUser.next(undefined));
+            (response: User) => {
+                this.currentUser.next(response)
+            },
+            err => {
+                this.currentUser.next(undefined)
+            }
+        );
     }
 
     /**
@@ -54,12 +57,10 @@ export class AuthService {
             })).subscribe(
                 (response: User) => {
                     this.currentUser.next(response);
-                    this.angulartics2Service.setUsername.next(response.emailAddress);
                     listener.next(response);
                 },
                 err => {
                     this.currentUser.next(undefined);
-                    this.angulartics2Service.setUsername.next(undefined);
                     listener.error(err);
                 }
             );
@@ -79,12 +80,10 @@ export class AuthService {
             })).subscribe(
                 (response: User) => {
                     this.currentUser.next(response);
-                    this.angulartics2Service.setUsername.next('admin');
                     listener.next(response);
                 },
                 err => {
                     this.currentUser.next(undefined);
-                    this.angulartics2Service.setUsername.next(undefined);
                     listener.error(err);
                 }
             );

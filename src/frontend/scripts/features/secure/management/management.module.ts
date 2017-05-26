@@ -4,20 +4,22 @@
  * Proprietary and confidential.
  */
 
-import { NgModule } from '@angular/core';
+import {NgModule} from "@angular/core";
 
-import { ManagementComponent } from './management.component';
+import {ManagementComponent} from "./management.component";
 import {SharedModule} from "../../../shared/shared.module";
 import {ApprovalModalComponent} from "./approval-modal/approval-modal.component";
 import {ApprovalQueueComponent} from "./approval-queue/approval-queue.component";
 import {ApprovedComponent} from "./approved/approved.component";
 import {RejectedComponent} from "./rejected/rejected.component";
 import {CalendarComponent} from "./calendar/calendar.component";
-import {CommonModule} from "@angular/common";
 import {ManagementRoutesModule} from "./management.routes";
+import {Angulartics2Module} from "angulartics2";
 
 @NgModule({
     imports: [
+        Angulartics2Module.forChild(),
+
         SharedModule,
 
         //Routes
@@ -34,4 +36,5 @@ import {ManagementRoutesModule} from "./management.routes";
     exports: [],
     providers: [],
 })
-export class ManagementModule { }
+export class ManagementModule {
+}

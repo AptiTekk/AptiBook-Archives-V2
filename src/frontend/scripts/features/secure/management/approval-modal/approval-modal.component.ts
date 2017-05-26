@@ -15,6 +15,7 @@ import {ReservationManagementService} from "../../../../core/services/reservatio
 import {AlertComponent} from "../../../../shared/alert/alert.component";
 import moment = require("moment");
 import {ConfirmationModalComponent} from "../../../../shared/confirmation-modal/confirmation-modal.component";
+import {Angulartics2} from "angulartics2";
 
 @Component({
     selector: 'approval-modal',
@@ -76,7 +77,8 @@ export class ApprovalModalComponent implements OnInit {
 
     constructor(private authService: AuthService,
                 private managementService: ReservationManagementService,
-                private formBuilder: FormBuilder) {
+                private formBuilder: FormBuilder,
+                private angulartics2Service: Angulartics2) {
     }
 
     ngOnInit() {
@@ -137,8 +139,10 @@ export class ApprovalModalComponent implements OnInit {
                 .decision
                 .take(1)
                 .subscribe(decision => {
-                    if (decision)
+                    if (decision) {
+                        this.angulartics2Service.eventTrack.next({action: 'ChangeDecision', properties: {category: 'Management - Approval Modal', label: 'Approved'}});
                         this.onApprove(true);
+                    }
                 });
 
             return;
@@ -172,8 +176,10 @@ export class ApprovalModalComponent implements OnInit {
                     .decision
                     .take(1)
                     .subscribe(decision => {
-                        if (decision)
+                        if (decision) {
+                            this.angulartics2Service.eventTrack.next({action: 'OverrideDecision', properties: {category: 'Management - Approval Modal', label: 'Approved'}});
                             this.onApprove(true, true);
+                        }
                     });
 
                 return;
@@ -185,6 +191,7 @@ export class ApprovalModalComponent implements OnInit {
             .subscribe(
                 decision => {
                     this.close();
+                    this.angulartics2Service.eventTrack.next({action: 'MakeDecision', properties: {category: 'Management - Approval Modal', label: 'Approved'}});
                     this.approved.emit();
                 },
                 err => {
@@ -210,8 +217,10 @@ export class ApprovalModalComponent implements OnInit {
                 .decision
                 .take(1)
                 .subscribe(decision => {
-                    if (decision)
+                    if (decision) {
+                        this.angulartics2Service.eventTrack.next({action: 'ChangeDecision', properties: {category: 'Management - Approval Modal', label: 'Rejected'}});
                         this.onReject(true);
+                    }
                 });
 
             return;
@@ -245,8 +254,10 @@ export class ApprovalModalComponent implements OnInit {
                     .decision
                     .take(1)
                     .subscribe(decision => {
-                        if (decision)
+                        if (decision) {
+                            this.angulartics2Service.eventTrack.next({action: 'OverrideDecision', properties: {category: 'Management - Approval Modal', label: 'Rejected'}});
                             this.onReject(true, true);
+                        }
                     });
 
                 return;
@@ -258,6 +269,7 @@ export class ApprovalModalComponent implements OnInit {
             .subscribe(
                 decision => {
                     this.close();
+                    this.angulartics2Service.eventTrack.next({action: 'MakeDecision', properties: {category: 'Management - Approval Modal', label: 'Rejected'}});
                     this.rejected.emit();
                 },
                 err => {
