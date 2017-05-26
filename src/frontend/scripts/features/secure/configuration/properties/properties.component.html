@@ -122,7 +122,8 @@
 								
 								<button class="btn btn-danger ml-md-auto"
 										type="button"
-										(click)="confirmationModal.open()">
+										(click)="confirmationModal.open()"
+										[at-analytics]="{category: 'Configuration - Properties', action: 'ClickResetProperties'}">
 									Reset All Properties
 								</button>
 							</div>

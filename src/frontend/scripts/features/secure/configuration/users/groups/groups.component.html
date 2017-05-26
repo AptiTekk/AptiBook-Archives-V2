@@ -8,7 +8,8 @@
 	<div class="col-12 col-md-3">
 		<div class="btn-toolbar">
 			<button class="btn btn-primary"
-					(click)="newGroupModal.open(selectedUserGroups ? selectedUserGroups[0] : undefined)">
+					(click)="newGroupModal.open(selectedUserGroups ? selectedUserGroups[0] : undefined)"
+					[at-analytics]="{category: 'Configuration - User Groups', action: 'ClickAddUserGroup'}">
 				Add New User Group
 			</button>
 		</div>
@@ -33,7 +34,8 @@
 		<div class="btn-toolbar">
 			<button class="btn btn-danger"
 					[disabled]="!selectedUserGroup"
-					(click)="userGroupDeleteConfirm.open()">
+					(click)="userGroupDeleteConfirm.open()"
+					[at-analytics]="{category: 'Configuration - User Groups', action: 'ClickDeleteUserGroup'}">
 				Delete User Group
 			</button>
 		</div>
@@ -61,18 +63,21 @@
 							<span *ngIf="!selectedUserGroup">Select a User Group by clicking on it.</span>
 							<button class="btn btn-secondary"
 									*ngIf="selectedUserGroup && !editingDetails"
-									(click)="onEditUserGroupDetails()">
+									(click)="onEditUserGroupDetails()"
+									[at-analytics]="{category: 'Configuration - User Groups', action: 'ClickEditUserGroupDetails'}">
 								Edit Details
 							</button>
 							<button class="btn btn-primary"
 									*ngIf="editingDetails"
 									(click)="onSaveUserGroupDetails()"
-									[disabled]="userGroupDetailsFormGroup.invalid">
+									[disabled]="userGroupDetailsFormGroup.invalid"
+									[at-analytics]="{category: 'Configuration - User Groups', action: 'EditUserGroupDetails'}">
 								Save Changes
 							</button>
 							<button class="btn btn-secondary"
 									*ngIf="editingDetails"
-									(click)="onCancelUserGroupDetails()">
+									(click)="onCancelUserGroupDetails()"
+									[at-analytics]="{category: 'Configuration - User Groups', action: 'CancelEditUserGroupDetails'}">
 								Cancel
 							</button>
 						</at-card-footer>

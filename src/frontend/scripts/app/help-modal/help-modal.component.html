@@ -14,7 +14,7 @@
 				<li *ngFor="let helpTopic of helpTopics">
 					<a target="_blank"
 					   href="https://support.aptitekk.com/article/aptibook/{{helpTopic.slug}}"
-					   [at-analytics]="{category: 'HelpModal', action: 'ClickHelpTopic', label: helpTopic.slug}">
+					   [at-analytics]="{category: 'Help Modal', action: 'ClickHelpTopic', label: helpTopic.slug}">
 						{{helpTopic.title}}
 					</a>
 				</li>
@@ -32,12 +32,12 @@
 	<modal-footer>
 		<button class="btn btn-primary"
 				(click)="onVisitKnowledgebase()"
-				[at-analytics]="{category: 'HelpModal', action: 'ClickVisitKnowledgebase'}">
+				[at-analytics]="{category: 'Help Modal', action: 'ClickVisitKnowledgebase'}">
 			Visit Knowledgebase
 		</button>
 		<button class="btn btn-secondary"
 				(click)="modal.closeModal()"
-				[at-analytics]="{category: 'HelpModal', action: 'ClickClose'}">
+				[at-analytics]="{category: 'Help Modal', action: 'ClickClose'}">
 			Close
 		</button>
 	</modal-footer>

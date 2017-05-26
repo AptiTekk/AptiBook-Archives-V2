@@ -12,6 +12,7 @@ import {NavigationLink} from "../../../../shared/navigation/navigation-link.mode
 import {ActivatedRoute, Router} from "@angular/router";
 import {PropertiesSectionComponent} from "./properties-section/properties-section.component";
 import {Properties} from "../../../../models/properties.model";
+import {AnalyticsService} from "../../../../core/services/analytics.service";
 
 @Component({
     selector: 'at-configuration-properties',
@@ -128,6 +129,7 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
          response => this.propertiesService.fetchProperties()
          );*/
 
+        AnalyticsService.sendEvent({category: 'Configuration - Properties', action: 'ResetProperties'});
         this.successAlert.display("Properties have been reset!");
     }
 
@@ -135,14 +137,21 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
         let propertiesPatch: Properties = {};
 
         for (let controlName in this.formGroup.controls) {
-            if (this.formGroup.controls[controlName].dirty)
+            if (this.formGroup.controls[controlName].dirty) {
+                AnalyticsService.sendEvent({
+                    category: 'Configuration - Properties',
+                    action: 'ChangeProperty',
+                    label: controlName
+                });
                 propertiesPatch[controlName] = this.formGroup.controls[controlName].value;
+            }
         }
 
 
         this.propertiesService.patchProperties(propertiesPatch)
             .subscribe(
                 properties => {
+                    AnalyticsService.sendEvent({category: 'Configuration - Properties', action: 'SaveProperties'});
                     this.propertiesService.fetchProperties();
                     this.successAlert.display("Changes have been saved!");
                 },
