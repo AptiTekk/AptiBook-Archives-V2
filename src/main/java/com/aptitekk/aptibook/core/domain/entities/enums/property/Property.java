@@ -20,7 +20,9 @@ public class Property {
         GOOGLE_SIGN_IN_ENABLED("false", new BooleanPropertyValidator()),
         GOOGLE_SIGN_IN_WHITELIST("", new MaxLengthPropertyValidator(256)),
 
-        CAS_SERVER_URL("", new CASServerUrlPropertyValidator());
+        CAS_SERVER_URL("", new CASServerUrlPropertyValidator()),
+
+        ANALYTICS_ENABLED("true", new BooleanPropertyValidator());
 
         private final String defaultValue;
         private PropertyValidator propertyValidator;

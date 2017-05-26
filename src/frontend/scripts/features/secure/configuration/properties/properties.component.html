@@ -53,7 +53,7 @@
 										<label for="authenticationMethod">Authentication Method</label>
 										<select id="authenticationMethod"
 												class="form-control mb-3"
-												formControlName="AUTHENTICATION_METHOD"
+												[formControlName]="'AUTHENTICATION_METHOD'"
 												(change)="onAuthenticationMethodChanged()">
 											<option value="BUILT_IN">Built-In (Username and Password)</option>
 											<option value="CAS">CAS (Apereo / Jasig Central Authentication Service)</option>
@@ -67,7 +67,7 @@
 											<!-- Sign In Enabled Toggle Switch -->
 											<div class="from-group">
 												<at-checkbox #googleSignInEnabled
-															 formControlName="GOOGLE_SIGN_IN_ENABLED"
+															 [formControlName]="'GOOGLE_SIGN_IN_ENABLED'"
 															 [label]="'Google Sign-In Enabled'">
 												</at-checkbox>
 											</div>
@@ -108,6 +108,18 @@
 														[readOnly]="true">
 											</form-group>
 										</section>
+									</div>
+								</div>
+							</property-section>
+							
+							<property-section [sectionPath]="'other'">
+								<div class="row">
+									<div class="col-12 col-md-8">
+										<!-- Analytics Opt-out -->
+										<at-checkbox [formControlName]="'ANALYTICS_ENABLED'"
+													 [label]="'Help make AptiBook better by sending usage statistics to AptiTekk.'">
+										</at-checkbox>
+									
 									</div>
 								</div>
 							</property-section>

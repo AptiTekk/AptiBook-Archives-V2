@@ -40,6 +40,11 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
             label: 'Authentication',
             icon: 'asterisk',
             path: ['', 'secure', 'configuration', 'properties', 'authentication']
+        },
+        {
+            label: 'Other',
+            icon: 'ellipsis-h',
+            path: ['', 'secure', 'configuration', 'properties', 'other']
         }
     ];
 
@@ -144,6 +149,11 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
                     label: controlName
                 });
                 propertiesPatch[controlName] = this.formGroup.controls[controlName].value;
+
+                // Handle analytics changes
+                if (controlName === 'ANALYTICS_ENABLED') {
+                    AnalyticsService.setAnalyticsEnabled(this.formGroup.controls[controlName].value);
+                }
             }
         }
 
