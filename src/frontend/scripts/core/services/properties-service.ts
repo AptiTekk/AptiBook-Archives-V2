@@ -24,8 +24,25 @@ export class PropertiesService {
         );
     }
 
+    /**
+     * Gets a ReplaySubject with all the properties after calling fetchProperties at least once.
+     */
     public getProperties(): ReplaySubject<Properties> {
         return this.properties;
+    }
+
+    /**
+     * Gets a single property.
+     * @param key The key of the property. Case sensitive.
+     * @return a Promise that gives the value of the property.
+     */
+    public getProperty(key: string): Promise<any> {
+        return new Promise<any>((resolve, reject) => {
+            this.apiService.get("properties/" + key).subscribe(
+                value => resolve(value),
+                err => reject(err)
+            )
+        });
     }
 
     /**

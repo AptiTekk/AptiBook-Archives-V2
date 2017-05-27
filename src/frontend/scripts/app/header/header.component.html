@@ -10,5 +10,6 @@
 		 src="../../../resources/images/logo.svg"
 		 draggable="false"
 		 [routerLink]="disableHeaderLink ? null : ['', 'secure']"
-		 [style.cursor]="disableHeaderLink ? 'default' : 'pointer'"/>
+		 [style.cursor]="disableHeaderLink ? 'default' : 'pointer'"
+		 [at-analytics]="{category: 'Header', action: 'ClickLogo'}"/>
 </div>

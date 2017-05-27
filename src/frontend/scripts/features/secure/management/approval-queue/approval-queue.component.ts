@@ -11,7 +11,7 @@ import {ReservationManagementService} from "../../../../core/services/reservatio
 import {LoaderService} from "../../../../core/services/loader.service";
 import {ApprovalModalComponent} from "../approval-modal/approval-modal.component";
 import {DataTableComponent} from "../../../../shared/datatable/datatable.component";
-import moment = require("moment");
+import {AnalyticsService} from "../../../../core/services/analytics.service";
 
 @Component({
     selector: 'at-management-approval-queue',
@@ -97,6 +97,11 @@ export class ApprovalQueueComponent implements OnInit {
      * @param reservation The clicked reservation.
      */
     onReservationSelected(reservation: Reservation) {
+        AnalyticsService.sendEvent({
+            category: 'Management - Approval Queue',
+            action: 'ClickReservation'
+        });
+
         // The reservation is considered unorganized if it does not have a hierarchy.
         if (!reservation['hierarchy']) {
             this.reservationManagementService.organizeReservation(reservation);

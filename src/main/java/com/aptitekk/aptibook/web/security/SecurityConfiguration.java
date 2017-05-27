@@ -81,8 +81,8 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Everyone can access registration.
                 .antMatchers("/api/register", "/api/register/*").permitAll()
 
-                // Everyone can access the list of allowed domains for registration
-                .antMatchers(HttpMethod.GET, "/api/properties/allowedDomains").permitAll()
+                // Everyone can GET individual properties. (Fine grain control is defined in the controller method body)
+                .antMatchers(HttpMethod.GET, "/api/properties/*").permitAll()
 
                 // Everyone can access the OAuth endpoints.
                 .antMatchers(HttpMethod.GET, "/api/oauth/*").permitAll()

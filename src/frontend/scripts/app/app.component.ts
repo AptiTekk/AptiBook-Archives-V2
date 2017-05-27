@@ -5,8 +5,10 @@
  */
 
 import {Component, ViewEncapsulation} from "@angular/core";
-import Moment = moment.Moment;
+import {AnalyticsService} from "../core/services/analytics.service";
 import moment = require("moment");
+
+declare const ga: Function;
 
 @Component({
     selector: 'at-app',
@@ -16,7 +18,10 @@ import moment = require("moment");
 })
 export class AppComponent {
 
-    constructor() {
+    constructor(analyticsService: AnalyticsService) {
+        // Note: Don't remove the un-used import, as it initializes the service.
+
+        // Moment messages
         moment.updateLocale('en', {
             calendar: {
                 lastDay: '[Yesterday at] LT',

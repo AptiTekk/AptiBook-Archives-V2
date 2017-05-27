@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {Component, ViewChild} from '@angular/core';
+import {Component, ViewChild} from "@angular/core";
 import {User} from "../../../../models/user.model";
 import {Reservation, ReservationWithOrganizedDecisions} from "../../../../models/reservation/reservation.model";
 import {AuthService} from "../../../../core/services/auth.service";
@@ -12,6 +12,7 @@ import {LoaderService} from "../../../../core/services/loader.service";
 import {ReservationManagementService} from "../../../../core/services/reservation-management.service";
 import {ApprovalModalComponent} from "../approval-modal/approval-modal.component";
 import {DataTableComponent} from "../../../../shared/datatable/datatable.component";
+import {AnalyticsService} from "../../../../core/services/analytics.service";
 
 @Component({
     selector: 'at-management-approved',
@@ -71,6 +72,11 @@ export class ApprovedComponent {
      * @param reservation The clicked reservation.
      */
     onReservationSelected(reservation: Reservation) {
+        AnalyticsService.sendEvent({
+            category: 'Management - Approved Reservations',
+            action: 'ClickReservation'
+        });
+
         // The reservation is considered unorganized if it does not have a hierarchy.
         if (!reservation['hierarchy']) {
             this.reservationManagementService.organizeReservation(reservation);

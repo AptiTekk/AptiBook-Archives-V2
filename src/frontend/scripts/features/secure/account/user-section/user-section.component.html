@@ -130,17 +130,20 @@
 			<button class="btn btn-secondary"
 					*ngIf="!editingAccount"
 					type="button"
-					(click)="onStartEditingAccount()">Edit Account
+					(click)="onStartEditingAccount()"
+					[at-analytics]="{category: 'Account', action: 'ClickEditAccount'}">Edit Account
 			</button>
 			<button class="btn btn-secondary"
 					*ngIf="editingAccount"
 					type="button"
-					(click)="onCancelEditingAccount()">Cancel
+					(click)="onCancelEditingAccount()"
+					[at-analytics]="{category: 'Account', action: 'ClickCancelEditAccount'}">Cancel
 			</button>
 			<button class="btn btn-primary"
 					*ngIf="editingAccount"
-					type="submit"
-					[disabled]="formGroup.invalid || !doPasswordsMatch()">Save Changes
+					[disabled]="formGroup.invalid || !doPasswordsMatch()"
+					[at-analytics]="{category: 'Account', action: 'ClickSaveEditAccount'}">
+				Save Changes
 			</button>
 		</at-card-footer>
 	</at-card>

@@ -9,6 +9,7 @@ import * as moment from "moment";
 import {Router} from "@angular/router";
 import {SearchService} from "../../../../core/services/search.service";
 import {ModalComponent} from "../../../../shared/modal/modal.component";
+import {AnalyticsService} from "../../../../core/services/analytics.service";
 import Moment = moment.Moment;
 
 @Component({
@@ -38,9 +39,15 @@ export class NewReservationModalComponent {
     }
 
     onSearch() {
+        AnalyticsService.sendEvent({category: 'New Reservation Modal', action: 'ClickSearch'});
         this.searchService.searchForResources(this.startDate, this.endDate);
         this.modal.closeModal();
         this.router.navigate(['', 'secure', 'search-results']);
+    }
+
+    // noinspection JSMethodCanBeStatic
+    onCancel() {
+        AnalyticsService.sendEvent({category: 'New Reservation Modal', action: 'ClickCancel'});
     }
 
 }

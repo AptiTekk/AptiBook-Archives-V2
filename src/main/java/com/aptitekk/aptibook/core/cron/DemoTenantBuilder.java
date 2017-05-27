@@ -114,7 +114,7 @@ public class DemoTenantBuilder {
         User admin = new User();
         admin.setAdmin(true);
         admin.setTenant(demoTenant);
-        admin.userGroups.add(rootGroup);
+        admin.getUserGroups().add(rootGroup);
         admin.setHashedPassword(PasswordUtils.encodePassword("demo"));
         admin.setVerified(true);
         userRepository.save(admin);
@@ -387,9 +387,9 @@ public class DemoTenantBuilder {
         user.setLastName(lastName);
         user.setVerified(true);
         user.setHashedPassword(PasswordUtils.encodePassword(password));
-        user.permissions = permissions;
-        user.notificationSettings = notificationSettings;
-        user.userGroups.addAll(Arrays.asList(userGroups));
+        user.setPermissions(permissions);
+        user.setNotificationSettings(notificationSettings);
+        user.getUserGroups().addAll(Arrays.asList(userGroups));
         return userRepository.save(user);
     }
 

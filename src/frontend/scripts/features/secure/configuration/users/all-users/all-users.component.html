@@ -8,7 +8,9 @@
 	<div class="col-12 col-md-8">
 		<div class="btn-toolbar">
 			<button class="btn btn-primary"
-					(click)="newUserModal.open()">Add New User
+					(click)="newUserModal.open()"
+					[at-analytics]="{category: 'Configuration - Users', action: 'ClickAddUser'}">
+				Add New User
 			</button>
 		</div>
 		<hr/>
@@ -112,24 +114,28 @@
 					<div *ngIf="selectedUser">
 						<button class="btn btn-secondary"
 								*ngIf="!editingSelectedUser"
-								(click)="onStartEditingUser()">
+								(click)="onStartEditingUser()"
+								[at-analytics]="{category: 'Configuration - Users', action: 'ClickEditUser'}">
 							Edit User
 						</button>
 						<button class="btn btn-primary"
 								*ngIf="editingSelectedUser"
 								(click)="onSaveUserChanges()"
+								[at-analytics]="{category: 'Configuration - Users', action: 'EditUser'}"
 								[disabled]="selectedUserPersonalInformation.invalid">
 							Save Changes
 						</button>
 						<button class="btn btn-secondary"
 								*ngIf="editingSelectedUser"
-								(click)="onCancelEditingUser()">
+								(click)="onCancelEditingUser()"
+								[at-analytics]="{category: 'Configuration - Users', action: 'CancelEditUser'}">
 							Cancel
 						</button>
 						<button class="btn btn-danger pull-right"
 								*ngIf="editingSelectedUser"
 								[disabled]="isSelectedUserCurrentUser()"
-								(click)="userDeleteModal.open()">
+								(click)="userDeleteModal.open()"
+								[at-analytics]="{category: 'Configuration - Users', action: 'ClickDeleteUser'}">
 							Delete User
 						</button>
 					</div>

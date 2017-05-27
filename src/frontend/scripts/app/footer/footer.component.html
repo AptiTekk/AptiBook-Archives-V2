@@ -10,7 +10,8 @@
 			<!-- Info Button & Copyright (Large Screens) -->
 			<div class="hidden-sm-down col">
 				<span class="no-decoration">
-					<a (click)="infoModal.openModal()">
+					<a (click)="infoModal.openModal()"
+					   [at-analytics]="{category: 'Footer', action: 'ClickInfo'}">
 						<span><i class="fa fa-info-circle"></i></span>
 					</a>
 				</span>
@@ -21,7 +22,8 @@
 			<!-- Info Button & Copyright (Small Screens) -->
 			<div class="hidden-md-up col col-auto">
 				<span class="no-decoration">
-					<a (click)="infoModal.openModal()">
+					<a (click)="infoModal.openModal()"
+					   [at-analytics]="{category: 'Footer', action: 'ClickInfo'}">
 						<span><i class="fa fa-info-circle"></i></span>
 					</a>
 				</span>
@@ -31,7 +33,8 @@
 			
 			<!-- Help Button -->
 			<div class="col text-right">
-				<a (click)="helpModal.openModal()">
+				<a (click)="helpModal.openModal()"
+				   [at-analytics]="{category: 'Footer', action: 'ClickHelp'}">
 					<span>
 						<i class="fa fa-question-circle"></i>
 					</span>

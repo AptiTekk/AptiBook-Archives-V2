@@ -47,10 +47,18 @@ public class PropertyController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties/{key}", method = RequestMethod.GET)
     public ResponseEntity<?> getProperty(@PathVariable Property.Key key) {
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
-            return noPermission();
+        switch (key) {
+            case PERSONALIZATION_ORGANIZATION_NAME:
+            case AUTHENTICATION_METHOD:
+            case GOOGLE_SIGN_IN_WHITELIST:
+            case ANALYTICS_ENABLED:
+                return ok(propertyService.getProperty(key));
+            default:
+                if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+                    return noPermission();
+                return ok(propertyService.getProperty(key));
+        }
 
-        return ok(propertyService.getProperty(key));
     }
 
     @RequestMapping(value = "properties/allowedDomains", method = RequestMethod.GET)

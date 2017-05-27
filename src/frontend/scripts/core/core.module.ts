@@ -27,13 +27,14 @@ import {AptiBookErrorHandler} from "./error-handler";
 import {HttpModule} from "@angular/http";
 import {PermissionsService} from "./services/permissions.service";
 import {CurrentUserService} from "./services/current-user.service";
+import {AnalyticsService} from "./services/analytics.service";
 
 /**
  * This module contains the services and other things which should only load once in the application.
  */
 @NgModule({
     imports: [
-        HttpModule
+        HttpModule,
     ],
     declarations: [],
     exports: [],
@@ -42,6 +43,7 @@ import {CurrentUserService} from "./services/current-user.service";
             provide: ErrorHandler,
             useClass: AptiBookErrorHandler
         },
+        AnalyticsService,
         APIService,
         AuthService,
         CurrentUserService,

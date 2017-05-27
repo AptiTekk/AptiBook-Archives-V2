@@ -7,24 +7,24 @@
 import {NgModule} from "@angular/core";
 
 import {FooterComponent} from "./footer.component";
-import {InfoModalComponent} from "./info-modal/info-modal.component";
-import {HelpModalComponent} from "./help-modal/help-modal.component";
 import {CommonModule} from "@angular/common";
 import {SharedModule} from "../../shared/shared.module";
+import {HelpModalModule} from "../help-modal/help-modal.module";
+import {InfoModalModule} from "../info-modal/info-modal.module";
 
 @NgModule({
     imports: [
         CommonModule,
-        SharedModule
+        SharedModule,
+
+        HelpModalModule,
+        InfoModalModule
     ],
     declarations: [
         FooterComponent,
-        HelpModalComponent,
-        InfoModalComponent
     ],
     exports: [
-        FooterComponent,
-        HelpModalComponent,
+        FooterComponent
     ],
     providers: [],
 })

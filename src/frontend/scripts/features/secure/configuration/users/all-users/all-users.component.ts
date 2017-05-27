@@ -3,12 +3,13 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
+import {AfterViewInit, Component, ViewChild} from "@angular/core";
 import {User} from "../../../../../models/user.model";
 import {UserService} from "../../../../../core/services/user.service";
 import {AuthService} from "../../../../../core/services/auth.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {DataTableComponent} from "../../../../../shared/datatable/datatable.component";
+import {AnalyticsService} from "../../../../../core/services/analytics.service";
 
 @Component({
     selector: 'at-configuration-users-all-users',
@@ -112,6 +113,7 @@ export class AllUsersComponent implements AfterViewInit {
     }
 
     onAddNewUser() {
+        AnalyticsService.sendEvent({category: 'Configuration - Users', action: 'AddUser'});
         this.userService.fetchUsers();
     }
 
@@ -120,6 +122,7 @@ export class AllUsersComponent implements AfterViewInit {
             .deleteUser(this.selectedUser)
             .subscribe(
                 success => {
+                    AnalyticsService.sendEvent({category: 'Configuration - Users', action: 'DeleteUser'});
                     this.dataTable.deselectRows();
                     this.userService.fetchUsers()
                 }

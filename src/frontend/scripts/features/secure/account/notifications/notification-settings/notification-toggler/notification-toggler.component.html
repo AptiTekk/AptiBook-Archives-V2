@@ -10,6 +10,7 @@
 		<span class="fa fa-envelope"
 			  (click)="onToggleEmail()"
 			  [class.enabled]="notificationToggles.emailEnabled"
-			  [class.disabled]="!notificationToggles.emailEnabled"></span>
+			  [class.disabled]="!notificationToggles.emailEnabled"
+			  [at-analytics]="{category: 'Account - Notifications', action: notificationToggles.emailEnabled ? 'DisableEmailNotification' : 'EnableEmailNotification', label: label}"></span>
 	</span>
 </div>

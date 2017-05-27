@@ -15,6 +15,7 @@ import {SearchService} from "../../../core/services/search.service";
 import {APIService} from "../../../core/services/api.service";
 import {ResourceCategoryService} from "../../../core/services/resource-category.service";
 import {ReservationDetailsService} from "../../../core/services/reservation-details.service";
+import {AnalyticsService} from "../../../core/services/analytics.service";
 
 @Component({
     selector: 'at-search-results',
@@ -56,11 +57,13 @@ export class SearchResultsComponent implements OnInit {
     }
 
     onSearch() {
+        AnalyticsService.sendEvent({category: 'Search Results', action: 'ClickUpdateTime'});
         this.searchService.searchForResources(this.start, this.end);
         this.searchService.getSearchResults().take(1).subscribe(resources => this.resultsUpdatedAlert.display());
     }
 
     reserve(resource: Resource) {
+        AnalyticsService.sendEvent({category: 'Search Results', action: 'ClickReserveResource'});
         this.reservationDetailsService.setResource(resource);
         this.router.navigateByUrl("/secure/search-results/reservation-details");
     }

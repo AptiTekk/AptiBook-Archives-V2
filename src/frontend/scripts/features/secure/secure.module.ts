@@ -17,7 +17,7 @@ import {SecureRoutesModule} from "./secure.routes";
 import {ConfigurationModule} from "./configuration/configuration.module";
 import {AccountModule} from "./account/account.module";
 import {HeaderModule} from "../../app/header/header.module";
-import {HelpModalComponent} from "../../app/footer/help-modal/help-modal.component";
+import {HelpModalModule} from "../../app/help-modal/help-modal.module";
 
 /**
  * The secure section is off-limits to the users who have not signed in.
@@ -28,6 +28,7 @@ import {HelpModalComponent} from "../../app/footer/help-modal/help-modal.compone
 
         HeaderModule,
         FooterModule,
+        HelpModalModule,
 
         // Routes
         SecureRoutesModule,

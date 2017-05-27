@@ -5,12 +5,12 @@
  */
 
 import {Component, ViewChild, OnInit} from "@angular/core";
-import {ModalComponent} from "../../../shared/modal/modal.component";
-import {HelpService, HelpTopic} from "../../../core/services/help.service";
+import {ModalComponent} from "../../shared/modal/modal.component";
+import {HelpService, HelpTopic} from "../../core/services/help.service";
 
 @Component({
     selector: 'help-modal',
-    templateUrl: 'help-modal.component.html'
+    templateUrl: './help-modal.component.html'
 })
 export class HelpModalComponent implements OnInit {
 

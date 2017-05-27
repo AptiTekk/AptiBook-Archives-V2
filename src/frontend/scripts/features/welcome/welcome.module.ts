@@ -10,7 +10,6 @@ import {WelcomeComponent} from "./welcome.component";
 import {SignInComponent} from "./sign-in/sign-in.component";
 import {SharedModule} from "../../shared/shared.module";
 import {RegisterModule} from "./register/register.module";
-import {CommonModule} from "@angular/common";
 import {FooterModule} from "../../app/footer/footer.module";
 import {WelcomeRoutesModule} from "./welcome.routes";
 import {AdminSignInComponent} from "./admin/admin-sign-in.component";

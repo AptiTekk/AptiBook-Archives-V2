@@ -10,6 +10,7 @@ import {TreeNodeComponent} from "./tree-node/tree-node.component";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {UserGroupService} from "../../core/services/usergroup.service";
 import * as Collections from "typescript-collections";
+import {AnalyticsService} from "../../core/services/analytics.service";
 
 @Component({
     selector: 'tree',
@@ -168,7 +169,10 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
         this.userGroupService
             .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.rootGroup)
             .subscribe(
-                success => this.userGroupService.fetchRootUserGroup()
+                success => {
+                    AnalyticsService.sendEvent({category: 'User Group Tree', action: 'MoveUserGroup'});
+                    this.userGroupService.fetchRootUserGroup();
+                }
             );
     }
 

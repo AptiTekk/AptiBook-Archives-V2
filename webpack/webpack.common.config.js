@@ -26,31 +26,31 @@ const config = {
                 use: 'imports-loader?define=>false'
             },
             {
-                test: /\.(component|page)\.html$/,
+                test: /\.(component|directive)\.html$/,
                 use: ["to-string-loader", "html-loader?-minimize"]
             },
             {
                 test: /\.html$/,
                 use: "html-loader?-minimize",
-                exclude: [/\.(component|page)\.html$/]
+                exclude: [/\.(component|directive)\.html$/]
             },
             {
-                test: /\.(component|page)\.css$/,
+                test: /\.(component|directive)\.css$/,
                 use: ["to-string-loader", "css-loader"]
             },
             {
-                test: /\.(component|page)\.scss$/,
+                test: /\.(component|directive)\.scss$/,
                 use: ["to-string-loader", "css-loader", "sass-loader"]
             },
             {
                 test: /\.css(\?v=[\d\.]+)?$/,
                 use: ["style-loader", "css-loader"],
-                exclude: [/\.(component|page)\.css$/]
+                exclude: [/\.(component|directive)\.css$/]
             },
             {
                 test: /\.scss(\?v=[\d\.]+)?$/,
                 use: ["style-loader", "css-loader", "sass-loader"],
-                exclude: [/\.(component|page)\.scss$/]
+                exclude: [/\.(component|directive)\.scss$/]
             },
             {
                 test: /\.xml$/,

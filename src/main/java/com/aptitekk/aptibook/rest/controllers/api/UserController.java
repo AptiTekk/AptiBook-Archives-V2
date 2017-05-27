@@ -88,7 +88,7 @@ public class UserController extends APIControllerAbstract {
         }
 
         if (userDTO.userGroups != null) {
-            newUser.userGroups = userValidator.validateUserGroups(userDTO.userGroups, null);
+            newUser.setUserGroups(userValidator.validateUserGroups(userDTO.userGroups, null));
         }
 
         String newPassword = PasswordGenerator.generateRandomPassword(10);
@@ -135,7 +135,7 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/current/notifications/settings", method = RequestMethod.GET)
     public ResponseEntity<?> getNotificationSettings() {
-        Map<NotificationType, User.NotificationToggles> notificationSettings = authService.getCurrentUser().notificationSettings;
+        Map<NotificationType, User.NotificationToggles> notificationSettings = authService.getCurrentUser().getNotificationSettings();
 
         for (NotificationType notificationType : NotificationType.values()) {
             notificationSettings.putIfAbsent(notificationType, new User.NotificationToggles(notificationType.getDefaultValue()));
@@ -151,13 +151,13 @@ public class UserController extends APIControllerAbstract {
                                                       @PathVariable("notificationType") NotificationType notificationType) {
         User user = authService.getCurrentUser();
         //Find passed in notification setting in user's notification settings and set value of user's setting to passed in value.
-        if (user.notificationSettings.containsKey(notificationType))
-            user.notificationSettings.get(notificationType).setEmailEnabled(notificationToggles.isEmailEnabled());
+        if (user.getNotificationSettings().containsKey(notificationType))
+            user.getNotificationSettings().get(notificationType).setEmailEnabled(notificationToggles.isEmailEnabled());
         else
-            user.notificationSettings.put(notificationType, new User.NotificationToggles(notificationToggles.isEmailEnabled()));
+            user.getNotificationSettings().put(notificationType, new User.NotificationToggles(notificationToggles.isEmailEnabled()));
 
         userRepository.save(user);
-        return ok(modelMapper.map(user.notificationSettings.get(notificationType), User.NotificationToggles.class));
+        return ok(modelMapper.map(user.getNotificationSettings().get(notificationType), User.NotificationToggles.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
@@ -205,11 +205,11 @@ public class UserController extends APIControllerAbstract {
 
             List<UserGroup> userGroupList = userValidator.validateUserGroups(userDTO.userGroups, currentUser);
 
-            for (UserGroup userGroup : currentUser.userGroups) {
+            for (UserGroup userGroup : currentUser.getUserGroups()) {
                 userGroup.getUsers().remove(currentUser);
             }
 
-            currentUser.userGroups = userGroupList;
+            currentUser.setUserGroups(userGroupList);
         }
 
         userRepository.save(currentUser);

@@ -30,7 +30,9 @@
 				
 				<!-- Details Button-->
 				<button class="btn btn-secondary pull-right"
-						(click)="infoModal.display(reservation)">Details
+						(click)="infoModal.display(reservation)"
+						[at-analytics]="{category: 'Account - Reservations', action: 'ClickReservationDetails'}">
+					Details
 				</button>
 			</div>
 		</div>

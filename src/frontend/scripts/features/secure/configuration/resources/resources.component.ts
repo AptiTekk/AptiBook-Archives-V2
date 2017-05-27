@@ -15,6 +15,7 @@ import {UserGroupService} from "../../../../core/services/usergroup.service";
 import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
 import {Subscription} from "rxjs/Subscription";
 import {LoaderService} from "../../../../core/services/loader.service";
+import {AnalyticsService} from "../../../../core/services/analytics.service";
 
 @Component({
     selector: 'at-configuration-resources',
@@ -125,11 +126,19 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     }
 
     onNewCategory(resourceCategory: ResourceCategory) {
+        AnalyticsService.sendEvent({
+            category: 'Configuration - Resources',
+            action: 'CreateCategory'
+        });
         this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
 
     onEditCategory(resourceCategory: ResourceCategory) {
+        AnalyticsService.sendEvent({
+            category: 'Configuration - Resources',
+            action: 'EditCategory'
+        });
         this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
@@ -139,19 +148,30 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
 
         this.resourceCategoryService.deleteResourceCategory(this.currentResourceCategory).subscribe(
             response => {
+                AnalyticsService.sendEvent({
+                    category: 'Configuration - Resources',
+                    action: 'DeleteCategory'
+                });
                 this.loaderService.stopLoading();
+                this.resourceCategoryService.fetchResourceCategories();
+                this.router.navigate(['', 'secure', 'configuration', 'resources']);
             }
         );
-
-        this.resourceCategoryService.fetchResourceCategories();
-        this.router.navigate(['', 'secure', 'configuration', 'resources']);
     }
 
     onNewResource() {
+        AnalyticsService.sendEvent({
+            category: 'Configuration - Resources',
+            action: 'CreateResource'
+        });
         this.resourceCategoryService.fetchResourceCategories();
     }
 
     onEditResource() {
+        AnalyticsService.sendEvent({
+            category: 'Configuration - Resources',
+            action: 'EditResource'
+        });
         this.resourceCategoryService.fetchResourceCategories();
     }
 
@@ -161,6 +181,10 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
 
         this.resourceService.deleteResource(this.resourceForDeletion).subscribe(
             response => {
+                AnalyticsService.sendEvent({
+                    category: 'Configuration - Resources',
+                    action: 'DeleteResource'
+                });
                 this.resourceCategoryService.fetchResourceCategories();
             }
         )

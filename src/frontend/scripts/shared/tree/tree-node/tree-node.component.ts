@@ -4,9 +4,10 @@
  * Proprietary and confidential.
  */
 
-import {Component, Input, ViewChildren, QueryList} from "@angular/core";
+import {Component, Input, QueryList, ViewChildren} from "@angular/core";
 import {UserGroup} from "../../../models/user-group.model";
 import {TreeComponent} from "../tree.component";
+import {AnalyticsService} from "../../../core/services/analytics.service";
 
 @Component({
     selector: 'tree-node',
@@ -42,6 +43,7 @@ export class TreeNodeComponent {
     /* Dragging of This Node */
 
     onDragStart(event: DragEvent) {
+        AnalyticsService.sendEvent({category: 'User Group Tree', action: 'Drag'});
         event.dataTransfer.effectAllowed = "move";
         this.tree.draggingNode = this;
     }
@@ -80,6 +82,7 @@ export class TreeNodeComponent {
 
     onDropPointDrop(event: DragEvent) {
         if (this.tree.draggingNode && this.nodeOverDropPoint) {
+            AnalyticsService.sendEvent({category: 'User Group Tree', action: 'DropOnDropPoint'});
             this.tree.moveNode(this.tree.draggingNode, this.parent);
             this.nodeOverDropPoint = false;
         }
@@ -115,6 +118,7 @@ export class TreeNodeComponent {
 
     onNodeDrop(event: DragEvent) {
         if (this.tree.draggingNode && this.nodeOverNode) {
+            AnalyticsService.sendEvent({category: 'User Group Tree', action: 'DropOnUserGroup'});
             this.tree.moveNode(this.tree.draggingNode, this);
             this.nodeOverNode = false;
         }

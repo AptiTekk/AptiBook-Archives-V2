@@ -13,8 +13,9 @@ import {FormBuilder, FormGroup} from "@angular/forms";
 import {UserGroup} from "../../../../models/user-group.model";
 import {ReservationManagementService} from "../../../../core/services/reservation-management.service";
 import {AlertComponent} from "../../../../shared/alert/alert.component";
-import moment = require("moment");
 import {ConfirmationModalComponent} from "../../../../shared/confirmation-modal/confirmation-modal.component";
+import {AnalyticsService} from "../../../../core/services/analytics.service";
+import moment = require("moment");
 
 @Component({
     selector: 'approval-modal',
@@ -137,8 +138,14 @@ export class ApprovalModalComponent implements OnInit {
                 .decision
                 .take(1)
                 .subscribe(decision => {
-                    if (decision)
+                    if (decision) {
+                        AnalyticsService.sendEvent({
+                            category: 'Management - Approval Modal',
+                            action: 'ChangeDecision',
+                            label: 'Approved'
+                        });
                         this.onApprove(true);
+                    }
                 });
 
             return;
@@ -172,8 +179,14 @@ export class ApprovalModalComponent implements OnInit {
                     .decision
                     .take(1)
                     .subscribe(decision => {
-                        if (decision)
+                        if (decision) {
+                            AnalyticsService.sendEvent({
+                                category: 'Management - Approval Modal',
+                                action: 'OverrideDecision',
+                                label: 'Approved'
+                            });
                             this.onApprove(true, true);
+                        }
                     });
 
                 return;
@@ -185,6 +198,11 @@ export class ApprovalModalComponent implements OnInit {
             .subscribe(
                 decision => {
                     this.close();
+                    AnalyticsService.sendEvent({
+                        category: 'Management - Approval Modal',
+                        action: 'MakeDecision',
+                        label: 'Approved'
+                    });
                     this.approved.emit();
                 },
                 err => {
@@ -210,8 +228,14 @@ export class ApprovalModalComponent implements OnInit {
                 .decision
                 .take(1)
                 .subscribe(decision => {
-                    if (decision)
+                    if (decision) {
+                        AnalyticsService.sendEvent({
+                            category: 'Management - Approval Modal',
+                            action: 'ChangeDecision',
+                            label: 'Rejected'
+                        });
                         this.onReject(true);
+                    }
                 });
 
             return;
@@ -245,8 +269,14 @@ export class ApprovalModalComponent implements OnInit {
                     .decision
                     .take(1)
                     .subscribe(decision => {
-                        if (decision)
+                        if (decision) {
+                            AnalyticsService.sendEvent({
+                                category: 'Management - Approval Modal',
+                                action: 'OverrideDecision',
+                                label: 'Rejected'
+                            });
                             this.onReject(true, true);
+                        }
                     });
 
                 return;
@@ -258,6 +288,11 @@ export class ApprovalModalComponent implements OnInit {
             .subscribe(
                 decision => {
                     this.close();
+                    AnalyticsService.sendEvent({
+                        category: 'Management - Approval Modal',
+                        action: 'MakeDecision',
+                        label: 'Rejected'
+                    });
                     this.rejected.emit();
                 },
                 err => {

@@ -6,14 +6,9 @@
 
 package com.aptitekk.aptibook.core.services.entity;
 
-import com.aptitekk.aptibook.core.domain.entities.Notification;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
-
-import java.util.EnumSet;
-import java.util.HashSet;
-import java.util.Set;
 
 
 @EntityService
@@ -33,8 +28,8 @@ public class UserService {
             throw new IllegalArgumentException("NotificationType is null");
 
         // Look for the NotificationToggles that pertains to this NotificationType.
-        if(user.notificationSettings.containsKey(notificationType))
-            return user.notificationSettings.get(notificationType).isEmailEnabled();
+        if (user.getNotificationSettings().containsKey(notificationType))
+            return user.getNotificationSettings().get(notificationType).isEmailEnabled();
 
         // The NotificationToggles for the given type does not exist for the User. Using the default value instead.
         return notificationType.getDefaultValue();

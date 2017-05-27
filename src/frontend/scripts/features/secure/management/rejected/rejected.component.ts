@@ -12,6 +12,8 @@ import {ReservationManagementService} from "../../../../core/services/reservatio
 import {User} from "../../../../models/user.model";
 import {ApprovalModalComponent} from "../approval-modal/approval-modal.component";
 import {DataTableComponent} from "../../../../shared/datatable/datatable.component";
+import {AnalyticsService} from "../../../../core/services/analytics.service";
+
 @Component({
     selector: 'at-management-rejected',
     templateUrl: 'rejected.component.html',
@@ -70,6 +72,11 @@ export class RejectedComponent {
      * @param reservation The clicked reservation.
      */
     onReservationSelected(reservation: Reservation) {
+        AnalyticsService.sendEvent({
+            category: 'Management - Rejected Reservations',
+            action: 'ClickReservation'
+        });
+
         // The reservation is considered unorganized if it does not have a hierarchy.
         if (!reservation['hierarchy']) {
             this.reservationManagementService.organizeReservation(reservation);

@@ -27,8 +27,13 @@ export class AuthService {
      */
     public reloadUser(): void {
         this.apiService.get("users/current").subscribe(
-            response => this.currentUser.next(response),
-            err => this.currentUser.next(undefined));
+            (response: User) => {
+                this.currentUser.next(response)
+            },
+            err => {
+                this.currentUser.next(undefined)
+            }
+        );
     }
 
     /**
@@ -50,7 +55,7 @@ export class AuthService {
                 "Authorization": "Basic " + btoa(emailAddress + ":" + password),
                 "X-Auth-Type": "user"
             })).subscribe(
-                response => {
+                (response: User) => {
                     this.currentUser.next(response);
                     listener.next(response);
                 },
@@ -73,7 +78,7 @@ export class AuthService {
                 "Authorization": "Basic " + btoa(":" + password),
                 "X-Auth-Type": "admin"
             })).subscribe(
-                response => {
+                (response: User) => {
                     this.currentUser.next(response);
                     listener.next(response);
                 },

@@ -10,7 +10,8 @@
 	 [class.closed]="!swipedOpen">
 	<div id="notifications"
 		 [class.unread]="unreadNotifications.length > 0"
-		 [routerLink]="['', 'secure', 'account', 'notifications']">
+		 [routerLink]="['', 'secure', 'account', 'notifications']"
+		 [at-analytics]="{category: 'Sidebar', action: 'ClickNotifications', value: unreadNotifications.length}">
 		<i class="fa fa-bell"
 		   aria-hidden="true"></i>
 		<span id="notifications-count-label">{{unreadNotifications.length + ' Unread'}}</span>
@@ -20,26 +21,31 @@
 		<div class="navigation-link"
 			 [routerLink]="['', 'secure', 'dashboard']"
 			 [routerLinkActive]="'active'"
+			 [at-analytics]="{category: 'Sidebar', action: 'ClickDashboard'}"
 			 [innerHTML]="DASHBOARD_ICON">
 		</div>
 		<div class="navigation-link"
 			 [routerLink]="['', 'secure', 'account']"
 			 [routerLinkActive]="'active'"
+			 [at-analytics]="{category: 'Sidebar', action: 'ClickAccount'}"
 			 [innerHTML]="ACCOUNT_ICON">
 		</div>
 		<div class="navigation-link"
 			 [routerLink]="['', 'secure', 'management']"
 			 [routerLinkActive]="'active'"
+			 [at-analytics]="{category: 'Sidebar', action: 'ClickManagement'}"
 			 [innerHTML]="MANAGEMENT_ICON"
 			 *ngIf="user?.admin || user?.userGroups?.length > 0">
 		</div>
 		<div class="navigation-link"
 			 [routerLink]="['', 'secure', 'configuration']"
 			 [routerLinkActive]="'active'"
+			 [at-analytics]="{category: 'Sidebar', action: 'ClickConfiguration'}"
 			 [innerHTML]="CONFIGURATION_ICON"
 			 *ngIf="user?.admin || userPermissions.length > 0">
 		</div>
 		<div class="navigation-link"
+			 [at-analytics]="{category: 'Sidebar', action: 'ClickHelp'}"
 			 [innerHTML]="HELP_ICON"
 			 (click)="helpModal.openModal()">
 		</div>
@@ -48,6 +54,7 @@
 	<div id="bottom">
 		<button id="sign-out-button"
 				(click)="onSignOut()"
+				[at-analytics]="{category: 'Sidebar', action: 'ClickSignOut'}"
 				class="btn-none">
 			<i class="fa fa-sign-out"
 			   aria-hidden="true"></i>

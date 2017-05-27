@@ -13,6 +13,7 @@ import {UserService} from "../../../../../core/services/user.service";
 import {TreeComponent} from "../../../../../shared/tree/tree.component";
 import {Observable} from "rxjs";
 import {Resource} from "../../../../../models/resource.model";
+import {AnalyticsService} from "../../../../../core/services/analytics.service";
 
 @Component({
     selector: 'at-configuration-users-groups',
@@ -59,6 +60,7 @@ export class GroupsComponent implements OnInit {
     }
 
     onAddNewUserGroup(newGroup: UserGroup) {
+        AnalyticsService.sendEvent({category: 'Configuration - User Groups', action: 'AddUserGroup'});
         this.userGroupService.fetchRootUserGroup();
 
         // Select the new group.
@@ -141,6 +143,7 @@ export class GroupsComponent implements OnInit {
             .deleteUserGroup(this.selectedUserGroup)
             .subscribe(
                 response => {
+                    AnalyticsService.sendEvent({category: 'Configuration - User Groups', action: 'DeleteUserGroup'});
                     this.selectedUserGroups = [];
                     this.userGroupService.fetchRootUserGroup();
                     this.userService.fetchUsers();

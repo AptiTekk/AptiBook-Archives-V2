@@ -5,7 +5,7 @@
  */
 
 import {Component, ViewChild} from "@angular/core";
-import {ModalComponent} from "../../../shared/modal/modal.component";
+import {ModalComponent} from "../../shared/modal/modal.component";
 
 @Component({
     selector: 'info-modal',
