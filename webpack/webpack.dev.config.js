@@ -5,7 +5,6 @@
  */
 
 const config = require('./webpack.common.config.js');
-const AotPlugin = require('@ngtools/webpack').AotPlugin;
 const path = require('path');
 
 const HtmlWebpackPlugin = require('html-webpack-plugin');
@@ -18,6 +17,18 @@ config.module.rules.unshift(
         exclude: [/\.(spec|e2e)\.ts$/]
     }
 );
+
+config.devServer = {
+    contentBase: path.join(__dirname, "../target/classes/static/"),
+    proxy: {
+        "/api": "http://localhost:8080/"
+    },
+    disableHostCheck: true,
+    historyApiFallback: true,
+    compress: true,
+    port: 9000
+};
+
 
 config.plugins.push(
     new HtmlWebpackPlugin({
