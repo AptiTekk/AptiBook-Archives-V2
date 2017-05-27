@@ -41,8 +41,8 @@
 					  [hiddenStatuses]="['rejected', 'cancelled']"
 					  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
 					  [filterByResourceCategories]="enabledResourceCategories"
-					  (eventSelected)="reservationInfoModal.display($event)"
-					  (daySelected)="newReservationModal.display($event)"
+					  (eventSelected)="onEventSelected($event)"
+					  (daySelected)="onDaySelected($event)"
 					  [view]="'basicWeek'"></calendar>
 			<!-- Mobile -->
 			<calendar *showItBootstrap="['xs', 'sm', 'md']"
@@ -51,12 +51,12 @@
 					  [hiddenStatuses]="['rejected', 'cancelled']"
 					  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
 					  [filterByResourceCategories]="enabledResourceCategories"
-					  (eventSelected)="reservationInfoModal.display($event)"
-					  (daySelected)="newReservationModal.display($event)"
+					  (eventSelected)="onEventSelected($event)"
+					  (daySelected)="onDaySelected($event)"
 					  [view]="'listWeek'"></calendar>
 		</div>
 	</div>
 </div>
 
-<reservation-info-modal #reservationInfoModal></reservation-info-modal>
-<new-reservation-modal #newReservationModal></new-reservation-modal>
+<reservation-info-modal></reservation-info-modal>
+<new-reservation-modal></new-reservation-modal>

@@ -12,6 +12,8 @@ import {User} from "../../../models/user.model";
 import {ResourceCategoryService} from "../../../core/services/resource-category.service";
 import {ResourceCategory} from "../../../models/resource-category.model";
 import {CalendarComponent} from "../../../shared/calendar/calendar.component";
+import {AnalyticsService} from "../../../core/services/analytics.service";
+import {NewReservationModalComponent} from "./new-reservation-modal/new-reservation-modal.component";
 
 @Component({
     selector: 'at-dashboard',
@@ -19,8 +21,9 @@ import {CalendarComponent} from "../../../shared/calendar/calendar.component";
 })
 export class DashboardComponent implements OnInit {
 
-    @ViewChild('reservationInfoModal')
-    reservationInfoModal: ReservationInfoModalComponent;
+    @ViewChild(ReservationInfoModalComponent) reservationInfoModal: ReservationInfoModalComponent;
+
+    @ViewChild(NewReservationModalComponent) newReservationModal: NewReservationModalComponent;
 
     @ViewChild(CalendarComponent)
     calendar: CalendarComponent;
@@ -65,4 +68,13 @@ export class DashboardComponent implements OnInit {
         this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
     }
 
+    onEventSelected(event): void {
+        AnalyticsService.sendEvent({category: 'Dashboard', action: 'ClickEvent'});
+        this.reservationInfoModal.display(event);
+    }
+
+    onDaySelected(day): void {
+        AnalyticsService.sendEvent({category: 'Dashboard', action: 'ClickDay'});
+        this.newReservationModal.display(day);
+    }
 }
