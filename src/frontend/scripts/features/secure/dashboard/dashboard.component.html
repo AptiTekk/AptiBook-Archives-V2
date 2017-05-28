@@ -5,15 +5,13 @@
   -->
 
 <div class="container-fluid no-padding h-100">
-	
 	<div class="row no-gutters h-100">
 		<!-- Left Toolbar / Filter Section -->
-		<div class="col-12 col-md-3">
-			
-			<!-- Filters Section -->
-			<calendar-header>
-			</calendar-header>
-			<div style="padding: 10px 10px">
+		<div id="tools-section"
+			 class="col-12 col-md-3">
+			<div class="header hidden-md-down"></div>
+			<div class="p-3">
+				<!-- Filters Section -->
 				<div class="form-group">
 					<at-checkbox [(ngModel)]="filterOnlyUsersEvents"
 								 [label]="'Show My Reservations Only'">
@@ -32,28 +30,48 @@
 		</div>
 		
 		<!-- Calendar Section -->
-		<div class="col-12 col-md-9 h-100"
+		<div id="calendar-section"
+			 class="col-12 col-md-9 h-100"
 			 style="overflow: hidden;">
+			
+			<ul id="calendar-view-selectors"
+				class="hidden-md-down">
+				<li [class.active]="currentView === 'month'"
+					(click)="setCurrentView('month')">
+					Month
+				</li>
+				<li [class.active]="currentView === 'basicWeek'"
+					(click)="setCurrentView('basicWeek')">
+					Week
+				</li>
+				<li [class.active]="currentView === 'listWeek'"
+					(click)="setCurrentView('listWeek')">
+					Week List
+				</li>
+			</ul>
+			
 			<!-- Desktops -->
-			<calendar *showItBootstrap="['xl', 'lg']"
-					  [eventFeedEndpoint]="'reservations'"
-					  [allowDaySelection]="true"
-					  [hiddenStatuses]="['rejected', 'cancelled']"
-					  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
-					  [filterByResourceCategories]="enabledResourceCategories"
-					  (eventSelected)="onEventSelected($event)"
-					  (daySelected)="onDaySelected($event)"
-					  [view]="'basicWeek'"></calendar>
-			<!-- Mobile -->
-			<calendar *showItBootstrap="['xs', 'sm', 'md']"
-					  [eventFeedEndpoint]="'reservations'"
-					  [allowDaySelection]="true"
-					  [hiddenStatuses]="['rejected', 'cancelled']"
-					  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
-					  [filterByResourceCategories]="enabledResourceCategories"
-					  (eventSelected)="onEventSelected($event)"
-					  (daySelected)="onDaySelected($event)"
-					  [view]="'listWeek'"></calendar>
+			<div id="calendar-container">
+				<calendar class="hidden-md-down"
+						  [eventFeedEndpoint]="'reservations'"
+						  [allowDaySelection]="true"
+						  [hiddenStatuses]="['rejected', 'cancelled']"
+						  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
+						  [filterByResourceCategories]="enabledResourceCategories"
+						  (eventSelected)="onEventSelected($event)"
+						  (daySelected)="onDaySelected($event)"
+						  [view]="currentView"></calendar>
+				<!-- Mobile -->
+				<calendar class="hidden-lg-up"
+						  [eventFeedEndpoint]="'reservations'"
+						  [allowDaySelection]="true"
+						  [hiddenStatuses]="['rejected', 'cancelled']"
+						  [filterByUsers]="filterOnlyUsersEvents ? [currentUser] : null"
+						  [filterByResourceCategories]="enabledResourceCategories"
+						  (eventSelected)="onEventSelected($event)"
+						  (daySelected)="onDaySelected($event)"
+						  [view]="'listWeek'"></calendar>
+			</div>
 		</div>
 	</div>
 </div>
