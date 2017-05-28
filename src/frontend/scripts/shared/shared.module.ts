@@ -7,7 +7,6 @@
 import {NgModule} from "@angular/core";
 import {AlertComponent} from "./alert/alert.component";
 import {CalendarComponent} from "./calendar/calendar.component";
-import {CalendarHeaderComponent} from "./calendar/calendar-header/calendar-header.component";
 import {DataTableComponent} from "./datatable/datatable.component";
 import {DataTableCell} from "./datatable/datatable-cell/datatable-cell.component";
 import {DataTableColumnComponent} from "./datatable/datatable-column/datatable-column.component";
@@ -28,7 +27,6 @@ import {ConfirmationModalComponent} from "./confirmation-modal/confirmation-moda
 import {CommonModule} from "@angular/common";
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import {RouterModule} from "@angular/router";
-import {ResponsiveModule} from "ng2-responsive";
 import {CardModule} from "./card/card.module";
 import {CheckboxModule} from "./checkbox/checkbox.module";
 import {AnalyticsModule} from "./analytics/analytics.module";
@@ -42,7 +40,6 @@ import {AnalyticsModule} from "./analytics/analytics.module";
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
-        ResponsiveModule,
 
         // Component modules
         AnalyticsModule,
@@ -54,7 +51,6 @@ import {AnalyticsModule} from "./analytics/analytics.module";
     declarations: [
         AlertComponent,
         CalendarComponent,
-        CalendarHeaderComponent, //TODO: make module
         ConfirmationModalComponent,
         DataTableComponent,
         DataTableCell,
@@ -76,7 +72,6 @@ import {AnalyticsModule} from "./analytics/analytics.module";
         FormsModule,
         ReactiveFormsModule,
         RouterModule,
-        ResponsiveModule,
 
         // Component modules
         AnalyticsModule,
@@ -88,7 +83,6 @@ import {AnalyticsModule} from "./analytics/analytics.module";
         // Components
         AlertComponent,
         CalendarComponent,
-        CalendarHeaderComponent, //TODO: make module
         ConfirmationModalComponent,
         DataTableComponent,
         DataTableCell,

@@ -14,10 +14,12 @@ import {ResourceCategory} from "../../../models/resource-category.model";
 import {CalendarComponent} from "../../../shared/calendar/calendar.component";
 import {AnalyticsService} from "../../../core/services/analytics.service";
 import {NewReservationModalComponent} from "./new-reservation-modal/new-reservation-modal.component";
+import {Moment} from "moment";
 
 @Component({
     selector: 'at-dashboard',
-    templateUrl: 'dashboard.component.html'
+    templateUrl: 'dashboard.component.html',
+    styleUrls: ['./dashboard.component.scss']
 })
 export class DashboardComponent implements OnInit {
 
@@ -25,8 +27,12 @@ export class DashboardComponent implements OnInit {
 
     @ViewChild(NewReservationModalComponent) newReservationModal: NewReservationModalComponent;
 
-    @ViewChild(CalendarComponent)
-    calendar: CalendarComponent;
+    @ViewChild(CalendarComponent) calendar: CalendarComponent;
+
+    /**
+     * The calendar's current view (only applicable to lg and xl screens)
+     */
+    currentView: string = "month";
 
     currentUser: User;
 
@@ -54,11 +60,12 @@ export class DashboardComponent implements OnInit {
     }
 
     /**
-     * Called when an event on the calendar is clicked.
-     * @param event The reservation that was clicked.
+     * Sets the current view of the calendar to the provided value.
+     * @param viewName The name of the calendar view.
      */
-    onCalendarEventClicked(event: Reservation): void {
-        this.reservationInfoModal.display(event);
+    setCurrentView(viewName: string) {
+        AnalyticsService.sendEvent({category: 'Dashboard', action: 'ChangeView', label: viewName});
+        this.currentView = viewName;
     }
 
     /**
@@ -68,12 +75,20 @@ export class DashboardComponent implements OnInit {
         this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
     }
 
-    onEventSelected(event): void {
+    /**
+     * Called when an event on the calendar is clicked on.
+     * @param event The event clicked on.
+     */
+    onEventSelected(event: Reservation): void {
         AnalyticsService.sendEvent({category: 'Dashboard', action: 'ClickEvent'});
         this.reservationInfoModal.display(event);
     }
 
-    onDaySelected(day): void {
+    /**
+     * Called when a day on the calendar is clicked on.
+     * @param day The date of the day clicked.
+     */
+    onDaySelected(day: Moment): void {
         AnalyticsService.sendEvent({category: 'Dashboard', action: 'ClickDay'});
         this.newReservationModal.display(day);
     }

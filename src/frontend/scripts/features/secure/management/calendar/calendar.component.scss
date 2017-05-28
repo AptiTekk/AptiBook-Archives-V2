@@ -1,0 +1,73 @@
+/*!
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+@import "~bootstrap/scss/bootstrap-grid.scss";
+
+/* Tools Section */
+
+@include media-breakpoint-up('lg') {
+  #tools-section {
+    height: 100%;
+  }
+}
+
+#tools-section .header {
+  height: 40px;
+  background-color: #f7f7f9;
+  box-shadow: inset 0 -10px 10px -15px #000;
+}
+
+/* Calendar View Selectors for Desktops */
+
+#calendar-view-selectors {
+  list-style: none none;
+  display: flex;
+  padding: 0;
+  margin: 0;
+  height: 40px;
+  width: 100%;
+  background-color: #f7f7f9;
+}
+
+#calendar-view-selectors li {
+  box-shadow: inset 0 -10px 10px -15px #000;
+}
+
+#calendar-view-selectors li {
+  text-align: center;
+  flex-grow: 1;
+  height: 100%;
+  line-height: 40px;
+  width: 100px;
+}
+
+#calendar-view-selectors li.active {
+  background-color: #fff;
+  border-top: 4px solid #4272b7;
+  box-shadow: none;
+}
+
+#calendar-view-selectors li:not(.active) {
+  cursor: pointer;
+  padding-top: 4px;
+}
+
+#calendar-view-selectors li:not(.active):hover {
+  background-color: #f1f1f1;
+}
+
+/* Calendar Container */
+
+@include media-breakpoint-up('lg') {
+  #calendar-container {
+    height: calc(100% - 40px);
+  }
+}
+
+@include media-breakpoint-down('md') {
+  #calendar-container {
+    height: 100%;
+  }
+}

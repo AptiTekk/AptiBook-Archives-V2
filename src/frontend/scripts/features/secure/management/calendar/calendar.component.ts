@@ -12,11 +12,12 @@ import {User} from "../../../../models/user.model";
 import {ResourceCategory} from "../../../../models/resource-category.model";
 import {Reservation} from "../../../../models/reservation/reservation.model";
 import {AuthService} from "../../../../core/services/auth.service";
-import {APIService} from "../../../../core/services/api.service";
+import {AnalyticsService} from "../../../../core/services/analytics.service";
 
 @Component({
     selector: 'at-management-calendar',
-    templateUrl: 'calendar.component.html'
+    templateUrl: 'calendar.component.html',
+    styleUrls: ['./calendar.component.scss']
 })
 export class CalendarComponent implements OnInit {
     @ViewChild('reservationInfoModal')
@@ -24,9 +25,14 @@ export class CalendarComponent implements OnInit {
 
     userGroupOwnerFilter: UserGroup[];
     currentUser: User;
+
+    /**
+     * The calendar's current view (only applicable to lg and xl screens)
+     */
+    currentView: string = 'month';
+
     resourceCategories: ResourceCategory[];
     enabledResourceCategories: ResourceCategory[];
-    filterOnlyUsersEvents: boolean = false;
 
     constructor(private userGroupService: UserGroupService,
                 private resourceCategoryService: ResourceCategoryService,
@@ -61,12 +67,29 @@ export class CalendarComponent implements OnInit {
             });
     }
 
-    onCalendarEventClicked(event: Reservation) {
-        this.reservationInfoModal.display(event);
-    }
-
+    /**
+     * Ensures that the resource categories are never undefined, only an empty array.
+     */
     updateEnabledResourceCategories() {
         this.enabledResourceCategories = this.resourceCategories ? this.resourceCategories.filter(category => category['enabled']) : [];
+    }
+
+    /**
+     * Sets the current view of the calendar to the provided value.
+     * @param viewName The name of the calendar view.
+     */
+    setCurrentView(viewName: string) {
+        AnalyticsService.sendEvent({category: 'Management - Calendar', action: 'ChangeView', label: viewName});
+        this.currentView = viewName;
+    }
+
+    /**
+     * Called when an event on the calendar is clicked on.
+     * @param event The event clicked on.
+     */
+    onEventSelected(event: Reservation): void {
+        AnalyticsService.sendEvent({category: 'Management - Calendar', action: 'ClickEvent'});
+        this.reservationInfoModal.display(event);
     }
 
 }
