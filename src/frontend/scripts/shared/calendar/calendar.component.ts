@@ -19,9 +19,9 @@ import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation/reservation.model";
 import {ResourceCategory} from "../../models/resource-category.model";
 import {UserGroup} from "../../models/user-group.model";
-import Moment = moment.Moment;
-import moment = require("moment");
 import {APIService} from "../../core/services/api.service";
+import moment = require("moment");
+import Moment = moment.Moment;
 
 @Component({
     selector: 'calendar',
@@ -30,7 +30,7 @@ import {APIService} from "../../core/services/api.service";
 })
 export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
-    public static readonly VIEW_CALENDAR: string = "month";
+    public static readonly VIEW_MONTH: string = "month";
     public static readonly VIEW_WEEK: string = "basicWeek";
     public static readonly VIEW_DAY: string = "basicDay";
     public static readonly VIEW_AGENDA_WEEK: string = "agendaWeek";
@@ -117,10 +117,10 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
     }
 
     private getEventsToUse(): any {
-        if(this.events)
+        if (this.events)
             return this.events;
 
-        if(this.eventFeedEndpoint)
+        if (this.eventFeedEndpoint)
             return (start: Moment, end: Moment, timezone: string, callback) => {
                 this.apiService
                     .get(`${this.eventFeedEndpoint}?start=${start.toISOString()}&end=${end.toISOString()}`)
@@ -141,7 +141,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             events: this.getEventsToUse(),
             timezone: 'local',
 
-            defaultView: this.view ? this.view : CalendarComponent.VIEW_CALENDAR,
+            defaultView: this.view ? this.view : CalendarComponent.VIEW_MONTH,
             views: {
                 week: {
                     displayEventEnd: true
@@ -167,10 +167,34 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
                     if (this.filterByUserGroupOwners && this.filterByUserGroupOwners.filter(owner => owner.id === event.resource.owner.id).length === 0)
                         return false;
 
-                    // If all is well, add the status to the class list.
-                    let domElement: HTMLLinkElement = element[0];
+                    // If all is well, add the status to the event's element.
+                    let htmlElement: HTMLElement = element[0];
+                    htmlElement.classList.add(event.status.toLowerCase());
 
-                    domElement.classList.add(event.status.toLowerCase());
+                    // Add the name of the resource to the event
+                    if (this.view === CalendarComponent.VIEW_WEEK || this.view === CalendarComponent.VIEW_MONTH) {
+                        // Wraps the time and title.
+                        let contentElement = htmlElement.children[0];
+                        // Time will be undefined for elements that are continued on the next week.
+                        let timeElement = contentElement.getElementsByClassName("fc-time")[0];
+                        // Title should always be defined.
+                        let titleElement = contentElement.getElementsByClassName("fc-title")[0];
+
+                        if (this.view === CalendarComponent.VIEW_WEEK) {
+                            titleElement.innerHTML = event.resource.name;
+                            contentElement.innerHTML += "<br />" + event.title;
+                        } else if (this.view === CalendarComponent.VIEW_MONTH) {
+                            titleElement.innerHTML = event.resource.name;
+                            contentElement.innerHTML += " - " + event.title;
+                        }
+                    } else if (this.view === CalendarComponent.VIEW_LIST_WEEK) {
+                        // Time will be undefined for elements that are continued on the next week.
+                        let timeElement = htmlElement.getElementsByClassName("fc-list-item-time")[0];
+                        // Title should always be defined.
+                        let titleElement = htmlElement.getElementsByClassName("fc-list-item-title")[0];
+
+                        titleElement.innerHTML = event.resource.name + " - " + event.title;
+                    }
 
                     return true;
                 }
@@ -219,7 +243,7 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
 
     public setView(view: string) {
         if (this.calendar)
-            this.calendar.fullCalendar('changeView', view ? view : CalendarComponent.VIEW_CALENDAR);
+            this.calendar.fullCalendar('changeView', view ? view : CalendarComponent.VIEW_MONTH);
     }
 
     private refreshCalendar(refreshEvents: boolean = false): void {
