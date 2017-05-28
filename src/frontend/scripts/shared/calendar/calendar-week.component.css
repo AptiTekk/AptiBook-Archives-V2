@@ -50,7 +50,7 @@
 /* Add border between days */
 :host /deep/ .fc-basicWeek-view td.fc-day,
 :host /deep/ .fc-basicWeek-view th.fc-day-header {
-    border-right: 1px solid #ddd;
+    border-right: 1px solid #eee;
 }
 
 /* Highlight current day title */
@@ -61,7 +61,7 @@
 
 /* Highlight current day background */
 :host /deep/ .fc-basicWeek-view .fc-today {
-    background-color: #fafafa !important;
+    background-color: #f7f7f9 !important;
 }
 
 /* Move events off the left border by 5px */
