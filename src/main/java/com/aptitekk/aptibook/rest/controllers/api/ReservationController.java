@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.*;
 import java.text.ParseException;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -68,6 +69,9 @@ public class ReservationController extends APIControllerAbstract {
             LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
             List<Reservation> reservations = reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, null, null);
 
+            // Sort the reservations so that the earliest show up first in the list.
+            reservations.sort(Comparator.comparing(Reservation::getStart));
+
             return ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
             }.getType()));
         } catch (ParseException e) {
@@ -93,8 +97,12 @@ public class ReservationController extends APIControllerAbstract {
 
                 LocalDateTime startLocalDateTime = startDate != null ? LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()) : null;
                 LocalDateTime endLocalDateTime = endDate != null ? LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()) : null;
+                List<Reservation> reservations = reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, user, null);
 
-                return ok(modelMapper.map(reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, user, null), new TypeToken<List<ReservationDTO>>() {
+                // Sort the reservations so that the earliest show up first in the list.
+                reservations.sort(Comparator.comparing(Reservation::getStart));
+
+                return ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
                 }.getType()));
             } catch (ParseException e) {
                 return badRequest("Could not parse start or end time.");

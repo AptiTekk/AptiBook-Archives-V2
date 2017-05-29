@@ -13,10 +13,10 @@ import {AuthService} from "../../../../core/services/auth.service";
 import {Reservation} from "../../../../models/reservation/reservation.model";
 import {ReservationService} from "../../../../core/services/reservation.service";
 import {Router} from "@angular/router";
-import {APIService} from "../../../../core/services/api.service";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import Moment = moment.Moment;
 import moment = require("moment");
+
 @Component({
     selector: 'at-search-reservation-details',
     templateUrl: 'reservation-details.component.html',

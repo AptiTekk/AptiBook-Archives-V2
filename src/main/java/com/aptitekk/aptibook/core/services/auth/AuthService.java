@@ -9,6 +9,7 @@ package com.aptitekk.aptibook.core.services.auth;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.entity.PermissionsService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,7 +40,14 @@ public class AuthService {
         if (authentication instanceof UserIDAuthenticationToken) {
             Long userId = ((UserIDAuthenticationToken) authentication).getUserId();
 
-            return userRepository.findInCurrentTenant(userId);
+            User user = userRepository.findInCurrentTenant(userId);
+            if(user == null) {
+                // The User could not be found. Sign them out.
+                signOut();
+                return null;
+            }
+
+            return user;
         }
 
         return null;
@@ -48,7 +56,7 @@ public class AuthService {
     /**
      * Signs the current user out.
      */
-    public void signOut() {
+    private void signOut() {
         SecurityContextHolder.clearContext();
     }
 

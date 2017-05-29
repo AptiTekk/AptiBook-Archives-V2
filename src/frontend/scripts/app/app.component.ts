@@ -18,6 +18,7 @@ declare const ga: Function;
 })
 export class AppComponent {
 
+    // noinspection JSUnusedLocalSymbols
     constructor(analyticsService: AnalyticsService) {
         // Note: Don't remove the un-used import, as it initializes the service.
 
@@ -29,7 +30,7 @@ export class AppComponent {
                 nextDay: '[Tomorrow at] LT',
                 lastWeek: '[Last] dddd [at] LT',
                 nextWeek: '[Next] dddd [at] LT',
-                sameElse: 'dddd, MMMM Do, YYYY [at] LT'
+                sameElse: 'MM/DD/YYYY [at] LT'
             }
         });
     }

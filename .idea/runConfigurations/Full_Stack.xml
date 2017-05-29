@@ -1,7 +1,7 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Full Stack" type="CompoundRunConfigurationType" factoryName="Compound Run Configuration">
-    <toRun type="SpringBootApplicationConfigurationType" name="AptiBook" />
-    <toRun type="js.build_tools.npm" name="Webpack Dev" />
+  <configuration default="false" name="Full Stack" type="Multirun" factoryName="Multirun" separateTabs="true" startOneByOne="false" markFailedProcess="true" hideSuccessProcess="false" delayTime="0">
+    <runConfiguration name="AptiBook" type="Spring Boot" />
+    <runConfiguration name="Webpack Dev" type="npm" />
     <method />
   </configuration>
 </component>
