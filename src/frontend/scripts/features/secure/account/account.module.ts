@@ -26,7 +26,8 @@ import {AccountNotificationSettingsModule} from "./notifications/notification-se
         AccountNotificationsComponent,
         UpcomingReservationsComponent
     ],
-    exports: [],
+    exports: [
+    ],
     providers: [],
 })
 export class AccountModule {

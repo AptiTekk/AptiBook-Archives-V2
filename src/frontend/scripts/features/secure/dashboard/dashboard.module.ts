@@ -10,15 +10,16 @@ import {DashboardComponent} from "./dashboard.component";
 import {NewReservationModalComponent} from "./new-reservation-modal/new-reservation-modal.component";
 import {SharedModule} from "../../../shared/shared.module";
 import {CommonModule} from "@angular/common";
+import {DashboardUpcomingReservationsComponent} from "./upcoming-reservations/dashboard-upcoming-reservations.component";
 
 @NgModule({
     imports: [
-        CommonModule,
         SharedModule
     ],
     declarations: [
         DashboardComponent,
-        NewReservationModalComponent
+        NewReservationModalComponent,
+        DashboardUpcomingReservationsComponent
     ],
     exports: [],
     providers: [],

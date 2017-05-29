@@ -29,6 +29,7 @@
 #notifications.unread,
 #notifications.active {
     background-color: #4272b7;
+    height: 40px;
     color: white;
 }
 

@@ -1,0 +1,44 @@
+<!--
+  ~ Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+  ~ Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+  ~ Proprietary and confidential.
+  -->
+
+<div id="main-wrapper"
+	 class="d-flex">
+	<div id="navigation">
+		<i class="arrow fa fa-arrow-up" (click)="onClickUpArrow()"
+		   [class.disabled]="currentReservationIndex == 0"></i>
+		<i class="arrow fa fa-arrow-down" (click)="onClickDownArrow()"
+		   [class.disabled]="currentReservationIndex >= (reservations.length - 1)"></i>
+	</div>
+	<div id="reservation-wrapper">
+		<p id="no-reservations"
+		   *ngIf="reservations.length == 0">
+			You have no upcoming reservations.
+		</p>
+		<div *ngIf="reservations.length > 0">
+			<div id="reservation-body"
+				 class="media">
+				<div id="reservation-image"
+					 class="media-left">
+					<resource-image [resource]="reservations[currentReservationIndex].resource"
+									[maxWidth]="'70px'"
+									[width]="'100%'">
+					</resource-image>
+				</div>
+				<div id="reservation-details"
+					 class="media-body">
+					<strong>{{reservations[currentReservationIndex].resource.name}}</strong> - {{reservations[currentReservationIndex].title}}<br/>
+					<strong>Start:</strong> {{formatDate(reservations[currentReservationIndex].start)}} <br/>
+					<strong>End:</strong> {{formatDate(reservations[currentReservationIndex].end)}}
+				</div>
+			</div>
+			<div id="reservation-footer" (click)="onClickMoreInformation()">
+				More Information
+			</div>
+		</div>
+	</div>
+</div>
+<reservation-info-modal>
+</reservation-info-modal>
