@@ -8,7 +8,14 @@ const path = require('path');
 const webpack = require('webpack');
 
 //noinspection JSUnresolvedVariable
-const buildDir = process.env.bamboo_buildNumber !== undefined ? process.env.bamboo_buildNumber : 'dev';
+let buildDir = process.env.jira_version;
+if (buildDir === undefined) {
+    // noinspection JSUnresolvedVariable
+    buildDir = process.env.bamboo_buildNumber;
+}
+if (buildDir === undefined) {
+    buildDir = 'dev';
+}
 
 const config = {
     cache: true,
