@@ -13,12 +13,6 @@
   }
 }
 
-#tools-section .header {
-  height: 40px;
-  background-color: #f7f7f9;
-  box-shadow: inset 0 -10px 10px -15px #000;
-}
-
 /* Calendar View Selectors for Desktops */
 
 #calendar-view-selectors {
@@ -28,11 +22,6 @@
   margin: 0;
   height: 40px;
   width: 100%;
-  background-color: #f7f7f9;
-}
-
-#calendar-view-selectors li {
-  box-shadow: inset 0 -10px 10px -15px #000;
 }
 
 #calendar-view-selectors li {
@@ -55,7 +44,8 @@
 }
 
 #calendar-view-selectors li:not(.active):hover {
-  background-color: #f1f1f1;
+  border-top: 4px solid #ddd;
+  padding-top: 0;
 }
 
 /* Calendar Container */
