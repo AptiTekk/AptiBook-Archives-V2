@@ -2,6 +2,7 @@ import {PermissionGroup} from "./permission-group.model";
 export const PERMISSION_GROUPS: PermissionGroup[] = [
     {
         name: 'General',
+        slug: 'general',
         details: [
             {
                 name: 'Full Permissions',
@@ -18,6 +19,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Resource Categories',
+        slug: 'resource_categories',
         details: [
             {
                 name: 'May Modify Any Resource Categories',
@@ -34,6 +36,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Resources',
+        slug: 'resources',
         details: [
             {
                 name: 'May Modify Own Group\'s Resources',
@@ -72,6 +75,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Reservations',
+        slug: 'reservations',
         details: [
             {
                 name: 'May Modify All Reservations',
@@ -88,6 +92,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Users',
+        slug: 'users',
         details: [
             {
                 name: 'May Modify Any Users',
@@ -104,6 +109,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'User Groups',
+        slug: 'user_groups',
         details: [
             {
                 name: 'May Modify Any User Groups',
@@ -119,23 +125,8 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
         ]
     },
     {
-        name: 'Permissions',
-        details: [
-            {
-                name: 'May Assign Any Permissions',
-                description: `Users and User Groups with this permission may assign any Permissions. 
-                                <ul> 
-                                    <li>If a User is given this permission, the User may assign any Permissions.</li> 
-                                    <li>If a User Group is given this permission, any Users within the User Group may assign any Permissions.</li> 
-                                </ul>`,
-                permission: {
-                    descriptor: 'PERMISSIONS_MODIFY_ALL'
-                }
-            }
-        ]
-    },
-    {
         name: 'Properties',
+        slug: 'properties',
         details: [
             {
                 name: 'May Modify Any Properties',

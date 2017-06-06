@@ -9,6 +9,8 @@ export interface PermissionGroup {
 
     name: string;
 
+    slug: string;
+
     details: PermissionDetails[];
 
 }

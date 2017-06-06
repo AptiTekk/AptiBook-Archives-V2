@@ -1,0 +1,17 @@
+/*!
+ * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
+ * Proprietary and confidential.
+ */
+@import "~bootstrap/scss/bootstrap-grid.scss";
+
+@include media-breakpoint-up('md') {
+
+  /* Make the categories card perfectly fit the view, with internal scrolling. */
+  :host /deep/ #categories-card > .card > .card-block {
+    /* 100vh - header - top/bottom padding - tabs */
+    height: calc(100vh - 60px - 32px - 54px);
+    overflow-y: auto;
+  }
+
+}

@@ -25,11 +25,11 @@ export class ConfigurationComponent {
                 label: "Users",
                 icon: "user"
             },
-            /*{
+            {
                 path: ['', 'secure', 'configuration', 'permissions'],
                 label: "Permissions",
                 icon: "unlock"
-            },*/
+            },
             {
                 path: ['', 'secure', 'configuration', 'properties'],
                 label: "Properties",

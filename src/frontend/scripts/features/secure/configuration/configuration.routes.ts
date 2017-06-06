@@ -47,10 +47,14 @@ const routes: Routes = [
                     }
                 ]
             },
-            /*{ //TODO: Permissions Page and Guard
-                path: 'permissions',
+            { //TODO: Permissions Page and Guard
+                path: 'permissions/:slug',
                 component: PermissionsConfigurationComponent
-            },*/
+            },
+            { //TODO: Permissions Page and Guard
+                path: 'permissions',
+                redirectTo: 'permissions/general'
+            },
             { //TODO: Properties Guard
                 path: 'properties/:section',
                 component: PropertiesConfigurationComponent
