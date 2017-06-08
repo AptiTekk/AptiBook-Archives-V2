@@ -5,144 +5,142 @@
   -->
 
 <div class="container-fluid">
-	<div *ngIf="properties != undefined">
-		<div class="row">
-			<div class="col-12">
-				<alert #successAlert
-					   [severity]="'success'"></alert>
-				<alert #dangerAlert
-					   [severity]="'danger'"></alert>
+	<div *ngIf="properties != undefined"
+		 class="row">
+		<div class="col-12">
+			<form [formGroup]="formGroup">
 				
-				<form [formGroup]="formGroup">
-					
-					<at-card [noTopBorder]="true">
-						<at-card-header>
-							<ul class="nav nav-tabs card-header-tabs">
-								<li class="nav-item"
-									*ngFor="let sectionLink of sectionLinks">
-									<a class="nav-link"
-									   [routerLink]="sectionLink.path"
-									   [routerLinkActive]="'active'">
+				<at-card id="properties-card" [noTopBorder]="true">
+					<at-card-header>
+						<ul class="nav nav-tabs card-header-tabs">
+							<li class="nav-item"
+								*ngFor="let sectionLink of sectionLinks">
+								<a class="nav-link"
+								   [routerLink]="sectionLink.path"
+								   [routerLinkActive]="'active'">
 										<span *ngIf="sectionLink.icon != undefined"
 											  class="fa fa-{{sectionLink.icon}}"></span>
-										{{sectionLink.label}}
-									</a>
-								</li>
-							</ul>
-						</at-card-header>
+									{{sectionLink.label}}
+								</a>
+							</li>
+						</ul>
+					</at-card-header>
+					
+					<at-card-block>
+						<alert #successAlert
+							   [severity]="'success'"></alert>
+						<alert #dangerAlert
+							   [severity]="'danger'"></alert>
 						
-						<at-card-block>
-							
-							<property-section [sectionPath]="'personalization'">
-								<div class="row">
-									<div class="col-12 col-md-8">
-										<!-- Organization Name -->
-										<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
-													[label]="'Organization Name'"
-													[placeholder]="'AptiTekk High School'"
-													[autoFocus]="true">
-										</form-group>
-									
-									</div>
-								</div>
-							</property-section>
-							
-							<property-section [sectionPath]="'authentication'">
-								<div class="row">
-									<div class="col-12 col-md-8">
-										<label for="authenticationMethod">Authentication Method</label>
-										<select id="authenticationMethod"
-												class="form-control mb-3"
-												[formControlName]="'AUTHENTICATION_METHOD'"
-												(change)="onAuthenticationMethodChanged()">
-											<option value="BUILT_IN">Built-In (Username and Password)</option>
-											<option value="CAS">CAS (Apereo / Jasig Central Authentication Service)</option>
-										</select>
-										
-										<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'BUILT_IN'">
-											<!-- Google Sign In Section -->
-											<h3>Google Sign In</h3>
-											<hr/>
-											
-											<!-- Sign In Enabled Toggle Switch -->
-											<div class="from-group">
-												<at-checkbox #googleSignInEnabled
-															 [formControlName]="'GOOGLE_SIGN_IN_ENABLED'"
-															 [label]="'Google Sign-In Enabled'">
-												</at-checkbox>
-											</div>
-											<br/>
-											
-											<!-- Allowed Domain Names -->
-											<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
-														[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
-														[readOnly]="googleSignInEnabled.value == false"
-														[placeholder]="'gmail.com, example.net, ...'">
-											</form-group>
-											
-											<!--&lt;!&ndash; Registration Section &ndash;&gt;
-											<h3>Registration</h3>
-											<hr/>
-											
-											&lt;!&ndash; Registration Enabled Toggle Switch &ndash;&gt;
-											<div class="from-group">
-												<at-checkbox formControlName="REGISTRATION_ENABLED"
-															 [label]="'Registration Enabled'">
-												</at-checkbox>
-											</div>-->
-										</section>
-										<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'CAS'">
-											<!-- CAS Settings Section -->
-											<h3>CAS Settings</h3>
-											<hr/>
-											
-											<!-- CAS Server URL -->
-											<form-group [control]="formGroup.controls['CAS_SERVER_URL']"
-														[label]="'CAS Server URL (Excluding /login)'"
-														[placeholder]="'https://example.com/cas'">
-											</form-group>
-											
-											<!-- CAS Callback URL -->
-											<form-group [label]="'AptiBook Service Callback URL (For CAS Server Configuration)'"
-														[value]="CAS_CALLBACK_URL"
-														[readOnly]="true">
-											</form-group>
-										</section>
-									</div>
-								</div>
-							</property-section>
-							
-							<property-section [sectionPath]="'other'">
-								<div class="row">
-									<div class="col-12 col-md-8">
-										<!-- Analytics Opt-out -->
-										<at-checkbox [formControlName]="'ANALYTICS_ENABLED'"
-													 [label]="'Help make AptiBook better by sending usage statistics to AptiTekk.'">
-										</at-checkbox>
-									
-									</div>
-								</div>
-							</property-section>
-						</at-card-block>
-						<at-card-footer>
-							<div class="btn-toolbar flex-wrap">
-								<button class="btn btn-primary"
-										(click)="onSubmit()"
-										[disabled]="formGroup.pristine">
-									Save Changes
-								</button>
+						<property-section [sectionPath]="'personalization'">
+							<div class="row">
+								<div class="col-12 col-md-8">
+									<!-- Organization Name -->
+									<form-group [control]="formGroup.controls['PERSONALIZATION_ORGANIZATION_NAME']"
+												[label]="'Organization Name'"
+												[placeholder]="'AptiTekk High School'"
+												[autoFocus]="true">
+									</form-group>
 								
-								<button class="btn btn-danger ml-md-auto"
-										type="button"
-										(click)="confirmationModal.open()"
-										[at-analytics]="{category: 'Configuration - Properties', action: 'ClickResetProperties'}">
-									Reset All Properties
-								</button>
+								</div>
 							</div>
-						</at-card-footer>
-					</at-card>
-				</form>
-			</div>
+						</property-section>
+						
+						<property-section [sectionPath]="'authentication'">
+							<div class="row">
+								<div class="col-12 col-md-8">
+									<label for="authenticationMethod">Authentication Method</label>
+									<select id="authenticationMethod"
+											class="form-control mb-3"
+											[formControlName]="'AUTHENTICATION_METHOD'"
+											(change)="onAuthenticationMethodChanged()">
+										<option value="BUILT_IN">Built-In (Username and Password)</option>
+										<option value="CAS">CAS (Apereo / Jasig Central Authentication Service)</option>
+									</select>
+									
+									<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'BUILT_IN'">
+										<!-- Google Sign In Section -->
+										<h3>Google Sign In</h3>
+										<hr/>
+										
+										<!-- Sign In Enabled Toggle Switch -->
+										<div class="from-group">
+											<at-checkbox #googleSignInEnabled
+														 [formControlName]="'GOOGLE_SIGN_IN_ENABLED'"
+														 [label]="'Google Sign-In Enabled'">
+											</at-checkbox>
+										</div>
+										<br/>
+										
+										<!-- Allowed Domain Names -->
+										<form-group [control]="formGroup.controls['GOOGLE_SIGN_IN_WHITELIST']"
+													[label]="'Allowed Google Sign-In Domain Names (Comma Separated)'"
+													[readOnly]="googleSignInEnabled.value == false"
+													[placeholder]="'gmail.com, example.net, ...'">
+										</form-group>
+										
+										<!--&lt;!&ndash; Registration Section &ndash;&gt;
+										<h3>Registration</h3>
+										<hr/>
+										
+										&lt;!&ndash; Registration Enabled Toggle Switch &ndash;&gt;
+										<div class="from-group">
+											<at-checkbox formControlName="REGISTRATION_ENABLED"
+														 [label]="'Registration Enabled'">
+											</at-checkbox>
+										</div>-->
+									</section>
+									<section *ngIf="formGroup.controls['AUTHENTICATION_METHOD'].value === 'CAS'">
+										<!-- CAS Settings Section -->
+										<h3>CAS Settings</h3>
+										<hr/>
+										
+										<!-- CAS Server URL -->
+										<form-group [control]="formGroup.controls['CAS_SERVER_URL']"
+													[label]="'CAS Server URL (Excluding /login)'"
+													[placeholder]="'https://example.com/cas'">
+										</form-group>
+										
+										<!-- CAS Callback URL -->
+										<form-group [label]="'AptiBook Service Callback URL (For CAS Server Configuration)'"
+													[value]="CAS_CALLBACK_URL"
+													[readOnly]="true">
+										</form-group>
+									</section>
+								</div>
+							</div>
+						</property-section>
+						
+						<property-section [sectionPath]="'other'">
+							<div class="row">
+								<div class="col-12 col-md-8">
+									<!-- Analytics Opt-out -->
+									<at-checkbox [formControlName]="'ANALYTICS_ENABLED'"
+												 [label]="'Help make AptiBook better by sending usage statistics to AptiTekk.'">
+									</at-checkbox>
+								
+								</div>
+							</div>
+						</property-section>
+					</at-card-block>
+					<at-card-footer>
+						<div class="btn-toolbar flex-wrap">
+							<button class="btn btn-primary"
+									(click)="onSubmit()"
+									[disabled]="formGroup.pristine">
+								Save Changes
+							</button>
+							
+							<button class="btn btn-danger ml-md-auto"
+									type="button"
+									(click)="confirmationModal.open()"
+									[at-analytics]="{category: 'Configuration - Properties', action: 'ClickResetProperties'}">
+								Reset All Properties
+							</button>
+						</div>
+					</at-card-footer>
+				</at-card>
+			</form>
 		</div>
 	</div>
 </div>

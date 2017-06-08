@@ -17,6 +17,7 @@ import {AnalyticsService} from "../../../../core/services/analytics.service";
 @Component({
     selector: 'at-configuration-properties',
     templateUrl: 'properties.component.html',
+    styleUrls: ['properties.component.css']
 })
 export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
 
