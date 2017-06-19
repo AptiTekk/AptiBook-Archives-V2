@@ -72,7 +72,7 @@ const config = {
                 use: "file-loader?name=./resources/" + buildDir + "/json/[hash].[ext]"
             },
             {
-                test: /\.(png|jpg|gif|svg)(\?v=[\d.]+)?$/,
+                test: /\.(png|jpg|gif|svg|ico)(\?v=[\d.]+)?$/,
                 use: "file-loader?name=./resources/" + buildDir + "/images/[hash].[ext]"
             },
             {
