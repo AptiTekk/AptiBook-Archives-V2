@@ -55,7 +55,6 @@
 
 .navigation-link {
     fill: #ddd;
-    border-left: 10px solid #ddd;
     height: 100px;
     line-height: 100px;
     text-align: center;
@@ -70,7 +69,6 @@
 
 .navigation-link:hover {
     fill: #aaa;
-    border-left-color: #ccc;
     background-color: #f1f1f1;
 }
 
@@ -80,7 +78,6 @@
 
 .navigation-link.active {
     fill: #4272b7;
-    border-left-color: #4272b7;
     background-color: #fff;
 }
 
@@ -92,32 +89,18 @@
     overflow: hidden;
 }
 
-#sign-out-button, #help-button {
+#sign-out-button {
     width: 100%;
     font-size: 20px;
     text-align: center;
     height: 50px;
     display: block;
     background-color: #fff;
-}
-
-#help-button {
-    border-left: 10px solid #ddd;
-    color: #ddd;
-}
-
-#help-button:hover {
-    border-left-color: #ccc;
-    background-color: #f1f1f1;
-    color: #aaa;
-}
-
-#sign-out-button {
-    background-color: #f1f1f1;
     color: #777;
 }
 
 #sign-out-button:hover {
     background-color: #d9534f;
     color: white;
+    cursor: pointer;
 }
