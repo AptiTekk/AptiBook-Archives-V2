@@ -55,10 +55,6 @@
 
 /* Button Styling */
 
-.at-app .btn {
-    border-radius: 0;
-}
-
 .at-app .btn-primary,
 .at-app .pagination > .active > a,
 .at-app .pagination > .active > span,

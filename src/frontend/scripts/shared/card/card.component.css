@@ -4,10 +4,6 @@
  * Proprietary and confidential.
  */
 
-.card, .card-header, .card-footer {
-    border-radius: 0;
-}
-
 .card {
     box-shadow: #ddd 0 0 8px 2px;
     border: none;
