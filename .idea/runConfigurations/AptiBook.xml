@@ -4,7 +4,7 @@
     <option name="SPRING_BOOT_MAIN_CLASS" value="com.aptitekk.aptibook.AptiBook" />
     <option name="ACTIVE_PROFILES" value="development" />
     <option name="ALTERNATIVE_JRE_PATH" />
-    <module name="AptiBook" />
+    <module name="Web" />
     <envs>
       <env name="SPARKPOST_API_KEY" value="0bdd338ba5de5083cef4c6908eb6719e0c20caae" />
       <env name="SPARKPOST_API_URL" value="https://api.sparkpost.com/api/v1" />
