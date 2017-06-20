@@ -9,8 +9,7 @@ import {APIService} from "./api.service";
 import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Permission} from "../../models/permissions/permission.model";
 import {AuthService} from "./auth.service";
-import {UserPermissionAssignments} from "../../models/permissions/permission-assignments";
-import {Observable} from "rxjs/Observable";
+import {User} from "../../models/user.model";
 
 @Injectable()
 export class PermissionsService {
@@ -51,18 +50,21 @@ export class PermissionsService {
     }
 
     /**
-     * Gets a UserPermissionAssignments instance that, for each permission,
-     * lists the users explicitly assigned that permission.
+     * For each Permission in a Permission Group, lists the Users assigned the Permission.
+     *
+     * @param groupKey The key of the Permission Group.
+     * @param inherited Whether or not to include inherited permissions from User Groups.
+     *
+     * @returns A Promise that emits a map of Permissions to assigned Users.
      */
-    public getUsersAssignedToPermissions(): Observable<UserPermissionAssignments> {
-        return Observable.create(listener => {
-            this.apiService.get("permissions/users")
+    public getUsersAssignedToPermissionsInGroup(groupKey: string, inherited: boolean = true): Promise<{ [permission: string]: User[] }> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("permissions/groups/" + groupKey + "/users?inherited=" + inherited)
                 .subscribe(
-                    assignments => listener.next(assignments),
-                    err => listener.error(err),
-                    () => listener.complete()
+                    assignments => resolve(assignments),
+                    err => reject(err)
                 );
-        });
+        })
     }
 
 }

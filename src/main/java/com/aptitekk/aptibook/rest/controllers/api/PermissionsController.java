@@ -50,8 +50,8 @@ public class PermissionsController extends APIControllerAbstract {
      * @param group The Permission Group.
      * @return A list of the Permissions in the Permission Group, and which User Groups are assigned to them.
      */
-    @RequestMapping(value = "/permissions/group/{name}/user_groups", method = RequestMethod.GET)
-    public ResponseEntity getUserGroupsAssignedToPermissionsInGroup(@PathVariable("name") Permission.Group group) {
+    @RequestMapping(value = "/permissions/groups/{key}/user_groups", method = RequestMethod.GET)
+    public ResponseEntity getUserGroupsAssignedToPermissionsInGroup(@PathVariable("key") Permission.Group group) {
 
         // Make sure the user has the permission to list the assignments.
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
@@ -82,8 +82,8 @@ public class PermissionsController extends APIControllerAbstract {
      * @param inherited Whether or not to include inherited assignments, from the Users' User Groups. Defaults to true.
      * @return A list of the Permissions in the Permission Group, and which Users are assigned to them.
      */
-    @RequestMapping(value = "/permissions/group/{name}/users", method = RequestMethod.GET)
-    public ResponseEntity getUsersAssignedToPermissionsInGroup(@PathVariable("name") Permission.Group group,
+    @RequestMapping(value = "/permissions/groups/{key}/users", method = RequestMethod.GET)
+    public ResponseEntity getUsersAssignedToPermissionsInGroup(@PathVariable("key") Permission.Group group,
                                                                @RequestParam(name = "inherited", defaultValue = "true") boolean inherited) {
 
         // Make sure the user has the permission to list the assignments.
