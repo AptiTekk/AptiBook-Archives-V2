@@ -50,7 +50,7 @@ public class PermissionsController extends APIControllerAbstract {
      */
     @RequestMapping(value = "/permissions/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsersWithPermissions() {
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PERMISSIONS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
             return noPermission();
 
         Map<Permission.Descriptor, List<User>> descriptorMap = new HashMap<>();
@@ -75,7 +75,7 @@ public class PermissionsController extends APIControllerAbstract {
      */
     @RequestMapping(value = "/permissions/{descriptor}/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsersWithPermission(@PathVariable("descriptor") Permission.Descriptor descriptor) {
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PERMISSIONS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
             return noPermission();
 
         List<User> usersWithPermission = this.userRepository.findUsersWithPermission(descriptor);
