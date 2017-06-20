@@ -10,20 +10,69 @@ import com.aptitekk.aptibook.core.domain.entities.Resource;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
+import com.aptitekk.aptibook.core.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.services.annotations.EntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @EntityService
 public class PermissionsService {
 
     private final UserGroupService userGroupService;
+    private final UserGroupRepository userGroupRepository;
+    private final UserRepository userRepository;
 
     @Autowired
-    public PermissionsService(UserGroupService userGroupService) {
+    public PermissionsService(UserGroupService userGroupService,
+                              UserGroupRepository userGroupRepository,
+                              UserRepository userRepository) {
         this.userGroupService = userGroupService;
+        this.userGroupRepository = userGroupRepository;
+        this.userRepository = userRepository;
+    }
+
+    /**
+     * Finds all the User Groups assigned to a Permission.
+     *
+     * @param descriptor The Permission's Descriptor.
+     * @return A List of User Groups assigned to the Permission.
+     */
+    public List<UserGroup> getUserGroupsAssignedToPermission(Permission.Descriptor descriptor) {
+        // Get all the User Groups.
+        List<UserGroup> allUserGroups = this.userGroupRepository.findAll();
+
+        // Include only the User Groups which have the permission.
+        return allUserGroups.stream().filter(userGroup -> userGroup.getPermissions().contains(descriptor)).collect(Collectors.toList());
+    }
+
+    /**
+     * Finds all the Users assigned to a Permission.
+     *
+     * @param descriptor The Permission's Descriptor.
+     * @param inherited  Whether or not to include inherited assignments, from the Users' User Groups.
+     * @return A List of Users assigned to the Permission.
+     */
+    public List<User> getUsersAssignedToPermission(Permission.Descriptor descriptor,
+                                                   boolean inherited) {
+        // Get all the Users.
+        List<User> allUsers = this.userRepository.findAll();
+
+        // Include only the Users which have the permission.
+        return allUsers.stream().filter(user -> {
+            // Check if the user has the permission explicitly assigned to them.
+            boolean hasPermission = user.getPermissions().contains(descriptor);
+
+            // If we are checking for inheritance and the user does not explicitly have the permission, check their groups.
+            if (inherited && !hasPermission)
+                hasPermission = user.getUserGroups().stream().anyMatch(userGroup -> userGroup.getPermissions().contains(descriptor));
+
+            return hasPermission;
+        }).collect(Collectors.toList());
     }
 
     /**
