@@ -20,6 +20,6 @@ export interface PermissionGroup {
     /**
      * The group's details (descriptors)
      */
-    details: PermissionDetails[];
+    permissions: PermissionDetails[];
 
 }

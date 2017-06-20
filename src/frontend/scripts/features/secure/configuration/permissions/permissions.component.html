@@ -22,21 +22,21 @@
 				</at-card-header>
 				<at-card-block>
 					<div *ngIf="currentPermissionGroup != undefined">
-						<div *ngFor="let permissionDetails of currentPermissionGroup.details">
+						<div *ngFor="let permission of currentPermissionGroup.permissions">
 							<div class="row pb-3">
 								<div class="col-12">
-									<h3>{{permissionDetails.name}}</h3>
+									<h3>{{permission.name}}</h3>
 									<hr/>
 								</div>
 								<div class="col-12 col-md-6">
-									<p [innerHTML]="permissionDetails.description"></p>
+									<p [innerHTML]="permission.description"></p>
 								</div>
 								<div class="col-6 col-md-3">
 									<at-card [title]="'Assigned Users'"
 											 [noTopBorder]="true">
 										<at-card-block>
-											<ul *ngIf="userPermissionAssignments">
-												<li *ngFor="let user of userPermissionAssignments[permissionDetails.permission.descriptor]">
+											<ul *ngIf="currentUserAssignments != undefined">
+												<li *ngFor="let user of currentUserAssignments[permission.key]">
 													{{user.emailAddress}}
 												</li>
 											</ul>

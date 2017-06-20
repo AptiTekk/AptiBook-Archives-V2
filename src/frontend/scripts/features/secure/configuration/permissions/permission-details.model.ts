@@ -4,13 +4,12 @@
  * Proprietary and confidential.
  */
 
-import {Permission} from "../../../../models/permissions/permission.model";
 export interface PermissionDetails {
 
     name: string;
 
-    description: string;
+    key: string;
 
-    permission: Permission;
+    description: string;
 
 }

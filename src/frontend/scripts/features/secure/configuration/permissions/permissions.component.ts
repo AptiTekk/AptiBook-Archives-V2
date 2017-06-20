@@ -8,10 +8,10 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {PermissionsService} from "../../../../core/services/permissions.service";
 import {PermissionGroup} from "./permission-group.model";
 import {PERMISSION_GROUPS} from "./permission-groups.data";
-import {UserPermissionAssignments} from "../../../../models/permissions/permission-assignments";
 import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
+import {User} from "../../../../models/user.model";
 
 @Component({
     selector: 'at-configuration-permissions',
@@ -24,11 +24,26 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
     paramsSubscription: Subscription;
 
     /* Instance Variables */
+
+    /**
+     * All the Permission Groups available and their details.
+     */
     permissionGroups: PermissionGroup[] = PERMISSION_GROUPS;
-    currentPermissionGroup: PermissionGroup;
+
+    /**
+     * The Navigation Links for the Permission Group tabs.
+     */
     sectionLinks: NavigationLink[] = [];
 
-    userPermissionAssignments: UserPermissionAssignments;
+    /**
+     * The currently viewed Permission Group.
+     */
+    currentPermissionGroup: PermissionGroup;
+
+    /**
+     * The User assignments for the current Permission Group.
+     */
+    currentUserAssignments: { [permission: string]: User[] };
 
     constructor(private permissionsService: PermissionsService,
                 private router: Router,
@@ -53,20 +68,13 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
                 } else {
                     this.currentPermissionGroup = filteredGroups[0];
                 }
+
+                this.permissionsService.getUsersAssignedToPermissionsInGroup(this.currentPermissionGroup.key, false)
+                    .then(assignments => {
+                        this.currentUserAssignments = assignments;
+                    })
             }
         );
-
-        // Get the users assigned to each permission.
-        this.permissionsService.getUsersAssignedToPermissions()
-            .subscribe(
-                assignments => {
-                    // Filter admin user from assignments.
-                    for(let group in assignments) {
-                        assignments[group] = assignments[group].filter(user => !user.admin);
-                    }
-                    this.userPermissionAssignments = assignments;
-                }
-            )
     }
 
     ngOnDestroy(): void {
