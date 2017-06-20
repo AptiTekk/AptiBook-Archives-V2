@@ -7,10 +7,19 @@
 import {PermissionDetails} from "./permission-details.model";
 export interface PermissionGroup {
 
+    /**
+     * The group's name, as displayed to the user.
+     */
     name: string;
 
-    slug: string;
+    /**
+     * The group's API key.
+     */
+    key: string;
 
+    /**
+     * The group's details (descriptors)
+     */
     details: PermissionDetails[];
 
 }

@@ -2,7 +2,7 @@ import {PermissionGroup} from "./permission-group.model";
 export const PERMISSION_GROUPS: PermissionGroup[] = [
     {
         name: 'General',
-        slug: 'general',
+        key: 'GENERAL',
         details: [
             {
                 name: 'Full Permissions',
@@ -19,7 +19,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Resource Categories',
-        slug: 'resource_categories',
+        key: 'RESOURCE_CATEGORIES',
         details: [
             {
                 name: 'May Modify Any Resource Categories',
@@ -36,7 +36,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Resources',
-        slug: 'resources',
+        key: 'RESOURCES',
         details: [
             {
                 name: 'May Modify Own Group\'s Resources',
@@ -75,7 +75,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Reservations',
-        slug: 'reservations',
+        key: 'RESERVATIONS',
         details: [
             {
                 name: 'May Modify All Reservations',
@@ -92,7 +92,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Users',
-        slug: 'users',
+        key: 'USERS',
         details: [
             {
                 name: 'May Modify Any Users',
@@ -109,7 +109,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'User Groups',
-        slug: 'user_groups',
+        key: 'USER_GROUPS',
         details: [
             {
                 name: 'May Modify Any User Groups',
@@ -126,7 +126,7 @@ export const PERMISSION_GROUPS: PermissionGroup[] = [
     },
     {
         name: 'Properties',
-        slug: 'properties',
+        key: 'PROPERTIES',
         details: [
             {
                 name: 'May Modify Any Properties',

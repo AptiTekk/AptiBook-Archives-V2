@@ -22,10 +22,9 @@ public class Permission {
         GENERAL,
         RESOURCE_CATEGORIES,
         RESOURCES,
+        RESERVATIONS,
         USERS,
         USER_GROUPS,
-        RESERVATIONS,
-        PERMISSIONS,
         PROPERTIES;
 
         private Set<Descriptor> descriptors = new HashSet<>();
@@ -49,7 +48,6 @@ public class Permission {
         RESERVATIONS_MODIFY_ALL(Group.RESERVATIONS),
         USERS_MODIFY_ALL(Group.USERS),
         GROUPS_MODIFY_ALL(Group.USER_GROUPS),
-        PERMISSIONS_MODIFY_ALL(Group.PERMISSIONS),
         PROPERTIES_MODIFY_ALL(Group.PROPERTIES);
 
         private final Group group;

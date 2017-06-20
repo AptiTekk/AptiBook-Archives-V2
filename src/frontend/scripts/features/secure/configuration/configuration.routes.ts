@@ -48,7 +48,7 @@ const routes: Routes = [
                 ]
             },
             { //TODO: Permissions Page and Guard
-                path: 'permissions/:slug',
+                path: 'permissions/:key',
                 component: PermissionsConfigurationComponent
             },
             { //TODO: Permissions Page and Guard

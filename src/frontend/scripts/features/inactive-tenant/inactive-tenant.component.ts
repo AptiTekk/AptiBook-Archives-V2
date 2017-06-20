@@ -8,7 +8,8 @@ import {Component} from '@angular/core';
 
 @Component({
     selector: 'at-inactive-tenant',
-    templateUrl: 'inactive-tenant.component.html'
+    templateUrl: 'inactive-tenant.component.html',
+    styleUrls: ['./inactive-tenant.component.css']
 })
 export class InactiveTenantComponent {
 

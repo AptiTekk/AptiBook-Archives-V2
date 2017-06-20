@@ -44,6 +44,10 @@ public class PermissionsController extends APIControllerAbstract {
         }.getType()));
     }
 
+    /**
+     * Finds all users with any permissions explicitly assigned to them (not inherited)
+     * @return For each permission descriptor, a list of the users who have the permission explicitly.
+     */
     @RequestMapping(value = "/permissions/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsersWithPermissions() {
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PERMISSIONS_MODIFY_ALL))
@@ -64,6 +68,11 @@ public class PermissionsController extends APIControllerAbstract {
         return ok(modelMappedDescriptorMap);
     }
 
+    /**
+     * Finds all users with this specific permission explicitly assigned to them (not inherited).
+     * @param descriptor The permission descriptor for filtering.
+     * @return A list of the users who have the permission explicitly.
+     */
     @RequestMapping(value = "/permissions/{descriptor}/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsersWithPermission(@PathVariable("descriptor") Permission.Descriptor descriptor) {
         if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PERMISSIONS_MODIFY_ALL))

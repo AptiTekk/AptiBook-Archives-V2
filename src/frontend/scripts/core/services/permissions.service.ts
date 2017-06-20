@@ -52,7 +52,7 @@ export class PermissionsService {
 
     /**
      * Gets a UserPermissionAssignments instance that, for each permission,
-     * lists the users explicity assigned that permission.
+     * lists the users explicitly assigned that permission.
      */
     public getUsersAssignedToPermissions(): Observable<UserPermissionAssignments> {
         return Observable.create(listener => {
