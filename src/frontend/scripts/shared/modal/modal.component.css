@@ -6,9 +6,6 @@
 
 .modal-content {
     border: none;
+    border-top: 6px solid #4272b7;
     box-shadow: none !important;
-}
-
-.modal-header {
-    border-top: 5px solid #4272b7;
 }
