@@ -21,7 +21,7 @@ config.module.rules.unshift(
 config.devServer = {
     contentBase: path.join(__dirname, "../target/classes/static/"),
     proxy: {
-        "/api": "http://localhost:8080/"
+        "/api": "http://127.0.0.1:8080/"
     },
     disableHostCheck: true,
     historyApiFallback: true,

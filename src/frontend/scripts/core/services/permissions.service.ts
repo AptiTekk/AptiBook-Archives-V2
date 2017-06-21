@@ -10,6 +10,7 @@ import {ReplaySubject} from "rxjs/ReplaySubject";
 import {Permission} from "../../models/permissions/permission.model";
 import {AuthService} from "./auth.service";
 import {User} from "../../models/user.model";
+import {UserGroup} from "../../models/user-group.model";
 
 @Injectable()
 export class PermissionsService {
@@ -60,6 +61,38 @@ export class PermissionsService {
     public getUsersAssignedToPermissionsInGroup(groupKey: string, inherited: boolean = true): Promise<{ [permission: string]: User[] }> {
         return new Promise((resolve, reject) => {
             this.apiService.get("permissions/groups/" + groupKey + "/users?inherited=" + inherited)
+                .subscribe(
+                    assignments => resolve(assignments),
+                    err => reject(err)
+                );
+        })
+    }
+
+    /**
+     * For each Permission in each Permission Group, lists the Users assigned the Permission.
+     *
+     * @returns A Promise that emits a map of Permission Groups to Permissions to assigned User Groups.
+     */
+    public getUserGroupsAssignedToPermissionsInAllGroups(groupKey: string): Promise<{ [permissionGroup: string]: { [permission: string]: UserGroup[] } }> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("permissions/groups/" + groupKey + "/user_groups")
+                .subscribe(
+                    assignments => resolve(assignments),
+                    err => reject(err)
+                );
+        })
+    }
+
+    /**
+     * For each Permission in a Permission Group, lists the User Groups assigned the Permission.
+     *
+     * @param groupKey The key of the Permission Group.
+     *
+     * @returns A Promise that emits a map of Permissions to assigned User Groups.
+     */
+    public getUserGroupsAssignedToPermissionsInGroup(groupKey: string): Promise<{ [permission: string]: UserGroup[] }> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("permissions/groups/" + groupKey + "/user_groups")
                 .subscribe(
                     assignments => resolve(assignments),
                     err => reject(err)

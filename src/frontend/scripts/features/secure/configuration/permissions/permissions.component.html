@@ -7,7 +7,8 @@
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-12">
-			<at-card id="categories-card" [noTopBorder]="true">
+			<at-card id="categories-card"
+					 [noTopBorder]="true">
 				<at-card-header>
 					<ul class="nav nav-tabs card-header-tabs">
 						<li class="nav-item"
@@ -40,6 +41,9 @@
 													{{user.emailAddress}}
 												</li>
 											</ul>
+											<p *ngIf="currentUserAssignments == undefined || currentUserAssignments[permission.key]?.length == 0">
+												No Users are assigned.
+											</p>
 										</at-card-block>
 										<at-card-footer>
 											<button class="btn btn-secondary">
@@ -52,7 +56,14 @@
 									<at-card [title]="'Assigned Groups'"
 											 [noTopBorder]="true">
 										<at-card-block>
-											No User Groups are assigned to this permission.
+											<ul *ngIf="currentUserGroupAssignments != undefined">
+												<li *ngFor="let userGroup of currentUserGroupAssignments[permission.key]">
+													{{userGroup.name}}
+												</li>
+											</ul>
+											<p *ngIf="currentUserGroupAssignments == undefined || currentUserGroupAssignments[permission.key]?.length == 0">
+												No User Groups are assigned.
+											</p>
 										</at-card-block>
 										<at-card-footer>
 											<button class="btn btn-secondary">

@@ -12,6 +12,7 @@ import {NavigationLink} from "../../../../shared/navigation/navigation-link.mode
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
 import {User} from "../../../../models/user.model";
+import {UserGroup} from "../../../../models/user-group.model";
 
 @Component({
     selector: 'at-configuration-permissions',
@@ -45,6 +46,11 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
      */
     currentUserAssignments: { [permission: string]: User[] };
 
+    /**
+     * The User Group assignments for the current Permission Group.
+     */
+    currentUserGroupAssignments: { [permission: string]: UserGroup[] };
+
     constructor(private permissionsService: PermissionsService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
@@ -69,10 +75,17 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
                     this.currentPermissionGroup = filteredGroups[0];
                 }
 
+                // Get the Users assigned to this Permission Group.
                 this.permissionsService.getUsersAssignedToPermissionsInGroup(this.currentPermissionGroup.key, false)
                     .then(assignments => {
                         this.currentUserAssignments = assignments;
-                    })
+                    });
+
+                // Get the User Groups assigned to this Permission Group.
+                this.permissionsService.getUserGroupsAssignedToPermissionsInGroup(this.currentPermissionGroup.key)
+                    .then(assignments => {
+                        this.currentUserGroupAssignments = assignments;
+                    });
             }
         );
     }

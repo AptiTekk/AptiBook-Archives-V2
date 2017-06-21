@@ -22,7 +22,6 @@
     background: url('background.svg') repeat center;
     background-size: contain;
     border-top: 10px solid #4272b7;
-    border-bottom: 10px solid #4272b7;
     box-sizing: border-box;
 
     opacity: 0;
@@ -40,7 +39,7 @@
 
 /* Logo Icon Size */
 #splashscreen > img {
-    width: 300px;
+    width: 700px;
 }
 
 /* Show splashscreen when at-app is empty */
