@@ -7,8 +7,8 @@
 package com.aptitekk.aptibook.core.cron;
 
 import com.aptitekk.aptibook.core.domain.entities.*;
-import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.repositories.*;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
 import com.aptitekk.aptibook.core.services.LogService;
@@ -120,13 +120,13 @@ public class DemoTenantBuilder {
         userRepository.save(admin);
 
         // Full Permission
-        Set<Permission.Descriptor> fullPermissions = new HashSet<>();
-        fullPermissions.add(Permission.Descriptor.GENERAL_FULL_PERMISSIONS);
+        Set<Permission> fullPermissions = new HashSet<>();
+        fullPermissions.add(Permission.GENERAL_FULL_PERMISSIONS);
 
         // Some Permission
-        Set<Permission.Descriptor> somePermissions = new HashSet<>();
-        somePermissions.add(Permission.Descriptor.PROPERTIES_MODIFY_ALL);
-        somePermissions.add(Permission.Descriptor.GROUPS_MODIFY_ALL);
+        Set<Permission> somePermissions = new HashSet<>();
+        somePermissions.add(Permission.PROPERTIES_MODIFY_ALL);
+        somePermissions.add(Permission.GROUPS_MODIFY_ALL);
 
         // Notification Settings
         Map<NotificationType, User.NotificationToggles> notificationSettings = new HashMap<>();
@@ -351,7 +351,7 @@ public class DemoTenantBuilder {
      */
     private UserGroup createUserGroup(String name,
                                       UserGroup parent,
-                                      Set<Permission.Descriptor> permissions) {
+                                      Set<Permission> permissions) {
         UserGroup userGroup = new UserGroup();
         userGroup.setTenant(demoTenant);
         userGroup.setName(name);
@@ -377,7 +377,7 @@ public class DemoTenantBuilder {
                             String firstName,
                             String lastName,
                             String password,
-                            Set<Permission.Descriptor> permissions,
+                            Set<Permission> permissions,
                             Map<NotificationType, User.NotificationToggles> notificationSettings,
                             UserGroup... userGroups) {
         User user = new User();

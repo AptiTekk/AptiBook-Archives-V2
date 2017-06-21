@@ -8,8 +8,8 @@ package com.aptitekk.aptibook.rest.controllers.api;
 
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.UserGroup;
-import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
 import com.aptitekk.aptibook.core.domain.rest.dtos.UserDTO;
 import com.aptitekk.aptibook.core.security.PasswordUtils;
@@ -47,7 +47,7 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
     public ResponseEntity<?> getUsers() {
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
             return noPermission();
 
         List<User> users = userRepository.findAll();
@@ -61,7 +61,7 @@ public class UserController extends APIControllerAbstract {
         if (userDTO == null)
             return badRequest("The User data was not supplied.");
 
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
             return noPermission();
 
         User newUser = new User();
@@ -126,7 +126,7 @@ public class UserController extends APIControllerAbstract {
             return notFound("No users were found with the ID: " + id);
 
         if (!user.equals(authService.getCurrentUser()))
-            if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+            if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
                 return noPermission();
 
         return ok(modelMapper.map(user, UserDTO.class));
@@ -170,7 +170,7 @@ public class UserController extends APIControllerAbstract {
             return notFound("No users were found with the ID: " + id);
 
         if (!currentUser.equals(authService.getCurrentUser()))
-            if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+            if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
                 return noPermission();
 
         if (userDTO.emailAddress != null) {
@@ -200,7 +200,7 @@ public class UserController extends APIControllerAbstract {
         }
 
         if (userDTO.userGroups != null) {
-            if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+            if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
                 return noPermission("You may not modify User Groups.");
 
             List<UserGroup> userGroupList = userValidator.validateUserGroups(userDTO.userGroups, currentUser);
@@ -226,7 +226,7 @@ public class UserController extends APIControllerAbstract {
         if (user.isAdmin())
             return badRequest("The admin user cannot be deleted.");
 
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
             return noPermission();
 
         userRepository.delete(user);

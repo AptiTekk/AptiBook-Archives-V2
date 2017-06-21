@@ -1,5 +1,5 @@
 /*
- * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Copyright (C) 2016 - 2017 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
@@ -10,9 +10,31 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Permission for the application.
+ * Keys for the individual permissions.
  */
-public class Permission {
+public enum Permission {
+
+    GENERAL_FULL_PERMISSIONS(Group.GENERAL),
+    RESOURCE_CATEGORIES_MODIFY_ALL(Group.RESOURCE_CATEGORIES),
+    RESOURCES_MODIFY_OWN(Group.RESOURCES),
+    RESOURCES_MODIFY_HIERARCHY(Group.RESOURCES),
+    RESOURCES_MODIFY_ALL(Group.RESOURCES),
+    RESERVATIONS_MODIFY_ALL(Group.RESERVATIONS),
+    USERS_MODIFY_ALL(Group.USERS),
+    GROUPS_MODIFY_ALL(Group.USER_GROUPS),
+    PROPERTIES_MODIFY_ALL(Group.PROPERTIES);
+
+    private final Group group;
+
+    Permission(Group group) {
+        this.group = group;
+
+        group.permissions.add(this);
+    }
+
+    public Group getGroup() {
+        return group;
+    }
 
     /**
      * Defines the groups of permissions.
@@ -27,41 +49,11 @@ public class Permission {
         USER_GROUPS,
         PROPERTIES;
 
-        private Set<Descriptor> descriptors = new HashSet<>();
+        private Set<Permission> permissions = new HashSet<>();
 
-        public Set<Descriptor> getDescriptors() {
-            return descriptors;
-        }
-    }
-
-    /**
-     * Keys for the individual permissions.
-     * NOTE: Any modifications to the NAME of the descriptor (not displayName) will clear its existence from the database!
-     */
-    public enum Descriptor {
-
-        GENERAL_FULL_PERMISSIONS(Group.GENERAL),
-        RESOURCE_CATEGORIES_MODIFY_ALL(Group.RESOURCE_CATEGORIES),
-        RESOURCES_MODIFY_OWN(Group.RESOURCES),
-        RESOURCES_MODIFY_HIERARCHY(Group.RESOURCES),
-        RESOURCES_MODIFY_ALL(Group.RESOURCES),
-        RESERVATIONS_MODIFY_ALL(Group.RESERVATIONS),
-        USERS_MODIFY_ALL(Group.USERS),
-        GROUPS_MODIFY_ALL(Group.USER_GROUPS),
-        PROPERTIES_MODIFY_ALL(Group.PROPERTIES);
-
-        private final Group group;
-
-        Descriptor(Group group) {
-            this.group = group;
-
-            group.descriptors.add(this);
-        }
-
-        public Group getGroup() {
-            return group;
+        public Set<Permission> getPermissions() {
+            return permissions;
         }
 
     }
-
 }

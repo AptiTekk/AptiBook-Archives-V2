@@ -39,25 +39,25 @@ public class PermissionsService {
     /**
      * Finds all the User Groups assigned to a Permission.
      *
-     * @param descriptor The Permission's Descriptor.
+     * @param permission The Permission's Permission.
      * @return A List of User Groups assigned to the Permission.
      */
-    public List<UserGroup> getUserGroupsAssignedToPermission(Permission.Descriptor descriptor) {
+    public List<UserGroup> getUserGroupsAssignedToPermission(Permission permission) {
         // Get all the User Groups.
         List<UserGroup> allUserGroups = this.userGroupRepository.findAll();
 
         // Include only the User Groups which have the permission.
-        return allUserGroups.stream().filter(userGroup -> userGroup.getPermissions().contains(descriptor)).collect(Collectors.toList());
+        return allUserGroups.stream().filter(userGroup -> userGroup.getPermissions().contains(permission)).collect(Collectors.toList());
     }
 
     /**
      * Finds all the Users assigned to a Permission.
      *
-     * @param descriptor The Permission's Descriptor.
+     * @param permission The Permission's Permission.
      * @param inherited  Whether or not to include inherited assignments, from the Users' User Groups.
      * @return A List of Users assigned to the Permission.
      */
-    public List<User> getUsersAssignedToPermission(Permission.Descriptor descriptor,
+    public List<User> getUsersAssignedToPermission(Permission permission,
                                                    boolean inherited) {
         // Get all the Users.
         List<User> allUsers = this.userRepository.findAll();
@@ -65,11 +65,11 @@ public class PermissionsService {
         // Include only the Users which have the permission.
         return allUsers.stream().filter(user -> {
             // Check if the user has the permission explicitly assigned to them.
-            boolean hasPermission = user.getPermissions().contains(descriptor);
+            boolean hasPermission = user.getPermissions().contains(permission);
 
             // If we are checking for inheritance and the user does not explicitly have the permission, check their groups.
             if (inherited && !hasPermission)
-                hasPermission = user.getUserGroups().stream().anyMatch(userGroup -> userGroup.getPermissions().contains(descriptor));
+                hasPermission = user.getUserGroups().stream().anyMatch(userGroup -> userGroup.getPermissions().contains(permission));
 
             return hasPermission;
         }).collect(Collectors.toList());
@@ -82,11 +82,11 @@ public class PermissionsService {
      * A user with Full Permission will return true for all permissions.
      *
      * @param user       The User to check.
-     * @param descriptor The Permission Descriptor to look for.
+     * @param permission The Permission Permission to look for.
      * @return true if the User has the Permission, false otherwise.
      */
-    public boolean userHasPermission(User user, Permission.Descriptor descriptor) {
-        if (user == null || descriptor == null)
+    public boolean userHasPermission(User user, Permission permission) {
+        if (user == null || permission == null)
             return false;
 
         // The admin has all permissions.
@@ -94,22 +94,22 @@ public class PermissionsService {
             return true;
 
         // Check for full permissions.
-        if (user.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+        if (user.getPermissions().contains(Permission.GENERAL_FULL_PERMISSIONS))
             return true;
 
-        // Check for the specific descriptor.
-        if (user.getPermissions().contains(descriptor))
+        // Check for the specific permission.
+        if (user.getPermissions().contains(permission))
             return true;
 
         // Check if the User inherits permissions from their groups.
         for (UserGroup userGroup : user.getUserGroups()) {
 
             // Check for full permissions.
-            if (userGroup.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+            if (userGroup.getPermissions().contains(Permission.GENERAL_FULL_PERMISSIONS))
                 return true;
 
-            // Check for the specific descriptor.
-            if (userGroup.getPermissions().contains(descriptor))
+            // Check for the specific permission.
+            if (userGroup.getPermissions().contains(permission))
                 return true;
         }
 
@@ -134,24 +134,24 @@ public class PermissionsService {
             return true;
 
         // Check for full permissions.
-        if (user.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+        if (user.getPermissions().contains(Permission.GENERAL_FULL_PERMISSIONS))
             return true;
 
         // Check if the User has any permissions from the group.
-        for (Permission.Descriptor permissionDescriptor : group.getDescriptors())
-            if (user.getPermissions().contains(permissionDescriptor))
+        for (Permission permission : group.getPermissions())
+            if (user.getPermissions().contains(permission))
                 return true;
 
         // Check if the User inherits permissions from their groups.
         for (UserGroup userGroup : user.getUserGroups()) {
 
             // Check for full permissions.
-            if (userGroup.getPermissions().contains(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+            if (userGroup.getPermissions().contains(Permission.GENERAL_FULL_PERMISSIONS))
                 return true;
 
             // Check if the UserGroup has any permissions from the group.
-            for (Permission.Descriptor permissionDescriptor : group.getDescriptors())
-                if (userGroup.getPermissions().contains(permissionDescriptor))
+            for (Permission permission : group.getPermissions())
+                if (userGroup.getPermissions().contains(permission))
                     return true;
         }
 
@@ -164,8 +164,8 @@ public class PermissionsService {
      * @param user The User.
      * @return A Set containing all the User's inherited and non-inherited Permission.
      */
-    public Set<Permission.Descriptor> getAllPermissionsForUser(User user) {
-        Set<Permission.Descriptor> permissions = new HashSet<>();
+    public Set<Permission> getAllPermissionsForUser(User user) {
+        Set<Permission> permissions = new HashSet<>();
         permissions.addAll(user.getPermissions());
 
         for (UserGroup userGroup : user.getUserGroups()) {
@@ -184,12 +184,12 @@ public class PermissionsService {
      */
     public boolean canUserEditResource(Resource resource, User user) {
         // True if they can edit all resources
-        if (this.userHasPermission(user, Permission.Descriptor.RESOURCES_MODIFY_ALL))
+        if (this.userHasPermission(user, Permission.RESOURCES_MODIFY_ALL))
             return true;
 
         // False if they have no other resource permissions
-        if (!this.userHasPermission(user, Permission.Descriptor.RESOURCES_MODIFY_OWN)
-                && !this.userHasPermission(user, Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY))
+        if (!this.userHasPermission(user, Permission.RESOURCES_MODIFY_OWN)
+                && !this.userHasPermission(user, Permission.RESOURCES_MODIFY_HIERARCHY))
             return false;
 
         // Check every group the user belongs to.
@@ -200,7 +200,7 @@ public class PermissionsService {
                 return true;
 
             // Check every group below the user's own if they have permission.
-            if (this.userHasPermission(user, Permission.Descriptor.RESOURCES_MODIFY_HIERARCHY))
+            if (this.userHasPermission(user, Permission.RESOURCES_MODIFY_HIERARCHY))
 
                 for (UserGroup hierarchyGroup : userGroupService.getHierarchyDown(userGroup))
 

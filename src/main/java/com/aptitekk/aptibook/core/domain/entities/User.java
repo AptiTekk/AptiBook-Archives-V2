@@ -6,8 +6,8 @@
 
 package com.aptitekk.aptibook.core.domain.entities;
 
-import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
+import com.aptitekk.aptibook.core.domain.entities.enums.NotificationType;
 import com.aptitekk.aptibook.core.util.EqualsHelper;
 
 import javax.persistence.*;
@@ -65,11 +65,11 @@ public class User extends MultiTenantEntity implements Serializable {
     @MapKeyEnumerated(EnumType.STRING)
     private Map<NotificationType, NotificationToggles> notificationSettings;
 
-    @ElementCollection(targetClass = Permission.Descriptor.class)
+    @ElementCollection(targetClass = Permission.class)
     @CollectionTable(name = "user_permissions", joinColumns = @JoinColumn(name = "user_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "descriptor")
-    private Set<Permission.Descriptor> permissions;
+    @Column(name = "permission")
+    private Set<Permission> permissions;
 
     public Long getId() {
         return this.id;
@@ -187,11 +187,11 @@ public class User extends MultiTenantEntity implements Serializable {
         this.notificationSettings = notificationSettings;
     }
 
-    public Set<Permission.Descriptor> getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(Set<Permission.Descriptor> permissions) {
+    public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 

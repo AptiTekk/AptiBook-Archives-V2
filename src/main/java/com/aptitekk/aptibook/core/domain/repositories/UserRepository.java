@@ -113,22 +113,22 @@ public class UserRepository extends MultiTenantEntityRepositoryAbstract<User> {
     /**
      * Finds and returns a list of all users with the given permission. Also includes all users with full permissions, and admin, as they inherit all permissions.
      *
-     * @param descriptor The permission to filter users by.
+     * @param permission The permission to filter users by.
      * @return A list of users with either the given permission or full permissions. Includes admin.
      */
-    public List<User> findUsersWithPermission(Permission.Descriptor descriptor) {
+    public List<User> findUsersWithPermission(Permission permission) {
         try {
             List<User> usersWithPermission = entityManager
                     .createQuery("SELECT u from User u WHERE (?1 MEMBER OF u.permissions OR ?2 MEMBER OF u.permissions) AND u.tenant = ?3", User.class)
-                    .setParameter(1, descriptor)
-                    .setParameter(2, Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
+                    .setParameter(1, permission)
+                    .setParameter(2, Permission.GENERAL_FULL_PERMISSIONS)
                     .setParameter(3, getTenant())
                     .getResultList();
 
             List<UserGroup> groupsWithPermission = entityManager
                     .createQuery("SELECT g FROM UserGroup g WHERE (?1 MEMBER OF g.permissions OR ?2 MEMBER OF g.permissions)  AND g.tenant = ?3", UserGroup.class)
-                    .setParameter(1, descriptor)
-                    .setParameter(2, Permission.Descriptor.GENERAL_FULL_PERMISSIONS)
+                    .setParameter(1, permission)
+                    .setParameter(2, Permission.GENERAL_FULL_PERMISSIONS)
                     .setParameter(3, getTenant())
                     .getResultList();
 

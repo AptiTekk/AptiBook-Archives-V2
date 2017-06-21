@@ -32,7 +32,7 @@ public class PropertyController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties", method = RequestMethod.GET)
     public ResponseEntity<?> getProperties() {
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
         Map<Property.Key, String> properties = propertyService.getProperties();
@@ -54,7 +54,7 @@ public class PropertyController extends APIControllerAbstract {
             case ANALYTICS_ENABLED:
                 return ok(propertyService.getProperty(key));
             default:
-                if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+                if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
                     return noPermission();
                 return ok(propertyService.getProperty(key));
         }
@@ -69,7 +69,7 @@ public class PropertyController extends APIControllerAbstract {
 
     @RequestMapping(value = "properties", method = RequestMethod.PATCH)
     public ResponseEntity<?> setPropertyValue(@RequestBody Map<Property.Key, String> propertiesPatch) {
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
         Map<Property.Key, String> tenantProperties = propertyService.getProperties();
@@ -93,7 +93,7 @@ public class PropertyController extends APIControllerAbstract {
     @RequestMapping(value = "properties/{key}", method = RequestMethod.PATCH)
     public ResponseEntity<?> setPropertyValue(@PathVariable Property.Key key,
                                               @RequestBody String value) {
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.PROPERTIES_MODIFY_ALL))
+        if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
             return noPermission();
 
         //Check that the submitted value is valid

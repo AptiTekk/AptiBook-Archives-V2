@@ -39,7 +39,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resourceCategories", method = RequestMethod.POST)
     public ResponseEntity<?> addResourceCategory(@RequestBody ResourceCategoryDTO.WithoutResources resourceCategoryDTO) {
-        if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCE_CATEGORIES_MODIFY_ALL)) {
+        if (authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
             ResourceCategory resourceCategory = new ResourceCategory();
 
             if (resourceCategoryDTO == null)
@@ -76,7 +76,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.PATCH)
     public ResponseEntity<?> patchResourceCategory(@RequestBody ResourceCategoryDTO.WithoutResources resourceCategoryDTO, @PathVariable Long id) {
-        if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCE_CATEGORIES_MODIFY_ALL)) {
+        if (authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
             ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
 
             if (resourceCategory == null)
@@ -107,7 +107,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.DELETE)
     public ResponseEntity<?> deleteResourceCategory(@PathVariable Long id) {
-        if (authService.doesCurrentUserHavePermission(Permission.Descriptor.RESOURCE_CATEGORIES_MODIFY_ALL)) {
+        if (authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
             ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
             this.resourceCategoryRepository.delete(resourceCategory);
             return noContent();

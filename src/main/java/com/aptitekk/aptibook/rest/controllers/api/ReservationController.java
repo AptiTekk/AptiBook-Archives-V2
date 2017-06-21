@@ -216,7 +216,7 @@ public class ReservationController extends APIControllerAbstract {
 
     @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.POST)
     public ResponseEntity<?> makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
-        if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permission.Descriptor.USERS_MODIFY_ALL)) {
+        if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL)) {
             Reservation reservation = new Reservation();
             reservation.setTenant(tenantManagementService.getTenant());
             reservation.setUser(userRepository.findInCurrentTenant(id));

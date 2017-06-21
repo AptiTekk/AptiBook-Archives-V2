@@ -46,7 +46,7 @@ public class UserGroupControllerTest extends AbstractWebClientTest {
     @Test
     public void testAddNewUserGroup() throws Exception {
 
-        given(this.authService.doesCurrentUserHavePermission(Permission.Descriptor.GROUPS_MODIFY_ALL)).willReturn(true);
+        given(this.authService.doesCurrentUserHavePermission(Permission.GROUPS_MODIFY_ALL)).willReturn(true);
 
         JSONObject newUserGroupJson = getJsonObjectFromFile("controllers/userGroupController/newUserGroup.json");
 

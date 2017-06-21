@@ -35,8 +35,8 @@ public class PermissionsController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/current/permissions", method = RequestMethod.GET)
     public ResponseEntity<?> getCurrentUserPermissions() {
-        Set<Permission.Descriptor> allPermissionsForUser = permissionsService.getAllPermissionsForUser(authService.getCurrentUser());
-        return ok(modelMapper.map(allPermissionsForUser, new TypeToken<Set<Permission.Descriptor>>() {
+        Set<Permission> allPermissionsForUser = permissionsService.getAllPermissionsForUser(authService.getCurrentUser());
+        return ok(modelMapper.map(allPermissionsForUser, new TypeToken<Set<Permission>>() {
         }.getType()));
     }
 
@@ -52,25 +52,25 @@ public class PermissionsController extends APIControllerAbstract {
                                                                @RequestParam(name = "inherited", defaultValue = "true") boolean inherited) {
 
         // Make sure the user has the permission to list the assignments.
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+        if (!authService.doesCurrentUserHavePermission(Permission.GENERAL_FULL_PERMISSIONS))
             return noPermission();
 
-        // Create a map with the descriptors for this Permission Group, mapped to the List of Users assigned to the descriptor.
-        Map<Permission.Descriptor, List<User>> permissionMap = new HashMap<>();
+        // Create a map with the permissions for this Permission Group, mapped to the List of Users assigned to the permission.
+        Map<Permission, List<User>> permissionMap = new HashMap<>();
 
-        // For each descriptor, find the User Groups assigned.
-        for (Permission.Descriptor descriptor : group.getDescriptors()) {
-            permissionMap.put(descriptor, permissionsService.getUsersAssignedToPermission(descriptor, inherited));
+        // For each permission, find the User Groups assigned.
+        for (Permission permission : group.getPermissions()) {
+            permissionMap.put(permission, permissionsService.getUsersAssignedToPermission(permission, inherited));
         }
 
         // We cannot simply modelMap the entire map, we must map each individual list within the map.
-        Map<Permission.Descriptor, List<UserDTO.WithoutUserGroups>> modelMappedDescriptorMap = new HashMap<>();
-        for (Map.Entry<Permission.Descriptor, List<User>> entry : permissionMap.entrySet()) {
-            modelMappedDescriptorMap.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserDTO.WithoutUserGroups>>() {
+        Map<Permission, List<UserDTO.WithoutUserGroups>> permissionMapDTO = new HashMap<>();
+        for (Map.Entry<Permission, List<User>> entry : permissionMap.entrySet()) {
+            permissionMapDTO.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserDTO.WithoutUserGroups>>() {
             }.getType()));
         }
 
-        return ok(modelMappedDescriptorMap);
+        return ok(permissionMapDTO);
     }
 
     /**
@@ -82,7 +82,7 @@ public class PermissionsController extends APIControllerAbstract {
     public ResponseEntity getUserGroupsAssignedToPermissionsInAllGroups() {
 
         // Make sure the user has the permission to list the assignments.
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+        if (!authService.doesCurrentUserHavePermission(Permission.GENERAL_FULL_PERMISSIONS))
             return noPermission();
 
         // Create a map containing the Permission Groups and their Permissions
@@ -104,25 +104,25 @@ public class PermissionsController extends APIControllerAbstract {
     public ResponseEntity getUserGroupsAssignedToPermissionsInGroup(@PathVariable("key") Permission.Group group) {
 
         // Make sure the user has the permission to list the assignments.
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+        if (!authService.doesCurrentUserHavePermission(Permission.GENERAL_FULL_PERMISSIONS))
             return noPermission();
 
-        // Create a map with the descriptors for this Permission Group, mapped to the List of User Groups assigned to the descriptor.
-        Map<Permission.Descriptor, List<UserGroup>> permissionMap = new HashMap<>();
+        // Create a map with the permissions for this Permission Group, mapped to the List of User Groups assigned to the permission.
+        Map<Permission, List<UserGroup>> permissionMap = new HashMap<>();
 
-        // For each descriptor, find the User Groups assigned.
-        for (Permission.Descriptor descriptor : group.getDescriptors()) {
-            permissionMap.put(descriptor, permissionsService.getUserGroupsAssignedToPermission(descriptor));
+        // For each permission, find the User Groups assigned.
+        for (Permission permission : group.getPermissions()) {
+            permissionMap.put(permission, permissionsService.getUserGroupsAssignedToPermission(permission));
         }
 
         // We cannot simply modelMap the entire map, we must map each individual list within the map.
-        Map<Permission.Descriptor, List<UserGroupDTO.WithoutParentOrChildren>> modelMappedDescriptorMap = new HashMap<>();
-        for (Map.Entry<Permission.Descriptor, List<UserGroup>> entry : permissionMap.entrySet()) {
-            modelMappedDescriptorMap.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
+        Map<Permission, List<UserGroupDTO.WithoutParentOrChildren>> permissionMapDTO = new HashMap<>();
+        for (Map.Entry<Permission, List<UserGroup>> entry : permissionMap.entrySet()) {
+            permissionMapDTO.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
             }.getType()));
         }
 
-        return ok(modelMappedDescriptorMap);
+        return ok(permissionMapDTO);
     }
 
 }

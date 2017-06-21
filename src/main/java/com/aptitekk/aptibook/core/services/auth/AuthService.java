@@ -9,7 +9,6 @@ package com.aptitekk.aptibook.core.services.auth;
 import com.aptitekk.aptibook.core.domain.entities.User;
 import com.aptitekk.aptibook.core.domain.entities.enums.Permission;
 import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.services.LogService;
 import com.aptitekk.aptibook.core.services.entity.PermissionsService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -63,12 +62,12 @@ public class AuthService {
     /**
      * Determines if the current user has the given permission.
      *
-     * @param descriptor The permission descriptor to check for.
+     * @param permission The permission permission to check for.
      * @return True if they have permission, false if they do not or the current user is null.
      */
-    public boolean doesCurrentUserHavePermission(Permission.Descriptor descriptor) {
+    public boolean doesCurrentUserHavePermission(Permission permission) {
         User currentUser = getCurrentUser();
-        return currentUser != null && permissionsService.userHasPermission(currentUser, descriptor);
+        return currentUser != null && permissionsService.userHasPermission(currentUser, permission);
     }
 
     /**

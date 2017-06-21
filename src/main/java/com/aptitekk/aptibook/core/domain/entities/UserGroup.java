@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
+@SuppressWarnings("JpaDataSourceORMInspection")
 @Entity
 public class UserGroup extends MultiTenantEntity implements Serializable {
 
@@ -37,11 +38,11 @@ public class UserGroup extends MultiTenantEntity implements Serializable {
     @OrderBy("name ASC")
     private List<UserGroup> children = new ArrayList<>();
 
-    @ElementCollection(targetClass = Permission.Descriptor.class)
+    @ElementCollection(targetClass = Permission.class)
     @CollectionTable(name = "usergroup_permissions", joinColumns = @JoinColumn(name = "usergroup_id"))
     @Enumerated(EnumType.STRING)
-    @Column(name = "descriptor")
-    private Set<Permission.Descriptor> permissions;
+    @Column(name = "permission")
+    private Set<Permission> permissions;
 
     @OneToMany(mappedBy = "userGroup", cascade = CascadeType.REMOVE)
     private List<ReservationDecision> reservationDecisions = new ArrayList<>();
@@ -90,11 +91,11 @@ public class UserGroup extends MultiTenantEntity implements Serializable {
         this.children = children;
     }
 
-    public Set<Permission.Descriptor> getPermissions() {
+    public Set<Permission> getPermissions() {
         return permissions;
     }
 
-    public void setPermissions(Set<Permission.Descriptor> permissions) {
+    public void setPermissions(Set<Permission> permissions) {
         this.permissions = permissions;
     }
 
