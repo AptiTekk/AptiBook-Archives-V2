@@ -51,6 +51,23 @@ export class PermissionsService {
     }
 
     /**
+     * For each Permission in each Permission Group, lists the Users assigned the Permission.
+     *
+     * @param inherited Whether or not to include inherited permissions from User Groups.
+     *
+     * @returns A Promise that emits a map of Permission Groups to Permissions to assigned User Groups.
+     */
+    public getUsersAssignedToPermissionsInAllGroups(inherited: boolean = true): Promise<{ [permissionGroup: string]: { [permission: string]: User[] } }> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("permissions/users?inherited=" + inherited)
+                .subscribe(
+                    assignments => resolve(assignments),
+                    err => reject(err)
+                );
+        })
+    }
+
+    /**
      * For each Permission in a Permission Group, lists the Users assigned the Permission.
      *
      * @param groupKey The key of the Permission Group.
@@ -73,9 +90,9 @@ export class PermissionsService {
      *
      * @returns A Promise that emits a map of Permission Groups to Permissions to assigned User Groups.
      */
-    public getUserGroupsAssignedToPermissionsInAllGroups(groupKey: string): Promise<{ [permissionGroup: string]: { [permission: string]: UserGroup[] } }> {
+    public getUserGroupsAssignedToPermissionsInAllGroups(): Promise<{ [permissionGroup: string]: { [permission: string]: UserGroup[] } }> {
         return new Promise((resolve, reject) => {
-            this.apiService.get("permissions/groups/" + groupKey + "/user_groups")
+            this.apiService.get("permissions/user_groups")
                 .subscribe(
                     assignments => resolve(assignments),
                     err => reject(err)

@@ -41,6 +41,28 @@ public class PermissionsController extends APIControllerAbstract {
     }
 
     /**
+     * Finds all the Users assigned to the Permissions in all Permission Groups.
+     *
+     * @param inherited Whether or not to include inherited assignments, from the Users' User Groups. Defaults to true.
+     * @return A list of Permission Groups, the Permissions in those groups, and which Users are assigned to them.
+     */
+    @RequestMapping(value = "/permissions/users", method = RequestMethod.GET)
+    public ResponseEntity getUsersAssignedToPermissionsInAllGroups(@RequestParam(name = "inherited", defaultValue = "true") boolean inherited) {
+
+        // Make sure the user has the permission to list the assignments.
+        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
+            return noPermission();
+
+        // Create a map containing the Permission Groups and their Permissions
+        Map<Permission.Group, Object> permissionGroupMap = new HashMap<>();
+
+        // For each Permission in each Permission Group, get the assigned Users.
+        Arrays.stream(Permission.Group.values()).forEach(group -> permissionGroupMap.put(group, getUsersAssignedToPermissionsInGroup(group, inherited).getBody()));
+
+        return ok(permissionGroupMap);
+    }
+
+    /**
      * Finds all the Users assigned to the Permissions in a particular Permission Group.
      *
      * @param group     The Permission Group.

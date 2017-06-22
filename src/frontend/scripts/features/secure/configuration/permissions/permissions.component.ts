@@ -42,14 +42,14 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
     currentPermissionGroup: PermissionGroup;
 
     /**
-     * The User assignments for the current Permission Group.
+     * The User assignments for all Permission Groups.
      */
-    currentUserAssignments: { [permission: string]: User[] };
+    userAssignments: { [permissionGroup: string]: { [permission: string]: User[] } };
 
     /**
-     * The User Group assignments for the current Permission Group.
+     * The User Group assignments for all Permission Groups.
      */
-    currentUserGroupAssignments: { [permission: string]: UserGroup[] };
+    userGroupAssignments: { [permissionGroup: string]: { [permission: string]: UserGroup[] } };
 
     constructor(private permissionsService: PermissionsService,
                 private router: Router,
@@ -64,8 +64,7 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-
-        // Get the current permission group from the slug param.
+        // Get the current permission group from the key param.
         this.paramsSubscription = this.activatedRoute.params.subscribe(
             params => {
                 let filteredGroups = this.permissionGroups.filter(group => group.key.toLowerCase() === params['key']);
@@ -75,19 +74,21 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
                     this.currentPermissionGroup = filteredGroups[0];
                 }
 
-                // Get the Users assigned to this Permission Group.
-                this.permissionsService.getUsersAssignedToPermissionsInGroup(this.currentPermissionGroup.key, false)
-                    .then(assignments => {
-                        this.currentUserAssignments = assignments;
-                    });
 
-                // Get the User Groups assigned to this Permission Group.
-                this.permissionsService.getUserGroupsAssignedToPermissionsInGroup(this.currentPermissionGroup.key)
-                    .then(assignments => {
-                        this.currentUserGroupAssignments = assignments;
-                    });
             }
         );
+
+        // Get the Users assigned to all Permissions.
+        this.permissionsService.getUsersAssignedToPermissionsInAllGroups(false)
+            .then(assignments => {
+                this.userAssignments = assignments;
+            });
+
+        // Get the User Groups assigned to all Permissions.
+        this.permissionsService.getUserGroupsAssignedToPermissionsInAllGroups()
+            .then(assignments => {
+                this.userGroupAssignments = assignments;
+            });
     }
 
     ngOnDestroy(): void {

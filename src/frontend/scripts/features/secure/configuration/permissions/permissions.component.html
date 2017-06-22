@@ -36,12 +36,12 @@
 									<at-card [title]="'Assigned Users'"
 											 [noTopBorder]="true">
 										<at-card-block>
-											<ul *ngIf="currentUserAssignments != undefined">
-												<li *ngFor="let user of currentUserAssignments[permission.key]">
+											<ul *ngIf="userAssignments != undefined">
+												<li *ngFor="let user of userAssignments[currentPermissionGroup.key][permission.key]">
 													{{user.emailAddress}}
 												</li>
 											</ul>
-											<p *ngIf="currentUserAssignments == undefined || currentUserAssignments[permission.key]?.length == 0">
+											<p *ngIf="userAssignments == undefined || userAssignments[currentPermissionGroup.key][permission.key]?.length == 0">
 												No Users are assigned.
 											</p>
 										</at-card-block>
@@ -56,12 +56,12 @@
 									<at-card [title]="'Assigned Groups'"
 											 [noTopBorder]="true">
 										<at-card-block>
-											<ul *ngIf="currentUserGroupAssignments != undefined">
-												<li *ngFor="let userGroup of currentUserGroupAssignments[permission.key]">
+											<ul *ngIf="userGroupAssignments != undefined">
+												<li *ngFor="let userGroup of userGroupAssignments[currentPermissionGroup.key][permission.key]">
 													{{userGroup.name}}
 												</li>
 											</ul>
-											<p *ngIf="currentUserGroupAssignments == undefined || currentUserGroupAssignments[permission.key]?.length == 0">
+											<p *ngIf="userGroupAssignments == undefined || userGroupAssignments[currentPermissionGroup.key][permission.key].length == 0">
 												No User Groups are assigned.
 											</p>
 										</at-card-block>
