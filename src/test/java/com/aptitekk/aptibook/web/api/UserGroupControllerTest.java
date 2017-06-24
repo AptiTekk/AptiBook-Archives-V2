@@ -52,7 +52,7 @@ public class UserGroupControllerTest extends AbstractWebClientTest {
 
         this.mockMvc
                 .perform(MockMvcRequestBuilders
-                        .post("/web/userGroups")
+                        .post("/api/userGroups")
                         .with(csrf())
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(newUserGroupJson.toString()))
