@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
+import com.aptitekk.aptibook.web.security.authenticationfilters.CustomBasicAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
 import com.aptitekk.aptibook.web.security.cas.CASEntryFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
@@ -76,24 +76,24 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 // Everyone can access the basic Tenant details.
-                .antMatchers(HttpMethod.GET, "/api/tenant").permitAll()
+                .antMatchers(HttpMethod.GET, "/web/tenant").permitAll()
 
                 // Everyone can access registration.
-                .antMatchers("/api/register", "/api/register/*").permitAll()
+                .antMatchers("/web/register", "/web/register/*").permitAll()
 
-                // Everyone can GET individual properties. (Fine grain control is defined in the controller method body)
-                .antMatchers(HttpMethod.GET, "/api/properties/*").permitAll()
+                // Everyone can GET individual properties. (Fine grain control is defined in the controllers method body)
+                .antMatchers(HttpMethod.GET, "/web/properties/*").permitAll()
 
                 // Everyone can access the OAuth endpoints.
-                .antMatchers(HttpMethod.GET, "/api/oauth/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/web/oauth/*").permitAll()
 
                 // Everyone can access the sign-out endpoint.
-                .antMatchers(HttpMethod.GET, "/api/sign-out").permitAll()
+                .antMatchers(HttpMethod.GET, "/web/sign-out").permitAll()
 
                 // All other endpoints must be authenticated.
-                .antMatchers("/api/**").authenticated()
+                .antMatchers("/web/**").authenticated()
 
-                // Permit anything outside of the api endpoints.
+                // Permit anything outside of the web endpoints.
                 .anyRequest().permitAll()
                 .and()
 

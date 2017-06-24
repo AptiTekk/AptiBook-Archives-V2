@@ -6,13 +6,13 @@
 
 package com.aptitekk.aptibook.web.security.oauth;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
-import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.SpringProfileService;
-import com.aptitekk.aptibook.core.services.entity.PropertyService;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.domain.entities.Tenant;
+import com.aptitekk.aptibook.domain.entities.User;
+import com.aptitekk.aptibook.domain.entities.property.Property;
+import com.aptitekk.aptibook.service.LogService;
+import com.aptitekk.aptibook.service.SpringProfileService;
+import com.aptitekk.aptibook.service.entity.PropertyService;
+import com.aptitekk.aptibook.service.tenant.TenantManagementService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
@@ -42,7 +42,7 @@ public abstract class AbstractOAuthFilter extends OncePerRequestFilter {
     private final String callbackPath;
 
     private final String name;
-    private final Property.Key propertyKey;
+    private final Property propertyKey;
     private final String apiKey;
     private final String apiSecret;
 
@@ -58,7 +58,7 @@ public abstract class AbstractOAuthFilter extends OncePerRequestFilter {
     @Autowired
     private LogService logService;
 
-    protected AbstractOAuthFilter(String name, Property.Key propertyKey, String apiKey, String apiSecret) {
+    protected AbstractOAuthFilter(String name, Property propertyKey, String apiKey, String apiSecret) {
         this.name = name;
         this.propertyKey = propertyKey;
         this.apiKey = apiKey;
@@ -67,7 +67,7 @@ public abstract class AbstractOAuthFilter extends OncePerRequestFilter {
         if (!name.matches("^[a-z]+$"))
             throw new IllegalArgumentException("The name must contain only lowercase letters.");
 
-        this.urlGenerationPath = "/api/oauth/" + name;
+        this.urlGenerationPath = "/web/oauth/" + name;
         this.callbackPath = urlGenerationPath + "/callback";
     }
 

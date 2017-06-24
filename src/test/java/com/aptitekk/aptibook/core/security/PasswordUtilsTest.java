@@ -7,7 +7,7 @@
 package com.aptitekk.aptibook.core.security;
 
 import com.aptitekk.aptibook.AbstractWebClientTest;
-import com.aptitekk.aptibook.core.util.PasswordGenerator;
+import com.aptitekk.aptibook.util.PasswordUtils;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNotEquals;
@@ -18,7 +18,7 @@ public class PasswordUtilsTest extends AbstractWebClientTest {
 
     @Test
     public void testSamePasswordHashesAreDifferent() throws Exception {
-        String password = PasswordGenerator.generateRandomPassword(50);
+        String password = PasswordUtils.generateRandomPassword(50);
 
         String passwordHash1 = PasswordUtils.encodePassword(password);
         String passwordHash2 = PasswordUtils.encodePassword(password);
@@ -28,7 +28,7 @@ public class PasswordUtilsTest extends AbstractWebClientTest {
 
     @Test
     public void testPasswordIsValid() throws Exception {
-        String password = PasswordGenerator.generateRandomPassword(50);
+        String password = PasswordUtils.generateRandomPassword(50);
 
         String passwordHash = PasswordUtils.encodePassword(password);
 

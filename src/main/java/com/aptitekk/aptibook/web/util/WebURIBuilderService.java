@@ -6,10 +6,10 @@
 
 package com.aptitekk.aptibook.web.util;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.SpringProfileService;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.domain.entities.Tenant;
+import com.aptitekk.aptibook.service.LogService;
+import com.aptitekk.aptibook.service.SpringProfileService;
+import com.aptitekk.aptibook.service.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
@@ -42,7 +42,7 @@ public class WebURIBuilderService {
     /**
      * Builds a full URI using the current Tenant as the subdomain, if one exists.
      *
-     * @param pathFromRoot The path the URI will point to from the root of the url. (E.x.: "/api/endpoint")
+     * @param pathFromRoot The path the URI will point to from the root of the url. (E.x.: "/web/endpoint")
      * @param queryParams  Parameters to be passed in URI. (?foo=bar&john=doe)
      * @return Built URI, or null if an exception occurred.
      */

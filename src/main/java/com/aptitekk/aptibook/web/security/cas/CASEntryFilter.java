@@ -6,11 +6,10 @@
 
 package com.aptitekk.aptibook.web.security.cas;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.AuthenticationMethod;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
-import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.domain.entities.Tenant;
+import com.aptitekk.aptibook.domain.entities.property.Property;
+import com.aptitekk.aptibook.service.LogService;
+import com.aptitekk.aptibook.service.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
@@ -24,7 +23,7 @@ import java.io.IOException;
 @Component
 public class CASEntryFilter extends OncePerRequestFilter {
 
-    private final static String ENTRY_PATH = "/api/cas/entry";
+    private final static String ENTRY_PATH = "/web/cas/entry";
 
     private final TenantManagementService tenantManagementService;
     private final LogService logService;
@@ -47,14 +46,14 @@ public class CASEntryFilter extends OncePerRequestFilter {
                     throw new CASEntryException("The CAS Entry must be accessed from a Tenant.");
 
                 // Check that CAS is enabled.
-                String authenticationMethod = currentTenant.getProperties().get(Property.Key.AUTHENTICATION_METHOD);
-                if (authenticationMethod == null || AuthenticationMethod.valueOf(authenticationMethod) != AuthenticationMethod.CAS) {
+                String authenticationMethod = currentTenant.getProperties().get(Property.AUTHENTICATION_METHOD);
+                if (authenticationMethod == null || Property.AuthenticationMethod.valueOf(authenticationMethod) != Property.AuthenticationMethod.CAS) {
                     this.redirectBackToSignIn(response, "CAS Authentication is not enabled.");
                     return;
                 }
 
                 // Check for a valid CAS Server Url
-                String casUrl = currentTenant.getProperties().get(Property.Key.CAS_SERVER_URL);
+                String casUrl = currentTenant.getProperties().get(Property.CAS_SERVER_URL);
                 if (casUrl == null || casUrl.isEmpty()) {
                     this.redirectBackToSignIn(response, "CAS Authentication is not properly configured.");
                     return;

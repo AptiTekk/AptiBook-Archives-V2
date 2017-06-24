@@ -94,6 +94,6 @@ export class AuthService {
      * Signs the user out of AptiBook by redirect.
      */
     public signOut(): void {
-        window.location.href = "/api/sign-out";
+        window.location.href = "/web/sign-out";
     }
 }

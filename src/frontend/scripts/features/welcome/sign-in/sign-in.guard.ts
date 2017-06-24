@@ -36,7 +36,7 @@ export class SignInGuard implements CanActivate {
                                     } else if (tenant.authenticationMethod === 'CAS') {
                                         // CAS authentication needs to redirect to the CAS Server.
                                         // Redirect to CAS entry endpoint, which will redirect to the correct server.
-                                        window.location.href = "/api/cas/entry";
+                                        window.location.href = "/web/cas/entry";
                                         resolve(false);
                                     }
                                 }

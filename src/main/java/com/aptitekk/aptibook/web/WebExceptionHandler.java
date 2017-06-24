@@ -1,15 +1,15 @@
 /*
- * Copyright (C) 2016 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
+ * Copyright (C) 2016 - 2017 AptiTekk, LLC. (https://AptiTekk.com/) - All Rights Reserved
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
 
 package com.aptitekk.aptibook.web;
 
-import com.aptitekk.aptibook.core.domain.rest.RestError;
-import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.SpringProfileService;
-import com.aptitekk.aptibook.rest.controllers.api.validators.RestValidator;
+import com.aptitekk.aptibook.web.api.RestError;
+import com.aptitekk.aptibook.service.LogService;
+import com.aptitekk.aptibook.service.SpringProfileService;
+import com.aptitekk.aptibook.web.api.validators.RestValidator;
 import org.apache.catalina.connector.ClientAbortException;
 import org.hibernate.MappingException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -46,8 +46,8 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        if (ex.getRequestURL().startsWith("/api"))
-            // For API calls, send a rest error.
+        if (ex.getRequestURL().startsWith("/web"))
+            // For API calls, send a web error.
             return new ResponseEntity<>(new RestError("The URL you have reached is not in service at this time. (404)"), HttpStatus.NOT_FOUND);
         else {
             Resource resource = this.resourceLoader.getResource("classpath:static" + ex.getRequestURL());

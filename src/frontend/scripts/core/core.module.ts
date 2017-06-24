@@ -30,7 +30,7 @@ import {CurrentUserService} from "./services/current-user.service";
 import {AnalyticsService} from "./services/analytics.service";
 
 /**
- * This module contains the services and other things which should only load once in the application.
+ * This module contains the service and other things which should only load once in the application.
  */
 @NgModule({
     imports: [

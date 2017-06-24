@@ -29,7 +29,7 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
 
     properties: Properties;
 
-    CAS_CALLBACK_URL: string = window.location.protocol + '//' + window.location.host + '/api/cas/callback';
+    CAS_CALLBACK_URL: string = window.location.protocol + '//' + window.location.host + '/web/cas/callback';
 
     sectionLinks: NavigationLink[] = [
         {
@@ -94,7 +94,7 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
     }
 
     /**
-     * Sets the specified section to visible if it is found, and the rest to invisible.
+     * Sets the specified section to visible if it is found, and the web to invisible.
      * @param sectionPath The section to make visible.
      */
     private showSection(sectionPath: string) {

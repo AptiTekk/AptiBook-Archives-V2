@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.core.domain.rest.RestError;
+import com.aptitekk.aptibook.web.api.RestError;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

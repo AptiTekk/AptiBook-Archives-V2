@@ -6,25 +6,21 @@
 
 package com.aptitekk.aptibook.web.security.cas;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.AuthenticationMethod;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
-import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.RegistrationService;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.domain.entities.Tenant;
+import com.aptitekk.aptibook.domain.entities.User;
+import com.aptitekk.aptibook.domain.entities.property.Property;
+import com.aptitekk.aptibook.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.service.LogService;
+import com.aptitekk.aptibook.service.RegistrationService;
+import com.aptitekk.aptibook.service.tenant.TenantManagementService;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
-import com.google.common.base.Charsets;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.util.UriUtils;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.xml.sax.SAXException;
-import org.yaml.snakeyaml.util.UriEncoder;
 
 import javax.servlet.FilterChain;
 import javax.servlet.ServletException;
@@ -38,7 +34,7 @@ import java.net.URLEncoder;
 @Component
 public class CASCallbackFilter extends OncePerRequestFilter {
 
-    public final static String CALLBACK_PATH = "/api/cas/callback";
+    public final static String CALLBACK_PATH = "/web/cas/callback";
 
     private final TenantManagementService tenantManagementService;
     private final RegistrationService registrationService;
@@ -67,14 +63,14 @@ public class CASCallbackFilter extends OncePerRequestFilter {
                     throw new CASCallbackException("The CAS Callback must be accessed from a Tenant.");
 
                 // Check that CAS is enabled.
-                String authenticationMethod = currentTenant.getProperties().get(Property.Key.AUTHENTICATION_METHOD);
-                if (authenticationMethod == null || AuthenticationMethod.valueOf(authenticationMethod) != AuthenticationMethod.CAS) {
+                String authenticationMethod = currentTenant.getProperties().get(Property.AUTHENTICATION_METHOD);
+                if (authenticationMethod == null || Property.AuthenticationMethod.valueOf(authenticationMethod) != Property.AuthenticationMethod.CAS) {
                     this.redirectBackToSignIn(response, "CAS Authentication is not enabled.");
                     return;
                 }
 
                 // Check for a valid CAS Server Url
-                String casUrl = currentTenant.getProperties().get(Property.Key.CAS_SERVER_URL);
+                String casUrl = currentTenant.getProperties().get(Property.CAS_SERVER_URL);
                 if (casUrl == null || casUrl.isEmpty()) {
                     this.redirectBackToSignIn(response, "CAS Authentication is not properly configured.");
                     return;

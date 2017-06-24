@@ -6,12 +6,11 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.AuthenticationMethod;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
-import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.domain.entities.Tenant;
+import com.aptitekk.aptibook.domain.entities.User;
+import com.aptitekk.aptibook.domain.entities.property.Property;
+import com.aptitekk.aptibook.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.service.tenant.TenantManagementService;
 import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
 import com.aptitekk.aptibook.web.util.WebURIBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +29,7 @@ import java.net.URLEncoder;
 @Component
 public class SignOutFilter extends OncePerRequestFilter {
 
-    private final static String SIGN_OUT_PATH = "/api/sign-out";
+    private final static String SIGN_OUT_PATH = "/web/sign-out";
     private final TenantManagementService tenantManagementService;
     private final WebURIBuilderService webURIBuilderService;
     private final UserRepository userRepository;
@@ -70,10 +69,10 @@ public class SignOutFilter extends OncePerRequestFilter {
                 }
 
                 // Check if CAS is enabled.
-                String authenticationMethod = currentTenant.getProperties().get(Property.Key.AUTHENTICATION_METHOD);
-                if (authenticationMethod != null && AuthenticationMethod.valueOf(authenticationMethod).equals(AuthenticationMethod.CAS)) {
+                String authenticationMethod = currentTenant.getProperties().get(Property.AUTHENTICATION_METHOD);
+                if (authenticationMethod != null && Property.AuthenticationMethod.valueOf(authenticationMethod).equals(Property.AuthenticationMethod.CAS)) {
                     // Redirect to the CAS logout page.
-                    String casServiceUrl = currentTenant.getProperties().get(Property.Key.CAS_SERVER_URL);
+                    String casServiceUrl = currentTenant.getProperties().get(Property.CAS_SERVER_URL);
                     response.sendRedirect(casServiceUrl + "/logout?service=" + URLEncoder.encode(webURIBuilderService.buildURI(CASCallbackFilter.CALLBACK_PATH, null).toString(), "UTF-8"));
                     return;
                 }
