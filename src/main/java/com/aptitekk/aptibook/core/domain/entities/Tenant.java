@@ -59,12 +59,6 @@ public class Tenant extends GlobalEntity {
     private List<ReservationDecision> reservationDecisions;
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
-    private List<ReservationField> reservationFields;
-
-    @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
-    private List<ReservationFieldEntry> reservationFieldEntries;
-
-    @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)
     private List<Tag> tags;
 
     @OneToMany(mappedBy = "tenant", cascade = CascadeType.REMOVE)

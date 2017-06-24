@@ -27,9 +27,6 @@ public class ResourceCategory extends MultiTenantEntity implements Serializable 
     private Set<Resource> resources = new HashSet<>();
 
     @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
-    private Set<ReservationField> reservationFields = new HashSet<>();
-
-    @OneToMany(mappedBy = "resourceCategory", cascade = CascadeType.REMOVE, fetch = FetchType.EAGER)
     private Set<Tag> tags = new HashSet<>();
 
     public Long getId() {
@@ -50,14 +47,6 @@ public class ResourceCategory extends MultiTenantEntity implements Serializable 
 
     public void setResources(Set<Resource> resources) {
         this.resources = resources;
-    }
-
-    public Set<ReservationField> getReservationFields() {
-        return reservationFields;
-    }
-
-    public void setReservationFields(Set<ReservationField> reservationFields) {
-        this.reservationFields = reservationFields;
     }
 
     public Set<Tag> getTags() {

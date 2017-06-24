@@ -21,3 +21,5 @@ databaseChangeLog:
       file: db/changelog/changeSets/10__User_Modifications.xml
   - include:
       file: db/changelog/changeSets/11__Rename_Permission_Descriptor.xml
+  - include:
+      file: db/changelog/changeSets/12__Remove_Reservation_Fields.xml
