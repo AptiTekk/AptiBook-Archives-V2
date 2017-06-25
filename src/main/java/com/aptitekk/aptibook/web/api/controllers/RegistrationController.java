@@ -8,7 +8,8 @@ package com.aptitekk.aptibook.web.api.controllers;
 
 import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.web.api.dto.UserDTO;
+import com.aptitekk.aptibook.web.api.APIResponse;
+import com.aptitekk.aptibook.web.api.dtos.UserDTO;
 import com.aptitekk.aptibook.util.PasswordUtils;
 import com.aptitekk.aptibook.service.EmailService;
 import com.aptitekk.aptibook.service.RegistrationService;
@@ -17,7 +18,6 @@ import com.aptitekk.aptibook.web.api.validators.UserValidator;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
@@ -50,12 +50,12 @@ public class RegistrationController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/register", method = RequestMethod.POST)
-    public ResponseEntity<?> register(@RequestBody UserDTO.WithNewPassword userDTO) {
+    public APIResponse register(@RequestBody UserDTO.WithNewPassword userDTO) {
 
         User newUser = new User();
 
         if (userDTO.emailAddress == null)
-            return badRequest("The Email Address was not supplied.");
+            return APIResponse.badRequestMissingField("emailAddress");
 
         userValidator.validateEmailAddress(userDTO.emailAddress, null);
         newUser.setEmailAddress(userDTO.emailAddress);
@@ -76,7 +76,7 @@ public class RegistrationController extends APIControllerAbstract {
         }
 
         if (userDTO.newPassword == null)
-            return badRequest("The New Password was not supplied.");
+            return APIResponse.badRequestMissingField("newPassword");
 
         userValidator.validatePassword(userDTO.newPassword);
         newUser.setHashedPassword(PasswordUtils.encodePassword(userDTO.newPassword));
@@ -103,7 +103,7 @@ public class RegistrationController extends APIControllerAbstract {
 
                         "<a href='" + webURIBuilderService.buildURI("/register/verify", queryParams) + "'>Verify Account</a>");
 
-        return created(modelMapper.map(newUser, UserDTO.class), "/web/users/" + newUser.getId());
+        return APIResponse.created(modelMapper.map(newUser, UserDTO.class), "/api/users/" + newUser.getId());
     }
 
     /**
@@ -147,21 +147,21 @@ public class RegistrationController extends APIControllerAbstract {
      * @return User details from the token, if it is valid; otherwise an error explaining the problem.
      */
     @RequestMapping(value = "/register/details", method = RequestMethod.GET)
-    public ResponseEntity<?> getRegistrationDetails(@RequestParam("token") String token, HttpServletRequest httpServletRequest) {
+    public APIResponse getRegistrationDetails(@RequestParam("token") String token, HttpServletRequest httpServletRequest) {
         try {
             User registrationUser = this.registrationService.getUserFromToken(UUID.fromString(token), httpServletRequest);
 
             if (registrationUser == null)
-                return notFound("The provided token does not exist.");
+                return APIResponse.notFound("The provided token does not exist.");
 
-            return ok(modelMapper.map(registrationUser, UserDTO.WithoutUserGroups.class));
+            return APIResponse.ok(modelMapper.map(registrationUser, UserDTO.WithoutUserGroups.class));
         } catch (IllegalArgumentException e) {
-            return badRequest("The provided token's format is not valid.");
+            return APIResponse.badRequestNotParsable("The provided token's format is not valid.");
         }
     }
 
     @RequestMapping(value = "/register/sso", method = RequestMethod.POST)
-    public ResponseEntity<?> register(@RequestBody UserDTO.WithNewPassword userDTO,
+    public APIResponse register(@RequestBody UserDTO.WithNewPassword userDTO,
                                       @RequestParam("token") String token,
                                       HttpServletRequest httpServletRequest) {
 
@@ -169,10 +169,10 @@ public class RegistrationController extends APIControllerAbstract {
             User registrationUser = this.registrationService.getUserFromToken(UUID.fromString(token), httpServletRequest);
 
             if (registrationUser == null)
-                return notFound("The provided token does not exist.");
+                return APIResponse.notFound("The provided token does not exist.");
 
             if (userDTO.emailAddress == null)
-                return badRequest("The email address was not supplied.");
+                return APIResponse.badRequestMissingField("emailAddress");
 
             userValidator.validateEmailAddress(userDTO.emailAddress, null);
             registrationUser.setEmailAddress(userDTO.emailAddress);
@@ -203,9 +203,9 @@ public class RegistrationController extends APIControllerAbstract {
             // Sign the new user in.
             SecurityContextHolder.getContext().setAuthentication(new UserIDAuthenticationToken(registrationUser.getId()));
 
-            return created(modelMapper.map(registrationUser, UserDTO.class), "/web/users/" + registrationUser.getId());
+            return APIResponse.created(modelMapper.map(registrationUser, UserDTO.class), "/api/users/" + registrationUser.getId());
         } catch (IllegalArgumentException e) {
-            return badRequest("The provided token's format is not valid.");
+            return APIResponse.badRequestNotParsable("The provided token's format is not valid.");
         }
     }
 

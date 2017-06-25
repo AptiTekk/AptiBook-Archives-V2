@@ -23,7 +23,7 @@ import java.io.IOException;
 @Component
 public class CASEntryFilter extends OncePerRequestFilter {
 
-    private final static String ENTRY_PATH = "/web/cas/entry";
+    private final static String ENTRY_PATH = "/api/cas/entry";
 
     private final TenantManagementService tenantManagementService;
     private final LogService logService;

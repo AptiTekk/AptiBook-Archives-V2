@@ -9,12 +9,11 @@ package com.aptitekk.aptibook.web.security.authenticationproviders;
 import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.entities.property.Property;
 import com.aptitekk.aptibook.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.util.PasswordUtils;
 import com.aptitekk.aptibook.service.tenant.TenantManagementService;
+import com.aptitekk.aptibook.util.PasswordUtils;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationProvider;
-import org.springframework.security.authentication.AuthenticationServiceException;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -44,54 +43,82 @@ public class BuiltInAuthenticationProvider implements AuthenticationProvider {
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
-        // Check for an X-Auth-Type header, which determines if this is authentication for an admin or a regular user.
-        if (httpServletRequest.getHeader("X-Auth-Type") != null) {
-            if (httpServletRequest.getHeader("X-Auth-Type").equalsIgnoreCase("admin")) {
-                // Admin Authentication
-
-                // Get the password supplied
-                if (authentication.getCredentials() == null)
-                    throw new BadCredentialsException("No Password Supplied.");
-                String password = authentication.getCredentials().toString();
-
-                // Find the Admin User
-                User adminUser = userRepository.findAdminUser();
-
-                // Check the Admin's password
-                if (PasswordUtils.passwordsMatch(password, adminUser.getHashedPassword()))
-                    return new UserIDAuthenticationToken(adminUser.getId());
-                throw new BadCredentialsException("Incorrect Password.");
-            } else if (httpServletRequest.getHeader("X-Auth-Type").equalsIgnoreCase("user")) {
-                // Check the authentication method.
-                String authenticationMethod = tenantManagementService.getTenant().getProperties().get(Property.AUTHENTICATION_METHOD);
-                if (authenticationMethod != null && Property.AuthenticationMethod.valueOf(authenticationMethod) != Property.AuthenticationMethod.BUILT_IN)
-                    throw new AuthenticationServiceException("Built-In Authentication is not Enabled.");
-
-                // Regular User Authentication
-                String emailAddress = authentication.getName();
-
-                // Get the password supplied
-                if (authentication.getCredentials() == null)
-                    throw new BadCredentialsException("No Password Supplied.");
-                String password = authentication.getCredentials().toString();
-
-                // Find the User with the email address supplied
-                User user = userRepository.findByEmailAddress(emailAddress);
-                if (user == null)
-                    throw new BadCredentialsException("Incorrect Email Address or Password.");
-
-                // Check the User's password
-                if (PasswordUtils.passwordsMatch(password, user.getHashedPassword()))
-                    return new UserIDAuthenticationToken(user.getId());
-                throw new BadCredentialsException("Incorrect Password.");
-            }
+        if (httpServletRequest.getHeader("X-Auth-Type").equalsIgnoreCase("admin")) {
+            // Admin Authentication
+            return authenticateAdmin((UsernamePasswordAuthenticationToken) authentication);
+        } else {
+            // Regular User Authentication
+            return authenticateUser((UsernamePasswordAuthenticationToken) authentication);
         }
+    }
 
-        throw new BadCredentialsException("Missing X-Auth-Type Header.");
+    /**
+     * Authenticates the Admin User.
+     *
+     * @param authentication The authentication token containing the provided credentials.
+     * @return An authentication token with the Admin's User ID if everything went ok.
+     * @throws AuthenticationException If authentication failed.
+     */
+    private UserIDAuthenticationToken authenticateAdmin(UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        // Get the password supplied
+        if (authentication.getCredentials() == null)
+            throw new BadCredentialsException("No Password Supplied.");
+        String password = authentication.getCredentials().toString();
+
+        // Find the Admin User
+        User adminUser = userRepository.findAdminUser();
+
+        // Check the Admin's password
+        if (PasswordUtils.passwordsMatch(password, adminUser.getHashedPassword()))
+            return new UserIDAuthenticationToken(adminUser.getId());
+        throw new BadCredentialsException("Incorrect Password.");
+    }
+
+    /**
+     * Authenticates a regular User.
+     *
+     * @param authentication The authentication token containing the provided credentials.
+     * @return An authentication token with the User's ID if everything went ok.
+     * @throws AuthenticationException If authentication failed.
+     */
+    private UserIDAuthenticationToken authenticateUser(UsernamePasswordAuthenticationToken authentication) throws AuthenticationException {
+        String emailAddress = authentication.getName();
+
+        // Get the password supplied
+        if (authentication.getCredentials() == null)
+            throw new BadCredentialsException("No Password Supplied.");
+        String password = authentication.getCredentials().toString();
+
+        // Find the User with the email address supplied
+        User user = userRepository.findByEmailAddress(emailAddress);
+        if (user == null)
+            throw new BadCredentialsException("Incorrect Email Address or Password.");
+
+        // Check the User's password
+        if (PasswordUtils.passwordsMatch(password, user.getHashedPassword()))
+            return new UserIDAuthenticationToken(user.getId());
+        throw new BadCredentialsException("Incorrect Email Address or Password.");
     }
 
     @Override
     public boolean supports(Class<?> authenticationClass) {
-        return authenticationClass.equals(UsernamePasswordAuthenticationToken.class);
+
+        // Only UsernamePasswordAuthenticationTokens are supported.
+        if (authenticationClass.equals(UsernamePasswordAuthenticationToken.class)) {
+
+            // Check that the Authentication Method for this Tenant is set to BUILT_IN. If it is, we are good to go.
+            String authenticationMethod = tenantManagementService.getTenant().getProperties().get(Property.AUTHENTICATION_METHOD);
+            if (authenticationMethod == null || Property.AuthenticationMethod.valueOf(authenticationMethod) == Property.AuthenticationMethod.BUILT_IN)
+                return true;
+
+            // Authentication method is not BUILT_IN. Check if we are authenticating as an Admin.
+            String authTypeHeader = httpServletRequest.getHeader("X-Auth-Type");
+            if (authTypeHeader != null && authTypeHeader.equalsIgnoreCase("admin")) {
+                // Authenticating as admin, so we can continue.
+                return true;
+            }
+        }
+
+        return false;
     }
 }

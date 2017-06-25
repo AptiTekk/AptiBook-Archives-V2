@@ -4,32 +4,29 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.api.dto;
-
+package com.aptitekk.aptibook.web.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
+import java.util.List;
+
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class ReservationDecisionDTO {
+public class ResourceCategoryDTO {
 
     public Long id;
 
-    public UserDTO.WithoutUserGroups user;
+    public String name;
 
-    public UserGroupDTO.WithoutParentOrChildren userGroup;
+    public List<ResourceDTO.WithoutReservations> resources;
 
-    public ReservationDTO reservation;
+    //Reservation Fields
 
-    public boolean approved;
+    //Tags
 
-    public boolean rejected;
-
-    public String comment;
-
-    @JsonIgnoreProperties("reservation")
-    public static class WithoutReservation extends ReservationDecisionDTO {
+    @JsonIgnoreProperties({"resources"})
+    public static class WithoutResources extends ResourceCategoryDTO {
 
     }
 

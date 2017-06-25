@@ -6,14 +6,14 @@
 
 package com.aptitekk.aptibook.web.api.controllers;
 
-import com.aptitekk.aptibook.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.domain.entities.Permission;
+import com.aptitekk.aptibook.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.domain.repositories.ResourceCategoryRepository;
-import com.aptitekk.aptibook.web.api.dto.ResourceCategoryDTO;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
+import com.aptitekk.aptibook.web.api.dtos.ResourceCategoryDTO;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,87 +32,82 @@ public class ResourceCategoryController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resourceCategories", method = RequestMethod.GET)
-    public ResponseEntity<?> getResourceCategories() {
-        return ok(modelMapper.map(resourceCategoryRepository.findAll(), new TypeToken<List<ResourceCategoryDTO>>() {
+    public APIResponse getResourceCategories() {
+        return APIResponse.ok(modelMapper.map(resourceCategoryRepository.findAll(), new TypeToken<List<ResourceCategoryDTO>>() {
         }.getType()));
     }
 
     @RequestMapping(value = "/resourceCategories", method = RequestMethod.POST)
-    public ResponseEntity<?> addResourceCategory(@RequestBody ResourceCategoryDTO.WithoutResources resourceCategoryDTO) {
-        if (authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
-            ResourceCategory resourceCategory = new ResourceCategory();
-
-            if (resourceCategoryDTO == null)
-                return badRequest("Resource Category not supplied.");
-
-            if (resourceCategoryDTO.name == null)
-                return badRequest("Name not supplied.");
-
-            if (resourceCategoryDTO.name.length() > 30)
-                return badRequest("The Name must be 30 characters or less.");
-
-            if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
-                return badRequest("The Name cannot contain these characters: < > ; =");
-
-            if (resourceCategoryRepository.findByName(resourceCategoryDTO.name) != null)
-                return badRequest("A Category with that name already exists!");
-
-            resourceCategory.setName(resourceCategoryDTO.name);
-            resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
-            return created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/resourceCategories/" + resourceCategory.getId());
+    public APIResponse addResourceCategory(@RequestBody ResourceCategoryDTO.WithoutResources resourceCategoryDTO) {
+        if (!authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
+            return APIResponse.noPermission();
         }
-        return noPermission();
+
+        ResourceCategory resourceCategory = new ResourceCategory();
+
+        if (resourceCategoryDTO.name == null)
+            return APIResponse.badRequestMissingField("name");
+
+        if (resourceCategoryDTO.name.length() > 30)
+            return APIResponse.badRequestFieldTooLong("name", 30);
+
+        if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
+            return APIResponse.badRequestInvalidCharacters("name", INVALID_CHARACTERS);
+
+        if (resourceCategoryRepository.findByName(resourceCategoryDTO.name) != null)
+            return APIResponse.badRequest("not_unique", "A Category with that name already exists!");
+
+        resourceCategory.setName(resourceCategoryDTO.name);
+        resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
+        return APIResponse.created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/api/resourceCategories/" + resourceCategory.getId());
     }
 
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getResourceCategory(@PathVariable Long id) {
+    public APIResponse getResourceCategory(@PathVariable Long id) {
         ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
 
         if (resourceCategory == null)
-            return noPermission();
+            return APIResponse.notFound("The Resource Category could not be found.");
 
-        return ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.class));
+        return APIResponse.ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.class));
     }
 
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchResourceCategory(@RequestBody ResourceCategoryDTO.WithoutResources resourceCategoryDTO, @PathVariable Long id) {
-        if (authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
-            ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
+    public APIResponse patchResourceCategory(@RequestBody ResourceCategoryDTO.WithoutResources resourceCategoryDTO, @PathVariable Long id) {
+        if (!authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL))
+            return APIResponse.noPermission();
 
-            if (resourceCategory == null)
-                return noPermission();
+        ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
 
-            if (resourceCategoryDTO == null)
-                return badRequest("Resource Category not supplied.");
+        if (resourceCategory == null)
+            return APIResponse.notFound("The Resource Category could not be found.");
 
-            if (resourceCategoryDTO.name != null) {
-                if (resourceCategoryDTO.name.length() > 30)
-                    return badRequest("The Name must be 30 characters or less.");
+        if (resourceCategoryDTO.name != null) {
+            if (resourceCategoryDTO.name.length() > 30)
+                return APIResponse.badRequestFieldTooLong("name", 30);
 
-                if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
-                    return badRequest("The Name cannot contain these characters: < > ; =");
+            if (!resourceCategoryDTO.name.matches(VALID_CHARACTER_PATTERN))
+                return APIResponse.badRequestInvalidCharacters("name", INVALID_CHARACTERS);
 
-                ResourceCategory existingCategory = resourceCategoryRepository.findByName(resourceCategoryDTO.name);
-                if (existingCategory != null && !existingCategory.getId().equals(id))
-                    return badRequest("A Category with that name already exists!");
+            ResourceCategory existingCategory = resourceCategoryRepository.findByName(resourceCategoryDTO.name);
+            if (existingCategory != null && !existingCategory.getId().equals(id))
+                return APIResponse.badRequest("not_unique", "A Category with that name already exists!");
 
-                resourceCategory.setName(resourceCategoryDTO.name);
-            }
-
-            resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
-            return ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.class));
+            resourceCategory.setName(resourceCategoryDTO.name);
         }
-        return noPermission();
+
+        resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
+        return APIResponse.ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.class));
     }
 
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteResourceCategory(@PathVariable Long id) {
-        if (authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
-            ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
-            this.resourceCategoryRepository.delete(resourceCategory);
-            return noContent();
-        }
-        return noPermission();
+    public APIResponse deleteResourceCategory(@PathVariable Long id) {
+        if (!authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL))
+            return APIResponse.noPermission();
+
+        ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
+        this.resourceCategoryRepository.delete(resourceCategory);
+        return APIResponse.noContentResponse();
     }
 
 }

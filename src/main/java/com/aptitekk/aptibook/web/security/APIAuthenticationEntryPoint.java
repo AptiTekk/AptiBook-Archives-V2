@@ -6,10 +6,9 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.web.api.RestError;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.stereotype.Component;
@@ -26,13 +25,15 @@ import java.io.IOException;
 @Component
 public class APIAuthenticationEntryPoint implements AuthenticationEntryPoint {
 
-    private static final ObjectMapper OBJECT_MAPPER = new ObjectMapper();
-
     @Override
     public void commence(HttpServletRequest request, HttpServletResponse response, AuthenticationException authException) throws IOException, ServletException {
-        ResponseEntity<RestError> error = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new RestError(authException.getMessage()));
-        response.setStatus(error.getStatusCodeValue());
-        response.getWriter().append(OBJECT_MAPPER.writeValueAsString(error.getBody()));
+        String error = "unauthorized";
+        if (authException instanceof BadCredentialsException)
+            error = "bad_credentials";
+
+        APIResponse apiResponse = APIResponse.unauthorized(error, authException.getMessage());
+        response.setStatus(apiResponse.getStatusCodeValue());
+        response.getWriter().append(new ObjectMapper().writeValueAsString(apiResponse.getBody()));
     }
 
 }

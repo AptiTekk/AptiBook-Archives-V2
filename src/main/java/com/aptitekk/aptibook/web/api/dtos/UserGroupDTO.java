@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.api.dto;
+package com.aptitekk.aptibook.web.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
@@ -13,32 +13,28 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 import java.util.List;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class ResourceDTO {
+public class UserGroupDTO {
 
     public Long id;
 
     public String name;
 
-    public Boolean needsApproval;
+    public boolean root;
 
-    public Boolean hasImage;
+    public UserGroupDTO.WithoutChildren parent;
 
-    public ResourceCategoryDTO resourceCategory;
+    public List<UserGroupDTO.WithoutParent> children;
 
-    public List<ReservationDTO> reservations;
-
-    public UserGroupDTO.WithoutParentOrChildren owner;
-
-    //Tags
-
-    @JsonIgnoreProperties({"reservations"})
-    public static class WithoutReservations extends ResourceDTO {
-
+    @JsonIgnoreProperties({"parent"})
+    public static class WithoutParent extends UserGroupDTO {
     }
 
-    @JsonIgnoreProperties({"resourceCategory"})
-    public static class WithoutResourceCategory extends ResourceDTO {
+    @JsonIgnoreProperties({"children"})
+    public static class WithoutChildren extends UserGroupDTO {
+    }
 
+    @JsonIgnoreProperties({"parent", "children"})
+    public static class WithoutParentOrChildren extends UserGroupDTO {
     }
 
 }

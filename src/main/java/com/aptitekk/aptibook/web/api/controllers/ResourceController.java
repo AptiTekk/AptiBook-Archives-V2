@@ -13,13 +13,13 @@ import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.domain.repositories.UserGroupRepository;
-import com.aptitekk.aptibook.web.api.dto.ResourceDTO;
+import com.aptitekk.aptibook.web.api.APIResponse;
+import com.aptitekk.aptibook.web.api.dtos.ResourceDTO;
 import com.aptitekk.aptibook.service.entity.ReservationService;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -48,7 +48,7 @@ public class ResourceController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
-    public ResponseEntity<?> getAvailableResources(@RequestParam(value = "start") String start, @RequestParam(value = "end") String end) {
+    public APIResponse getAvailableResources(@RequestParam(value = "start") String start, @RequestParam(value = "end") String end) {
         try {
             Date startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
             Date endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
@@ -56,50 +56,50 @@ public class ResourceController extends APIControllerAbstract {
             LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
 
             List<Resource> availableResources = reservationService.findAvailableResources(startLocalDateTime, endLocalDateTime);
-            return ok(modelMapper.map(availableResources, new TypeToken<List<ResourceDTO>>() {
+            return APIResponse.ok(modelMapper.map(availableResources, new TypeToken<List<ResourceDTO>>() {
             }.getType()));
         } catch (ParseException e) {
-            return badRequest("Could not parse start or end times.");
+            return APIResponse.badRequestNotParsable("Could not parse start or end times.");
         }
     }
 
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
-    public ResponseEntity<?> addResource(@RequestBody ResourceDTO.WithoutReservations resourceDTO) {
+    public APIResponse addResource(@RequestBody ResourceDTO.WithoutReservations resourceDTO) {
         if (!authService.doesCurrentUserHavePermission(Permission.RESOURCES_MODIFY_ALL))
-            return noPermission();
+            return APIResponse.noPermission();
 
         Resource resource = new Resource();
         ResourceCategory resourceCategory = null;
 
         if (resourceDTO.resourceCategory == null)
-            return badRequest("Resource Category not supplied.");
+            return APIResponse.badRequestMissingField("resourceCategory");
         else {
             resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
             if (resourceCategory == null)
-                return badRequest("Category not found.");
+                return APIResponse.notFound("Category not found.");
             else
                 resource.setResourceCategory(resourceCategory);
         }
 
         if (resourceDTO.name == null)
-            return badRequest("Name not supplied.");
+            return APIResponse.badRequestMissingField("name");
         else if (resourceDTO.name.length() > 30)
-            return badRequest("Name must be 30 characters or less.");
+            return APIResponse.badRequestFieldTooLong("name", 30);
         else if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
-            return badRequest("Name includes invalid characters.");
+            return APIResponse.badRequestInvalidCharacters("name", INVALID_CHARACTERS);
         else if (resourceRepository.findByName(resourceDTO.name, resourceCategory) != null)
-            return badRequest("A Resource by that name already exists!");
+            return APIResponse.badRequestConflict("A Resource by that name already exists!");
         else
             resource.setName(resourceDTO.name);
 
         if (resourceDTO.owner == null)
-            return badRequest("Owner not supplied.");
+            return APIResponse.badRequestMissingField("owner");
         else {
             UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
             if (owner == null)
-                return badRequest("Owner not found.");
+                return APIResponse.notFound("The resource owner group was not found.");
             else if (owner.isRoot())
-                return badRequest("Owner cannot be root.");
+                return APIResponse.forbidden("The resource owner group cannot be the root group.");
             else
                 resource.setOwner(owner);
         }
@@ -107,39 +107,38 @@ public class ResourceController extends APIControllerAbstract {
         resource.setNeedsApproval(resourceDTO.needsApproval != null ? resourceDTO.needsApproval : false);
 
         resource = resourceRepository.save(resource);
-        return created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.getId());
-
+        return APIResponse.created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.getId());
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchResource(@RequestBody ResourceDTO resourceDTO, @PathVariable Long id) {
+    public APIResponse patchResource(@RequestBody ResourceDTO resourceDTO, @PathVariable Long id) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
         ResourceCategory resourceCategory = null;
 
         if (resource == null)
-            return noPermission();
+            return APIResponse.noPermission();
 
         if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
-            return noPermission();
+            return APIResponse.noPermission();
 
         if (resourceDTO.resourceCategory != null) {
             resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
             if (resourceCategory == null)
-                return badRequest("Category not found.");
+                return APIResponse.notFound("Category not found.");
             else
                 resource.setResourceCategory(resourceCategory);
         }
 
         if (resourceDTO.name != null) {
             if (resourceDTO.name.length() > 30)
-                return badRequest("Name must be 30 characters or less.");
+                return APIResponse.badRequestFieldTooLong("name", 30);
 
             if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
-                return badRequest("Name includes invalid characters.");
+                return APIResponse.badRequestInvalidCharacters("name", INVALID_CHARACTERS);
 
             Resource existingResource = resourceRepository.findByName(resourceDTO.name, resourceCategory);
             if (existingResource != null && !existingResource.getId().equals(resourceDTO.id))
-                return badRequest("A Resource by that name already exists!");
+                return APIResponse.badRequestConflict("A Resource by that name already exists!");
 
             resource.setName(resourceDTO.name);
         }
@@ -147,9 +146,9 @@ public class ResourceController extends APIControllerAbstract {
         if (resourceDTO.owner != null) {
             UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
             if (owner == null)
-                return badRequest("Owner not found.");
+                return APIResponse.notFound("The resource owner group was not found.");
             else if (owner.isRoot())
-                return badRequest("Owner cannot be root.");
+                return APIResponse.forbidden("The resource owner group cannot be the root group.");
             else
                 resource.setOwner(owner);
         }
@@ -158,18 +157,18 @@ public class ResourceController extends APIControllerAbstract {
             resource.setNeedsApproval(resourceDTO.needsApproval);
 
         resource = resourceRepository.save(resource);
-        return ok(modelMapper.map(resource, ResourceDTO.class));
+        return APIResponse.ok(modelMapper.map(resource, ResourceDTO.class));
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteResource(@PathVariable Long id) {
+    public APIResponse deleteResource(@PathVariable Long id) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
         if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
-            return noPermission();
+            return APIResponse.noPermission();
 
         resourceRepository.delete(resource);
-        return noContent();
+        return APIResponse.noContentResponse();
     }
 
 }

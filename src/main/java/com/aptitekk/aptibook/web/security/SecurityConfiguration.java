@@ -76,22 +76,22 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
 
                 // Everyone can access the basic Tenant details.
-                .antMatchers(HttpMethod.GET, "/web/tenant").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/tenant").permitAll()
 
                 // Everyone can access registration.
-                .antMatchers("/web/register", "/web/register/*").permitAll()
+                .antMatchers("/api/register", "/api/register/*").permitAll()
 
                 // Everyone can GET individual properties. (Fine grain control is defined in the controllers method body)
-                .antMatchers(HttpMethod.GET, "/web/properties/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/properties/*").permitAll()
 
                 // Everyone can access the OAuth endpoints.
-                .antMatchers(HttpMethod.GET, "/web/oauth/*").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/oauth/*").permitAll()
 
                 // Everyone can access the sign-out endpoint.
-                .antMatchers(HttpMethod.GET, "/web/sign-out").permitAll()
+                .antMatchers(HttpMethod.GET, "/api/sign-out").permitAll()
 
                 // All other endpoints must be authenticated.
-                .antMatchers("/web/**").authenticated()
+                .antMatchers("/api/**").authenticated()
 
                 // Permit anything outside of the web endpoints.
                 .anyRequest().permitAll()

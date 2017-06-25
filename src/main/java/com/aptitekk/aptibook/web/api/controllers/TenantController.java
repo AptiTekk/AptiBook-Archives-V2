@@ -8,9 +8,9 @@ package com.aptitekk.aptibook.web.api.controllers;
 
 import com.aptitekk.aptibook.domain.entities.Tenant;
 import com.aptitekk.aptibook.domain.entities.property.Property;
-import com.aptitekk.aptibook.web.api.dto.TenantDTO;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
-import org.springframework.http.ResponseEntity;
+import com.aptitekk.aptibook.web.api.dtos.TenantDTO;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 
@@ -18,12 +18,11 @@ import org.springframework.web.bind.annotation.RequestMethod;
 public class TenantController extends APIControllerAbstract {
 
     @RequestMapping(value = "/tenant", method = RequestMethod.GET)
-    public ResponseEntity<?> getTenant() {
+    public APIResponse getTenant() {
         Tenant tenant = tenantManagementService.getTenant();
 
-        if (tenant == null) {
-            return badRequest("Tenant is Inactive");
-        }
+        if (tenant == null)
+            return APIResponse.badRequest("inactive_tenant", "The AptiBook subscription you have accessed is not active.");
 
         TenantDTO tenantDTO = modelMapper.map(tenant, TenantDTO.class);
 
@@ -34,7 +33,7 @@ public class TenantController extends APIControllerAbstract {
         String authenticationMethod = tenant.getProperties().get(Property.AUTHENTICATION_METHOD);
         tenantDTO.authenticationMethod = authenticationMethod != null ? Property.AuthenticationMethod.valueOf(authenticationMethod) : Property.AuthenticationMethod.BUILT_IN;
 
-        return ok(tenantDTO);
+        return APIResponse.ok(tenantDTO);
     }
 
 }

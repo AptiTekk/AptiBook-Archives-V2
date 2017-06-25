@@ -42,7 +42,7 @@ public class WebURIBuilderService {
     /**
      * Builds a full URI using the current Tenant as the subdomain, if one exists.
      *
-     * @param pathFromRoot The path the URI will point to from the root of the url. (E.x.: "/web/endpoint")
+     * @param pathFromRoot The path the URI will point to from the root of the url. (E.x.: "/api/endpoint")
      * @param queryParams  Parameters to be passed in URI. (?foo=bar&john=doe)
      * @return Built URI, or null if an exception occurred.
      */

@@ -9,13 +9,13 @@ package com.aptitekk.aptibook.web.api.controllers;
 import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.entities.UserGroup;
 import com.aptitekk.aptibook.domain.entities.Permission;
-import com.aptitekk.aptibook.web.api.dto.UserDTO;
-import com.aptitekk.aptibook.web.api.dto.UserGroupDTO;
+import com.aptitekk.aptibook.web.api.APIResponse;
+import com.aptitekk.aptibook.web.api.dtos.UserDTO;
+import com.aptitekk.aptibook.web.api.dtos.UserGroupDTO;
 import com.aptitekk.aptibook.service.entity.PermissionsService;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -34,9 +34,9 @@ public class PermissionsController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/users/current/permissions", method = RequestMethod.GET)
-    public ResponseEntity<?> getCurrentUserPermissions() {
+    public APIResponse getCurrentUserPermissions() {
         Set<Permission> allPermissionsForUser = permissionsService.getAllPermissionsForUser(authService.getCurrentUser());
-        return ok(modelMapper.map(allPermissionsForUser, new TypeToken<Set<Permission>>() {
+        return APIResponse.ok(modelMapper.map(allPermissionsForUser, new TypeToken<Set<Permission>>() {
         }.getType()));
     }
 
@@ -48,12 +48,12 @@ public class PermissionsController extends APIControllerAbstract {
      * @return A list of the Permissions in the Permission Group, and which Users are assigned to them.
      */
     @RequestMapping(value = "/permissions/groups/{key}/users", method = RequestMethod.GET)
-    public ResponseEntity getUsersAssignedToPermissionsInGroup(@PathVariable("key") Permission.Group group,
+    public APIResponse getUsersAssignedToPermissionsInGroup(@PathVariable("key") Permission.Group group,
                                                                @RequestParam(name = "inherited", defaultValue = "true") boolean inherited) {
 
         // Make sure the user has the permission to list the assignments.
         if (!authService.doesCurrentUserHavePermission(Permission.GENERAL_FULL_PERMISSIONS))
-            return noPermission();
+            return APIResponse.noPermission();
 
         // Create a map with the permissions for this Permission Group, mapped to the List of Users assigned to the permission.
         Map<Permission, List<User>> permissionMap = new HashMap<>();
@@ -70,7 +70,7 @@ public class PermissionsController extends APIControllerAbstract {
             }.getType()));
         }
 
-        return ok(permissionMapDTO);
+        return APIResponse.ok(permissionMapDTO);
     }
 
     /**
@@ -79,11 +79,11 @@ public class PermissionsController extends APIControllerAbstract {
      * @return A list of Permission Groups, the Permissions in those groups, and which User Groups are assigned to them.
      */
     @RequestMapping(value = "/permissions/user_groups", method = RequestMethod.GET)
-    public ResponseEntity getUserGroupsAssignedToPermissionsInAllGroups() {
+    public APIResponse getUserGroupsAssignedToPermissionsInAllGroups() {
 
         // Make sure the user has the permission to list the assignments.
         if (!authService.doesCurrentUserHavePermission(Permission.GENERAL_FULL_PERMISSIONS))
-            return noPermission();
+            return APIResponse.noPermission();
 
         // Create a map containing the Permission Groups and their Permissions
         Map<Permission.Group, Object> permissionGroupMap = new HashMap<>();
@@ -91,7 +91,7 @@ public class PermissionsController extends APIControllerAbstract {
         // For each Permission in each Permission Group, get the assigned User Groups.
         Arrays.stream(Permission.Group.values()).forEach(group -> permissionGroupMap.put(group, getUserGroupsAssignedToPermissionsInGroup(group).getBody()));
 
-        return ok(permissionGroupMap);
+        return APIResponse.ok(permissionGroupMap);
     }
 
     /**
@@ -101,11 +101,11 @@ public class PermissionsController extends APIControllerAbstract {
      * @return A list of the Permissions in the Permission Group, and which User Groups are assigned to them.
      */
     @RequestMapping(value = "/permissions/groups/{key}/user_groups", method = RequestMethod.GET)
-    public ResponseEntity getUserGroupsAssignedToPermissionsInGroup(@PathVariable("key") Permission.Group group) {
+    public APIResponse getUserGroupsAssignedToPermissionsInGroup(@PathVariable("key") Permission.Group group) {
 
         // Make sure the user has the permission to list the assignments.
         if (!authService.doesCurrentUserHavePermission(Permission.GENERAL_FULL_PERMISSIONS))
-            return noPermission();
+            return APIResponse.noPermission();
 
         // Create a map with the permissions for this Permission Group, mapped to the List of User Groups assigned to the permission.
         Map<Permission, List<UserGroup>> permissionMap = new HashMap<>();
@@ -122,7 +122,7 @@ public class PermissionsController extends APIControllerAbstract {
             }.getType()));
         }
 
-        return ok(permissionMapDTO);
+        return APIResponse.ok(permissionMapDTO);
     }
 
 }

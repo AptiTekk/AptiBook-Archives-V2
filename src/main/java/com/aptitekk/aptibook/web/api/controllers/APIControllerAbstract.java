@@ -10,16 +10,16 @@ import com.aptitekk.aptibook.service.LogService;
 import com.aptitekk.aptibook.service.auth.AuthService;
 import com.aptitekk.aptibook.service.entity.PermissionsService;
 import com.aptitekk.aptibook.service.tenant.TenantManagementService;
-import com.aptitekk.aptibook.web.RestOperations;
 import com.aptitekk.aptibook.web.util.WebURIBuilderService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-public abstract class APIControllerAbstract implements RestOperations {
+public abstract class APIControllerAbstract {
 
     final static String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
     final static String VALID_CHARACTER_PATTERN = "[^<>;=]*";
+    final static String INVALID_CHARACTERS = "< > ; =";
 
     ModelMapper modelMapper = new ModelMapper();
 
@@ -43,13 +43,4 @@ public abstract class APIControllerAbstract implements RestOperations {
         modelMapper.getConfiguration().setFieldMatchingEnabled(true);
     }
 
-    @Override
-    public WebURIBuilderService getWebURIBuilderService() {
-        return this.webURIBuilderService;
-    }
-
-    @Override
-    public TenantManagementService getTenantManagementService() {
-        return this.tenantManagementService;
-    }
 }

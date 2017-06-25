@@ -10,9 +10,9 @@ import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.entities.property.Property;
 import com.aptitekk.aptibook.domain.entities.property.validators.PropertyValidator;
 import com.aptitekk.aptibook.service.entity.PropertyService;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -31,9 +31,9 @@ public class PropertyController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "properties", method = RequestMethod.GET)
-    public ResponseEntity<?> getProperties() {
+    public APIResponse getProperties() {
         if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
-            return noPermission();
+            return APIResponse.noPermission();
 
         Map<Property, String> properties = propertyService.getProperties();
 
@@ -42,35 +42,35 @@ public class PropertyController extends APIControllerAbstract {
             properties.putIfAbsent(key, key.getDefaultValue());
         }
 
-        return ok(properties);
+        return APIResponse.ok(properties);
     }
 
     @RequestMapping(value = "properties/{key}", method = RequestMethod.GET)
-    public ResponseEntity<?> getProperty(@PathVariable Property key) {
+    public APIResponse getProperty(@PathVariable Property key) {
         switch (key) {
             case PERSONALIZATION_ORGANIZATION_NAME:
             case AUTHENTICATION_METHOD:
             case GOOGLE_SIGN_IN_WHITELIST:
             case ANALYTICS_ENABLED:
-                return ok(propertyService.getProperty(key));
+                return APIResponse.ok(propertyService.getProperty(key));
             default:
                 if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
-                    return noPermission();
-                return ok(propertyService.getProperty(key));
+                    return APIResponse.noPermission();
+                return APIResponse.ok(propertyService.getProperty(key));
         }
 
     }
 
     @RequestMapping(value = "properties/allowedDomains", method = RequestMethod.GET)
-    public ResponseEntity<?> getAllowedDomains() {
+    public APIResponse getAllowedDomains() {
 
-        return ok(propertyService.getProperty(Property.GOOGLE_SIGN_IN_WHITELIST));
+        return APIResponse.ok(propertyService.getProperty(Property.GOOGLE_SIGN_IN_WHITELIST));
     }
 
     @RequestMapping(value = "properties", method = RequestMethod.PATCH)
-    public ResponseEntity<?> setPropertyValue(@RequestBody Map<Property, String> propertiesPatch) {
+    public APIResponse setPropertyValue(@RequestBody Map<Property, String> propertiesPatch) {
         if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
-            return noPermission();
+            return APIResponse.noPermission();
 
         Map<Property, String> tenantProperties = propertyService.getProperties();
 
@@ -78,7 +78,7 @@ public class PropertyController extends APIControllerAbstract {
         for (Map.Entry<Property, String> entry : propertiesPatch.entrySet()) {
             PropertyValidator propertyValidator = entry.getKey().getPropertyValidator();
             if (!propertyValidator.isValid(propertiesPatch.get(entry.getKey()))) {
-                return badRequest(propertyValidator.getValidationFailedMessage());
+                return APIResponse.badRequest("validation_failed", propertyValidator.getValidationFailedMessage());
             }
 
             tenantProperties.put(entry.getKey(), propertiesPatch.get(entry.getKey()));
@@ -87,25 +87,25 @@ public class PropertyController extends APIControllerAbstract {
         // Update values
         propertyService.mergeProperties(tenantProperties);
 
-        return ok(tenantProperties);
+        return APIResponse.ok(tenantProperties);
     }
 
     @RequestMapping(value = "properties/{key}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> setPropertyValue(@PathVariable Property key,
+    public APIResponse setPropertyValue(@PathVariable Property key,
                                               @RequestBody String value) {
         if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
-            return noPermission();
+            return APIResponse.noPermission();
 
         //Check that the submitted value is valid
         PropertyValidator propertyValidator = key.getPropertyValidator();
         if (!propertyValidator.isValid(value)) {
-            return badRequest(propertyValidator.getValidationFailedMessage());
+            return APIResponse.badRequest("validation_failed", propertyValidator.getValidationFailedMessage());
         }
 
         // Update value
         propertyService.setProperty(key, value);
 
-        return ok(value);
+        return APIResponse.ok(value);
     }
 
 }

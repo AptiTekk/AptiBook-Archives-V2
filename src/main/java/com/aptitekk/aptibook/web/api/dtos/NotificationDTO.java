@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.api.dto;
+package com.aptitekk.aptibook.web.api.dtos;
 
 import com.aptitekk.aptibook.domain.entities.serializers.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;

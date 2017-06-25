@@ -10,7 +10,7 @@ import com.aptitekk.aptibook.AbstractWebClientTest;
 import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.web.api.dto.UserGroupDTO;
+import com.aptitekk.aptibook.web.api.dtos.UserGroupDTO;
 import org.junit.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 

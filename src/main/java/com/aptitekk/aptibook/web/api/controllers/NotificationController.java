@@ -9,11 +9,11 @@ package com.aptitekk.aptibook.web.api.controllers;
 import com.aptitekk.aptibook.domain.entities.Notification;
 import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.repositories.NotificationRepository;
-import com.aptitekk.aptibook.web.api.dto.NotificationDTO;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
+import com.aptitekk.aptibook.web.api.dtos.NotificationDTO;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -31,31 +31,31 @@ public class NotificationController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/notifications/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserNotifications(@PathVariable Long id) {
+    public APIResponse getUserNotifications(@PathVariable Long id) {
         User user = authService.getCurrentUser();
-        if (user.isAdmin() || user.getId().equals(id)) {
+        if (!user.isAdmin() && !user.getId().equals(id))
+            return APIResponse.noPermission();
+
             try {
                 List<Notification> notifications = notificationRepository.getAllForUser(user);
-                return ok(modelMapper.map(notifications, new TypeToken<List<NotificationDTO.WithoutUser>>() {
+                return APIResponse.ok(modelMapper.map(notifications, new TypeToken<List<NotificationDTO.WithoutUser>>() {
                 }.getType()));
             } catch (Exception e) {
-                return badRequest("Could not parse start or end time.");
+                return APIResponse.badRequestNotParsable("Could not parse start or end time.");
             }
-        }
-        return noPermission();
     }
 
     @RequestMapping(value = "/notifications/user/{id}/markRead", method = RequestMethod.PATCH)
-    public ResponseEntity<?> markAllNotificationsRead(@PathVariable Long id) {
+    public APIResponse markAllNotificationsRead(@PathVariable Long id) {
         User user = authService.getCurrentUser();
-        if (user.isAdmin() || user.getId().equals(id)) {
-            try {
-                notificationRepository.markAllAsReadForUser(user);
-                return getUserNotifications(id);
-            } catch (Exception e) {
-                return badRequest();
-            }
+        if (!user.isAdmin() && !user.getId().equals(id))
+            return APIResponse.noPermission();
+
+        try {
+            notificationRepository.markAllAsReadForUser(user);
+            return getUserNotifications(id);
+        } catch (Exception e) {
+            return APIResponse.internalServerError();
         }
-        return noPermission();
     }
 }

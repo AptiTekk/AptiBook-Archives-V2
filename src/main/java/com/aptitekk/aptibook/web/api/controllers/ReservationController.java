@@ -7,19 +7,18 @@
 package com.aptitekk.aptibook.web.api.controllers;
 
 import com.aptitekk.aptibook.domain.entities.*;
-import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.repositories.*;
-import com.aptitekk.aptibook.web.api.dto.ReservationDTO;
-import com.aptitekk.aptibook.web.api.dto.ReservationDecisionDTO;
-import com.aptitekk.aptibook.web.api.dto.ReservationWithDecisionsDTO;
 import com.aptitekk.aptibook.service.entity.NotificationService;
 import com.aptitekk.aptibook.service.entity.ReservationService;
 import com.aptitekk.aptibook.service.entity.UserGroupService;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
+import com.aptitekk.aptibook.web.api.dtos.ReservationDTO;
+import com.aptitekk.aptibook.web.api.dtos.ReservationDecisionDTO;
+import com.aptitekk.aptibook.web.api.dtos.ReservationWithDecisionsDTO;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.text.ParseException;
@@ -61,7 +60,7 @@ public class ReservationController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/reservations", method = RequestMethod.GET)
-    public ResponseEntity<?> getReservationsBetweenDates(@RequestParam("start") String start, @RequestParam("end") String end) {
+    public APIResponse getReservationsBetweenDates(@RequestParam("start") String start, @RequestParam("end") String end) {
         try {
             Date startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
             Date endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
@@ -72,92 +71,89 @@ public class ReservationController extends APIControllerAbstract {
             // Sort the reservations so that the earliest show up first in the list.
             reservations.sort(Comparator.comparing(Reservation::getStart));
 
-            return ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
+            return APIResponse.ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
             }.getType()));
         } catch (ParseException e) {
-            return badRequest("Could not parse start or end time.");
+            return APIResponse.badRequestNotParsable("Could not parse start or end time.");
         }
     }
 
     @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUserReservationsBetweenDates(@PathVariable Long id, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "end", required = false) String end) {
-        if (id == null)
-            return badRequest("Missing ID");
-
+    public APIResponse getUserReservationsBetweenDates(@PathVariable Long id, @RequestParam(value = "start", required = false) String start, @RequestParam(value = "end", required = false) String end) {
         User user = authService.getCurrentUser();
-        if (user.isAdmin() || user.getId().equals(id)) {
-            try {
-                Date startDate = null;
-                Date endDate = null;
+        if (!user.isAdmin() && !user.getId().equals(id))
+            return APIResponse.noPermission();
 
-                if (start != null)
-                    startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
-                if (end != null)
-                    endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
+        try {
+            Date startDate = null;
+            Date endDate = null;
 
-                LocalDateTime startLocalDateTime = startDate != null ? LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()) : null;
-                LocalDateTime endLocalDateTime = endDate != null ? LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()) : null;
-                List<Reservation> reservations = reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, user, null);
+            if (start != null)
+                startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
+            if (end != null)
+                endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
 
-                // Sort the reservations so that the earliest show up first in the list.
-                reservations.sort(Comparator.comparing(Reservation::getStart));
+            LocalDateTime startLocalDateTime = startDate != null ? LocalDateTime.ofInstant(startDate.toInstant(), ZoneId.systemDefault()) : null;
+            LocalDateTime endLocalDateTime = endDate != null ? LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault()) : null;
+            List<Reservation> reservations = reservationRepository.findReservationsWithFilters(startLocalDateTime, endLocalDateTime, user, null);
 
-                return ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
-                }.getType()));
-            } catch (ParseException e) {
-                return badRequest("Could not parse start or end time.");
-            }
+            // Sort the reservations so that the earliest show up first in the list.
+            reservations.sort(Comparator.comparing(Reservation::getStart));
+
+            return APIResponse.ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
+            }.getType()));
+        } catch (ParseException e) {
+            return APIResponse.badRequestNotParsable("Could not parse start or end time.");
         }
-        return noPermission();
     }
 
     @RequestMapping(value = "/reservations/pending", method = RequestMethod.GET)
-    public ResponseEntity<?> getPendingReservations() {
+    public APIResponse getPendingReservations() {
 
         if (authService.getCurrentUser().getUserGroups().size() == 0)
-            return noPermission();
+            return APIResponse.noPermission();
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
 
-        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
+        return APIResponse.ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 
     @RequestMapping(value = "/reservations/approved", method = RequestMethod.GET)
-    public ResponseEntity<?> getApprovedReservations() {
+    public APIResponse getApprovedReservations() {
 
         if (authService.getCurrentUser().getUserGroups().size() == 0)
-            return noPermission();
+            return APIResponse.noPermission();
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.APPROVED);
 
-        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
+        return APIResponse.ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 
     @RequestMapping(value = "/reservations/rejected", method = RequestMethod.GET)
-    public ResponseEntity<?> getRejectedReservations() {
+    public APIResponse getRejectedReservations() {
 
         if (authService.getCurrentUser().getUserGroups().size() == 0)
-            return noPermission();
+            return APIResponse.noPermission();
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.REJECTED);
 
-        return ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
+        return APIResponse.ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 
     @RequestMapping(value = "/reservations/{id}/decision", method = RequestMethod.PATCH)
-    public ResponseEntity<?> approveReservation(@PathVariable Long id, @RequestBody Boolean approved) {
+    public APIResponse approveReservation(@PathVariable Long id, @RequestBody Boolean approved) {
         if (authService.getCurrentUser().getUserGroups().size() == 0)
-            return noPermission();
+            return APIResponse.noPermission();
 
         if (approved == null)
-            return badRequest("Please send only true (for approved) or false (for rejected).");
+            return APIResponse.badRequestNotParsable("Please send only true (for approved) or false (for rejected).");
 
         Reservation reservation = reservationRepository.find(id);
         if (reservation == null)
-            return notFound("Reservation not found.");
+            return APIResponse.notFound("Reservation not found.");
 
         User currentUser = authService.getCurrentUser();
 
@@ -170,7 +166,7 @@ public class ReservationController extends APIControllerAbstract {
         }
 
         if (decidingFor == null)
-            return noPermission("You are not allowed to decide upon this Reservation.");
+            return APIResponse.noPermission();
 
         // Remove the existing decisions.
         List<ReservationDecision> decisionsToRemove = reservationDecisionRepository.getUserGroupDecisionsByReservation(decidingFor, reservation);
@@ -198,69 +194,69 @@ public class ReservationController extends APIControllerAbstract {
             notificationService.sendReservationDecisionNotification(reservation);
         }
 
-        return ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
+        return APIResponse.ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
         }.getType()));
     }
 
     @RequestMapping(value = "/reservations/decisions/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getPendingReservationDecisions(@PathVariable Long id) {
-        if (id == null)
-            return badRequest("Missing ID");
-
+    public APIResponse getPendingReservationDecisions(@PathVariable Long id) {
         Reservation reservation = reservationRepository.find(id);
         List<ReservationDecision> decisionList = reservationService.generateReservationDecisions(reservation);
 
-        return ok(modelMapper.map(decisionList, new TypeToken<List<ReservationDecisionDTO>>() {
+        return APIResponse.ok(modelMapper.map(decisionList, new TypeToken<List<ReservationDecisionDTO>>() {
         }.getType()));
     }
 
     @RequestMapping(value = "/reservations/user/{id}", method = RequestMethod.POST)
-    public ResponseEntity<?> makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
-        if (authService.getCurrentUser().getId().equals(id) || authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL)) {
-            Reservation reservation = new Reservation();
-            reservation.setTenant(tenantManagementService.getTenant());
-            reservation.setUser(userRepository.findInCurrentTenant(id));
+    public APIResponse makeReservation(@PathVariable Long id, @RequestBody ReservationDTO reservationDTO) {
+        if (!authService.getCurrentUser().getId().equals(id) && !authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
+            return APIResponse.noPermission();
 
-            if (reservationDTO.title != null)
-                if (!reservationDTO.title.matches("[^<>;=]*"))
-                    return badRequest("The Title cannot contain these characters: < > ; =");
-                else if (reservationDTO.title.length() > 100)
-                    return badRequest("The Title must be 100 characters or less.");
-                else
-                    reservation.setTitle(reservationDTO.title);
+        Reservation reservation = new Reservation();
+        reservation.setTenant(tenantManagementService.getTenant());
+        reservation.setUser(userRepository.findInCurrentTenant(id));
 
-            Long resourceId = reservationDTO.resource.id;
-            Resource resource = resourceRepository.findInCurrentTenant(resourceId);
+        if (reservationDTO.title != null)
+            if (!reservationDTO.title.matches("[^<>;=]*"))
+                return APIResponse.badRequestInvalidCharacters("title", INVALID_CHARACTERS);
+            else if (reservationDTO.title.length() > 100)
+                return APIResponse.badRequestFieldTooLong("title", 100);
+            else
+                reservation.setTitle(reservationDTO.title);
 
-            if (resource == null)
-                return badRequest("No Resource supplied");
+        Long resourceId = reservationDTO.resource.id;
+        Resource resource = resourceRepository.findInCurrentTenant(resourceId);
 
-            if (reservationDTO.start == null || reservationDTO.end == null)
-                return badRequest("No Start or End times supplied.");
+        if (resource == null)
+            return APIResponse.notFound("Resource not found.");
 
-            if (reservationDTO.start.isAfter(reservationDTO.end))
-                return badRequest("Start time is after End time.");
+        if (reservationDTO.start == null)
+            return APIResponse.badRequestMissingField("start");
 
-            boolean available = reservationService.isResourceAvailableForReservation(resource, reservationDTO.start, reservationDTO.end);
-            if (!available)
-                return badRequest("Resource is not available at specified times.");
+        if (reservationDTO.end == null)
+            return APIResponse.badRequestMissingField("end");
 
-            reservation.setResource(resource);
-            reservation.setStart(reservationDTO.start);
-            reservation.setEnd(reservationDTO.end);
+        if (reservationDTO.start.isAfter(reservationDTO.end))
+            return APIResponse.badRequest("start_after_end", "The start time is after the end time.");
 
-            if (resource.isNeedsApproval()) {
-                reservation.setStatus(Reservation.Status.PENDING);
-            } else {
-                reservation.setStatus(Reservation.Status.APPROVED);
-            }
+        boolean available = reservationService.isResourceAvailableForReservation(resource, reservationDTO.start, reservationDTO.end);
+        if (!available)
+            return APIResponse.forbidden("The resource is not available at the specified times.");
 
-            reservation = reservationRepository.save(reservation);
-            notificationService.sendNewReservationNotifications(reservation);
-            return ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
-            }.getType()));
+        reservation.setResource(resource);
+        reservation.setStart(reservationDTO.start);
+        reservation.setEnd(reservationDTO.end);
+
+        if (resource.isNeedsApproval()) {
+            reservation.setStatus(Reservation.Status.PENDING);
+        } else {
+            reservation.setStatus(Reservation.Status.APPROVED);
         }
-        return noPermission();
+
+        reservation = reservationRepository.save(reservation);
+        notificationService.sendNewReservationNotifications(reservation);
+        return APIResponse.ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
+        }.getType()));
     }
 
 }

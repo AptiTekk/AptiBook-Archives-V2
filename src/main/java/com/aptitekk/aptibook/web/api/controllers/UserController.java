@@ -6,19 +6,19 @@
 
 package com.aptitekk.aptibook.web.api.controllers;
 
+import com.aptitekk.aptibook.domain.entities.NotificationType;
+import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.entities.UserGroup;
-import com.aptitekk.aptibook.domain.entities.Permission;
-import com.aptitekk.aptibook.domain.entities.NotificationType;
 import com.aptitekk.aptibook.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.web.api.dto.UserDTO;
-import com.aptitekk.aptibook.util.PasswordUtils;
 import com.aptitekk.aptibook.service.EmailService;
+import com.aptitekk.aptibook.util.PasswordUtils;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
+import com.aptitekk.aptibook.web.api.dtos.UserDTO;
 import com.aptitekk.aptibook.web.api.validators.UserValidator;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -45,28 +45,25 @@ public class UserController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.GET)
-    public ResponseEntity<?> getUsers() {
+    public APIResponse getUsers() {
         if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
-            return noPermission();
+            return APIResponse.noPermission();
 
         List<User> users = userRepository.findAll();
 
-        return ok(modelMapper.map(users, new TypeToken<List<UserDTO>>() {
+        return APIResponse.ok(modelMapper.map(users, new TypeToken<List<UserDTO>>() {
         }.getType()));
     }
 
     @RequestMapping(value = "/users", method = RequestMethod.POST)
-    public ResponseEntity<?> addNewUser(@RequestBody UserDTO userDTO) {
-        if (userDTO == null)
-            return badRequest("The User data was not supplied.");
-
+    public APIResponse addNewUser(@RequestBody UserDTO userDTO) {
         if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
-            return noPermission();
+            return APIResponse.noPermission();
 
         User newUser = new User();
 
         if (userDTO.emailAddress == null)
-            return badRequest("The Email Address was not supplied.");
+            return APIResponse.badRequestMissingField("emailAddress");
 
         userValidator.validateEmailAddress(userDTO.emailAddress, null);
         newUser.setEmailAddress(userDTO.emailAddress);
@@ -107,47 +104,44 @@ public class UserController extends APIControllerAbstract {
                         + "</center>"
                         + "<p>Please let us know of any way we can be of assistance, and be sure to check out our knowledge base at https://support.aptitekk.com/. Enjoy!</p>");
 
-        return created(modelMapper.map(newUser, UserDTO.class), "/users/" + newUser.getId());
+        return APIResponse.created(modelMapper.map(newUser, UserDTO.class), "/users/" + newUser.getId());
     }
 
     @RequestMapping(value = "/users/current", method = RequestMethod.GET)
-    public ResponseEntity<?> getCurrentUser() {
-        if (authService.getCurrentUser() != null)
-            return ok(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
-        else
-            return badRequest();
+    public APIResponse getCurrentUser() {
+        return APIResponse.ok(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
-    public ResponseEntity<?> getUser(@PathVariable long id) {
+    public APIResponse getUser(@PathVariable long id) {
         User user = userRepository.findInCurrentTenant(id);
         if (user == null)
-            return notFound("No users were found with the ID: " + id);
+            return APIResponse.notFound("No users were found with the ID: " + id);
 
         if (!user.equals(authService.getCurrentUser()))
             if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
-                return noPermission();
+                return APIResponse.noPermission();
 
-        return ok(modelMapper.map(user, UserDTO.class));
+        return APIResponse.ok(modelMapper.map(user, UserDTO.class));
     }
 
 
     @RequestMapping(value = "/users/current/notifications/settings", method = RequestMethod.GET)
-    public ResponseEntity<?> getNotificationSettings() {
+    public APIResponse getNotificationSettings() {
         Map<NotificationType, User.NotificationToggles> notificationSettings = authService.getCurrentUser().getNotificationSettings();
 
         for (NotificationType notificationType : NotificationType.values()) {
             notificationSettings.putIfAbsent(notificationType, new User.NotificationToggles(notificationType.getDefaultValue()));
         }
 
-        return ok(modelMapper.map(notificationSettings, new TypeToken<Map<NotificationType, User.NotificationToggles>>() {
+        return APIResponse.ok(modelMapper.map(notificationSettings, new TypeToken<Map<NotificationType, User.NotificationToggles>>() {
         }.getType()));
     }
 
 
     @RequestMapping(value = "/users/current/notifications/settings/{notificationType}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchNotificationSetting(@RequestBody User.NotificationToggles notificationToggles,
-                                                      @PathVariable("notificationType") NotificationType notificationType) {
+    public APIResponse patchNotificationSetting(@RequestBody User.NotificationToggles notificationToggles,
+                                                @PathVariable("notificationType") NotificationType notificationType) {
         User user = authService.getCurrentUser();
         //Find passed in notification setting in user's notification settings and set value of user's setting to passed in value.
         if (user.getNotificationSettings().containsKey(notificationType))
@@ -156,21 +150,18 @@ public class UserController extends APIControllerAbstract {
             user.getNotificationSettings().put(notificationType, new User.NotificationToggles(notificationToggles.isEmailEnabled()));
 
         userRepository.save(user);
-        return ok(modelMapper.map(user.getNotificationSettings().get(notificationType), User.NotificationToggles.class));
+        return APIResponse.ok(modelMapper.map(user.getNotificationSettings().get(notificationType), User.NotificationToggles.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
-    public ResponseEntity<?> patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO) {
-        if (userDTO == null)
-            return badRequest("The User data was not supplied.");
-
+    public APIResponse patchUser(@PathVariable Long id, @RequestBody UserDTO.WithNewPassword userDTO) {
         User currentUser = userRepository.findInCurrentTenant(id);
         if (currentUser == null)
-            return notFound("No users were found with the ID: " + id);
+            return APIResponse.notFound("No users were found with the ID: " + id);
 
         if (!currentUser.equals(authService.getCurrentUser()))
             if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
-                return noPermission();
+                return APIResponse.noPermission();
 
         if (userDTO.emailAddress != null) {
             userValidator.validateEmailAddress(userDTO.emailAddress, currentUser);
@@ -200,7 +191,7 @@ public class UserController extends APIControllerAbstract {
 
         if (userDTO.userGroups != null) {
             if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
-                return noPermission("You may not modify User Groups.");
+                return APIResponse.noPermission();
 
             List<UserGroup> userGroupList = userValidator.validateUserGroups(userDTO.userGroups, currentUser);
 
@@ -213,23 +204,23 @@ public class UserController extends APIControllerAbstract {
 
         userRepository.save(currentUser);
 
-        return ok(modelMapper.map(currentUser, UserDTO.class));
+        return APIResponse.ok(modelMapper.map(currentUser, UserDTO.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteUser(@PathVariable long id) {
+    public APIResponse deleteUser(@PathVariable long id) {
         User user = userRepository.findInCurrentTenant(id);
         if (user == null)
-            return notFound("No users were found with the ID: " + id);
+            return APIResponse.notFound("No users were found with the ID: " + id);
 
         if (user.isAdmin())
-            return badRequest("The admin user cannot be deleted.");
+            return APIResponse.forbidden("The admin user cannot be deleted.");
 
         if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
-            return noPermission();
+            return APIResponse.noPermission();
 
         userRepository.delete(user);
-        return noContent();
+        return APIResponse.noContentResponse();
     }
 
 }

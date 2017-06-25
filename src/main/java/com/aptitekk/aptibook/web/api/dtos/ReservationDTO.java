@@ -4,19 +4,19 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.api.dto;
+package com.aptitekk.aptibook.web.api.dtos;
 
 import com.aptitekk.aptibook.domain.entities.serializers.LocalDateTimeSerializer;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonDeserialize;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class ReservationWithDecisionsDTO {
+public class ReservationDTO {
 
     public Long id;
 
@@ -40,12 +40,15 @@ public class ReservationWithDecisionsDTO {
 
     public UserDTO.WithoutUserGroups user;
 
-    public List<ReservationDecisionDTO> decisions;
-
     public boolean approved;
 
     public boolean rejected;
 
     public boolean pending;
+
+    @JsonIgnoreProperties({"resource"})
+    public static class WithoutResource extends ReservationDTO {
+
+    }
 
 }

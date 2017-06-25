@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.api.dto;
+package com.aptitekk.aptibook.web.api.dtos;
 
 public class PermissionDTO {
 

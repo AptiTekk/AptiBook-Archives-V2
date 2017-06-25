@@ -10,8 +10,9 @@ import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.entities.UserGroup;
 import com.aptitekk.aptibook.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.web.api.dto.UserGroupDTO;
 import com.aptitekk.aptibook.service.entity.UserGroupService;
+import com.aptitekk.aptibook.web.api.APIResponse;
+import com.aptitekk.aptibook.web.api.dtos.UserGroupDTO;
 import org.apache.commons.validator.routines.EmailValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -46,7 +47,7 @@ public class UserValidator extends RestValidator {
     void checkIfEmailAddressIsInUse(String emailAddress, @Nullable Long excludedUserId) throws RestValidationException {
         User otherUser = userRepository.findByEmailAddress(emailAddress);
         if (otherUser != null && !otherUser.getId().equals(excludedUserId))
-            throw new RestValidationException(badRequest("The Email Address is already in use."));
+            throw new RestValidationException(APIResponse.badRequestConflict("The Email Address is already in use."));
     }
 
     /**
@@ -60,10 +61,10 @@ public class UserValidator extends RestValidator {
         if (emailAddress != null) {
 
             if (existingUser != null && existingUser.isAdmin())
-                throw new RestValidationException(badRequest("The admin user cannot change their Email Address."));
+                throw new RestValidationException(APIResponse.forbidden("The admin user cannot change their Email Address."));
 
             if (!EmailValidator.getInstance().isValid(emailAddress))
-                throw new RestValidationException(badRequest("The Email Address is invalid."));
+                throw new RestValidationException(APIResponse.badRequestNotParsable("The Email Address is invalid."));
 
             checkIfEmailAddressIsInUse(emailAddress, existingUser != null ? existingUser.getId() : null);
         }
@@ -78,9 +79,9 @@ public class UserValidator extends RestValidator {
     public void validateFirstName(String firstName) throws RestValidationException {
         if (firstName != null)
             if (!firstName.matches("[^<>;=]*"))
-                throw new RestValidationException(badRequest("The First Name cannot contain these characters: < > ; ="));
+                throw new RestValidationException(APIResponse.badRequestInvalidCharacters("firstName", "< > ; ="));
             else if (firstName.length() > 30)
-                throw new RestValidationException(badRequest("The First Name must be 30 characters or less."));
+                throw new RestValidationException(APIResponse.badRequestFieldTooLong("firstName", 30));
     }
 
     /**
@@ -92,9 +93,9 @@ public class UserValidator extends RestValidator {
     public void validateLastName(String lastName) throws RestValidationException {
         if (lastName != null)
             if (!lastName.matches("[^<>;=]*"))
-                throw new RestValidationException(badRequest("The Last Name cannot contain these characters: < > ; ="));
+                throw new RestValidationException(APIResponse.badRequestInvalidCharacters("lastName", "< > ; ="));
             else if (lastName.length() > 30)
-                throw new RestValidationException(badRequest("The Last Name must be 30 characters or less."));
+                throw new RestValidationException(APIResponse.badRequestFieldTooLong("lastName", 30));
     }
 
     /**
@@ -106,9 +107,9 @@ public class UserValidator extends RestValidator {
     public void validatePhoneNumber(String phoneNumber) throws RestValidationException {
         if (phoneNumber != null)
             if (!phoneNumber.matches("[^<>;=]*"))
-                throw new RestValidationException(badRequest("The Phone Number cannot contain these characters: < > ; ="));
+                throw new RestValidationException(APIResponse.badRequestInvalidCharacters("phoneNumber", "< > ; ="));
             else if (phoneNumber.length() > 30)
-                throw new RestValidationException(badRequest("The Phone Number must be 30 characters or less."));
+                throw new RestValidationException(APIResponse.badRequestFieldTooLong("phoneNumber", 30));
     }
 
     /**
@@ -120,7 +121,7 @@ public class UserValidator extends RestValidator {
     public void validatePassword(String password) throws RestValidationException {
         if (password != null)
             if (password.length() > 30)
-                throw new RestValidationException(badRequest("The Password must be 30 characters or less."));
+                throw new RestValidationException(APIResponse.badRequestFieldTooLong("password", 30));
     }
 
     /**
@@ -144,15 +145,15 @@ public class UserValidator extends RestValidator {
         // 2. Must be assigned to the Root Group.
         if (isAdmin) {
             if (userGroupDTOs.isEmpty())
-                throw new RestValidationException(badRequest("The admin user must be assigned to the root group."));
+                throw new RestValidationException(APIResponse.forbidden("The admin user must be assigned to the root group."));
             else if (userGroupDTOs.size() > 1)
-                throw new RestValidationException(badRequest("The admin user may only be assigned to the root group."));
+                throw new RestValidationException(APIResponse.forbidden("The admin user may only be assigned to the root group."));
             else {
                 UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTOs.get(0).id);
                 if (userGroup == null)
-                    throw new RestValidationException(badRequest("The User Group was not found."));
+                    throw new RestValidationException(APIResponse.notFound("The User Group was not found."));
                 else if (!userGroup.isRoot())
-                    throw new RestValidationException(badRequest("The admin user may only be assigned to the root group."));
+                    throw new RestValidationException(APIResponse.forbidden("The admin user may only be assigned to the root group."));
 
                 userGroupList.add(userGroup);
             }
@@ -160,30 +161,30 @@ public class UserValidator extends RestValidator {
             // For all other users, check the user group structure.
             for (UserGroupDTO userGroupDTO : userGroupDTOs) {
                 if (userGroupDTO.id == null)
-                    throw new RestValidationException(badRequest("A User Group is missing an ID."));
+                    throw new RestValidationException(APIResponse.badRequestMissingField("id"));
 
                 UserGroup userGroup = userGroupRepository.findInCurrentTenant(userGroupDTO.id);
 
                 // Make sure the group exists.
                 if (userGroup == null)
-                    throw new RestValidationException(badRequest("A User Group was not found."));
+                    throw new RestValidationException(APIResponse.notFound("The User Group with the id " + userGroupDTO.id + " was not found."));
 
                 // Make sure the group is not root, as normal users cannot be assigned to root.
                 if (userGroup.isRoot())
-                    throw new RestValidationException(badRequest("You may not assign a non-admin user to the root group."));
+                    throw new RestValidationException(APIResponse.forbidden("You may not assign a non-admin user to the root group."));
 
                 // Make sure there are not other groups being assigned on this same branch.
                 // Check below this group...
                 List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
                 for (UserGroup otherGroup : userGroupList) {
                     if (hierarchyDown.contains(otherGroup))
-                        throw new RestValidationException(badRequest("You may not assign a user to two or more groups of the same branch."));
+                        throw new RestValidationException(APIResponse.forbidden("You may not assign a user to two or more groups of the same branch."));
                 }
                 // And above this group...
                 List<UserGroup> hierarchyUp = userGroupService.getHierarchyUp(userGroup);
                 for (UserGroup otherGroup : userGroupList) {
                     if (hierarchyUp.contains(otherGroup))
-                        throw new RestValidationException(badRequest("You may not assign a user to two or more groups of the same branch."));
+                        throw new RestValidationException(APIResponse.forbidden("You may not assign a user to two or more groups of the same branch."));
                 }
 
                 userGroupList.add(userGroup);

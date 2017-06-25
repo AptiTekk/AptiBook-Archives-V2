@@ -11,11 +11,11 @@ import com.aptitekk.aptibook.domain.entities.Resource;
 import com.aptitekk.aptibook.domain.repositories.FileRepository;
 import com.aptitekk.aptibook.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.util.ImageUtils;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
 import net.coobird.thumbnailator.geometry.Positions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -44,30 +44,28 @@ public class ResourceImageController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.GET, produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<?> getImage(@PathVariable Long id) {
+    public APIResponse getImage(@PathVariable Long id) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
         if (resource == null)
-            return badRequest("Resource not found.");
+            return APIResponse.notFound("Resource not found.");
 
         if (resource.getImage() == null || resource.getImage().getData() == null)
-            return noContent();
+            return APIResponse.noContentResponse();
 
-        return ok(resource.getImage().getData());
+        return APIResponse.ok(resource.getImage().getData());
     }
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
-    public ResponseEntity<?> setImage(@PathVariable Long id, @RequestPart("file") MultipartFile multipartFile) {
+    public APIResponse setImage(@PathVariable Long id, @RequestPart("file") MultipartFile multipartFile) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
         if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
-            return noPermission();
+            return APIResponse.noPermission();
 
-        if (multipartFile == null)
-            return badRequest("No image supplied.");
-        else if (multipartFile.getSize() > 5000000)
-            return badRequest("Image cannot be larger than 5MB.");
+        if (multipartFile.getSize() > 5000000)
+            return APIResponse.badRequest("maximum_file_size_exceeded", "Image cannot be larger than 5MB.");
         else if (!ACCEPTED_IMAGE_TYPES.contains(multipartFile.getContentType()))
-            return badRequest("Image type not supported.");
+            return APIResponse.badRequest("image_type_not_supported", "The provided image type is not supported.");
         else {
             try {
                 // Read the image
@@ -90,9 +88,6 @@ public class ResourceImageController extends APIControllerAbstract {
                 imageFile.setData(parsedImage);
                 imageFile = fileRepository.save(imageFile);
 
-                if (imageFile == null)
-                    return serverError("Could not save image.");
-
                 File oldImage = resource.getImage();
 
                 // Set and save new image
@@ -105,22 +100,22 @@ public class ResourceImageController extends APIControllerAbstract {
                 }
 
                 // Return the image.
-                return ok(resource.getImage().getData());
+                return APIResponse.ok(resource.getImage().getData());
             } catch (IOException e) {
-                return badRequest("Could not read image. It may be corrupt.");
+                return APIResponse.badRequestNotParsable("Could not read image. It may be corrupt.");
             }
         }
     }
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.DELETE)
-    public ResponseEntity<?> deleteImage(@PathVariable Long id) {
+    public APIResponse deleteImage(@PathVariable Long id) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
         if (resource == null)
-            return noPermission();
+            return APIResponse.noPermission();
 
         if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
-            return noPermission();
+            return APIResponse.noPermission();
 
         File imageFile = resource.getImage();
 
@@ -129,7 +124,7 @@ public class ResourceImageController extends APIControllerAbstract {
             fileRepository.delete(imageFile);
         }
 
-        return noContent();
+        return APIResponse.noContentResponse();
     }
 
 }

@@ -4,18 +4,21 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.api.dto;
+package com.aptitekk.aptibook.web.api.dtos;
 
+import com.aptitekk.aptibook.domain.entities.property.Property;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 @JsonIdentityInfo(generator = JSOGGenerator.class)
-public class PropertyDTO {
+public class TenantDTO {
 
-    public String defaultValue;
+    public Long id;
 
-    public String propertyValue;
+    public String domain;
 
-    public String keyName;
+    public String name;
+
+    public Property.AuthenticationMethod authenticationMethod;
 
 }

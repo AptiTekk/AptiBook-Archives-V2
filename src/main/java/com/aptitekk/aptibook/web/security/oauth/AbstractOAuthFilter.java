@@ -67,7 +67,7 @@ public abstract class AbstractOAuthFilter extends OncePerRequestFilter {
         if (!name.matches("^[a-z]+$"))
             throw new IllegalArgumentException("The name must contain only lowercase letters.");
 
-        this.urlGenerationPath = "/web/oauth/" + name;
+        this.urlGenerationPath = "/api/oauth/" + name;
         this.callbackPath = urlGenerationPath + "/callback";
     }
 

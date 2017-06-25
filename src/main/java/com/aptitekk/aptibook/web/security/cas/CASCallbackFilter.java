@@ -34,7 +34,7 @@ import java.net.URLEncoder;
 @Component
 public class CASCallbackFilter extends OncePerRequestFilter {
 
-    public final static String CALLBACK_PATH = "/web/cas/callback";
+    public final static String CALLBACK_PATH = "/api/cas/callback";
 
     private final TenantManagementService tenantManagementService;
     private final RegistrationService registrationService;

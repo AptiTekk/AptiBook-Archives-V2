@@ -6,9 +6,9 @@
 
 package com.aptitekk.aptibook.web;
 
-import com.aptitekk.aptibook.web.api.RestError;
 import com.aptitekk.aptibook.service.LogService;
 import com.aptitekk.aptibook.service.SpringProfileService;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.validators.RestValidator;
 import org.apache.catalina.connector.ClientAbortException;
 import org.hibernate.MappingException;
@@ -46,19 +46,20 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleNoHandlerFoundException(NoHandlerFoundException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        if (ex.getRequestURL().startsWith("/web"))
-            // For API calls, send a web error.
-            return new ResponseEntity<>(new RestError("The URL you have reached is not in service at this time. (404)"), HttpStatus.NOT_FOUND);
+        if (ex.getRequestURL().startsWith("/api"))
+            // For API calls, send a not found error.
+            return APIResponse.notFound("The resource you have tried to access could not be found.");
         else {
+            // Load the requested resource.
             Resource resource = this.resourceLoader.getResource("classpath:static" + ex.getRequestURL());
 
             // If it doesn't exist, load index.html
             if (!resource.exists() || ex.getRequestURL().equals("/")) {
                 resource = this.resourceLoader.getResource("classpath:static/index.html");
 
-                // If index.html doesn't exist, that's not good.
+                // If index.html doesn't exist, something is wrong internally.
                 if (!resource.exists())
-                    return new ResponseEntity<Object>("Could not load AptiBook. Please contact support at https://support.aptitekk.com/", HttpStatus.INTERNAL_SERVER_ERROR);
+                    return APIResponse.internalServerError();
             }
 
             // Send the resource.
@@ -67,30 +68,30 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(MappingException.class)
-    protected ResponseEntity<Object> handleModelMappingException(MappingException ex) {
+    protected APIResponse handleModelMappingException(MappingException ex) {
         logService.logException(getClass(), ex, "An error occurred while mapping an object to a DTO");
-        return new ResponseEntity<>(new RestError("An Internal Server Error occurred while processing your request. (500)"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return APIResponse.internalServerError();
     }
 
     @ExceptionHandler(IllegalArgumentException.class)
-    protected ResponseEntity<Object> handleIllegalArgumentException(IllegalArgumentException ex) {
+    protected APIResponse handleIllegalArgumentException(IllegalArgumentException ex) {
         logService.logException(getClass(), ex, "An error occurred while processing an endpoint request");
-        return new ResponseEntity<>(new RestError("An Internal Server Error occurred while processing your request. (500)"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return APIResponse.internalServerError();
     }
 
     @ExceptionHandler(RestValidator.RestValidationException.class)
     protected ResponseEntity<?> handleRestValidationException(RestValidator.RestValidationException ex) {
-        return ex.getResponseEntity();
+        return ex.getApiResponse();
     }
 
     @Override
     protected ResponseEntity<Object> handleHttpMediaTypeNotSupported(HttpMediaTypeNotSupportedException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<>(new RestError(ex.getMessage()), HttpStatus.BAD_REQUEST);
+        return APIResponse.unsupportedMediaType(ex.getContentType());
     }
 
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
-    protected ResponseEntity<?> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
-        return new ResponseEntity<>(new RestError("The passed in value for the '" + ex.getName() + "' path variable is not valid."), HttpStatus.BAD_REQUEST);
+    protected APIResponse handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex) {
+        return APIResponse.badRequest("invalid_path_variable", "The passed in value for the '" + ex.getName() + "' path variable is not valid.");
     }
 
     @ExceptionHandler(ClientAbortException.class)
@@ -100,15 +101,15 @@ public class WebExceptionHandler extends ResponseEntityExceptionHandler {
 
     @Override
     protected ResponseEntity<Object> handleMissingServletRequestParameter(MissingServletRequestParameterException ex, HttpHeaders headers, HttpStatus status, WebRequest request) {
-        return new ResponseEntity<Object>(new RestError("The request parameter '" + ex.getParameterName() + "' was not supplied."), HttpStatus.BAD_REQUEST);
+        return APIResponse.badRequest("missing_parameter", "The request parameter '" + ex.getParameterName() + "' was not supplied.");
     }
 
     @Override
     protected ResponseEntity<Object> handleExceptionInternal(Exception ex, Object body, HttpHeaders headers, HttpStatus status, WebRequest request) {
         if (ex instanceof HttpRequestMethodNotSupportedException) {
-            return new ResponseEntity<>(new RestError("The Request Method you have specified (" + ((HttpRequestMethodNotSupportedException) ex).getMethod() + ") is not valid. (405)"), HttpStatus.METHOD_NOT_ALLOWED);
+            return APIResponse.methodNotAllowed(((HttpRequestMethodNotSupportedException) ex).getMethod());
         }
         logService.logException(getClass(), ex, "An error occurred while processing an endpoint request");
-        return new ResponseEntity<>(new RestError("An Internal Server Error occurred while processing your request. (500)"), HttpStatus.INTERNAL_SERVER_ERROR);
+        return APIResponse.internalServerError();
     }
 }

@@ -8,6 +8,7 @@ package com.aptitekk.aptibook.web.api.validators;
 
 import com.aptitekk.aptibook.domain.entities.UserGroup;
 import com.aptitekk.aptibook.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -34,7 +35,7 @@ public class UserGroupValidator extends RestValidator {
     void checkIfNameIsInUse(String name, @Nullable Long excludedUserGroupId) throws RestValidationException {
         UserGroup otherUserGroup = userGroupRepository.findByName(name);
         if (otherUserGroup != null && !otherUserGroup.getId().equals(excludedUserGroupId))
-            throw new RestValidationException(badRequest("A User Group with this name already exists."));
+            throw new RestValidationException(APIResponse.badRequestConflict("A User Group with this name already exists."));
     }
 
     /**
@@ -51,13 +52,13 @@ public class UserGroupValidator extends RestValidator {
                 if (name.equals("root"))
                     return; // Nothing else to check.
                 else
-                    throw new RestValidationException(badRequest("The root group's name cannot be changed."));
+                    throw new RestValidationException(APIResponse.forbidden("The root group's name cannot be changed."));
             }
 
             if (!name.matches("[^<>;=]*"))
-                throw new RestValidationException(badRequest("The Name cannot contain these characters: < > ; ="));
+                throw new RestValidationException(APIResponse.badRequestInvalidCharacters("name", "< > ; ="));
             else if (name.length() > 30)
-                throw new RestValidationException(badRequest("The Name must be 30 characters or less."));
+                throw new RestValidationException(APIResponse.badRequestFieldTooLong("name", 30));
 
             checkIfNameIsInUse(name, existingUserGroup != null ? existingUserGroup.getId() : null);
         }

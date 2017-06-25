@@ -7,13 +7,13 @@
 package com.aptitekk.aptibook.web.api.validators;
 
 import com.aptitekk.aptibook.service.tenant.TenantManagementService;
-import com.aptitekk.aptibook.web.RestOperations;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.util.WebURIBuilderService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
-public abstract class RestValidator implements RestOperations {
+public abstract class RestValidator {
 
     @Autowired
     private WebURIBuilderService webURIBuilderService;
@@ -21,27 +21,17 @@ public abstract class RestValidator implements RestOperations {
     @Autowired
     private TenantManagementService tenantManagementService;
 
-    @Override
-    public WebURIBuilderService getWebURIBuilderService() {
-        return webURIBuilderService;
-    }
-
-    @Override
-    public TenantManagementService getTenantManagementService() {
-        return tenantManagementService;
-    }
-
     public static class RestValidationException extends RuntimeException {
 
-        private final ResponseEntity<?> responseEntity;
+        private final APIResponse apiResponse;
 
-        public RestValidationException(ResponseEntity<?> responseEntity) {
-            super(responseEntity.toString());
-            this.responseEntity = responseEntity;
+        public RestValidationException(APIResponse apiResponse) {
+            super(apiResponse.toString());
+            this.apiResponse = apiResponse;
         }
 
-        public ResponseEntity<?> getResponseEntity() {
-            return responseEntity;
+        public APIResponse getApiResponse() {
+            return apiResponse;
         }
 
     }

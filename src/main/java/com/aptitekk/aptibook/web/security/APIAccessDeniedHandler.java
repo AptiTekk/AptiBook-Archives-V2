@@ -6,9 +6,8 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.web.api.RestError;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
+import com.aptitekk.aptibook.web.api.APIResponse;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.stereotype.Component;
@@ -26,9 +25,9 @@ public class APIAccessDeniedHandler implements AccessDeniedHandler {
 
     @Override
     public void handle(HttpServletRequest request, HttpServletResponse response, AccessDeniedException accessDeniedException) throws IOException, ServletException {
-        ResponseEntity<RestError> error = ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(new RestError(accessDeniedException.getMessage()));
-        response.setStatus(error.getStatusCodeValue());
-        response.getWriter().append(error.toString());
+        APIResponse apiResponse = APIResponse.unauthorized("unauthorized", accessDeniedException.getMessage());
+        response.setStatus(apiResponse.getStatusCodeValue());
+        response.getWriter().append(new ObjectMapper().writeValueAsString(apiResponse.getBody()));
     }
 
 }

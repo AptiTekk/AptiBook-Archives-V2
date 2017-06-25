@@ -29,7 +29,7 @@ import java.net.URLEncoder;
 @Component
 public class SignOutFilter extends OncePerRequestFilter {
 
-    private final static String SIGN_OUT_PATH = "/web/sign-out";
+    private final static String SIGN_OUT_PATH = "/api/sign-out";
     private final TenantManagementService tenantManagementService;
     private final WebURIBuilderService webURIBuilderService;
     private final UserRepository userRepository;
