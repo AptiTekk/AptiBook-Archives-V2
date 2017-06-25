@@ -6,10 +6,10 @@
 
 package com.aptitekk.aptibook.web.util;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.SpringProfileService;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.domain.entities.Tenant;
+import com.aptitekk.aptibook.service.LogService;
+import com.aptitekk.aptibook.service.SpringProfileService;
+import com.aptitekk.aptibook.service.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;

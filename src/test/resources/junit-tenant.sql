@@ -73,25 +73,6 @@ INSERT INTO reservationdecision (id, approved, comment, tenant_id, reservation_i
 INSERT INTO reservationdecision (id, approved, comment, tenant_id, reservation_id, user_id, usergroup_id) VALUES (20383, true, NULL, 20000, 20352, 20101, 20151);
 INSERT INTO reservationdecision (id, approved, comment, tenant_id, reservation_id, user_id, usergroup_id) VALUES (20384, true, NULL, 20000, 20353, 20101, 20151);
 
-
---
--- Data for Name: reservationfield; Type: TABLE DATA; Schema: public; Owner: aptibook
---
-
-
-
---
--- Data for Name: reservationfieldentry; Type: TABLE DATA; Schema: public; Owner: aptibook
---
-
-
-
---
--- Data for Name: reservationfield_reservationfieldentry; Type: TABLE DATA; Schema: public; Owner: aptibook
---
-
-
-
 --
 -- Data for Name: tag; Type: TABLE DATA; Schema: public; Owner: aptibook
 --

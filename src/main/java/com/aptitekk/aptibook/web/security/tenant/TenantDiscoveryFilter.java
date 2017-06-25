@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.web.security.tenant;
 
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.service.tenant.TenantManagementService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;

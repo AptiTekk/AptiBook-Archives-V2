@@ -6,8 +6,8 @@
 
 package com.aptitekk.aptibook;
 
-import com.aptitekk.aptibook.core.domain.entities.Tenant;
-import com.aptitekk.aptibook.core.services.tenant.TenantManagementService;
+import com.aptitekk.aptibook.domain.entities.Tenant;
+import com.aptitekk.aptibook.service.tenant.TenantManagementService;
 import com.gargoylesoftware.htmlunit.WebClient;
 import org.apache.commons.io.IOUtils;
 import org.json.JSONException;

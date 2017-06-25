@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.web.security.authenticationFilters.CustomBasicAuthenticationFilter;
+import com.aptitekk.aptibook.web.security.authenticationfilters.CustomBasicAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
 import com.aptitekk.aptibook.web.security.cas.CASEntryFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
@@ -81,7 +81,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // Everyone can access registration.
                 .antMatchers("/api/register", "/api/register/*").permitAll()
 
-                // Everyone can GET individual properties. (Fine grain control is defined in the controller method body)
+                // Everyone can GET individual properties. (Fine grain control is defined in the controllers method body)
                 .antMatchers(HttpMethod.GET, "/api/properties/*").permitAll()
 
                 // Everyone can access the OAuth endpoints.
@@ -93,7 +93,7 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                 // All other endpoints must be authenticated.
                 .antMatchers("/api/**").authenticated()
 
-                // Permit anything outside of the api endpoints.
+                // Permit anything outside of the web endpoints.
                 .anyRequest().permitAll()
                 .and()
 

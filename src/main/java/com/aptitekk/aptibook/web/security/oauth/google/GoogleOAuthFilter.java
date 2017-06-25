@@ -6,11 +6,11 @@
 
 package com.aptitekk.aptibook.web.security.oauth.google;
 
-import com.aptitekk.aptibook.core.domain.entities.User;
-import com.aptitekk.aptibook.core.domain.entities.enums.property.Property;
-import com.aptitekk.aptibook.core.domain.repositories.UserRepository;
-import com.aptitekk.aptibook.core.services.LogService;
-import com.aptitekk.aptibook.core.services.entity.PropertyService;
+import com.aptitekk.aptibook.domain.entities.User;
+import com.aptitekk.aptibook.domain.entities.property.Property;
+import com.aptitekk.aptibook.domain.repositories.UserRepository;
+import com.aptitekk.aptibook.service.LogService;
+import com.aptitekk.aptibook.service.entity.PropertyService;
 import com.aptitekk.aptibook.web.security.oauth.AbstractOAuthFilter;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.github.scribejava.apis.GoogleApi20;
@@ -45,7 +45,7 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
     public GoogleOAuthFilter(UserRepository userRepository,
                              PropertyService propertyService,
                              LogService logService) {
-        super("google", Property.Key.GOOGLE_SIGN_IN_ENABLED, API_KEY, API_SECRET);
+        super("google", Property.GOOGLE_SIGN_IN_ENABLED, API_KEY, API_SECRET);
         this.userRepository = userRepository;
         this.propertyService = propertyService;
         this.logService = logService;
@@ -78,7 +78,7 @@ public class GoogleOAuthFilter extends AbstractOAuthFilter {
 
         if (googleUserInfo != null) {
             // Check to make sure their email domain is whitelisted.
-            String[] allowedDomains = propertyService.getProperty(Property.Key.GOOGLE_SIGN_IN_WHITELIST).split(",");
+            String[] allowedDomains = propertyService.getProperty(Property.GOOGLE_SIGN_IN_WHITELIST).split(",");
 
             boolean domainWhitelisted = false;
             // Compare each whitelisted domain to the email

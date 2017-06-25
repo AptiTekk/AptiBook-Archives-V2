@@ -65,7 +65,7 @@ export class DataTableComponent implements AfterViewInit, AfterViewChecked {
     }
 
     ngAfterViewChecked(): void {
-        // Re-draw the table if scheduled.
+        // Re-draw the table if schedule.
         if (this.redrawOptions) {
 
             // We must destroy the datatable to redraw any columns.
