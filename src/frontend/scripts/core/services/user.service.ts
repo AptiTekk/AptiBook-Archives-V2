@@ -8,59 +8,71 @@ import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {User} from "../../models/user.model";
 import {Observable, ReplaySubject} from "rxjs";
-import {NotificationToggles} from "../../models/notification-toggles.model";
 
 @Injectable()
 export class UserService {
 
+    /**
+     * TODO: JAVADOCS
+     * @type {ReplaySubject<User[]>}
+     */
     users: ReplaySubject<User[]> = new ReplaySubject<User[]>(1);
 
     constructor(private apiService: APIService) {
     }
 
-    public fetchUsers() {
-        this.apiService
-            .get("/users")
-            .take(1)
-            .subscribe(
-                response => this.users.next(response),
-                err => this.users.next([])
-            )
+    /**
+     * TODO: JAVADOCS
+     */
+    public fetchUsers(): void {
+        this.apiService.get("/users")
+            .then(response => this.users.next(response))
     }
 
+    /**
+     * TODO: JAVADOCS
+     * @returns {ReplaySubject<User[]>}
+     */
     public getUsers(): ReplaySubject<User[]> {
         return this.users;
     }
 
-    public addNewUser(user: User): Observable<User> {
-        return Observable.create(listener => {
-            this.apiService
-                .post("users", user)
-                .subscribe(
-                    response => listener.next(response),
-                    err => listener.error(err)
-                );
+    /**
+     * TODO: JAVADOCS
+     * @param user
+     * @returns {any}
+     */
+    public addNewUser(user: User): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.apiService.post("users", user)
+                .then(response => resolve(response))
+                .catch(err => reject(err))
         });
     }
 
-    public patchUser(user: User): Observable<User> {
-        return Observable.create(listener => {
-            this.apiService
-                .patch("users/" + user.id, user)
-                .subscribe(
-                    response => listener.next(response),
-                    err => listener.error(err)
-                );
+    /**
+     * TODO: JAVADOCS
+     * @param user
+     * @returns {any}
+     */
+    public patchUser(user: User): Promise<User> {
+        return new Promise((resolve, reject) => {
+            this.apiService.patch("users/" + user.id, user)
+                .then(response => resolve(response))
+                .catch(err => reject(err))
         });
     }
 
-    public deleteUser(user: User): Observable<boolean> {
-        return Observable.create(listener => {
-            this.apiService
-                .del("users/" + user.id)
-                .subscribe(
-                    response => listener.next(true),
-                    err => listener.error(err)
+    /**
+     * TODO: JAVADOCS
+     * @param user
+     * @returns {any}
+     */
+    public deleteUser(user: User): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.apiService.del("users/" + user.id)
+                .then(response => resolve(),
+                    err => reject(err)
                 );
         });
     }

@@ -52,11 +52,10 @@ export class CurrentUserService {
     /**
      * Fetches the current user's notification settings from the server.
      */
-    public fetchNotificationSettings() {
-        this.apiService.get("/users/current/notifications/settings").subscribe(
-            response => this.notificationSettings.next(response),
-            err => this.notificationSettings.next(null)
-        );
+    public fetchNotificationSettings(): void {
+        this.apiService.get("/users/current/notifications/settings")
+            .then(response => this.notificationSettings.next(response))
+            .catch(err => this.notificationSettings.next(null));
     }
 
     /**
@@ -73,13 +72,11 @@ export class CurrentUserService {
      * @param notificationToggles The toggles for the setting.
      * @returns An observable that emits the patched version of the setting upon success, or an error upon failure.
      */
-    public patchNotificationSetting(notificationSetting: string, notificationToggles: NotificationToggles): Observable<NotificationToggles> {
-        return Observable.create(listener => {
+    public patchNotificationSetting(notificationSetting: string, notificationToggles: NotificationToggles): Promise<NotificationToggles> {
+        return new Promise((resolve, reject) => {
             this.apiService.patch("/users/current/notifications/settings/" + notificationSetting, notificationToggles)
-                .subscribe(
-                    response => listener.next(response),
-                    err => listener.error(err)
-                )
+                .then(response => resolve(response))
+                .catch(err => reject(err))
         });
     }
 

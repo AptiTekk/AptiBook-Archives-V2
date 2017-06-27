@@ -18,10 +18,9 @@ export class PropertiesService {
     }
 
     public fetchProperties(): void {
-        this.apiService.get("properties").subscribe(
-            response => this.properties.next(response),
-            err => this.properties.next(null)
-        );
+        this.apiService.get("properties")
+            .then(response => this.properties.next(response))
+            .catch(err => this.properties.next(null));
     }
 
     /**
@@ -38,24 +37,22 @@ export class PropertiesService {
      */
     public getProperty(key: string): Promise<any> {
         return new Promise<any>((resolve, reject) => {
-            this.apiService.get("properties/" + key).subscribe(
-                value => resolve(value),
-                err => reject(err)
-            )
+            this.apiService.get("properties/" + key)
+                .then(value => resolve(value))
+                .catch(err => reject(err));
         });
     }
 
     /**
      * Patches all properties at once.
      * @param properties The properties to patch.
-     * @returns An observable that should be subscribed to. May emit the updated properties or an error.
+     * @returns A promise that gives the properties in their updated state.
      */
-    patchProperties(properties: Properties): Observable<Properties> {
-        return Observable.create(listener => {
-            this.apiService.patch("properties/", properties, false).subscribe(
-                response => listener.next(response),
-                err => listener.error(err)
-            )
+    patchProperties(properties: Properties): Promise<Properties> {
+        return new Promise((resolve, reject) => {
+            this.apiService.patch("properties/", properties, false)
+                .then(response => resolve(response))
+                .catch(err => reject(err));
         });
     }
 
@@ -63,14 +60,13 @@ export class PropertiesService {
      * Patches a single property.
      * @param key The property key
      * @param value The property value.
-     * @returns An observable that should be subscribed to. May emit the updated value or an error.
+     * @returns An promise that gives the property value in its updated state.
      */
-    public patchProperty(key: string, value: string): Observable<string> {
-        return Observable.create(listener => {
-            this.apiService.patch("properties/" + key, value).subscribe(
-                response => listener.next(response),
-                err => listener.error(err)
-            )
+    public patchProperty(key: string, value: string): Promise<string> {
+        return new Promise((resolve, reject) => {
+            this.apiService.patch("properties/" + key, value)
+                .then(response => resolve(response))
+                .catch(err => reject(err));
         });
     }
 

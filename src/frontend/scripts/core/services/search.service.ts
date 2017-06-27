@@ -22,28 +22,49 @@ export class SearchService {
         this.searchResults.next(undefined);
     }
 
-    searchForResources(start: Moment, end: Moment) {
-        this.resourceService.fetchAvailableResources(start, end).take(1).subscribe(results => {
-            this.searchResults.next(results);
-            this.startTime.next(start);
-            this.endTime.next(end);
-        });
+    /**
+     * TODO: JAVADOCS
+     * @param start
+     * @param end
+     */
+    searchForResources(start: Moment, end: Moment): void {
+        this.resourceService.fetchAvailableResources(start, end)
+            .then(results => {
+                this.searchResults.next(results);
+                this.startTime.next(start);
+                this.endTime.next(end);
+            });
     }
 
-    clearResults() {
+    /**
+     * TODO: JAVADOCS
+     */
+    clearResults(): void {
         this.searchResults.next([]);
         this.startTime.next(undefined);
         this.endTime.next(undefined);
     }
 
+    /**
+     * TODO: JAVADOCS
+     * @returns {ReplaySubject<Resource[]>}
+     */
     getSearchResults(): ReplaySubject<Resource[]> {
         return this.searchResults;
     }
 
+    /**
+     * TODO: JAVADOCS
+     * @returns {ReplaySubject<Moment>}
+     */
     getStartTime(): ReplaySubject<Moment> {
         return this.startTime;
     }
 
+    /**
+     * TODO: JAVADOCS
+     * @returns {ReplaySubject<Moment>}
+     */
     getEndTime(): ReplaySubject<Moment> {
         return this.endTime;
     }

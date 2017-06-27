@@ -35,11 +35,8 @@ export class PermissionsService {
      * to reload the current user's permissions.
      */
     public fetchCurrentUserPermissions(): void {
-        this.apiService.get("/users/current/permissions").subscribe(
-            permissions => {
-                this.currentUserPermissions.next(permissions.map(permission => <Permission>{descriptor: permission}));
-            }
-        )
+        this.apiService.get("/users/current/permissions")
+            .then(permissions => this.currentUserPermissions.next(permissions.map(permission => <Permission>{descriptor: permission})));
     }
 
     /**
@@ -60,10 +57,8 @@ export class PermissionsService {
     public getUsersAssignedToPermissionsInAllGroups(inherited: boolean = true): Promise<{ [permissionGroup: string]: { [permission: string]: User[] } }> {
         return new Promise((resolve, reject) => {
             this.apiService.get("permissions/users?inherited=" + inherited)
-                .subscribe(
-                    assignments => resolve(assignments),
-                    err => reject(err)
-                );
+                .then(assignments => resolve(assignments))
+                .catch(err => reject(err));
         })
     }
 
@@ -78,10 +73,8 @@ export class PermissionsService {
     public getUsersAssignedToPermissionsInGroup(groupKey: string, inherited: boolean = true): Promise<{ [permission: string]: User[] }> {
         return new Promise((resolve, reject) => {
             this.apiService.get("permissions/groups/" + groupKey + "/users?inherited=" + inherited)
-                .subscribe(
-                    assignments => resolve(assignments),
-                    err => reject(err)
-                );
+                .then(assignments => resolve(assignments))
+                .catch(err => reject(err));
         })
     }
 
@@ -93,10 +86,8 @@ export class PermissionsService {
     public getUserGroupsAssignedToPermissionsInAllGroups(): Promise<{ [permissionGroup: string]: { [permission: string]: UserGroup[] } }> {
         return new Promise((resolve, reject) => {
             this.apiService.get("permissions/user_groups")
-                .subscribe(
-                    assignments => resolve(assignments),
-                    err => reject(err)
-                );
+                .then(assignments => resolve(assignments))
+                .catch(err => reject(err));
         })
     }
 
@@ -110,10 +101,8 @@ export class PermissionsService {
     public getUserGroupsAssignedToPermissionsInGroup(groupKey: string): Promise<{ [permission: string]: UserGroup[] }> {
         return new Promise((resolve, reject) => {
             this.apiService.get("permissions/groups/" + groupKey + "/user_groups")
-                .subscribe(
-                    assignments => resolve(assignments),
-                    err => reject(err)
-                );
+                .then(assignments => resolve(assignments))
+                .catch(err => reject(err));
         })
     }
 

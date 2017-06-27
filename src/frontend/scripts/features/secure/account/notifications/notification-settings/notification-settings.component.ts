@@ -48,15 +48,11 @@ export class AccountNotificationSettingsComponent implements OnInit {
      */
     saveSetting(setting: string): void {
         this.currentUserService.patchNotificationSetting(setting, this.notificationSettings[setting])
-            .subscribe(
-                response => {
+            .then(response => {
                     this.currentUserService.fetchNotificationSettings();
                     this.infoAlert.display("Notification Preferences Updated!");
-                },
-                err => {
-                    this.dangerAlert.display(err, false);
-                }
-            );
+                })
+            .catch(err => this.dangerAlert.display(err.message, false))
     }
 
 }

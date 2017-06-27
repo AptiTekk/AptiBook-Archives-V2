@@ -6,7 +6,7 @@
 
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {Observable, ReplaySubject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 import {UserGroup} from "../../models/user-group.model";
 import {User} from "../../models/user.model";
 import {Resource} from "../../models/resource.model";
@@ -20,122 +20,139 @@ export class UserGroupService {
         this.fetchRootUserGroup();
     }
 
+    /**
+     * TODO: JAVADOCS
+     */
     public fetchRootUserGroup(): void {
-        this.apiService.get("userGroups").subscribe(
-            response => this.rootUserGroup.next(<UserGroup>response),
-            err => this.rootUserGroup.error(err)
-        )
+        this.apiService.get("userGroups")
+            .then(response => this.rootUserGroup.next(response))
+            .catch(err => this.rootUserGroup.error(err))
     }
 
+    /**
+     * TODO: JAVADOCS
+     * @returns {ReplaySubject<UserGroup>}
+     */
     public getRootUserGroup(): ReplaySubject<UserGroup> {
         return this.rootUserGroup;
     }
 
-    public getUserGroupById(id: number): Observable<UserGroup> {
-        return Observable.create(listener => {
+    /**
+     * TODO: JAVADOCS
+     * @param id
+     * @returns {any}
+     */
+    public getUserGroupById(id: number): Promise<UserGroup> {
+        return new Promise((resolve, reject) => {
             this.apiService.get("userGroups/" + id)
-                .subscribe(
-                    response => listener.next(response),
-                    err => listener.error(err),
-                    () => listener.complete()
-                );
+                .then(response => resolve(response))
+                .catch(err => reject(err))
         });
     }
 
-    public getUsersByGroup(userGroup: UserGroup): Observable<User[]> {
-        return Observable.create(listener => {
+    /**
+     * TODO: JAVADOCS
+     * @param userGroup
+     * @returns {any}
+     */
+    public getUsersByGroup(userGroup: UserGroup): Promise<User[]> {
+        return new Promise((resolve, reject) => {
             this.apiService.get("userGroups/" + userGroup.id + "/users")
-                .subscribe(
-                    response => listener.next(response),
-                    err => listener.error(err),
-                    () => listener.complete()
-                );
-        });
+                .then(response => resolve(response))
+                .catch(err => reject(err))
+        })
     }
 
-    public getResourcesByGroup(userGroup: UserGroup): Observable<Resource[]> {
-        return Observable.create(listener => {
+    /**
+     * TODO: JAVADOCS
+     * @param userGroup
+     * @returns {Promise<T>}
+     */
+    public getResourcesByGroup(userGroup: UserGroup): Promise<Resource[]> {
+        return new Promise((resolve, reject) => {
             this.apiService.get("userGroups/" + userGroup.id + "/resources")
-                .subscribe(
-                    response => listener.next(response),
-                    err => listener.error(err),
-                    () => listener.complete()
-                );
-        });
+                .then(response => resolve(response))
+                .catch(err => reject(err))
+        })
     }
 
-    public getUserGroupHierarchyDown(userGroup: UserGroup): Observable<UserGroup[]> {
-        return Observable.create(listener => {
-            this.apiService.get("userGroups/hierarchyDown/" + userGroup.id).subscribe(
-                response => listener.next(response),
-                err => listener.error(err),
-                () => listener.complete()
-            );
-        });
+    /**
+     * TODO: JAVADOCS
+     * @param userGroup
+     * @returns {Promise<T>}
+     */
+    public getUserGroupHierarchyDown(userGroup: UserGroup): Promise<UserGroup[]> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("userGroups/hierarchyDown/" + userGroup.id)
+                .then(response => resolve(response))
+                .catch(err => resolve(err))
+        })
     }
 
-    public getUserGroupHierarchyUp(userGroup: UserGroup): Observable<UserGroup[]> {
-        return Observable.create(listener => {
-            this.apiService.get("/userGroups/hierarchyUp/" + userGroup.id).subscribe(
-                response => listener.next(response),
-                err => listener.error(err),
-                () => listener.complete()
-            );
-        });
+    /**
+     * TODO: JAVADOCS
+     * @param userGroup
+     * @returns {Promise<T>}
+     */
+    public getUserGroupHierarchyUp(userGroup: UserGroup): Promise<UserGroup[]> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("/userGroups/hierarchyUp/" + userGroup.id)
+                .then(response => resolve(response))
+                .catch(err => resolve(err))
+        })
     }
 
     /**
      * Adds a new User Group with the details provided in the provided UserGroup object.
      * @param userGroup The UserGroup containing the details of the new Group. ID is not required.
-     * @returns The new UserGroup if it was created successfully, undefined otherwise.
+     * @returns A Promise that gives the new UserGroup.
      */
-    public addNewUserGroup(userGroup: UserGroup): Observable<UserGroup> {
-        return Observable.create(listener => {
-            if (!userGroup)
-                listener.next(false);
-            else {
-                this.apiService.post("userGroups", userGroup).subscribe(
-                    response => listener.next(response),
-                    err => listener.error(err),
-                    () => listener.complete()
-                );
-            }
-        });
+    public addNewUserGroup(userGroup: UserGroup): Promise<UserGroup> {
+        return new Promise((resolve, reject) => {
+            this.apiService.post("userGroups", userGroup)
+                .then(response => resolve(response))
+                .catch(err => reject(err))
+        })
     }
 
-    public patchUserGroup(userGroup: UserGroup): Observable<void> {
-        return Observable.create(listener => {
-            if (!userGroup)
-                listener.error("User group was null.");
-            else {
-                this.apiService.patch("userGroups/" + userGroup.id, userGroup).subscribe(
-                    response => listener.next(),
-                    err => listener.error(err),
-                    () => listener.complete()
-                );
-            }
-        });
+    /**
+     * TODO: JAVADOCS
+     * @param userGroup
+     * @returns {Promise<T>}
+     */
+    public patchUserGroup(userGroup: UserGroup): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.apiService.patch("userGroups/" + userGroup.id, userGroup)
+                .then(response => resolve())
+                .catch(err => reject(err))
+        })
     }
 
-    public moveUserGroup(userGroup: UserGroup, newParentUserGroup: UserGroup): Observable<void> {
-        return Observable.create(listener => {
-            this.apiService.patch("userGroups/" + userGroup.id + "/move?newParentId=" + newParentUserGroup.id).subscribe(
-                response => listener.next(),
-                err => listener.error(err),
-                () => listener.complete()
-            )
-        });
+    /**
+     * TODO: JAVADOCS
+     * @param userGroup
+     * @param newParentUserGroup
+     * @returns {Promise<T>}
+     */
+    public moveUserGroup(userGroup: UserGroup, newParentUserGroup: UserGroup): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.apiService.patch("userGroups/" + userGroup.id + "/move?newParentId=" + newParentUserGroup.id)
+                .then(response => resolve())
+                .catch(err => reject(err))
+        })
     }
 
-    public deleteUserGroup(userGroup: UserGroup): Observable<void> {
-        return Observable.create(listener => {
+    /**
+     * TODO: JAVADOCS
+     * @param userGroup
+     * @returns {Promise<T>}
+     */
+    public deleteUserGroup(userGroup: UserGroup): Promise<any> {
+        return new Promise((resolve, reject) => {
             this.apiService.del("userGroups/" + userGroup.id)
-                .subscribe(
-                    response => listener.next(),
-                    err => listener.error(err),
-                    () => listener.complete()
-                )
-        });
+                .then(response => resolve())
+                .catch(err => reject(err))
+        })
     }
 
 }

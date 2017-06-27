@@ -41,35 +41,39 @@ export class NotificationService {
     }
 
     reloadNotifications(): void {
-        this.apiService.get("notifications/user/" + this.user.id).subscribe(
-            response => {
-                let notifications = <Notification[]> response;
-                this.notifications.next(notifications);
-                this.unreadNotifications.next(notifications.filter(n => !n.read));
-                this.readNotifications.next(notifications.filter(n => n.read));
-            },
-            err => {
-                this.notifications.next([]);
-                this.unreadNotifications.next([]);
-                this.readNotifications.next([]);
-            }
-        )
+        this.apiService.get("notifications/user/" + this.user.id)
+            .then(
+                response => {
+                    let notifications = <Notification[]> response;
+                    this.notifications.next(notifications);
+                    this.unreadNotifications.next(notifications.filter(n => !n.read));
+                    this.readNotifications.next(notifications.filter(n => n.read));
+                })
+            .catch(
+                err => {
+                    this.notifications.next([]);
+                    this.unreadNotifications.next([]);
+                    this.readNotifications.next([]);
+                }
+            )
     }
 
     public markAllRead(): void {
-        this.apiService.patch("notifications/user/" + this.user.id + "/markRead").subscribe(
-            response => {
-                let notifications = <Notification[]> response;
-                this.notifications.next(notifications);
-                this.unreadNotifications.next(notifications.filter(n => !n.read));
-                this.readNotifications.next(notifications.filter(n => n.read));
-            },
-            err => {
-                this.notifications.next([]);
-                this.unreadNotifications.next([]);
-                this.readNotifications.next([]);
-            }
-        );
+        this.apiService.patch("notifications/user/" + this.user.id + "/markRead")
+            .then(
+                response => {
+                    let notifications: Notification[] = response;
+                    this.notifications.next(notifications);
+                    this.unreadNotifications.next(notifications.filter(n => !n.read));
+                    this.readNotifications.next(notifications.filter(n => n.read));
+                })
+            .catch(
+                err => {
+                    this.notifications.next([]);
+                    this.unreadNotifications.next([]);
+                    this.readNotifications.next([]);
+                }
+            );
     }
 
 }

@@ -10,7 +10,7 @@ import {
     ReservationWithOrganizedDecisions,
     ReservationWithUnorganizedDecisions
 } from "../../models/reservation/reservation.model";
-import {Observable, ReplaySubject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 import {UserGroup} from "../../models/user-group.model";
 import {ReservationDecision} from "../../models/reservation/reservation-decision.model";
 import {UserGroupService} from "./usergroup.service";
@@ -41,22 +41,16 @@ export class ReservationManagementService {
     }
 
     public fetchReservations(): void {
-        this.apiService
-            .get("reservations/pending")
-            .take(1)
-            .subscribe((reservations: ReservationWithUnorganizedDecisions[]) => {
+        this.apiService.get("reservations/pending")
+            .then((reservations: ReservationWithUnorganizedDecisions[]) => {
                 this.pendingReservations.next(reservations);
             });
-        this.apiService
-            .get("reservations/approved")
-            .take(1)
-            .subscribe((reservations: ReservationWithUnorganizedDecisions[]) => {
+        this.apiService.get("reservations/approved")
+            .then((reservations: ReservationWithUnorganizedDecisions[]) => {
                 this.approvedReservations.next(reservations);
             });
-        this.apiService
-            .get("reservations/rejected")
-            .take(1)
-            .subscribe((reservations: ReservationWithUnorganizedDecisions[]) => {
+        this.apiService.get("reservations/rejected")
+            .then((reservations: ReservationWithUnorganizedDecisions[]) => {
                 this.rejectedReservations.next(reservations);
             });
     }
@@ -171,16 +165,13 @@ export class ReservationManagementService {
      * Makes a decision on the provided reservation.
      * @param approved If the decision is an approval or a rejection.
      * @param reservation The reservation deciding upon.
-     * @returns The decision that was made, or undefined if one could not be made.
+     * @returns A promise that gives the decision made.
      */
-    makeDecision(approved: boolean, reservation: Reservation): Observable<ReservationDecision> {
-        return Observable.create(listener => {
-            this.apiService
-                .patch("/reservations/" + reservation.id + "/decision", approved)
-                .subscribe(
-                    decision => listener.next(decision),
-                    err => listener.error(err)
-                )
+    makeDecision(approved: boolean, reservation: Reservation): Promise<ReservationDecision> {
+        return new Promise((resolve, reject) => {
+            this.apiService.patch("/reservations/" + reservation.id + "/decision", approved)
+                .then(decision => resolve(decision))
+                .catch(err => reject(err))
         });
     }
 

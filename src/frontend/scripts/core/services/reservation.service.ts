@@ -6,54 +6,61 @@
 
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {Observable, ReplaySubject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 import {User} from "../../models/user.model";
 import {Reservation} from "../../models/reservation/reservation.model";
 import * as moment from "moment";
-import {AuthService} from "./auth.service";
 
 @Injectable()
 export class ReservationService {
 
     private lastReservationMade: ReplaySubject<Reservation> = new ReplaySubject<Reservation>(1);
 
-    constructor(private apiService: APIService,
-                private authService: AuthService) {
+    constructor(private apiService: APIService) {
     }
 
-    public getUpcomingUserReservations(user: User): Observable<Reservation[]> {
-        return Observable.create(listener => {
-            if (user == undefined)
-                listener.next(undefined);
-            else
-                this.apiService.get("reservations/user/" + user.id + "?start=" + moment().utc().format("YYYY-MM-DDTHH:mm:ss")).subscribe(
-                    response => listener.next(<Reservation[]>response),
-                    err => listener.next(undefined)
-                )
+    /**
+     * TODO JAVADOCS
+     * @param user
+     * @returns {any}
+     */
+    public getUpcomingUserReservations(user: User): Promise<Reservation[]> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("reservations/user/" + user.id + "?start=" + moment().utc().format("YYYY-MM-DDTHH:mm:ss"))
+                .then(response => resolve(response))
+                .catch(err => reject(err))
         });
     }
 
-    public makeReservationDecision(approved: boolean, reservation: Reservation): Observable<boolean> {
-        return Observable.create(listener => {
-            this.apiService.patch("reservations/" + reservation.id + (approved ? "/approved" : "/rejected")).subscribe(
-                response => listener.next(true),
-                err => listener.next(false)
-            );
+    /**
+     * TODO JAVADOCS
+     * @param approved
+     * @param reservation
+     * @returns {Promise<T>}
+     */
+    public makeReservationDecision(approved: boolean, reservation: Reservation): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.apiService.patch("reservations/" + reservation.id + (approved ? "/approved" : "/rejected"))
+                .then(response => resolve())
+                .catch(err => reject(err))
         });
 
     }
 
-    public makeReservation(reservation: Reservation): Observable<Reservation> {
-        return Observable.create(listener => {
-            this.apiService.post("reservations/user/" + reservation.user.id, reservation).subscribe(
-                response => {
-                    let reservation: Reservation = <Reservation>response;
-                    listener.next(reservation);
+    /**
+     * TODO JAVADOCS
+     * @param reservation
+     * @returns {any}
+     */
+    public makeReservation(reservation: Reservation): Promise<Reservation> {
+        return new Promise((resolve, reject) => {
+            this.apiService.post("reservations/user/" + reservation.user.id, reservation)
+                .then(response => {
+                    let reservation: Reservation = response
                     this.lastReservationMade.next(reservation)
-                },
-                err => listener.next(undefined)
-            );
-
+                    resolve(reservation)
+                })
+                .catch(err => reject(err))
         });
     }
 

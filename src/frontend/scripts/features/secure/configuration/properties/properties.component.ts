@@ -29,7 +29,7 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
 
     properties: Properties;
 
-    CAS_CALLBACK_URL: string = window.location.protocol + '//' + window.location.host + '/web/cas/callback';
+    CAS_CALLBACK_URL: string = window.location.protocol + '//' + window.location.host + '/api/cas/callback';
 
     sectionLinks: NavigationLink[] = [
         {
@@ -160,16 +160,14 @@ export class PropertiesConfigurationComponent implements OnInit, AfterViewInit {
 
 
         this.propertiesService.patchProperties(propertiesPatch)
-            .subscribe(
-                properties => {
-                    AnalyticsService.sendEvent({category: 'Configuration - Properties', action: 'SaveProperties'});
-                    this.propertiesService.fetchProperties();
-                    this.successAlert.display("Changes have been saved!");
-                },
-                err => {
-                    this.dangerAlert.display(err);
-                }
-            );
+            .then(properties => {
+                AnalyticsService.sendEvent({category: 'Configuration - Properties', action: 'SaveProperties'});
+                this.propertiesService.fetchProperties();
+                this.successAlert.display("Changes have been saved!");
+            })
+            .catch(err => {
+                this.dangerAlert.display(err.message);
+            })
     }
 
 }

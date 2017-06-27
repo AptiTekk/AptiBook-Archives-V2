@@ -5,7 +5,7 @@
  */
 
 import {Injectable} from "@angular/core";
-import {ReplaySubject, Observable} from "rxjs";
+import {Observable, ReplaySubject} from "rxjs";
 import {AuthService} from "./auth.service";
 import {APIService} from "./api.service";
 import {ResourceCategory} from "../../models/resource-category.model";
@@ -18,40 +18,58 @@ export class ResourceCategoryService {
         this.fetchResourceCategories();
     }
 
-    fetchResourceCategories() {
-        this.apiService.get("/resourceCategories").subscribe(
-            response => this.resourceCategories.next(<ResourceCategory[]>response),
-            err => this.resourceCategories.next(undefined));
+    /**
+     * TODO: JAVADOCS
+     */
+    fetchResourceCategories(): void {
+        this.apiService.get("/resourceCategories")
+            .then(categories => this.resourceCategories.next(categories));
     }
 
+    /**
+     * TODO: JAVADOCS
+     * @returns {ReplaySubject<ResourceCategory[]>}
+     */
     getResourceCategories() {
         return this.resourceCategories;
     }
 
-    addNewResourceCategory(name: string): Observable<ResourceCategory> {
-        return Observable.create(listener => {
-            this.apiService.post("/resourceCategories", {name: name}).subscribe(
-                response => listener.next(response),
-                err => listener.next(undefined)
-            )
+    /**
+     * TODO: JAVADOCS
+     * @param name
+     * @returns {Promise<T>}
+     */
+    addNewResourceCategory(name: string): Promise<ResourceCategory> {
+        return new Promise((resolve, reject) => {
+            this.apiService.post("/resourceCategories", {name: name})
+                .then(response => resolve(response))
+                .catch(err => reject(err))
         });
     }
 
-    patchResourceCategory(category: ResourceCategory): Observable<ResourceCategory> {
-        return Observable.create(listener => {
-            this.apiService.patch("/resourceCategories/" + category.id, category).subscribe(
-                response => listener.next(response),
-                err => listener.next(undefined)
-            )
+    /**
+     * TODO: JAVADOCS
+     * @param category
+     * @returns {any}
+     */
+    patchResourceCategory(category: ResourceCategory): Promise<ResourceCategory> {
+        return new Promise((resolve, reject) => {
+            this.apiService.patch("/resourceCategories/" + category.id, category)
+                .then(response => resolve(response))
+                .catch(err => reject(err))
         });
     }
 
-    deleteResourceCategory(category: ResourceCategory): Observable<boolean> {
-        return Observable.create(listener => {
-            this.apiService.del("/resourceCategories/" + category.id).subscribe(
-                response => listener.next(true),
-                err => listener.next(false)
-            )
+    /**
+     * TODO: JAVADOCS
+     * @param category
+     * @returns {any}
+     */
+    deleteResourceCategory(category: ResourceCategory): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.apiService.del("/resourceCategories/" + category.id)
+                .then(response => resolve())
+                .catch(err => reject(err))
         });
     }
 

@@ -47,11 +47,11 @@ public class PermissionsController extends APIControllerAbstract {
      * @return A list of Permission Groups, the Permissions in those groups, and which Users are assigned to them.
      */
     @RequestMapping(value = "/permissions/users", method = RequestMethod.GET)
-    public ResponseEntity getUsersAssignedToPermissionsInAllGroups(@RequestParam(name = "inherited", defaultValue = "true") boolean inherited) {
+    public APIResponse getUsersAssignedToPermissionsInAllGroups(@RequestParam(name = "inherited", defaultValue = "true") boolean inherited) {
 
         // Make sure the user has the permission to list the assignments.
-        if (!authService.doesCurrentUserHavePermission(Permission.Descriptor.GENERAL_FULL_PERMISSIONS))
-            return noPermission();
+        if (!authService.doesCurrentUserHavePermission(Permission.GENERAL_FULL_PERMISSIONS))
+            return APIResponse.noPermission();
 
         // Create a map containing the Permission Groups and their Permissions
         Map<Permission.Group, Object> permissionGroupMap = new HashMap<>();
@@ -59,7 +59,7 @@ public class PermissionsController extends APIControllerAbstract {
         // For each Permission in each Permission Group, get the assigned Users.
         Arrays.stream(Permission.Group.values()).forEach(group -> permissionGroupMap.put(group, getUsersAssignedToPermissionsInGroup(group, inherited).getBody()));
 
-        return ok(permissionGroupMap);
+        return APIResponse.ok(permissionGroupMap);
     }
 
     /**

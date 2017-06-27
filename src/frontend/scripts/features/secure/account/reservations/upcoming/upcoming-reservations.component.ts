@@ -21,7 +21,8 @@ export class UpcomingReservationsComponent {
     constructor(authService: AuthService, reservationService: ReservationService) {
         authService.getCurrentUser().subscribe(user => {
             if (user)
-                reservationService.getUpcomingUserReservations(user).subscribe(reservations => this.reservations = reservations);
+                reservationService.getUpcomingUserReservations(user)
+                    .then(reservations => this.reservations = reservations);
         });
     }
 

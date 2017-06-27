@@ -99,15 +99,15 @@ export class UserSectionComponent implements OnInit {
         if (newPassword)
             userPatch.newPassword = newPassword;
 
-        this.userService.patchUser(userPatch).take(1).subscribe(
-            user => {
+        this.userService.patchUser(userPatch)
+            .then(user => {
                 this.authService.reloadUser();
                 this.infoAlert.display("Account updated successfully.");
                 this.editingAccount = false;
-            },
-            err => {
-                this.errorAlert.display(err);
-            });
+            })
+            .catch(err => {
+                this.errorAlert.display(err.message);
+            })
     }
 
     doPasswordsMatch(): boolean {

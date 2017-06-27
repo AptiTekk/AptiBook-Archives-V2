@@ -26,14 +26,16 @@ export class AuthService {
      * Forces a reload of the current user from the REST API
      */
     public reloadUser(): void {
-        this.apiService.get("users/current").subscribe(
-            (response: User) => {
-                this.currentUser.next(response)
-            },
-            err => {
-                this.currentUser.next(undefined)
-            }
-        );
+        this.apiService.get("users/current")
+            .then(
+                (response: User) => {
+                    this.currentUser.next(response)
+                })
+            .catch(
+                err => {
+                    this.currentUser.next(undefined)
+                }
+            );
     }
 
     /**
@@ -47,46 +49,48 @@ export class AuthService {
      * Attempts to sign into AptiBook as a regular user, using the credentials provided.
      * @param emailAddress The email address of the user.
      * @param password The password of the user.
-     * @returns An observable that contains the object of the signed in User.
+     * @returns An promise that gives the signed in User.
      */
-    public signInAsUser(emailAddress: String, password: String): Observable<User> {
-        return Observable.create(listener => {
+    public signInAsUser(emailAddress: String, password: String): Promise<User> {
+        return new Promise((resolve, reject) => {
             this.apiService.get("users/current", new Headers({
                 "Authorization": "Basic " + btoa(emailAddress + ":" + password),
                 "X-Auth-Type": "user"
-            })).subscribe(
-                (response: User) => {
-                    this.currentUser.next(response);
-                    listener.next(response);
-                },
-                err => {
-                    this.currentUser.next(undefined);
-                    listener.error(err);
-                }
-            );
+            })).then(
+                (user: User) => {
+                    this.currentUser.next(user);
+                    resolve(user);
+                })
+                .catch(
+                    err => {
+                        this.currentUser.next(undefined);
+                        reject(err);
+                    }
+                );
         });
     }
 
     /**
      * Attempts to sign into AptiBook as the admin, using the credentials provided.
      * @param password The password of the user.
-     * @returns An observable that contains the object of the signed in User.
+     * @returns A promise that gives the signed in User.
      */
-    public signInAsAdmin(password: String): Observable<User> {
-        return Observable.create(listener => {
+    public signInAsAdmin(password: String): Promise<User> {
+        return new Promise((resolve, reject) => {
             this.apiService.get("users/current", new Headers({
                 "Authorization": "Basic " + btoa(":" + password),
                 "X-Auth-Type": "admin"
-            })).subscribe(
-                (response: User) => {
-                    this.currentUser.next(response);
-                    listener.next(response);
-                },
-                err => {
-                    this.currentUser.next(undefined);
-                    listener.error(err);
-                }
-            );
+            })).then(
+                (user: User) => {
+                    this.currentUser.next(user);
+                    resolve(user);
+                })
+                .catch(
+                    err => {
+                        this.currentUser.next(undefined);
+                        reject(err);
+                    }
+                );
         });
     }
 
@@ -94,6 +98,6 @@ export class AuthService {
      * Signs the user out of AptiBook by redirect.
      */
     public signOut(): void {
-        window.location.href = "/web/sign-out";
+        window.location.href = "/api/sign-out";
     }
 }

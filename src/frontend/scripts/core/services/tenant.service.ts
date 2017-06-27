@@ -7,7 +7,6 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {Tenant} from "../../models/tenant.model";
-import {Observable} from "rxjs/Observable";
 
 @Injectable()
 export class TenantService {
@@ -17,14 +16,13 @@ export class TenantService {
 
     /**
      * Gets the Tenant details.
-     * @returns An Observable that should be subscribed to. May emit the Tenant details or an error.
+     * @returns A Promise that gives the Tenant details.
      */
-    getTenant(): Observable<Tenant> {
-        return Observable.create(listener => {
-            this.apiService.get("tenant").subscribe(
-                response => listener.next(response),
-                err => listener.error(err)
-            );
+    getTenant(): Promise<Tenant> {
+        return new Promise((resolve, reject) => {
+            this.apiService.get("tenant")
+                .then(response => resolve(response))
+                .catch(err => reject(err))
         });
     }
 

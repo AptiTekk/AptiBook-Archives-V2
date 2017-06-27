@@ -7,7 +7,6 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {User} from "../../models/user.model";
-import {Observable} from "rxjs";
 
 @Injectable()
 export class RegistrationService {
@@ -18,18 +17,13 @@ export class RegistrationService {
     /**
      * Registers a new user with the details provided in the User object.
      * @param user The User containing the details of the new user.
-     * @returns The new User if it was created, or an error message.
+     * @returns A Promise that gives the new User.
      */
-    public register(user: User): Observable<any> {
-        return Observable.create(listener => {
-            this.apiService.post("register", user).subscribe(
-                user => {
-                    listener.next(user)
-                },
-                err => {
-                    listener.error(err)
-                }
-            );
+    public register(user: User): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.apiService.post("register", user)
+                .then(user => resolve(user))
+                .catch(err => reject(err));
         });
     }
 
@@ -41,15 +35,9 @@ export class RegistrationService {
     public getRegistrationDetails(token: string): Promise<User> {
         return new Promise((resolve, reject) => {
             this.apiService.get("register/details?token=" + token)
-                .subscribe(
-                    user => {
-                        resolve(user);
-                    },
-                    err => {
-                        reject(err);
-                    }
-                )
-        });
+                .then(user => resolve(user))
+                .catch(err => reject(err))
+        })
     }
 
     /**
@@ -61,14 +49,8 @@ export class RegistrationService {
     public finishRegistration(user: User, token: string): Promise<User> {
         return new Promise((resolve, reject) => {
             this.apiService.post("register/sso?token=" + token, user)
-                .subscribe(
-                    user => {
-                        resolve(user);
-                    },
-                    err => {
-                        reject(err);
-                    }
-                )
-        });
+                .then(user => resolve(user))
+                .catch(err => reject(err))
+        })
     }
 }
