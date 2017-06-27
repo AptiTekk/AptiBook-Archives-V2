@@ -68,16 +68,16 @@ export class EditCategoryModalComponent implements OnInit {
         this.loaderService.startLoading();
 
         this.resourceCategory.name = this.formGroup.controls['name'].value;
-        this.resourceCategoryService.patchResourceCategory(this.resourceCategory).subscribe(
-            resourceCategory => {
+        this.resourceCategoryService.patchResourceCategory(this.resourceCategory)
+            .then(resourceCategory => {
                 if (resourceCategory) {
                     this.submitted.emit(resourceCategory);
                     this.modal.closeModal();
                 }
 
                 this.loaderService.stopLoading();
-            }
-        );
+            })
+            .catch(err => this.loaderService.stopLoading())
     }
 
 }

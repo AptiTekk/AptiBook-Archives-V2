@@ -8,7 +8,7 @@ import {AfterViewInit, Component, OnInit, ViewChild} from "@angular/core";
 import {Router} from "@angular/router";
 import {AuthService} from "../../../core/services/auth.service";
 import {AlertComponent} from "../../../shared/alert/alert.component";
-import {FormBuilder, FormGroup, Validators} from "@angular/forms";
+import {FormBuilder, FormGroup} from "@angular/forms";
 import {LoaderService} from "../../../core/services/loader.service";
 import {FormGroupComponent} from "../../../shared/form-group/form-group.component";
 
@@ -48,13 +48,11 @@ export class AdminSignInComponent implements OnInit, AfterViewInit {
         this.loaderService.startLoading();
         this.authService
             .signInAsAdmin(this.signInFormGroup.controls['password'].value)
-            .subscribe(
-                user => this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading()),
-                err => {
-                    this.loginDangerAlert.display(err, true);
-                    this.loaderService.stopLoading();
-                }
-            );
+            .then(user => this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading()))
+            .catch(err => {
+                this.loginDangerAlert.display(err, true);
+                this.loaderService.stopLoading();
+            })
     }
 
     onGoogleSignIn() {

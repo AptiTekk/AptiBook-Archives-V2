@@ -60,11 +60,12 @@ export class ReservationDetailsComponent {
         reservation.end = this.end.toISOString();
         reservation.resource = {id: this.resource.id};
 
-        this.reservationService.makeReservation(reservation).subscribe(newReservation => {
-            if (newReservation) {
-                this.router.navigate(['', 'secure', 'search-results', 'success']);
-            }
-        })
+        this.reservationService.makeReservation(reservation)
+            .then(newReservation => {
+                if (newReservation) {
+                    this.router.navigate(['', 'secure', 'search-results', 'success']);
+                }
+            })
     }
 
 }

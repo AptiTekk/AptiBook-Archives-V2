@@ -81,13 +81,11 @@ export class SignInComponent implements OnInit, AfterViewInit {
         this.loaderService.startLoading();
         this.authService
             .signInAsUser(this.signInFormGroup.controls['emailAddress'].value, this.signInFormGroup.controls['password'].value)
-            .subscribe(
-                user => this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading()),
-                err => {
-                    this.loginDangerAlert.display(err, true);
-                    this.loaderService.stopLoading();
-                }
-            );
+            .then(user => this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading()))
+            .catch(err => {
+                this.loginDangerAlert.display(err, true);
+                this.loaderService.stopLoading();
+            })
     }
 
     onGoogleSignIn() {

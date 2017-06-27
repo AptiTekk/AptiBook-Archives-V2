@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-import {AfterViewInit, Component, OnInit} from "@angular/core";
+import {AfterViewInit, Component} from "@angular/core";
 import {TenantService} from "../../core/services/tenant.service";
 import {Tenant} from "../../models/tenant.model";
 
@@ -21,6 +21,7 @@ export class WelcomeComponent implements AfterViewInit {
     }
 
     ngAfterViewInit(): void {
-        this.tenantService.getTenant().subscribe(response => this.tenant = response);
+        this.tenantService.getTenant()
+            .then(response => this.tenant = response);
     }
 }

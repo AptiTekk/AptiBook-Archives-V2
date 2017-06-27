@@ -195,20 +195,18 @@ export class ApprovalModalComponent implements OnInit {
 
         this.managementService
             .makeDecision(true, this.reservation)
-            .subscribe(
-                decision => {
-                    this.close();
-                    AnalyticsService.sendEvent({
-                        category: 'Management - Approval Modal',
-                        action: 'MakeDecision',
-                        label: 'Approved'
-                    });
-                    this.approved.emit();
-                },
-                err => {
-                    this.dangerAlert.display(err);
-                }
-            );
+            .then(decision => {
+                this.close();
+                AnalyticsService.sendEvent({
+                    category: 'Management - Approval Modal',
+                    action: 'MakeDecision',
+                    label: 'Approved'
+                });
+                this.approved.emit();
+            })
+            .catch(err => {
+                this.dangerAlert.display(err.message);
+            })
     }
 
     /**
@@ -285,20 +283,18 @@ export class ApprovalModalComponent implements OnInit {
 
         this.managementService
             .makeDecision(false, this.reservation)
-            .subscribe(
-                decision => {
-                    this.close();
-                    AnalyticsService.sendEvent({
-                        category: 'Management - Approval Modal',
-                        action: 'MakeDecision',
-                        label: 'Rejected'
-                    });
-                    this.rejected.emit();
-                },
-                err => {
-                    this.dangerAlert.display(err);
-                }
-            );
+            .then(decision => {
+                this.close();
+                AnalyticsService.sendEvent({
+                    category: 'Management - Approval Modal',
+                    action: 'MakeDecision',
+                    label: 'Rejected'
+                });
+                this.rejected.emit();
+            })
+            .catch(err => {
+                this.dangerAlert.display(err.message);
+            })
     }
 
     /**

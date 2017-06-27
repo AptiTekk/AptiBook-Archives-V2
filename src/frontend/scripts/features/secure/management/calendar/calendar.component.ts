@@ -49,12 +49,9 @@ export class CalendarComponent implements OnInit {
             if (user)
                 user.userGroups.forEach(userGroup => {
                     this.userGroupService.getUserGroupHierarchyDown(userGroup)
-                        .take(1)
-                        .subscribe(
-                            hierarchyGroups => this.userGroupOwnerFilter.push(...hierarchyGroups)
-                        );
-                });
-        });
+                        .then(hierarchyGroups => this.userGroupOwnerFilter.push(...hierarchyGroups))
+                })
+        })
 
         // Get Resource Categories
         this.resourceCategoryService.getResourceCategories()

@@ -146,8 +146,8 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     onDeleteCategory() {
         this.loaderService.startLoading();
 
-        this.resourceCategoryService.deleteResourceCategory(this.currentResourceCategory).subscribe(
-            response => {
+        this.resourceCategoryService.deleteResourceCategory(this.currentResourceCategory)
+            .then(response => {
                 AnalyticsService.sendEvent({
                     category: 'Configuration - Resources',
                     action: 'DeleteCategory'
@@ -155,8 +155,8 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                 this.loaderService.stopLoading();
                 this.resourceCategoryService.fetchResourceCategories();
                 this.router.navigate(['', 'secure', 'configuration', 'resources']);
-            }
-        );
+            })
+            .catch(err => this.loaderService.stopLoading())
     }
 
     onNewResource() {
@@ -179,15 +179,14 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
         if (!this.resourceForDeletion)
             return;
 
-        this.resourceService.deleteResource(this.resourceForDeletion).subscribe(
-            response => {
+        this.resourceService.deleteResource(this.resourceForDeletion)
+            .then(response => {
                 AnalyticsService.sendEvent({
                     category: 'Configuration - Resources',
                     action: 'DeleteResource'
                 });
                 this.resourceCategoryService.fetchResourceCategories();
-            }
-        )
+            })
     }
 
 }

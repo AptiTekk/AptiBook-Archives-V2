@@ -55,22 +55,20 @@ export class NewGroupModalComponent implements OnInit {
                     this.rootGroup = rootGroup;
                     this.userGroupService
                         .getUserGroupHierarchyDown(rootGroup)
-                        .subscribe(
-                            groups => {
-                                let groupNames: string[] = groups ? groups.map(group => group.name) : [];
-                                groupNames.push(rootGroup.name);
+                        .then(groups => {
+                            let groupNames: string[] = groups ? groups.map(group => group.name) : [];
+                            groupNames.push(rootGroup.name);
 
-                                this.formGroup = this.formBuilder.group({
-                                    name: [null, Validators.compose([
-                                        Validators.required,
-                                        Validators.maxLength(30),
-                                        Validators.pattern("[^<>;=]*"),
-                                        UniquenessValidator.isUnique(groupNames)
-                                    ])],
-                                    parent: [selectedUserGroup ? [selectedUserGroup] : []]
-                                });
-                            }
-                        );
+                            this.formGroup = this.formBuilder.group({
+                                name: [null, Validators.compose([
+                                    Validators.required,
+                                    Validators.maxLength(30),
+                                    Validators.pattern("[^<>;=]*"),
+                                    UniquenessValidator.isUnique(groupNames)
+                                ])],
+                                parent: [selectedUserGroup ? [selectedUserGroup] : []]
+                            });
+                        })
                 }
             );
     }
@@ -91,16 +89,15 @@ export class NewGroupModalComponent implements OnInit {
 
         this.userGroupService
             .addNewUserGroup(newUserGroup)
-            .subscribe(
-                userGroup => {
-                    if (userGroup) {
-                        this.submitted.next(userGroup);
-                        this.modal.closeModal();
-                    }
-
-                    this.loaderService.stopLoading();
+            .then(userGroup => {
+                if (userGroup) {
+                    this.submitted.next(userGroup);
+                    this.modal.closeModal();
                 }
-            );
+
+                this.loaderService.stopLoading();
+            })
+            .catch(err => this.loaderService.stopLoading())
     }
 
 }

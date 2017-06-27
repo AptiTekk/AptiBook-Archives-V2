@@ -19,24 +19,24 @@ export class WelcomeGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.tenantService.getTenant().take(1).subscribe(
-                tenant => {
-                    this.authService.getCurrentUser().take(1).subscribe(
-                        user => {
-                            // If the user exists, then they shouldn't be on the welcome page.
-                            if (user) {
-                                this.router.navigate(['secure']);
-                                resolve(false);
-                            } else {
-                                resolve(true);
-                            }
-                        });
-                },
-                err => {
+            this.tenantService.getTenant()
+                .then(tenant => {
+                    this.authService.getCurrentUser()
+                        .take(1).subscribe(user => {
+                        // If the user exists, then they shouldn't be on the welcome page.
+                        if (user) {
+                            this.router.navigate(['secure']);
+                            resolve(false);
+                        } else {
+                            resolve(true);
+                        }
+                    })
+                })
+                .catch(err => {
                     // Tenant could not be found; inactive Tenant.
                     this.router.navigate(['inactive'], {skipLocationChange: true});
                     resolve(false);
-                });
-        });
+                })
+        })
     }
 }

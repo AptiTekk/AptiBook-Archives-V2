@@ -86,36 +86,32 @@ export class EditResourceModalComponent implements OnInit {
 
         this.resourceService
             .patchResource(resourcePatch)
-            .subscribe(
-                resource => {
-                    if (resource) {
-                        if (this.resourceImage.hasImageToUpload()) {
+            .then(resource => {
+                if (this.resourceImage.hasImageToUpload()) {
 
-                            // If there is an image, upload it.
-                            this.resourceImage.upload().subscribe(
-                                success => {
-                                    if (success) {
-                                        this.close();
-                                        this.submitted.next();
-                                    }
+                    // If there is an image, upload it.
+                    this.resourceImage.upload().subscribe(
+                        success => {
+                            if (success) {
+                                this.close();
+                                this.submitted.next();
+                            }
 
-                                    this.loaderService.stopLoading();
-                                }
-                            );
-                        } else {
-                            // Otherwise, delete any existing image.
-                            this.resourceImage.deleteImageFromServer()
-                                .subscribe(
-                                    response => {
-                                        this.close();
-                                        this.submitted.next();
-                                        this.loaderService.stopLoading();
-                                    }
-                                );
+                            this.loaderService.stopLoading();
                         }
-                    }
+                    );
+                } else {
+                    // Otherwise, delete any existing image.
+                    this.resourceImage.deleteImageFromServer()
+                        .then(response => {
+                            this.close();
+                            this.submitted.next();
+                            this.loaderService.stopLoading();
+                        })
+                        .catch(err => this.loaderService.stopLoading())
                 }
-            );
+            })
+            .catch(err => this.loaderService.stopLoading())
     }
 
 }

@@ -168,12 +168,10 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
 
         this.userGroupService
             .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.rootGroup)
-            .subscribe(
-                success => {
-                    AnalyticsService.sendEvent({category: 'User Group Tree', action: 'MoveUserGroup'});
-                    this.userGroupService.fetchRootUserGroup();
-                }
-            );
+            .then(success => {
+                AnalyticsService.sendEvent({category: 'User Group Tree', action: 'MoveUserGroup'});
+                this.userGroupService.fetchRootUserGroup();
+            })
     }
 
     public selectUserGroup(userGroup: UserGroup) {

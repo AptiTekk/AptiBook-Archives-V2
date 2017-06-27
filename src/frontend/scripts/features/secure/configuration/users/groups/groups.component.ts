@@ -106,16 +106,15 @@ export class GroupsComponent implements OnInit {
         this.selectedUserGroup.name = this.userGroupDetailsFormGroup.controls['name'].value;
         this.userGroupService
             .patchUserGroup(this.selectedUserGroup)
-            .subscribe(() => {
-                    this.detailsInfoAlert.display("Details Updated.");
-                    this.userGroupService.fetchRootUserGroup();
-                    this.onUserGroupSelected();
-                },
-                err => {
-                    this.detailsDangerAlert.display(err);
-                    this.onUserGroupSelected();
-                }
-            );
+            .then(userGroup => {
+                this.detailsInfoAlert.display("Details Updated.");
+                this.userGroupService.fetchRootUserGroup();
+                this.onUserGroupSelected();
+            })
+            .catch(err => {
+                this.detailsDangerAlert.display(err);
+                this.onUserGroupSelected();
+            })
     }
 
     onCancelUserGroupDetails() {
@@ -141,16 +140,13 @@ export class GroupsComponent implements OnInit {
     onDeleteUserGroup() {
         this.userGroupService
             .deleteUserGroup(this.selectedUserGroup)
-            .subscribe(
-                response => {
-                    AnalyticsService.sendEvent({category: 'Configuration - User Groups', action: 'DeleteUserGroup'});
-                    this.selectedUserGroups = [];
-                    this.userGroupService.fetchRootUserGroup();
-                    this.userService.fetchUsers();
-                    this.onUserGroupSelected();
-                }
-            )
-
+            .then(response => {
+                AnalyticsService.sendEvent({category: 'Configuration - User Groups', action: 'DeleteUserGroup'});
+                this.selectedUserGroups = [];
+                this.userGroupService.fetchRootUserGroup();
+                this.userService.fetchUsers();
+                this.onUserGroupSelected();
+            })
     }
 
     setShowAssignedUsers(show: boolean) {

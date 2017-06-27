@@ -80,19 +80,17 @@ export class NewUserModalComponent implements OnInit {
 
         this.userService
             .addNewUser(newUser)
-            .subscribe(
-                user => {
-                    if (user) {
-                        this.submitted.next(user);
-                        this.modal.closeModal();
-                    }
-                    this.loaderService.stopLoading();
-                },
-                err => {
-                    this.dangerAlert.display(err);
-                    this.loaderService.stopLoading();
+            .then(user => {
+                if (user) {
+                    this.submitted.next(user);
+                    this.modal.closeModal();
                 }
-            );
+                this.loaderService.stopLoading();
+            })
+            .catch(err => {
+                this.dangerAlert.display(err.message);
+                this.loaderService.stopLoading();
+            })
     }
 
 }

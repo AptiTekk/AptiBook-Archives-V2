@@ -32,11 +32,8 @@ export class RegisterComponent {
                 private registrationService: RegistrationService,
                 private loaderService: LoaderService) {
 
-        this.apiService.get("properties/allowedDomains").subscribe(
-            response => {
-                this.allowedDomains = response.propertyValue.split(',');
-            }
-        );
+        this.apiService.get("properties/allowedDomains")
+            .then(response => this.allowedDomains = response.propertyValue.split(','))
 
         this.formGroup = formBuilder.group({
             emailAddress: [null, Validators.compose([Validators.required, Validators.maxLength(100), Validators.pattern("[^<>;=]*")])],
@@ -77,13 +74,12 @@ export class RegisterComponent {
         };
 
         this.loaderService.startLoading();
-        this.registrationService.register(newUser).subscribe(
-            user => this.router.navigate(['', 'register', 'success']).then(() => this.loaderService.stopLoading()),
-            err => {
+        this.registrationService.register(newUser)
+            .then(user => this.router.navigate(['', 'register', 'success']).then(() => this.loaderService.stopLoading()))
+            .catch(err => {
                 this.registerAlert.display(err, true);
                 this.loaderService.stopLoading();
-            }
-        );
+            })
     }
 
     /**

@@ -60,16 +60,15 @@ export class NewCategoryModalComponent implements OnInit {
 
         this.resourceCategoryService
             .addNewResourceCategory(this.formGroup.controls['name'].value)
-            .subscribe(
-                resourceCategory => {
-                    if (resourceCategory) {
-                        this.submitted.next(resourceCategory);
-                        this.modal.closeModal();
-                    }
-
-                    this.loaderService.stopLoading();
+            .then(resourceCategory => {
+                if (resourceCategory) {
+                    this.submitted.next(resourceCategory);
+                    this.modal.closeModal();
                 }
-            );
+
+                this.loaderService.stopLoading();
+            })
+            .catch(err => this.loaderService.stopLoading())
     }
 
 }

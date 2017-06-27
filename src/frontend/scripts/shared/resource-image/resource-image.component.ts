@@ -47,7 +47,7 @@ export class ResourceImageComponent {
         return null;
     }
 
-    public deleteImageFromServer(resource: Resource = this.resource): Observable<boolean> {
+    public deleteImageFromServer(resource: Resource = this.resource): Promise<any> {
         return this.apiService.del("/resources/" + resource.id + "/image");
     }
 

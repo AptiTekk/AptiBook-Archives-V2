@@ -124,10 +124,8 @@ export class CalendarComponent implements OnInit, AfterViewInit, OnChanges {
             return (start: Moment, end: Moment, timezone: string, callback) => {
                 this.apiService
                     .get(`${this.eventFeedEndpoint}?start=${start.toISOString()}&end=${end.toISOString()}`)
-                    .subscribe(
-                        events => callback(events)
-                    );
-            };
+                    .then(events => callback(events))
+            }
     }
 
     private buildCalendar(): void {

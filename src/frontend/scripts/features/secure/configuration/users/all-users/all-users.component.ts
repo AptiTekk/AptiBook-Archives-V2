@@ -120,13 +120,11 @@ export class AllUsersComponent implements AfterViewInit {
     onDeleteSelectedUser() {
         this.userService
             .deleteUser(this.selectedUser)
-            .subscribe(
-                success => {
-                    AnalyticsService.sendEvent({category: 'Configuration - Users', action: 'DeleteUser'});
-                    this.dataTable.deselectRows();
-                    this.userService.fetchUsers()
-                }
-            );
+            .then(success => {
+                AnalyticsService.sendEvent({category: 'Configuration - Users', action: 'DeleteUser'});
+                this.dataTable.deselectRows();
+                this.userService.fetchUsers()
+            })
     }
 
     onUserSelected(user: User) {
@@ -163,10 +161,10 @@ export class AllUsersComponent implements AfterViewInit {
 
         this.userService
             .patchUser(this.selectedUser)
-            .subscribe(user => {
+            .then(user => {
                 this.selectedUser = user;
                 this.userService.fetchUsers();
-            });
+            })
     }
 
     onCancelEditingUser() {

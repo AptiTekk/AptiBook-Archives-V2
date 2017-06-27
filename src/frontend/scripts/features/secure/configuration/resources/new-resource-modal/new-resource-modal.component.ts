@@ -10,7 +10,6 @@ import {UserGroupService} from "../../../../../core/services/usergroup.service";
 import {UserGroup} from "../../../../../models/user-group.model";
 import {ResourceService} from "../../../../../core/services/resource.service";
 import {ResourceCategory} from "../../../../../models/resource-category.model";
-import {APIService} from "../../../../../core/services/api.service";
 import {LoaderService} from "../../../../../core/services/loader.service";
 import {ResourceImageComponent} from "../../../../../shared/resource-image/resource-image.component";
 import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
@@ -73,24 +72,19 @@ export class NewResourceModalComponent implements OnInit {
             this.formGroup.controls['name'].value,
             this.formGroup.controls['needsApproval'].value,
             [].concat(this.formGroup.controls['owner'].value)[0]
-        ).subscribe(
-            resource => {
-                if (resource) {
-                    this.resourceImage
-                        .upload(resource)
-                        .subscribe(
-                            success => {
-                                if (success) {
-                                    this.modal.closeModal();
-                                    this.submitted.next();
-                                }
+        ).then(resource => {
+            if (resource) {
+                this.resourceImage.upload(resource)
+                    .subscribe(success => {
+                        if (success) {
+                            this.modal.closeModal();
+                            this.submitted.next();
+                        }
 
-                                this.loaderService.stopLoading();
-                            }
-                        );
-                }
+                        this.loaderService.stopLoading();
+                    })
             }
-        );
+        })
     }
 
 }

@@ -10,8 +10,8 @@ import {Reservation} from "../../../../models/reservation/reservation.model";
 import {ReservationService} from "../../../../core/services/reservation.service";
 import * as moment from "moment";
 import {ReservationInfoModalComponent} from "../../../../shared/reservation-info-modal/reservation-info-modal.component";
-import Moment = moment.Moment;
 import {AnalyticsService} from "../../../../core/services/analytics.service";
+import Moment = moment.Moment;
 
 @Component({
     selector: 'at-dashboard-upcoming-reservations',
@@ -37,15 +37,13 @@ export class DashboardUpcomingReservationsComponent implements OnInit {
     }
 
     ngOnInit() {
-        this.currentUserService.getCurrentUser().take(1).subscribe(
-            user => {
-                this.reservationService.getUpcomingUserReservations(user).take(1).subscribe(
-                    reservations => {
-                        this.reservations = reservations;
-                    }
-                )
-            }
-        )
+        this.currentUserService.getCurrentUser()
+            .take(1).subscribe(user => {
+            this.reservationService.getUpcomingUserReservations(user)
+                .then(reservations => {
+                    this.reservations = reservations;
+                })
+        })
     }
 
     onClickUpArrow() {
