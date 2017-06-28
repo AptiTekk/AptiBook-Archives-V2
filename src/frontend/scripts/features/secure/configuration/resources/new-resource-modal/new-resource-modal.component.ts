@@ -6,7 +6,7 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../../../../shared/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserGroupService} from "../../../../../core/services/usergroup.service";
+import {UserGroupService} from "../../../../../core/services/user-group.service";
 import {UserGroup} from "../../../../../models/user-group.model";
 import {ResourceService} from "../../../../../core/services/resource.service";
 import {ResourceCategory} from "../../../../../models/resource-category.model";
@@ -61,7 +61,7 @@ export class NewResourceModalComponent implements OnInit {
                 UniquenessValidator.isUnique(this.resourceCategory ? this.resourceCategory.resources.map(resource => resource.name) : [])
             ])],
             needsApproval: true,
-            owner: this.rootGroup ? this.rootGroup.children[0] : null
+            owner: null
         });
     }
 

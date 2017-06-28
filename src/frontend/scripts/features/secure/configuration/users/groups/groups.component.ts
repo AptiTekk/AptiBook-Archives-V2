@@ -6,7 +6,7 @@
 import {Component, OnInit, ViewChild} from "@angular/core";
 import {UserGroup} from "../../../../../models/user-group.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserGroupService} from "../../../../../core/services/usergroup.service";
+import {UserGroupService} from "../../../../../core/services/user-group.service";
 import {User} from "../../../../../models/user.model";
 import {AlertComponent} from "../../../../../shared/alert/alert.component";
 import {UserService} from "../../../../../core/services/user.service";
@@ -80,10 +80,10 @@ export class GroupsComponent implements OnInit {
                             this.selectedUserGroup = this.selectedUserGroups[0];
 
                             // Users
-                            this.selectedUserGroup.users = response[0];
+                            this.selectedUserGroup['users'] = response[0];
 
                             // Resources
-                            this.selectedUserGroup.resources = response[1];
+                            this.selectedUserGroup['resources'] = response[1];
 
                             // Form Reset
                             this.userGroupDetailsFormGroup.reset();

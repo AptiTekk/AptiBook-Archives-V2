@@ -17,29 +17,29 @@ import org.springframework.beans.factory.annotation.Autowired;
 @SuppressWarnings("SpringAutowiredFieldsWarningInspection")
 public abstract class APIControllerAbstract {
 
-    final static String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
-    final static String VALID_CHARACTER_PATTERN = "[^<>;=]*";
-    final static String INVALID_CHARACTERS = "< > ; =";
+    public final static String[] ACCEPTED_TIME_FORMATS = {"yyyy-MM-dd'T'HH:mm:ss", "yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd"};
+    public final static String VALID_CHARACTER_PATTERN = "[^<>;=]*";
+    public final static String INVALID_CHARACTERS = "< > ; =";
 
-    ModelMapper modelMapper = new ModelMapper();
-
-    @Autowired
-    AuthService authService;
+    public ModelMapper modelMapper = new ModelMapper();
 
     @Autowired
-    LogService logService;
+    public AuthService authService;
 
     @Autowired
-    PermissionsService permissionsService;
+    public LogService logService;
+
+    @Autowired
+    public PermissionsService permissionsService;
 
     @SuppressWarnings("WeakerAccess")
     @Autowired
-    TenantManagementService tenantManagementService;
+    public TenantManagementService tenantManagementService;
 
     @Autowired
-    WebURIBuilderService webURIBuilderService;
+    public WebURIBuilderService webURIBuilderService;
 
-    APIControllerAbstract() {
+    public APIControllerAbstract() {
         modelMapper.getConfiguration().setFieldMatchingEnabled(true);
     }
 

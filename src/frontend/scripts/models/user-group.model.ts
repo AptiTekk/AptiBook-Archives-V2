@@ -4,24 +4,24 @@
  * Proprietary and confidential.
  */
 
-import {User} from "./user.model";
-import {ReservationDecision} from "./reservation/reservation-decision.model";
-import {Resource} from "./resource.model";
-
 export interface UserGroup {
 
-    id?: number;
+    id?: number
 
-    name?: string;
+    root?: boolean
 
-    root?: boolean;
+    name?: string
 
-    users?: User[];
+}
 
-    resources?: Resource[];
+export interface UserGroupHierarchyUp extends UserGroup {
 
-    parent?: UserGroup;
+    parent?: UserGroupHierarchyUp
 
-    children?: UserGroup[];
+}
+
+export interface UserGroupHierarchyDown extends UserGroup {
+
+    children?: UserGroupHierarchyDown[]
 
 }

@@ -8,7 +8,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ModalComponent} from "../../../../../../shared/modal/modal.component";
 import {LoaderService} from "../../../../../../core/services/loader.service";
 import {UniquenessValidator} from "../../../../../../validators/uniqueness.validator";
-import {UserGroupService} from "../../../../../../core/services/usergroup.service";
+import {UserGroupService} from "../../../../../../core/services/user-group.service";
 import {UserGroup} from "../../../../../../models/user-group.model";
 
 @Component({
@@ -84,11 +84,10 @@ export class NewGroupModalComponent implements OnInit {
 
         let newUserGroup: UserGroup = {
             name: this.formGroup.controls['name'].value,
-            parent: parentGroup
         };
 
         this.userGroupService
-            .addNewUserGroup(newUserGroup)
+            .addNewUserGroup(parentGroup, newUserGroup)
             .then(userGroup => {
                 if (userGroup) {
                     this.submitted.next(userGroup);

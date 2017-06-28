@@ -16,7 +16,7 @@ import {ReservationDetailsService} from "./services/reservation-details.service"
 import {ResourceCategoryService} from "./services/resource-category.service";
 import {ReservationManagementService} from "./services/reservation-management.service";
 import {SearchService} from "./services/search.service";
-import {UserGroupService} from "./services/usergroup.service";
+import {UserGroupService} from "./services/user-group.service";
 import {UserService} from "./services/user.service";
 import {RegistrationService} from "./services/registration.service";
 import {ReservationService} from "./services/reservation.service";

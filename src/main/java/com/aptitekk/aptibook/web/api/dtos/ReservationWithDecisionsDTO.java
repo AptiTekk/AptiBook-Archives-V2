@@ -38,7 +38,7 @@ public class ReservationWithDecisionsDTO {
 
     public ResourceDTO.WithoutReservations resource;
 
-    public UserDTO.WithoutUserGroups user;
+    public UserDTO user;
 
     public List<ReservationDecisionDTO> decisions;
 

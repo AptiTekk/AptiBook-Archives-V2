@@ -13,7 +13,7 @@ import {
 import {ReplaySubject} from "rxjs";
 import {UserGroup} from "../../models/user-group.model";
 import {ReservationDecision} from "../../models/reservation/reservation-decision.model";
-import {UserGroupService} from "./usergroup.service";
+import {UserGroupService} from "./user-group.service";
 import PriorityQueue from "typescript-collections/dist/lib/PriorityQueue";
 import {User} from "../../models/user.model";
 import {AuthService} from "./auth.service";
@@ -119,6 +119,7 @@ export class ReservationManagementService {
             currentGroup = ownerGroup;
             organizedReservation.decisionHierarchy = [];
 
+            // Map reservation decisions to user groups
             do {
                 // Assign a decision to the group, if they have made one.
                 let filteredDecisions = organizedReservation.decisions.filter(decision => decision.userGroup.id === currentGroup.id);

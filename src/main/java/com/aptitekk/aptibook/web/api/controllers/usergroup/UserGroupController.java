@@ -4,17 +4,18 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.api.controllers;
+package com.aptitekk.aptibook.web.api.controllers.usergroup;
 
-import com.aptitekk.aptibook.domain.entities.UserGroup;
 import com.aptitekk.aptibook.domain.entities.Permission;
+import com.aptitekk.aptibook.domain.entities.UserGroup;
 import com.aptitekk.aptibook.domain.repositories.UserGroupRepository;
+import com.aptitekk.aptibook.service.entity.UserGroupService;
 import com.aptitekk.aptibook.web.api.APIResponse;
+import com.aptitekk.aptibook.web.api.annotations.APIController;
+import com.aptitekk.aptibook.web.api.controllers.APIControllerAbstract;
 import com.aptitekk.aptibook.web.api.dtos.ResourceDTO;
 import com.aptitekk.aptibook.web.api.dtos.UserDTO;
 import com.aptitekk.aptibook.web.api.dtos.UserGroupDTO;
-import com.aptitekk.aptibook.service.entity.UserGroupService;
-import com.aptitekk.aptibook.web.api.annotations.APIController;
 import com.aptitekk.aptibook.web.api.validators.UserGroupValidator;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,7 +32,7 @@ public class UserGroupController extends APIControllerAbstract {
 
     private final UserGroupRepository userGroupRepository;
     private final UserGroupService userGroupService;
-    private UserGroupValidator userGroupValidator;
+    private final UserGroupValidator userGroupValidator;
 
     @Autowired
     public UserGroupController(UserGroupRepository userGroupRepository,
@@ -42,35 +43,13 @@ public class UserGroupController extends APIControllerAbstract {
         this.userGroupValidator = userGroupValidator;
     }
 
+    /**
+     * Fetches all the User Groups in a tree structure. Always returns the root User Group as the top-most User Group.
+     * This endpoint is equivalent to calling the hierarchy down endpoint on the root User Group.
+     */
     @RequestMapping(value = "/userGroups", method = RequestMethod.GET)
     public APIResponse getUserGroups() {
-        return APIResponse.ok(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.WithoutParent.class));
-    }
-
-    @RequestMapping(value = "/userGroups", method = RequestMethod.POST)
-    public APIResponse addNewUserGroup(@RequestBody UserGroupDTO userGroupDTO) {
-        if (!authService.doesCurrentUserHavePermission(Permission.GROUPS_MODIFY_ALL))
-            return APIResponse.noPermission();
-
-        UserGroup userGroup = new UserGroup();
-
-        if (userGroupDTO.name == null)
-            return APIResponse.badRequestMissingField("name");
-
-        userGroupValidator.validateName(userGroupDTO.name, null);
-        userGroup.setName(userGroupDTO.name);
-
-        if (userGroupDTO.parent == null)
-            return APIResponse.badRequestMissingField("parent");
-
-        UserGroup parentGroup = userGroupRepository.findByName(userGroupDTO.parent.name);
-        if (parentGroup == null)
-            return APIResponse.notFound("The group parent could not be found.");
-
-        userGroup.setParent(parentGroup);
-
-        userGroup = userGroupRepository.save(userGroup);
-        return APIResponse.created(modelMapper.map(userGroup, UserGroupDTO.class), "/userGroups/" + userGroup.getId());
+        return APIResponse.ok(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.HierarchyDown.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.GET)
@@ -79,7 +58,45 @@ public class UserGroupController extends APIControllerAbstract {
         if (userGroup == null)
             return APIResponse.notFound("No user groups were found with the ID: " + id);
 
-        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
+        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.class));
+    }
+
+    @RequestMapping(value = "/userGroups/{id}/children", method = RequestMethod.GET)
+    public APIResponse getUserGroupChildren(@PathVariable Long id) {
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return APIResponse.notFound("No user groups were found with the ID: " + id);
+
+        return APIResponse.ok(modelMapper.map(userGroup.getChildren(), new TypeToken<List<UserGroupDTO>>() {}.getType()));
+    }
+
+    @RequestMapping(value = "/userGroups/{id}/children", method = RequestMethod.POST)
+    public APIResponse addToUserGroupChildren(@PathVariable Long id, @RequestBody UserGroupDTO userGroupDTO) {
+
+        // Check Permissions
+        if (!authService.doesCurrentUserHavePermission(Permission.GROUPS_MODIFY_ALL))
+            return APIResponse.noPermission();
+
+        // Find the Parent User Group
+        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
+        if (userGroup == null)
+            return APIResponse.notFound("No user groups were found with the ID: " + id);
+
+        // Create a new User Group entity.
+        UserGroup newUserGroup = new UserGroup();
+
+        // Check that the name was supplied and is valid.
+        if (userGroupDTO.name == null)
+            return APIResponse.badRequestMissingField("name");
+        userGroupValidator.validateName(userGroupDTO.name, null);
+        newUserGroup.setName(userGroupDTO.name);
+
+        // Add the Parent User Group
+        newUserGroup.setParent(userGroup);
+
+        // Save the new User Group
+        newUserGroup = userGroupRepository.save(newUserGroup);
+        return APIResponse.created(modelMapper.map(newUserGroup, UserGroupDTO.class), "/userGroups/" + newUserGroup.getId());
     }
 
     @RequestMapping(value = "/userGroups/{id}/users", method = RequestMethod.GET)
@@ -111,7 +128,7 @@ public class UserGroupController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.PATCH)
-    public APIResponse patchUserGroup(@PathVariable Long id, @RequestBody UserGroupDTO.WithoutParentOrChildren userGroupDTO) {
+    public APIResponse patchUserGroup(@PathVariable Long id, @RequestBody UserGroupDTO userGroupDTO) {
         if (!authService.doesCurrentUserHavePermission(Permission.GROUPS_MODIFY_ALL))
             return APIResponse.noPermission();
 
@@ -125,7 +142,7 @@ public class UserGroupController extends APIControllerAbstract {
         }
 
         userGroup = userGroupRepository.save(userGroup);
-        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
+        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}/move", method = RequestMethod.PATCH)
@@ -149,7 +166,7 @@ public class UserGroupController extends APIControllerAbstract {
 
         // Check if they are already where they should be.
         if (userGroup.getParent().equals(newParentUserGroup))
-            return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
+            return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.class));
 
         // Make sure we are not placing the selected User Group below itself on the same branch.
         List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
@@ -162,7 +179,7 @@ public class UserGroupController extends APIControllerAbstract {
 
         //FIXME: Fix all users who now have more than one assigned group on the same branch.
 
-        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.WithoutParentOrChildren.class));
+        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.DELETE)
@@ -192,23 +209,5 @@ public class UserGroupController extends APIControllerAbstract {
         return APIResponse.noContentResponse();
     }
 
-    @RequestMapping(value = "/userGroups/hierarchyDown/{id}", method = RequestMethod.GET)
-    public APIResponse getUserGroupsHierarchyDown(@PathVariable Long id) {
-        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
-        if (userGroup == null)
-            return APIResponse.notFound("No user groups were found with the ID: " + id);
 
-        return APIResponse.ok(modelMapper.map(userGroupService.getHierarchyDown(userGroup), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
-        }.getType()));
-    }
-
-    @RequestMapping(value = "/userGroups/hierarchyUp/{id}", method = RequestMethod.GET)
-    public APIResponse getUserGroupsHierarchyUp(@PathVariable Long id) {
-        UserGroup userGroup = userGroupRepository.findInCurrentTenant(id);
-        if (userGroup == null)
-            return APIResponse.notFound("No user groups were found with the ID: " + id);
-
-        return APIResponse.ok(modelMapper.map(userGroupService.getHierarchyUp(userGroup), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
-        }.getType()));
-    }
 }

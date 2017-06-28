@@ -7,7 +7,7 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {ReplaySubject} from "rxjs";
-import {UserGroup} from "../../models/user-group.model";
+import {UserGroup, UserGroupHierarchyDown, UserGroupHierarchyUp} from "../../models/user-group.model";
 import {User} from "../../models/user.model";
 import {Resource} from "../../models/resource.model";
 
@@ -77,26 +77,30 @@ export class UserGroupService {
     }
 
     /**
-     * TODO: JAVADOCS
-     * @param userGroup
-     * @returns {Promise<T>}
+     * Gets the upward hierarchy in relation to a User Group.
+     * (The group's parent, their parent, their parent, ... etc)
+     *
+     * @param userGroup The origin User Group.
+     * @returns A Promise that gives the same User Group as was passed in, with an upward hierarchy.
      */
-    public getUserGroupHierarchyDown(userGroup: UserGroup): Promise<UserGroup[]> {
+    public getUserGroupHierarchyUp(userGroup: UserGroup): Promise<UserGroupHierarchyUp> {
         return new Promise((resolve, reject) => {
-            this.apiService.get("userGroups/hierarchyDown/" + userGroup.id)
+            this.apiService.get(`/userGroups/${userGroup.id}/hierarchy/up`)
                 .then(response => resolve(response))
                 .catch(err => resolve(err))
         })
     }
 
     /**
-     * TODO: JAVADOCS
-     * @param userGroup
-     * @returns {Promise<T>}
+     * Gets the downward hierarchy in relation to a User Group.
+     * (The group's children, their children, their children, ... etc)
+     *
+     * @param userGroup The origin User Group.
+     * @returns A Promise that gives the same User Group as was passed in, with a downward hierarchy.
      */
-    public getUserGroupHierarchyUp(userGroup: UserGroup): Promise<UserGroup[]> {
+    public getUserGroupHierarchyDown(userGroup: UserGroup): Promise<UserGroupHierarchyDown> {
         return new Promise((resolve, reject) => {
-            this.apiService.get("/userGroups/hierarchyUp/" + userGroup.id)
+            this.apiService.get(`/userGroups/${userGroup.id}/hierarchy/down`)
                 .then(response => resolve(response))
                 .catch(err => resolve(err))
         })
@@ -104,12 +108,13 @@ export class UserGroupService {
 
     /**
      * Adds a new User Group with the details provided in the provided UserGroup object.
-     * @param userGroup The UserGroup containing the details of the new Group. ID is not required.
-     * @returns A Promise that gives the new UserGroup.
+     * @param parent The Parent User Group of the new User Group.
+     * @param userGroup The new User Group. Should contain the name.
+     * @returns A Promise that gives the newly created User Group.
      */
-    public addNewUserGroup(userGroup: UserGroup): Promise<UserGroup> {
+    public addNewUserGroup(parent: UserGroup, userGroup: UserGroup): Promise<UserGroup> {
         return new Promise((resolve, reject) => {
-            this.apiService.post("userGroups", userGroup)
+            this.apiService.post(`userGroups/${parent.id}/children`, userGroup)
                 .then(response => resolve(response))
                 .catch(err => reject(err))
         })

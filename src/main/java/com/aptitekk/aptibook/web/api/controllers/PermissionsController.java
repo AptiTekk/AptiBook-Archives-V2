@@ -6,14 +6,14 @@
 
 package com.aptitekk.aptibook.web.api.controllers;
 
+import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.entities.UserGroup;
-import com.aptitekk.aptibook.domain.entities.Permission;
+import com.aptitekk.aptibook.service.entity.PermissionsService;
 import com.aptitekk.aptibook.web.api.APIResponse;
+import com.aptitekk.aptibook.web.api.annotations.APIController;
 import com.aptitekk.aptibook.web.api.dtos.UserDTO;
 import com.aptitekk.aptibook.web.api.dtos.UserGroupDTO;
-import com.aptitekk.aptibook.service.entity.PermissionsService;
-import com.aptitekk.aptibook.web.api.annotations.APIController;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -71,7 +71,7 @@ public class PermissionsController extends APIControllerAbstract {
      */
     @RequestMapping(value = "/permissions/groups/{key}/users", method = RequestMethod.GET)
     public APIResponse getUsersAssignedToPermissionsInGroup(@PathVariable("key") Permission.Group group,
-                                                               @RequestParam(name = "inherited", defaultValue = "true") boolean inherited) {
+                                                            @RequestParam(name = "inherited", defaultValue = "true") boolean inherited) {
 
         // Make sure the user has the permission to list the assignments.
         if (!authService.doesCurrentUserHavePermission(Permission.GENERAL_FULL_PERMISSIONS))
@@ -86,9 +86,9 @@ public class PermissionsController extends APIControllerAbstract {
         }
 
         // We cannot simply modelMap the entire map, we must map each individual list within the map.
-        Map<Permission, List<UserDTO.WithoutUserGroups>> permissionMapDTO = new HashMap<>();
+        Map<Permission, List<UserDTO>> permissionMapDTO = new HashMap<>();
         for (Map.Entry<Permission, List<User>> entry : permissionMap.entrySet()) {
-            permissionMapDTO.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserDTO.WithoutUserGroups>>() {
+            permissionMapDTO.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserDTO>>() {
             }.getType()));
         }
 
@@ -138,9 +138,9 @@ public class PermissionsController extends APIControllerAbstract {
         }
 
         // We cannot simply modelMap the entire map, we must map each individual list within the map.
-        Map<Permission, List<UserGroupDTO.WithoutParentOrChildren>> permissionMapDTO = new HashMap<>();
+        Map<Permission, List<UserGroupDTO>> permissionMapDTO = new HashMap<>();
         for (Map.Entry<Permission, List<UserGroup>> entry : permissionMap.entrySet()) {
-            permissionMapDTO.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserGroupDTO.WithoutParentOrChildren>>() {
+            permissionMapDTO.put(entry.getKey(), modelMapper.map(entry.getValue(), new TypeToken<List<UserGroupDTO>>() {
             }.getType()));
         }
 

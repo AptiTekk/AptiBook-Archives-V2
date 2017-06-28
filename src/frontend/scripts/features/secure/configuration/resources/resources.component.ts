@@ -11,7 +11,7 @@ import {ActivatedRoute, Router} from "@angular/router";
 import {Resource} from "../../../../models/resource.model";
 import {ResourceService} from "../../../../core/services/resource.service";
 import {UserGroup} from "../../../../models/user-group.model";
-import {UserGroupService} from "../../../../core/services/usergroup.service";
+import {UserGroupService} from "../../../../core/services/user-group.service";
 import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
 import {Subscription} from "rxjs/Subscription";
 import {LoaderService} from "../../../../core/services/loader.service";

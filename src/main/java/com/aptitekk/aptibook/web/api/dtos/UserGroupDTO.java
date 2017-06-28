@@ -7,34 +7,38 @@
 package com.aptitekk.aptibook.web.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.util.List;
 
+/**
+ * DTO for the User Group entity (See {@link com.aptitekk.aptibook.domain.entities.UserGroup})
+ */
 @JsonIdentityInfo(generator = JSOGGenerator.class)
 public class UserGroupDTO {
 
     public Long id;
 
-    public String name;
-
     public boolean root;
 
-    public UserGroupDTO.WithoutChildren parent;
+    public String name;
 
-    public List<UserGroupDTO.WithoutParent> children;
+    /**
+     * User Group DTO extension that includes the parent, for listing the hierarchy upwards in relation to a User Group.
+     */
+    public static class HierarchyUp extends UserGroupDTO {
 
-    @JsonIgnoreProperties({"parent"})
-    public static class WithoutParent extends UserGroupDTO {
+        public UserGroupDTO.HierarchyUp parent;
+
     }
 
-    @JsonIgnoreProperties({"children"})
-    public static class WithoutChildren extends UserGroupDTO {
-    }
+    /**
+     * User Group DTO extension that includes the children, for listing the hierarchy downwards in relation to a User Group.
+     */
+    public static class HierarchyDown extends UserGroupDTO {
 
-    @JsonIgnoreProperties({"parent", "children"})
-    public static class WithoutParentOrChildren extends UserGroupDTO {
+        public List<UserGroupDTO.HierarchyDown> children;
+
     }
 
 }

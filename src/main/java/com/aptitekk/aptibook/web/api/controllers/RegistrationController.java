@@ -154,7 +154,7 @@ public class RegistrationController extends APIControllerAbstract {
             if (registrationUser == null)
                 return APIResponse.notFound("The provided token does not exist.");
 
-            return APIResponse.ok(modelMapper.map(registrationUser, UserDTO.WithoutUserGroups.class));
+            return APIResponse.ok(modelMapper.map(registrationUser, UserDTO.class));
         } catch (IllegalArgumentException e) {
             return APIResponse.badRequestNotParsable("The provided token's format is not valid.");
         }

@@ -20,7 +20,7 @@ public class NotificationDTO {
 
     public Long id;
 
-    public UserDTO.WithoutUserGroups user;
+    public UserDTO user;
 
     public String subject;
 

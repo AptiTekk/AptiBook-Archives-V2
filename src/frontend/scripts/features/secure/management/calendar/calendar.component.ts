@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 import {Component, OnInit, ViewChild} from "@angular/core";
-import {UserGroupService} from "../../../../core/services/usergroup.service";
+import {UserGroupService} from "../../../../core/services/user-group.service";
 import {UserGroup} from "../../../../models/user-group.model";
 import {ResourceCategoryService} from "../../../../core/services/resource-category.service";
 import {ReservationInfoModalComponent} from "../../../../shared/reservation-info-modal/reservation-info-modal.component";

@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.web.api.dtos;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.JsonIdentityReference;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
@@ -17,32 +18,24 @@ public class UserDTO {
 
     public Long id;
 
+    public boolean admin;
+
     public String emailAddress;
 
     public String firstName;
 
     public String lastName;
 
+    public String fullName;
+
+    public List<UserGroupDTO> userGroups;
+
     public String phoneNumber;
 
     public String location;
 
-    public boolean verified;
-
-    public List<UserGroupDTO.WithoutParentOrChildren> userGroups;
-
-    //public Set<Notification.NotificationToggles> notificationSetting;
-
-    public String fullName;
-
-    public boolean admin;
-
     public static class WithNewPassword extends UserDTO {
         public String newPassword;
-    }
-
-    @JsonIgnoreProperties({"userGroups"})
-    public static class WithoutUserGroups extends UserDTO {
     }
 
 }

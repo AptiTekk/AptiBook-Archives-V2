@@ -16,9 +16,9 @@ public class ReservationDecisionDTO {
 
     public Long id;
 
-    public UserDTO.WithoutUserGroups user;
+    public UserDTO user;
 
-    public UserGroupDTO.WithoutParentOrChildren userGroup;
+    public UserGroupDTO userGroup;
 
     public ReservationDTO reservation;
 

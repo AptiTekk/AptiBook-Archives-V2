@@ -6,7 +6,7 @@
 import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core";
 import {ModalComponent} from "../../../../../shared/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {UserGroupService} from "../../../../../core/services/usergroup.service";
+import {UserGroupService} from "../../../../../core/services/user-group.service";
 import {ResourceService} from "../../../../../core/services/resource.service";
 import {APIService} from "../../../../../core/services/api.service";
 import {Resource} from "../../../../../models/resource.model";
