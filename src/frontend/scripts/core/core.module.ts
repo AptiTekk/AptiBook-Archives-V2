@@ -7,7 +7,6 @@
 import {ErrorHandler, NgModule, Optional, SkipSelf} from "@angular/core";
 import {APIService} from "./services/api.service";
 import {HelpService} from "./services/help.service";
-import {EmailService} from "./services/email-service";
 import {AuthService} from "./services/auth.service";
 import {PropertiesService} from "./services/properties-service";
 import {OAuthService} from "./services/oauth.service";
@@ -47,7 +46,6 @@ import {AnalyticsService} from "./services/analytics.service";
         APIService,
         AuthService,
         CurrentUserService,
-        EmailService,
         HelpService,
         LoaderService,
         NotificationService,

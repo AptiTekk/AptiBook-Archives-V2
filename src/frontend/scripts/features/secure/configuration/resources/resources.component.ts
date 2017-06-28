@@ -10,7 +10,7 @@ import {ResourceCategory} from "../../../../models/resource-category.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Resource} from "../../../../models/resource.model";
 import {ResourceService} from "../../../../core/services/resource.service";
-import {UserGroup} from "../../../../models/user-group.model";
+import {UserGroupHierarchy} from "../../../../models/user-group.model";
 import {UserGroupService} from "../../../../core/services/user-group.service";
 import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
 import {Subscription} from "rxjs/Subscription";
@@ -53,7 +53,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     /**
      * The root user group.
      */
-    rootGroup: UserGroup;
+    allUserGroups: UserGroupHierarchy;
 
     /**
      * Links for use on the frontend category selection.
@@ -113,9 +113,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.userGroupService.getRootUserGroup().subscribe(
-            rootGroup => this.rootGroup = rootGroup
-        );
+        this.userGroupService.getAllUserGroups().take(1).subscribe(allUserGroups => this.allUserGroups = allUserGroups);
     }
 
     ngOnDestroy(): void {

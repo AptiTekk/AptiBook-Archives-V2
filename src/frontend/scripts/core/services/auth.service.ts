@@ -6,9 +6,10 @@
 
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {Observable, ReplaySubject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 import {Headers} from "@angular/http";
 import {User} from "../../models/user.model";
+import {UserGroupService} from "./user-group.service";
 
 @Injectable()
 export class AuthService {
@@ -18,7 +19,8 @@ export class AuthService {
      */
     private currentUser: ReplaySubject<User> = new ReplaySubject<User>(1);
 
-    constructor(private apiService: APIService) {
+    constructor(private apiService: APIService,
+                private userGroupService: UserGroupService) {
         this.reloadUser();
     }
 
@@ -27,15 +29,11 @@ export class AuthService {
      */
     public reloadUser(): void {
         this.apiService.get("users/current")
-            .then(
-                (response: User) => {
-                    this.currentUser.next(response)
-                })
-            .catch(
-                err => {
-                    this.currentUser.next(undefined)
-                }
-            );
+            .then(user => {
+                this.currentUser.next(user);
+                this.onSignIn();
+            })
+            .catch(err => this.currentUser.next(undefined));
     }
 
     /**
@@ -52,22 +50,19 @@ export class AuthService {
      * @returns An promise that gives the signed in User.
      */
     public signInAsUser(emailAddress: String, password: String): Promise<User> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("users/current", new Headers({
-                "Authorization": "Basic " + btoa(emailAddress + ":" + password),
-                "X-Auth-Type": "user"
-            })).then(
-                (user: User) => {
-                    this.currentUser.next(user);
-                    resolve(user);
-                })
-                .catch(
-                    err => {
-                        this.currentUser.next(undefined);
-                        reject(err);
-                    }
-                );
-        });
+        return this.apiService.get("users/current", new Headers({
+            "Authorization": "Basic " + btoa(emailAddress + ":" + password),
+            "X-Auth-Type": "user"
+        }))
+            .then(user => {
+                this.currentUser.next(user);
+                this.onSignIn();
+                return user;
+            })
+            .catch(err => {
+                this.currentUser.next(undefined);
+                throw err;
+            })
     }
 
     /**
@@ -76,28 +71,33 @@ export class AuthService {
      * @returns A promise that gives the signed in User.
      */
     public signInAsAdmin(password: String): Promise<User> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("users/current", new Headers({
-                "Authorization": "Basic " + btoa(":" + password),
-                "X-Auth-Type": "admin"
-            })).then(
-                (user: User) => {
-                    this.currentUser.next(user);
-                    resolve(user);
-                })
-                .catch(
-                    err => {
-                        this.currentUser.next(undefined);
-                        reject(err);
-                    }
-                );
-        });
+        return this.apiService.get("users/current", new Headers({
+            "Authorization": "Basic " + btoa(":" + password),
+            "X-Auth-Type": "admin"
+        }))
+            .then(user => {
+                this.currentUser.next(user);
+                this.onSignIn();
+                return user;
+            })
+            .catch(err => {
+                this.currentUser.next(undefined);
+                throw err;
+            })
     }
 
     /**
-     * Signs the user out of AptiBook by redirect.
+     * Called upon sign-in as any user. Used to perform actions immediately after a user is signed in.
      */
-    public signOut(): void {
+    private onSignIn(): void {
+        this.userGroupService.loadAllUserGroups();
+    }
+
+    /**
+     * Signs the user out by redirect.
+     * The sign-out endpoint will clear the user's session and then redirect them to the proper location.
+     */
+    public static signOut(): void {
         window.location.href = "/api/sign-out";
     }
 }

@@ -42,26 +42,24 @@ export class CalendarComponent implements OnInit {
     ngOnInit(): void {
 
         // Get user and hierarchy down
-        this.authService.getCurrentUser().subscribe(user => {
-            this.currentUser = user;
-            this.userGroupOwnerFilter = [];
+        this.authService.getCurrentUser()
+            .subscribe(user => {
+                this.currentUser = user;
+                this.userGroupOwnerFilter = [];
 
-            if (user)
                 user.userGroups.forEach(userGroup => {
-                    this.userGroupService.getUserGroupHierarchyDown(userGroup)
-                        .then(hierarchyGroups => this.userGroupOwnerFilter.push(...hierarchyGroups))
+                    this.userGroupOwnerFilter.push(...UserGroupService.flattenHierarchyDown(userGroup))
                 })
-        })
+            });
 
         // Get Resource Categories
         this.resourceCategoryService.getResourceCategories()
-            .take(1)
-            .subscribe(resourceCategories => {
-                this.resourceCategories = resourceCategories.map(category => {
-                    category['enabled'] = true;
-                    return category;
-                });
+            .take(1).subscribe(resourceCategories => {
+            this.resourceCategories = resourceCategories.map(category => {
+                category['enabled'] = true;
+                return category;
             });
+        });
     }
 
     /**

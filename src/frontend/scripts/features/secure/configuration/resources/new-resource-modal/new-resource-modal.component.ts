@@ -28,8 +28,6 @@ export class NewResourceModalComponent implements OnInit {
 
     resourceCategory: ResourceCategory;
 
-    rootGroup: UserGroup;
-
     @ViewChild(ResourceImageComponent) resourceImage: ResourceImageComponent;
 
     @Output() submitted: EventEmitter<void> = new EventEmitter<void>();
@@ -41,7 +39,6 @@ export class NewResourceModalComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.userGroupService.getRootUserGroup().subscribe(rootGroup => this.rootGroup = rootGroup);
         this.resetFormGroup();
     }
 

@@ -7,7 +7,7 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {User} from "../../models/user.model";
-import {Observable, ReplaySubject} from "rxjs";
+import {ReplaySubject} from "rxjs";
 
 @Injectable()
 export class UserService {
@@ -25,8 +25,7 @@ export class UserService {
      * TODO: JAVADOCS
      */
     public fetchUsers(): void {
-        this.apiService.get("/users")
-            .then(response => this.users.next(response))
+        this.apiService.get("/users").then(response => this.users.next(response));
     }
 
     /**
@@ -43,11 +42,7 @@ export class UserService {
      * @returns {any}
      */
     public addNewUser(user: User): Promise<User> {
-        return new Promise((resolve, reject) => {
-            this.apiService.post("users", user)
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        });
+        return this.apiService.post("users", user);
     }
 
     /**
@@ -56,11 +51,7 @@ export class UserService {
      * @returns {any}
      */
     public patchUser(user: User): Promise<User> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("users/" + user.id, user)
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        });
+        return this.apiService.patch("users/" + user.id, user);
     }
 
     /**
@@ -69,11 +60,6 @@ export class UserService {
      * @returns {any}
      */
     public deleteUser(user: User): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.apiService.del("users/" + user.id)
-                .then(response => resolve(),
-                    err => reject(err)
-                );
-        });
+        return this.apiService.del("users/" + user.id);
     }
 }

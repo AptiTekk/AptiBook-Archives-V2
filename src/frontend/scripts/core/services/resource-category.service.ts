@@ -22,8 +22,7 @@ export class ResourceCategoryService {
      * TODO: JAVADOCS
      */
     fetchResourceCategories(): void {
-        this.apiService.get("/resourceCategories")
-            .then(categories => this.resourceCategories.next(categories));
+        this.apiService.get("/resourceCategories").then(categories => this.resourceCategories.next(categories));
     }
 
     /**
@@ -40,11 +39,7 @@ export class ResourceCategoryService {
      * @returns {Promise<T>}
      */
     addNewResourceCategory(name: string): Promise<ResourceCategory> {
-        return new Promise((resolve, reject) => {
-            this.apiService.post("/resourceCategories", {name: name})
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        });
+        return this.apiService.post("/resourceCategories", {name: name});
     }
 
     /**
@@ -53,11 +48,7 @@ export class ResourceCategoryService {
      * @returns {any}
      */
     patchResourceCategory(category: ResourceCategory): Promise<ResourceCategory> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("/resourceCategories/" + category.id, category)
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        });
+        return this.apiService.patch("/resourceCategories/" + category.id, category);
     }
 
     /**
@@ -66,11 +57,7 @@ export class ResourceCategoryService {
      * @returns {any}
      */
     deleteResourceCategory(category: ResourceCategory): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.apiService.del("/resourceCategories/" + category.id)
-                .then(response => resolve())
-                .catch(err => reject(err))
-        });
+        return this.apiService.del("/resourceCategories/" + category.id);
     }
 
 }

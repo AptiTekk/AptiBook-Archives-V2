@@ -50,7 +50,7 @@ export class AdminSignInComponent implements OnInit, AfterViewInit {
             .signInAsAdmin(this.signInFormGroup.controls['password'].value)
             .then(user => this.router.navigateByUrl("/secure").then(() => this.loaderService.stopLoading()))
             .catch(err => {
-                this.loginDangerAlert.display(err, true);
+                this.loginDangerAlert.display(err.message, true);
                 this.loaderService.stopLoading();
             })
     }

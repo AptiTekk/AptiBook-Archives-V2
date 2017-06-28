@@ -6,35 +6,61 @@
 
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
-import {ReplaySubject} from "rxjs";
-import {UserGroup, UserGroupHierarchyDown, UserGroupHierarchyUp} from "../../models/user-group.model";
+import {
+    UserGroup,
+    UserGroupHierarchy,
+    UserGroupHierarchyDown,
+    UserGroupHierarchyUp
+} from "../../models/user-group.model";
 import {User} from "../../models/user.model";
 import {Resource} from "../../models/resource.model";
+import Queue from "typescript-collections/dist/lib/Queue";
+import {ReplaySubject} from "rxjs/ReplaySubject";
 
 @Injectable()
 export class UserGroupService {
 
-    private rootUserGroup: ReplaySubject<UserGroup> = new ReplaySubject<UserGroup>(1);
+    /**
+     * Emits the User Group hierarchy tree.
+     */
+    private allUserGroups = new ReplaySubject<UserGroupHierarchy>();
 
     constructor(private apiService: APIService) {
-        this.fetchRootUserGroup();
     }
 
     /**
-     * TODO: JAVADOCS
+     * @returns A replay subject with all the User Groups in the form of a tree.
      */
-    public fetchRootUserGroup(): void {
+    public getAllUserGroups(): ReplaySubject<UserGroupHierarchy> {
+        return this.allUserGroups;
+    }
+
+    /**
+     * Loads all User Groups in the form of a tree, starting with the root User Group.
+     * Stores the User Groups in the allUserGroups EventEmitter.
+     *
+     * Since the API only gives each group's children, and does not assign the parent (due to JSON circular references),
+     * this method will also assign the parent to each child. This way, the tree can be traversed in either direction.
+     *
+     * @returns A Promise that gives the entire User Group hierarchy.
+     */
+    public loadAllUserGroups(): void {
         this.apiService.get("userGroups")
-            .then(response => this.rootUserGroup.next(response))
-            .catch(err => this.rootUserGroup.error(err))
-    }
+            .then((userGroups: UserGroupHierarchy) => {
+                // Traverse through each User Group and their children, and assign the parent to each child.
+                let userGroupQueue = new Queue<UserGroupHierarchy>();
+                userGroupQueue.add(userGroups);
 
-    /**
-     * TODO: JAVADOCS
-     * @returns {ReplaySubject<UserGroup>}
-     */
-    public getRootUserGroup(): ReplaySubject<UserGroup> {
-        return this.rootUserGroup;
+                let currentUserGroup: UserGroupHierarchy;
+
+                while ((currentUserGroup = userGroupQueue.dequeue()) != null) {
+                    for (let childGroup of currentUserGroup.children) {
+                        childGroup.parent = currentUserGroup;
+                    }
+                }
+
+                this.allUserGroups.next(userGroups);
+            })
     }
 
     /**
@@ -43,11 +69,7 @@ export class UserGroupService {
      * @returns {any}
      */
     public getUserGroupById(id: number): Promise<UserGroup> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("userGroups/" + id)
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        });
+        return this.apiService.get("userGroups/" + id);
     }
 
     /**
@@ -56,11 +78,7 @@ export class UserGroupService {
      * @returns {any}
      */
     public getUsersByGroup(userGroup: UserGroup): Promise<User[]> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("userGroups/" + userGroup.id + "/users")
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        })
+        return this.apiService.get("userGroups/" + userGroup.id + "/users");
     }
 
     /**
@@ -69,11 +87,7 @@ export class UserGroupService {
      * @returns {Promise<T>}
      */
     public getResourcesByGroup(userGroup: UserGroup): Promise<Resource[]> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("userGroups/" + userGroup.id + "/resources")
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        })
+        return this.apiService.get("userGroups/" + userGroup.id + "/resources");
     }
 
     /**
@@ -84,11 +98,7 @@ export class UserGroupService {
      * @returns A Promise that gives the same User Group as was passed in, with an upward hierarchy.
      */
     public getUserGroupHierarchyUp(userGroup: UserGroup): Promise<UserGroupHierarchyUp> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get(`/userGroups/${userGroup.id}/hierarchy/up`)
-                .then(response => resolve(response))
-                .catch(err => resolve(err))
-        })
+        return this.apiService.get(`/userGroups/${userGroup.id}/hierarchy/up`);
     }
 
     /**
@@ -99,11 +109,39 @@ export class UserGroupService {
      * @returns A Promise that gives the same User Group as was passed in, with a downward hierarchy.
      */
     public getUserGroupHierarchyDown(userGroup: UserGroup): Promise<UserGroupHierarchyDown> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get(`/userGroups/${userGroup.id}/hierarchy/down`)
-                .then(response => resolve(response))
-                .catch(err => resolve(err))
-        })
+        return this.apiService.get(`/userGroups/${userGroup.id}/hierarchy/down`);
+    }
+
+    /**
+     * Flattens a User Group hierarchy tree into an array of all children in the downward hierarchy.
+     * The array begins with the origin, then includes all children as encountered, with no guaranteed order.
+     *
+     * @param origin The User Group from which to flatten the downward hierarchy.
+     */
+    public static flattenHierarchyDown(origin: UserGroupHierarchyDown): UserGroup[] {
+        let flattenedUserGroups: UserGroup[] = [];
+
+        // Create a queue for traversal.
+        let queue = new Queue<UserGroupHierarchyDown>();
+        queue.add(origin);
+
+        // Traverse through all children.
+        let currentUserGroup: UserGroupHierarchyDown;
+        while ((currentUserGroup = queue.dequeue()) != null) {
+            // Add this group to the array.
+            flattenedUserGroups.push({
+                id: currentUserGroup.id,
+                root: currentUserGroup.root,
+                name: currentUserGroup.name
+            });
+
+            // Add all the group's children into the queue.
+            for (let childGroup of currentUserGroup.children) {
+                queue.add(childGroup);
+            }
+        }
+
+        return flattenedUserGroups;
     }
 
     /**
@@ -113,11 +151,11 @@ export class UserGroupService {
      * @returns A Promise that gives the newly created User Group.
      */
     public addNewUserGroup(parent: UserGroup, userGroup: UserGroup): Promise<UserGroup> {
-        return new Promise((resolve, reject) => {
-            this.apiService.post(`userGroups/${parent.id}/children`, userGroup)
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        })
+        return this.apiService.post(`userGroups/${parent.id}/children`, userGroup)
+            .then(userGroup => {
+                this.loadAllUserGroups();
+                return userGroup;
+            })
     }
 
     /**
@@ -125,12 +163,12 @@ export class UserGroupService {
      * @param userGroup
      * @returns {Promise<T>}
      */
-    public patchUserGroup(userGroup: UserGroup): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("userGroups/" + userGroup.id, userGroup)
-                .then(response => resolve())
-                .catch(err => reject(err))
-        })
+    public patchUserGroup(userGroup: UserGroup): Promise<UserGroup> {
+        return this.apiService.patch("userGroups/" + userGroup.id, userGroup)
+            .then(userGroup => {
+                this.loadAllUserGroups();
+                return userGroup;
+            })
     }
 
     /**
@@ -139,12 +177,12 @@ export class UserGroupService {
      * @param newParentUserGroup
      * @returns {Promise<T>}
      */
-    public moveUserGroup(userGroup: UserGroup, newParentUserGroup: UserGroup): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("userGroups/" + userGroup.id + "/move?newParentId=" + newParentUserGroup.id)
-                .then(response => resolve())
-                .catch(err => reject(err))
-        })
+    public moveUserGroup(userGroup: UserGroup, newParentUserGroup: UserGroup): Promise<UserGroup> {
+        return this.apiService.patch("userGroups/" + userGroup.id + "/move?newParentId=" + newParentUserGroup.id)
+            .then(userGroup => {
+                this.loadAllUserGroups();
+                return userGroup;
+            })
     }
 
     /**
@@ -153,11 +191,11 @@ export class UserGroupService {
      * @returns {Promise<T>}
      */
     public deleteUserGroup(userGroup: UserGroup): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.apiService.del("userGroups/" + userGroup.id)
-                .then(response => resolve())
-                .catch(err => reject(err))
-        })
+        return this.apiService.del("userGroups/" + userGroup.id)
+            .then(userGroup => {
+                this.loadAllUserGroups();
+                return userGroup;
+            })
     }
 
 }

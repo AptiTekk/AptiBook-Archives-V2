@@ -25,11 +25,7 @@ export class ReservationService {
      * @returns {any}
      */
     public getUpcomingUserReservations(user: User): Promise<Reservation[]> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("reservations/user/" + user.id + "?start=" + moment().utc().format("YYYY-MM-DDTHH:mm:ss"))
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        });
+        return this.apiService.get("reservations/user/" + user.id + "?start=" + moment().utc().format("YYYY-MM-DDTHH:mm:ss"));
     }
 
     /**
@@ -39,11 +35,7 @@ export class ReservationService {
      * @returns {Promise<T>}
      */
     public makeReservationDecision(approved: boolean, reservation: Reservation): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("reservations/" + reservation.id + (approved ? "/approved" : "/rejected"))
-                .then(response => resolve())
-                .catch(err => reject(err))
-        });
+        return this.apiService.patch("reservations/" + reservation.id + (approved ? "/approved" : "/rejected"));
 
     }
 
@@ -53,15 +45,12 @@ export class ReservationService {
      * @returns {any}
      */
     public makeReservation(reservation: Reservation): Promise<Reservation> {
-        return new Promise((resolve, reject) => {
-            this.apiService.post("reservations/user/" + reservation.user.id, reservation)
-                .then(response => {
-                    let reservation: Reservation = response
-                    this.lastReservationMade.next(reservation)
-                    resolve(reservation)
-                })
-                .catch(err => reject(err))
-        });
+        return this.apiService.post("reservations/user/" + reservation.user.id, reservation)
+            .then(response => {
+                let reservation: Reservation = response;
+                this.lastReservationMade.next(reservation);
+                return reservation;
+            })
     }
 
     getLastReservationMade(): ReplaySubject<Reservation> {

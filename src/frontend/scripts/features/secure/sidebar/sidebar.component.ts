@@ -108,8 +108,11 @@ export class SidebarComponent implements OnInit {
         //this.swipedOpen = false;
     }
 
+    /**
+     * When the sign out button is clicked.
+     */
     onSignOut() {
         this.loaderService.startLoading();
-        this.authService.signOut();
+        AuthService.signOut();
     }
 }

@@ -3,7 +3,7 @@
  * Unauthorized copying of any part of AptiBook, via any medium, is strictly prohibited.
  * Proprietary and confidential.
  */
-import {Component, OnInit, ViewChild} from "@angular/core";
+import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
 import {UserGroup} from "../../../../../models/user-group.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../core/services/user-group.service";
@@ -14,16 +14,22 @@ import {TreeComponent} from "../../../../../shared/tree/tree.component";
 import {Observable} from "rxjs";
 import {Resource} from "../../../../../models/resource.model";
 import {AnalyticsService} from "../../../../../core/services/analytics.service";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'at-configuration-users-groups',
     templateUrl: 'groups.component.html',
     styleUrls: ['groups.component.css']
 })
-export class GroupsComponent implements OnInit {
+export class GroupsComponent implements OnInit, OnDestroy {
+
+    /**
+     * All Observable subscriptions for this component.
+     */
+    subscriptions: Subscription[] = [];
 
     @ViewChild(TreeComponent) private tree: TreeComponent;
-    rootGroup: UserGroup;
+    allUserGroups: UserGroup;
 
     selectedUserGroups: UserGroup[];
     selectedUserGroup: UserGroup;
@@ -45,10 +51,14 @@ export class GroupsComponent implements OnInit {
             name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
         });
 
-        this.userGroupService.getRootUserGroup().subscribe(group => this.rootGroup = group);
+        this.subscriptions.push(this.userGroupService.getAllUserGroups().subscribe(allUserGroups => this.allUserGroups = allUserGroups));
     }
 
-    //noinspection JSMethodCanBeStatic
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+//noinspection JSMethodCanBeStatic
     /**
      * Returns an array containing only the names of the user's UserGroups
      * @param user The User
@@ -61,7 +71,6 @@ export class GroupsComponent implements OnInit {
 
     onAddNewUserGroup(newGroup: UserGroup) {
         AnalyticsService.sendEvent({category: 'Configuration - User Groups', action: 'AddUserGroup'});
-        this.userGroupService.fetchRootUserGroup();
 
         // Select the new group.
         this.tree.selectUserGroup(newGroup);
@@ -108,11 +117,10 @@ export class GroupsComponent implements OnInit {
             .patchUserGroup(this.selectedUserGroup)
             .then(userGroup => {
                 this.detailsInfoAlert.display("Details Updated.");
-                this.userGroupService.fetchRootUserGroup();
                 this.onUserGroupSelected();
             })
             .catch(err => {
-                this.detailsDangerAlert.display(err);
+                this.detailsDangerAlert.display(err.message);
                 this.onUserGroupSelected();
             })
     }
@@ -140,10 +148,9 @@ export class GroupsComponent implements OnInit {
     onDeleteUserGroup() {
         this.userGroupService
             .deleteUserGroup(this.selectedUserGroup)
-            .then(response => {
+            .then(() => {
                 AnalyticsService.sendEvent({category: 'Configuration - User Groups', action: 'DeleteUserGroup'});
                 this.selectedUserGroups = [];
-                this.userGroupService.fetchRootUserGroup();
                 this.userService.fetchUsers();
                 this.onUserGroupSelected();
             })

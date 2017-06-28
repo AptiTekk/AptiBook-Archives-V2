@@ -17,15 +17,15 @@ export class SecureGuard implements CanActivate {
 
     canActivate(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<boolean> {
         return new Promise((resolve, reject) => {
-            this.authService.getCurrentUser().take(1).subscribe(
-                user => {
-                    if (user) {
-                        resolve(true);
-                    } else {
-                        this.router.navigate(['sign-in']);
-                        resolve(false);
-                    }
-                });
+            this.authService.getCurrentUser()
+                .take(1).subscribe(user => {
+                if (user) {
+                    resolve(true);
+                } else {
+                    this.router.navigate(['sign-in']);
+                    resolve(false);
+                }
+            });
         });
     }
 

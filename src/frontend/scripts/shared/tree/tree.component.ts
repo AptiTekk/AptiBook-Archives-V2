@@ -4,13 +4,14 @@
  * Proprietary and confidential.
  */
 
-import {Component, EventEmitter, forwardRef, Input, OnInit, Output} from "@angular/core";
-import {UserGroup} from "../../models/user-group.model";
+import {Component, EventEmitter, forwardRef, Input, OnDestroy, OnInit, Output} from "@angular/core";
+import {UserGroup, UserGroupHierarchy} from "../../models/user-group.model";
 import {TreeNodeComponent} from "./tree-node/tree-node.component";
 import {ControlValueAccessor, NG_VALUE_ACCESSOR} from "@angular/forms";
 import {UserGroupService} from "../../core/services/user-group.service";
 import * as Collections from "typescript-collections";
 import {AnalyticsService} from "../../core/services/analytics.service";
+import {Subscription} from "rxjs/Subscription";
 
 @Component({
     selector: 'tree',
@@ -24,7 +25,12 @@ import {AnalyticsService} from "../../core/services/analytics.service";
         }
     ]
 })
-export class TreeComponent implements OnInit, ControlValueAccessor {
+export class TreeComponent implements OnInit, OnDestroy, ControlValueAccessor {
+
+    /**
+     * All Observable subscriptions for this component.
+     */
+    subscriptions: Subscription[] = [];
 
     /**
      * Determines if the Tree has drag-and-drop support. Defaults to false.
@@ -60,7 +66,7 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
      */
     @Input() showRoot: boolean = false;
 
-    rootGroup: UserGroup;
+    allUserGroups: UserGroupHierarchy;
 
     selectedUserGroups: UserGroup[] = [];
 
@@ -70,7 +76,11 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
     }
 
     ngOnInit(): void {
-        this.userGroupService.getRootUserGroup().subscribe(root => this.rootGroup = root);
+        this.subscriptions.push(this.userGroupService.getAllUserGroups().subscribe(allUserGroups => this.allUserGroups = allUserGroups));
+    }
+
+    ngOnDestroy(): void {
+        this.subscriptions.forEach(s => s.unsubscribe())
     }
 
     onNodeSelected(treeNode: TreeNodeComponent, ctrlDown: boolean = false) {
@@ -167,11 +177,8 @@ export class TreeComponent implements OnInit, ControlValueAccessor {
             return;
 
         this.userGroupService
-            .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.rootGroup)
-            .then(success => {
-                AnalyticsService.sendEvent({category: 'User Group Tree', action: 'MoveUserGroup'});
-                this.userGroupService.fetchRootUserGroup();
-            })
+            .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.allUserGroups)
+            .then(() => AnalyticsService.sendEvent({category: 'User Group Tree', action: 'MoveUserGroup'}))
     }
 
     public selectUserGroup(userGroup: UserGroup) {

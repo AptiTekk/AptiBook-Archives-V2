@@ -20,11 +20,7 @@ export class RegistrationService {
      * @returns A Promise that gives the new User.
      */
     public register(user: User): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.apiService.post("register", user)
-                .then(user => resolve(user))
-                .catch(err => reject(err));
-        });
+        return this.apiService.post("register", user);
     }
 
     /**
@@ -33,11 +29,7 @@ export class RegistrationService {
      * @returns A Promise that gives the partially-filled User.
      */
     public getRegistrationDetails(token: string): Promise<User> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("register/details?token=" + token)
-                .then(user => resolve(user))
-                .catch(err => reject(err))
-        })
+        return this.apiService.get("register/details?token=" + token);
     }
 
     /**
@@ -47,10 +39,6 @@ export class RegistrationService {
      * @returns A Promise that gives the newly created User.
      */
     public finishRegistration(user: User, token: string): Promise<User> {
-        return new Promise((resolve, reject) => {
-            this.apiService.post("register/sso?token=" + token, user)
-                .then(user => resolve(user))
-                .catch(err => reject(err))
-        })
+        return this.apiService.post("register/sso?token=" + token, user);
     }
 }

@@ -14,6 +14,14 @@ export interface UserGroup {
 
 }
 
+export interface UserGroupHierarchy extends UserGroup {
+
+    parent?: UserGroupHierarchy
+
+    children?: UserGroupHierarchy[]
+
+}
+
 export interface UserGroupHierarchyUp extends UserGroup {
 
     parent?: UserGroupHierarchyUp

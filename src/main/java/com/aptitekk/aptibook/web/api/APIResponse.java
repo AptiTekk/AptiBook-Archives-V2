@@ -52,13 +52,14 @@ public class APIResponse extends ResponseEntity<Object> {
     }
 
     /**
-     * Creates an APIResponse with a 204 status code.
+     * Creates an APIResponse with a 200 status code, but no content.
+     * Generally used after deletion.
      *
      * @return The generated APIResponse.
      */
     @JsonIgnore
     public static APIResponse noContentResponse() {
-        return buildAPIResponse(HttpStatus.NO_CONTENT, null, null, null, null);
+        return buildAPIResponse(HttpStatus.OK, null, null, null, null);
     }
 
     /**

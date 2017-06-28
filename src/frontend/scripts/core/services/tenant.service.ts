@@ -19,11 +19,7 @@ export class TenantService {
      * @returns A Promise that gives the Tenant details.
      */
     getTenant(): Promise<Tenant> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("tenant")
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        });
+        return this.apiService.get("tenant");
     }
 
 }

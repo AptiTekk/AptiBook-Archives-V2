@@ -55,11 +55,7 @@ export class PermissionsService {
      * @returns A Promise that emits a map of Permission Groups to Permissions to assigned User Groups.
      */
     public getUsersAssignedToPermissionsInAllGroups(inherited: boolean = true): Promise<{ [permissionGroup: string]: { [permission: string]: User[] } }> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("permissions/users?inherited=" + inherited)
-                .then(assignments => resolve(assignments))
-                .catch(err => reject(err));
-        })
+        return this.apiService.get("permissions/users?inherited=" + inherited);
     }
 
     /**
@@ -71,11 +67,7 @@ export class PermissionsService {
      * @returns A Promise that emits a map of Permissions to assigned Users.
      */
     public getUsersAssignedToPermissionsInGroup(groupKey: string, inherited: boolean = true): Promise<{ [permission: string]: User[] }> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("permissions/groups/" + groupKey + "/users?inherited=" + inherited)
-                .then(assignments => resolve(assignments))
-                .catch(err => reject(err));
-        })
+        return this.apiService.get("permissions/groups/" + groupKey + "/users?inherited=" + inherited);
     }
 
     /**
@@ -84,11 +76,7 @@ export class PermissionsService {
      * @returns A Promise that emits a map of Permission Groups to Permissions to assigned User Groups.
      */
     public getUserGroupsAssignedToPermissionsInAllGroups(): Promise<{ [permissionGroup: string]: { [permission: string]: UserGroup[] } }> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("permissions/user_groups")
-                .then(assignments => resolve(assignments))
-                .catch(err => reject(err));
-        })
+        return this.apiService.get("permissions/user_groups");
     }
 
     /**
@@ -99,11 +87,7 @@ export class PermissionsService {
      * @returns A Promise that emits a map of Permissions to assigned User Groups.
      */
     public getUserGroupsAssignedToPermissionsInGroup(groupKey: string): Promise<{ [permission: string]: UserGroup[] }> {
-        return new Promise((resolve, reject) => {
-            this.apiService.get("permissions/groups/" + groupKey + "/user_groups")
-                .then(assignments => resolve(assignments))
-                .catch(err => reject(err));
-        })
+        return this.apiService.get("permissions/groups/" + groupKey + "/user_groups");
     }
 
 }

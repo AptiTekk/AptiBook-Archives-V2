@@ -8,7 +8,6 @@ import {Injectable} from "@angular/core";
 import {AuthService} from "./auth.service";
 import {APIService} from "./api.service";
 import {ReplaySubject} from "rxjs/ReplaySubject";
-import {Observable} from "rxjs/Observable";
 import {User} from "../../models/user.model";
 import {NotificationSettings} from "../../models/notification-settings.model";
 import {NotificationToggles} from "../../models/notification-toggles.model";
@@ -73,11 +72,7 @@ export class CurrentUserService {
      * @returns An observable that emits the patched version of the setting upon success, or an error upon failure.
      */
     public patchNotificationSetting(notificationSetting: string, notificationToggles: NotificationToggles): Promise<NotificationToggles> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("/users/current/notifications/settings/" + notificationSetting, notificationToggles)
-                .then(response => resolve(response))
-                .catch(err => reject(err))
-        });
+        return this.apiService.patch("/users/current/notifications/settings/" + notificationSetting, notificationToggles);
     }
 
 }

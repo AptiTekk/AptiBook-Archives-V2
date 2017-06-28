@@ -11,7 +11,7 @@ import {
     ReservationWithUnorganizedDecisions
 } from "../../models/reservation/reservation.model";
 import {ReplaySubject} from "rxjs";
-import {UserGroup} from "../../models/user-group.model";
+import {UserGroup, UserGroupHierarchy} from "../../models/user-group.model";
 import {ReservationDecision} from "../../models/reservation/reservation-decision.model";
 import {UserGroupService} from "./user-group.service";
 import PriorityQueue from "typescript-collections/dist/lib/PriorityQueue";
@@ -27,7 +27,7 @@ import {DecisionHierarchyRelation} from "../../models/reservation/decision-hiera
 export class ReservationManagementService {
 
     private user: User;
-    private rootUserGroup: UserGroup;
+    private allUserGroups: UserGroupHierarchy;
     private pendingReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
     private approvedReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
     private rejectedReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
@@ -37,10 +37,11 @@ export class ReservationManagementService {
                 private userGroupService: UserGroupService) {
 
         authService.getCurrentUser().subscribe(user => this.user = user);
-        userGroupService.getRootUserGroup().subscribe(root => this.rootUserGroup = root);
+        userGroupService.getAllUserGroups().subscribe(userGroups => this.allUserGroups = userGroups);
     }
 
     public fetchReservations(): void {
+        //TODO: Fork join
         this.apiService.get("reservations/pending")
             .then((reservations: ReservationWithUnorganizedDecisions[]) => {
                 this.pendingReservations.next(reservations);
@@ -90,11 +91,11 @@ export class ReservationManagementService {
 
         // Add a queue. We will traverse down the tree.
         let userGroupTraversalQueue = new PriorityQueue<UserGroup>();
-        userGroupTraversalQueue.add(this.rootUserGroup);
+        userGroupTraversalQueue.add(this.allUserGroups);
 
         // Traverse down the tree until we find the owner of the reservation's resource.
-        let currentGroup: UserGroup;
-        let ownerGroup: UserGroup;
+        let currentGroup: UserGroupHierarchy;
+        let ownerGroup: UserGroupHierarchy;
         while ((currentGroup = userGroupTraversalQueue.dequeue())) {
             if (organizedReservation.resource.owner.id === currentGroup.id) {
                 ownerGroup = currentGroup;
@@ -169,11 +170,7 @@ export class ReservationManagementService {
      * @returns A promise that gives the decision made.
      */
     makeDecision(approved: boolean, reservation: Reservation): Promise<ReservationDecision> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("/reservations/" + reservation.id + "/decision", approved)
-                .then(decision => resolve(decision))
-                .catch(err => reject(err))
-        });
+        return this.apiService.patch("/reservations/" + reservation.id + "/decision", approved);
     }
 
 }

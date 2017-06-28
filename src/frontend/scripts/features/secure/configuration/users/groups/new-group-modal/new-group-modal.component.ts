@@ -7,9 +7,9 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core"
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ModalComponent} from "../../../../../../shared/modal/modal.component";
 import {LoaderService} from "../../../../../../core/services/loader.service";
-import {UniquenessValidator} from "../../../../../../validators/uniqueness.validator";
 import {UserGroupService} from "../../../../../../core/services/user-group.service";
 import {UserGroup} from "../../../../../../models/user-group.model";
+import {AlertComponent} from "../../../../../../shared/alert/alert.component";
 
 @Component({
     selector: 'new-group-modal',
@@ -18,12 +18,13 @@ import {UserGroup} from "../../../../../../models/user-group.model";
 export class NewGroupModalComponent implements OnInit {
 
     @ViewChild('modal') modal: ModalComponent;
+    @ViewChild(AlertComponent) dangerAlert: AlertComponent;
 
     @Output() submitted = new EventEmitter<UserGroup>();
 
     formGroup: FormGroup;
 
-    rootGroup: UserGroup;
+    allUserGroups: UserGroup;
 
     constructor(private formBuilder: FormBuilder,
                 private userGroupService: UserGroupService,
@@ -48,29 +49,20 @@ export class NewGroupModalComponent implements OnInit {
     }
 
     private resetFormGroup(selectedUserGroup?: UserGroup) {
-        this.userGroupService
-            .getRootUserGroup()
-            .subscribe(
-                rootGroup => {
-                    this.rootGroup = rootGroup;
-                    this.userGroupService
-                        .getUserGroupHierarchyDown(rootGroup)
-                        .then(groups => {
-                            let groupNames: string[] = groups ? groups.map(group => group.name) : [];
-                            groupNames.push(rootGroup.name);
+        this.userGroupService.getAllUserGroups()
+            .take(1).subscribe(allUserGroups => {
+                this.allUserGroups = allUserGroups;
 
-                            this.formGroup = this.formBuilder.group({
-                                name: [null, Validators.compose([
-                                    Validators.required,
-                                    Validators.maxLength(30),
-                                    Validators.pattern("[^<>;=]*"),
-                                    UniquenessValidator.isUnique(groupNames)
-                                ])],
-                                parent: [selectedUserGroup ? [selectedUserGroup] : []]
-                            });
-                        })
-                }
-            );
+                this.formGroup = this.formBuilder.group({
+                    name: [null, Validators.compose([
+                        Validators.required,
+                        Validators.maxLength(30),
+                        Validators.pattern("[^<>;=]*")
+                    ])],
+                    parent: [selectedUserGroup ? [selectedUserGroup] : []]
+                });
+            }
+        );
     }
 
     onGroupSubmitted() {
@@ -80,14 +72,13 @@ export class NewGroupModalComponent implements OnInit {
         if (this.formGroup.controls['parent'].value && this.formGroup.controls['parent'].value.length > 0)
             parentGroup = [].concat(this.formGroup.controls['parent'].value)[0];
         else
-            parentGroup = this.rootGroup;
+            parentGroup = this.allUserGroups;
 
         let newUserGroup: UserGroup = {
             name: this.formGroup.controls['name'].value,
         };
 
-        this.userGroupService
-            .addNewUserGroup(parentGroup, newUserGroup)
+        this.userGroupService.addNewUserGroup(parentGroup, newUserGroup)
             .then(userGroup => {
                 if (userGroup) {
                     this.submitted.next(userGroup);
@@ -96,7 +87,11 @@ export class NewGroupModalComponent implements OnInit {
 
                 this.loaderService.stopLoading();
             })
-            .catch(err => this.loaderService.stopLoading())
+            .catch(err => {
+                console.error(err);
+                this.dangerAlert.display(err.message);
+                this.loaderService.stopLoading();
+            })
     }
 
 }

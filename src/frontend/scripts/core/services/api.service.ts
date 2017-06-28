@@ -8,7 +8,6 @@ import {Injectable} from "@angular/core";
 import {Headers, Http, RequestOptions, Response} from "@angular/http";
 import {APIResponse} from "../../models/api-response.model";
 import {APIError} from "../../models/api-error.model";
-import {Observable} from "rxjs/Observable";
 
 declare const JSOG: any;
 
@@ -35,12 +34,16 @@ export class APIService {
         return path;
     }
 
-    private static checkForErrors(response: Response) {
-        let body: APIResponse = JSOG.parse(response.text())
+    /**
+     * Given a Response, checks for errors and returns appropriately.
+     * @param response The Response from the server.
+     */
+    private static handleResponse(response: Response) {
+        let body: APIResponse = JSOG.parse(response.text());
         if (body.ok === true)
-            return body.content
+            return body.content;
         else
-            throw <APIError>{error: body.error, message: body.message}
+            throw <APIError>{error: body.error, message: body.message};
     }
 
     public get(path: string, additionalHeaders?: Headers): Promise<any> {
@@ -57,56 +60,36 @@ export class APIService {
         else options = new RequestOptions({headers: this.headers});
 
         // Make request
-        return new Promise((resolve, reject) => {
-            this.http.get(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
-                .map(response => APIService.checkForErrors(response))
-                .catch(error => Observable.throw(error))
-                .subscribe(content => resolve(content), err => reject(err))
-        })
+        return this.http.get(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
+            .toPromise().then(APIService.handleResponse).catch(APIService.handleResponse)
     }
 
     public post(path: string, data: any): Promise<any> {
         let options = new RequestOptions({headers: this.headers});
 
-        return new Promise((resolve, reject) => {
-            this.http.post(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, JSOG.stringify(data), options)
-                .map(response => APIService.checkForErrors(response))
-                .catch(error => Observable.throw(error))
-                .subscribe(content => resolve(content), err => reject(err))
-        });
+        return this.http.post(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, JSOG.stringify(data), options)
+            .toPromise().then(APIService.handleResponse).catch(APIService.handleResponse)
     }
 
     public put(path: string, data: any): Promise<any> {
         let options = new RequestOptions({headers: this.headers});
 
-        return new Promise((resolve, reject) => {
-            this.http.put(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, JSOG.stringify(data), options)
-                .map(response => APIService.checkForErrors(response))
-                .catch(error => Observable.throw(error))
-                .subscribe(content => resolve(content), err => reject(err))
-        });
+        return this.http.put(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, JSOG.stringify(data), options)
+            .toPromise().then(APIService.handleResponse).catch(APIService.handleResponse)
     }
 
     public patch(path: string, data?: any, useJsog: boolean = true): Promise<any> {
         let options = new RequestOptions({headers: this.headers});
 
-        return new Promise((resolve, reject) => {
-            this.http.patch(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data != null ? (useJsog ? JSOG.stringify(data) : JSON.stringify(data)) : undefined, options)
-                .map(response => APIService.checkForErrors(response))
-                .catch(error => Observable.throw(error))
-                .subscribe(content => resolve(content), err => reject(err))
-        });
+        return this.http.patch(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, data != null ? (useJsog ? JSOG.stringify(data) : JSON.stringify(data)) : undefined, options)
+            .toPromise().then(APIService.handleResponse).catch(APIService.handleResponse)
     }
 
     public del(path: string): Promise<any> {
         let options = new RequestOptions({headers: this.headers});
 
-        return new Promise((resolve, reject) => {
-            this.http.delete(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
-                .map(response => APIService.checkForErrors(response))
-                .catch(error => Observable.throw(error))
-                .subscribe(content => resolve(content), err => reject(err))
-        });
+        return this.http.delete(`${this.apiUrl}${APIService.removeTrailingSlash(path)}`, options)
+            .toPromise().then(APIService.handleResponse).catch(APIService.handleResponse)
     }
 
 }

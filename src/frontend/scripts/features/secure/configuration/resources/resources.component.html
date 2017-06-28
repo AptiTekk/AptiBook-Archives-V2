@@ -29,12 +29,12 @@
 					</ul>
 				</at-card-header>
 				<at-card-block>
-					<h4 *ngIf="!(rootGroup?.children?.length > 0)">
+					<h4 *ngIf="!(allUserGroups?.children?.length > 0)">
 						Please
 						<a [routerLink]="'/secure/configuration/users/groups'"
 						   [at-analytics]="{category: 'Configuration - Resources', action: 'ClickAddUserGroups'}">add User Groups</a> before adding Resources.
 					</h4>
-					<section *ngIf="(rootGroup?.children?.length > 0) && currentResourceCategory != undefined">
+					<section *ngIf="(allUserGroups?.children?.length > 0) && currentResourceCategory != undefined">
 						
 						<!-- Add Resource Button -->
 						<button class="btn btn-primary"

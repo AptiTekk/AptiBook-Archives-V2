@@ -36,11 +36,7 @@ export class PropertiesService {
      * @return a Promise that gives the value of the property.
      */
     public getProperty(key: string): Promise<any> {
-        return new Promise<any>((resolve, reject) => {
-            this.apiService.get("properties/" + key)
-                .then(value => resolve(value))
-                .catch(err => reject(err));
-        });
+        return this.apiService.get("properties/" + key);
     }
 
     /**
@@ -49,11 +45,7 @@ export class PropertiesService {
      * @returns A promise that gives the properties in their updated state.
      */
     patchProperties(properties: Properties): Promise<Properties> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("properties/", properties, false)
-                .then(response => resolve(response))
-                .catch(err => reject(err));
-        });
+        return this.apiService.patch("properties/", properties, false);
     }
 
     /**
@@ -63,11 +55,7 @@ export class PropertiesService {
      * @returns An promise that gives the property value in its updated state.
      */
     public patchProperty(key: string, value: string): Promise<string> {
-        return new Promise((resolve, reject) => {
-            this.apiService.patch("properties/" + key, value)
-                .then(response => resolve(response))
-                .catch(err => reject(err));
-        });
+        return this.apiService.patch("properties/" + key, value);
     }
 
 }
