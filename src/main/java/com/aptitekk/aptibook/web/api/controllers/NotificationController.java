@@ -36,13 +36,13 @@ public class NotificationController extends APIControllerAbstract {
         if (!user.isAdmin() && !user.getId().equals(id))
             return APIResponse.noPermission();
 
-            try {
-                List<Notification> notifications = notificationRepository.getAllForUser(user);
-                return APIResponse.ok(modelMapper.map(notifications, new TypeToken<List<NotificationDTO.WithoutUser>>() {
-                }.getType()));
-            } catch (Exception e) {
-                return APIResponse.badRequestNotParsable("Could not parse start or end time.");
-            }
+        try {
+            List<Notification> notifications = notificationRepository.getAllForUser(user);
+            return APIResponse.ok(modelMapper.map(notifications, new TypeToken<List<NotificationDTO>>() {
+            }.getType()));
+        } catch (Exception e) {
+            return APIResponse.badRequestNotParsable("Could not parse start or end time.");
+        }
     }
 
     @RequestMapping(value = "/notifications/user/{id}/markRead", method = RequestMethod.PATCH)

@@ -15,12 +15,9 @@ import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
 import java.time.LocalDateTime;
 
-@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class NotificationDTO {
 
     public Long id;
-
-    public UserDTO user;
 
     public String subject;
 
@@ -31,10 +28,5 @@ public class NotificationDTO {
     public LocalDateTime creation;
 
     public boolean read;
-
-    @JsonIgnoreProperties({"user"})
-    public static class WithoutUser extends NotificationDTO {
-
-    }
 
 }
