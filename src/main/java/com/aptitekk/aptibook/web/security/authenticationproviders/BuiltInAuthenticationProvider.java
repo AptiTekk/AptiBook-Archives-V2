@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.security.authentication_providers;
+package com.aptitekk.aptibook.web.security.authenticationproviders;
 
 import com.aptitekk.aptibook.domain.entities.User;
 import com.aptitekk.aptibook.domain.entities.property.Property;

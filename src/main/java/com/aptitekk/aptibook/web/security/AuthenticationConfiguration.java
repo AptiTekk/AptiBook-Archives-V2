@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.web.security.authentication_providers.BuiltInAuthenticationProvider;
+import com.aptitekk.aptibook.web.security.authenticationproviders.BuiltInAuthenticationProvider;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
