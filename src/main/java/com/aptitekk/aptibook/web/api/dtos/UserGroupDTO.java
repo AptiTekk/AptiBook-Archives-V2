@@ -6,15 +6,11 @@
 
 package com.aptitekk.aptibook.web.api.dtos;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.voodoodyne.jackson.jsog.JSOGGenerator;
-
 import java.util.List;
 
 /**
  * DTO for the User Group entity (See {@link com.aptitekk.aptibook.domain.entities.UserGroup})
  */
-@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class UserGroupDTO {
 
     public Long id;
