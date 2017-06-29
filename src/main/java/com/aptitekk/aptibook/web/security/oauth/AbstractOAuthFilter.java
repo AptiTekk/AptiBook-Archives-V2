@@ -13,12 +13,11 @@ import com.aptitekk.aptibook.service.LogService;
 import com.aptitekk.aptibook.service.SpringProfileService;
 import com.aptitekk.aptibook.service.entity.PropertyService;
 import com.aptitekk.aptibook.service.tenant.TenantManagementService;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.security.UserIDAuthenticationToken;
 import com.github.scribejava.core.builder.ServiceBuilder;
 import com.github.scribejava.core.model.OAuth2AccessToken;
 import com.github.scribejava.core.oauth.OAuth20Service;
-import org.json.JSONException;
-import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
@@ -188,27 +187,18 @@ public abstract class AbstractOAuthFilter extends OncePerRequestFilter {
 
                     // Check that the URL was generated correctly.
                     if (oAuthProviderUrl != null) {
-
-                        try {
-                            JSONObject jsonObject = new JSONObject();
-                            jsonObject.put("url", oAuthProviderUrl);
-                            // Send a redirect to the generated URL.
-                            response.getWriter().write(jsonObject.toString());
-                        } catch (JSONException e) {
-                            logService.logException(getClass(), e, "Could not create JSON for OAuth URL");
-                            redirectWithError(response, "server_error");
-                        }
+                        APIResponse.writeToResponse(APIResponse.ok(oAuthProviderUrl), response);
                         return;
                     }
 
                     // Something went wrong while generating the URL.
                     redirectWithError(response, "server_error");
+                    logService.logError(getClass(), "Generated OAuth URL was null.");
                     return;
                 }
 
                 // OAuth is Disabled.
-                response.setStatus(HttpServletResponse.SC_NOT_IMPLEMENTED);
-                response.getWriter().write("This authentication scheme is not enabled.");
+                APIResponse.writeToResponse(APIResponse.authenticationSchemeNotImplemented("Google OAuth is not enabled."), response);
                 return;
             }
         }

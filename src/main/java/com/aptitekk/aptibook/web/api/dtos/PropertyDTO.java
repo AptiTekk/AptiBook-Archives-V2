@@ -9,7 +9,6 @@ package com.aptitekk.aptibook.web.api.dtos;
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.voodoodyne.jackson.jsog.JSOGGenerator;
 
-@JsonIdentityInfo(generator = JSOGGenerator.class)
 public class PropertyDTO {
 
     public String defaultValue;

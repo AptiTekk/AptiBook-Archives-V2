@@ -80,7 +80,7 @@ public class EmailService {
      */
     private boolean sendEmail(String templateId, Map<String, Object> substitutionData, String... recipients) {
         // Tests don't need to send emails.
-        if(springProfileService.isProfileActive(SpringProfileService.Profile.TESTING))
+        if (springProfileService.isProfileActive(SpringProfileService.Profile.TESTING))
             return true;
 
         if (client == null)
@@ -121,7 +121,7 @@ public class EmailService {
                 stringJoiner.add(recipientAttributes.getAddress().getEmail());
             }
 
-            logService.logException(getClass(), e, "Unable to send an email to these addresses: " + stringJoiner.toString());
+            logService.logError(getClass(), "Unable to send an email to these addresses: " + stringJoiner.toString() + ". Reason: " + e.getMessage());
             return false;
         }
 

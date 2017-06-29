@@ -7,6 +7,7 @@
 package com.aptitekk.aptibook.web.api;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,7 +15,9 @@ import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;
 
 import javax.annotation.Nullable;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotNull;
+import java.io.IOException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -220,6 +223,17 @@ public class APIResponse extends ResponseEntity<Object> {
     }
 
     /**
+     * Creates an APIResponse with a 501 status code, a pre-defined error message, and an optional message.
+     *
+     * @param message (Optional) A human readable message.
+     * @return The generated APIResponse.
+     */
+    @JsonIgnore
+    public static APIResponse authenticationSchemeNotImplemented(@Nullable String message) {
+        return buildAPIResponse(HttpStatus.NOT_IMPLEMENTED, null, "auth_scheme_not_implemented", message, null);
+    }
+
+    /**
      * Builds the APIResponse with the given, mostly optional, parameters.
      * This method is required to generate the JSON body for the ResponseEntity constructor.
      *
@@ -260,6 +274,19 @@ public class APIResponse extends ResponseEntity<Object> {
      */
     private APIResponse(HttpStatus status, Map<String, Object> body, MultiValueMap<String, String> headers) {
         super(body, headers, status);
+    }
+
+    /**
+     * Writes the APIResponse to the HttpServletResponse.
+     *
+     * @param apiResponse         The APIResponse to write.
+     * @param httpServletResponse The HttpServletResponse to write to.
+     * @return The same HttpServletResponse passed in, for inline convenience.
+     */
+    public static HttpServletResponse writeToResponse(APIResponse apiResponse, HttpServletResponse httpServletResponse) throws IOException {
+        httpServletResponse.setStatus(apiResponse.getStatusCodeValue());
+        httpServletResponse.getWriter().append(new ObjectMapper().writeValueAsString(apiResponse.getBody()));
+        return httpServletResponse;
     }
 
 }

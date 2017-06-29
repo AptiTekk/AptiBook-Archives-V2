@@ -7,7 +7,6 @@
 package com.aptitekk.aptibook.web.security;
 
 import com.aptitekk.aptibook.web.api.APIResponse;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.AuthenticationEntryPoint;
@@ -31,9 +30,7 @@ public class APIAuthenticationEntryPoint implements AuthenticationEntryPoint {
         if (authException instanceof BadCredentialsException)
             error = "bad_credentials";
 
-        APIResponse apiResponse = APIResponse.unauthorized(error, authException.getMessage());
-        response.setStatus(apiResponse.getStatusCodeValue());
-        response.getWriter().append(new ObjectMapper().writeValueAsString(apiResponse.getBody()));
+        APIResponse.writeToResponse(APIResponse.unauthorized(error, authException.getMessage()), response);
     }
 
 }

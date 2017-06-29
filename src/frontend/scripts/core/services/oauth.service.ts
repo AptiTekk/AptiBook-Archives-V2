@@ -23,7 +23,7 @@ export class OAuthService {
 
         //Reload Google URL
         this.apiService.get("/oauth/google")
-            .then(response => this.googleOAuthUrl.next(response.url))
+            .then(url => this.googleOAuthUrl.next(url))
             .catch(err => this.googleOAuthUrl.next(undefined));
     }
 

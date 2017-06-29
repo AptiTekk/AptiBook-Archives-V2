@@ -21,10 +21,6 @@ public class ResourceCategoryDTO {
 
     public List<ResourceDTO.WithoutReservations> resources;
 
-    //Reservation Fields
-
-    //Tags
-
     @JsonIgnoreProperties({"resources"})
     public static class WithoutResources extends ResourceCategoryDTO {
 
