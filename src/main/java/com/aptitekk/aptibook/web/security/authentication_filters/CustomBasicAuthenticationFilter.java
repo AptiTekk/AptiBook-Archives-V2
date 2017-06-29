@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.security.authenticationfilters;
+package com.aptitekk.aptibook.web.security.authentication_filters;
 
 import com.aptitekk.aptibook.web.security.APIAuthenticationEntryPoint;
 import org.springframework.beans.factory.annotation.Autowired;

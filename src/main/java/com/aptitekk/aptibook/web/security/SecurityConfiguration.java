@@ -6,7 +6,7 @@
 
 package com.aptitekk.aptibook.web.security;
 
-import com.aptitekk.aptibook.web.security.authenticationfilters.CustomBasicAuthenticationFilter;
+import com.aptitekk.aptibook.web.security.authentication_filters.CustomBasicAuthenticationFilter;
 import com.aptitekk.aptibook.web.security.cas.CASCallbackFilter;
 import com.aptitekk.aptibook.web.security.cas.CASEntryFilter;
 import com.aptitekk.aptibook.web.security.csrf.CSRFCookieFilter;
