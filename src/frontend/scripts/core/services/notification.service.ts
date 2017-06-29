@@ -10,6 +10,7 @@ import {ReplaySubject} from "rxjs";
 import {User} from "../../models/user.model";
 import {Notification} from "../../models/notification.model";
 import {AuthService} from "./auth.service";
+import {NavigationEnd, Router} from "@angular/router";
 
 @Injectable()
 export class NotificationService {
@@ -19,13 +20,26 @@ export class NotificationService {
     private unreadNotifications: ReplaySubject<Notification[]> = new ReplaySubject<Notification[]>(1);
     private readNotifications: ReplaySubject<Notification[]> = new ReplaySubject<Notification[]>(1);
 
-    constructor(private apiService: APIService, private authService: AuthService) {
+    constructor(private apiService: APIService,
+                private authService: AuthService,
+                private router: Router) {
+
+        // Listen for changes in the signed in User.
         this.authService.getCurrentUser().subscribe(user => {
             if (user != undefined) {
                 this.user = user;
                 this.reloadNotifications();
             }
         });
+
+        // Check notifications on every page change while a User is signed in.
+        this.router.events.subscribe(
+            event => {
+                if (event instanceof NavigationEnd)
+                    if (this.user != null)
+                        this.reloadNotifications();
+            }
+        )
     }
 
     getNotifications(): ReplaySubject<Notification[]> {
