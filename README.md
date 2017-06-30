@@ -51,3 +51,21 @@ Before you can start the `Frontend` run configuration, you must install the requ
 Once `npm` is installed (verify by running `npm --version` in the Terminal), open the Terminal window at the bottom of the IDE and run `npm install`. This may take a while.
 
 After the dependencies are installed, they will show up in the `node_modules` directory, which is local to your computer and will not be committed. You can now start the Frontend run configuration.
+
+## Usage
+
+### Backend
+
+To run the backend server, select the Backend run configuration and start the **debugger**. 
+
+You want to use the debugger because it allows you to hot-swap changes to the code without having to reboot the entire server. For example, after changing the contents of a method, you can click the "make" button (to the left of the run configuration dropdown) and the changes will be re-loaded. This makes it super easy to make changes to REST API methods without rebooting the server. _Note: This does not work when you create new methods, fields, or classes, or rename any methods/fields/classes etc... Basically, it only works when modifying method contents._ 
+
+The server will start on port **9000**.
+
+### Frontend
+
+To run the frontend development server, select the Frontend run configuration and start the **debugger**. The server **will not run** if not in debugging mode. You can then access the webpage at:
+
+http://demo.localhost:8080
+
+When you make any changes to the typescript/html/css files, the web browser will automatically reload the changes for you. API requests (those to /api) are forwarded to port 9000 where the Backend server must be running.
