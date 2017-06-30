@@ -5,8 +5,8 @@
   -->
 
 <div class="tree">
-	<ul *ngIf="allUserGroups">
-		<li *ngFor="let userGroup of showRoot ? [allUserGroups] : allUserGroups.children">
+	<ul *ngIf="rootUserGroup">
+		<li *ngFor="let userGroup of showRoot ? [rootUserGroup] : rootUserGroup.children">
 			<tree-node [tree]="this"
 					   [userGroup]="userGroup"></tree-node>
 		</li>

@@ -36,7 +36,7 @@ public class ReservationWithDecisionsDTO {
     @JsonDeserialize(using = LocalDateTimeSerializer.Deserializer.class)
     public LocalDateTime end;
 
-    public ResourceDTO.WithoutReservations resource;
+    public ResourceDTO resource;
 
     public UserDTO user;
 

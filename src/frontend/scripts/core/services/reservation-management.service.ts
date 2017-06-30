@@ -27,7 +27,7 @@ import {DecisionHierarchyRelation} from "../../models/reservation/decision-hiera
 export class ReservationManagementService {
 
     private user: User;
-    private allUserGroups: UserGroupHierarchy;
+    private rootUserGroup: UserGroupHierarchy;
     private pendingReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
     private approvedReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
     private rejectedReservations = new ReplaySubject<ReservationWithUnorganizedDecisions[]>(1);
@@ -37,7 +37,7 @@ export class ReservationManagementService {
                 private userGroupService: UserGroupService) {
 
         authService.getCurrentUser().subscribe(user => this.user = user);
-        userGroupService.getAllUserGroups().subscribe(userGroups => this.allUserGroups = userGroups);
+        userGroupService.getRootUserGroupHierarchy().subscribe(userGroups => this.rootUserGroup = userGroups);
     }
 
     public fetchReservations(): void {
@@ -91,7 +91,7 @@ export class ReservationManagementService {
 
         // Add a queue. We will traverse down the tree.
         let userGroupTraversalQueue = new PriorityQueue<UserGroup>();
-        userGroupTraversalQueue.add(this.allUserGroups);
+        userGroupTraversalQueue.add(this.rootUserGroup);
 
         // Traverse down the tree until we find the owner of the reservation's resource.
         let currentGroup: UserGroupHierarchy;

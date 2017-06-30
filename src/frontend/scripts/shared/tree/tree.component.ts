@@ -66,7 +66,7 @@ export class TreeComponent implements OnInit, OnDestroy, ControlValueAccessor {
      */
     @Input() showRoot: boolean = false;
 
-    allUserGroups: UserGroupHierarchy;
+    rootUserGroup: UserGroupHierarchy;
 
     selectedUserGroups: UserGroup[] = [];
 
@@ -76,7 +76,7 @@ export class TreeComponent implements OnInit, OnDestroy, ControlValueAccessor {
     }
 
     ngOnInit(): void {
-        this.subscriptions.push(this.userGroupService.getAllUserGroups().subscribe(allUserGroups => this.allUserGroups = allUserGroups));
+        this.subscriptions.push(this.userGroupService.getRootUserGroupHierarchy().subscribe(rootUserGroup => this.rootUserGroup = rootUserGroup));
     }
 
     ngOnDestroy(): void {
@@ -177,7 +177,7 @@ export class TreeComponent implements OnInit, OnDestroy, ControlValueAccessor {
             return;
 
         this.userGroupService
-            .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.allUserGroups)
+            .moveUserGroup(node.userGroup, newParentNode ? newParentNode.userGroup : this.rootUserGroup)
             .then(() => AnalyticsService.sendEvent({category: 'User Group Tree', action: 'MoveUserGroup'}))
     }
 

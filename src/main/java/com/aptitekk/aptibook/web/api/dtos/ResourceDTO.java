@@ -25,20 +25,6 @@ public class ResourceDTO {
 
     public ResourceCategoryDTO resourceCategory;
 
-    public List<ReservationDTO> reservations;
-
     public UserGroupDTO owner;
-
-    //Tags
-
-    @JsonIgnoreProperties({"reservations"})
-    public static class WithoutReservations extends ResourceDTO {
-
-    }
-
-    @JsonIgnoreProperties({"resourceCategory"})
-    public static class WithoutResourceCategory extends ResourceDTO {
-
-    }
 
 }

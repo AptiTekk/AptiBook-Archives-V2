@@ -7,7 +7,6 @@
 import {Injectable} from "@angular/core";
 import {Headers, Http, RequestOptions, Response} from "@angular/http";
 import {APIResponse} from "../../models/api-response.model";
-import {APIError} from "../../models/api-error.model";
 
 declare const JSOG: any;
 
@@ -43,7 +42,7 @@ export class APIService {
         if (body.ok === true)
             return body.content;
         else
-            throw <APIError>{error: body.error, message: body.message};
+            throw {error: body.error, message: body.message};
     }
 
     public get(path: string, additionalHeaders?: Headers): Promise<any> {

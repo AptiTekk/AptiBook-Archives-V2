@@ -12,7 +12,7 @@ import {ResourceCategory} from "../../models/resource-category.model";
 
 @Injectable()
 export class ResourceCategoryService {
-    private resourceCategories: ReplaySubject<ResourceCategory[]> = new ReplaySubject<ResourceCategory[]>(1);
+    private resourceCategories = new ReplaySubject<ResourceCategory[]>(1);
 
     constructor(private authService: AuthService, private apiService: APIService) {
         this.fetchResourceCategories();

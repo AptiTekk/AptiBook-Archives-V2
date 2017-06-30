@@ -8,7 +8,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ModalComponent} from "../../../../../../shared/modal/modal.component";
 import {LoaderService} from "../../../../../../core/services/loader.service";
 import {UserGroupService} from "../../../../../../core/services/user-group.service";
-import {UserGroup} from "../../../../../../models/user-group.model";
+import {UserGroup, UserGroupHierarchy} from "../../../../../../models/user-group.model";
 import {AlertComponent} from "../../../../../../shared/alert/alert.component";
 
 @Component({
@@ -20,11 +20,11 @@ export class NewGroupModalComponent implements OnInit {
     @ViewChild('modal') modal: ModalComponent;
     @ViewChild(AlertComponent) dangerAlert: AlertComponent;
 
-    @Output() submitted = new EventEmitter<UserGroup>();
+    @Output() submitted = new EventEmitter<UserGroupHierarchy>();
 
     formGroup: FormGroup;
 
-    allUserGroups: UserGroup;
+    rootUserGroup: UserGroupHierarchy;
 
     constructor(private formBuilder: FormBuilder,
                 private userGroupService: UserGroupService,
@@ -43,15 +43,15 @@ export class NewGroupModalComponent implements OnInit {
      * Opens the modal, and optionally sets the selected User Group in the tree to the one provided.
      * @param selectedUserGroup The User Group to select.
      */
-    public open(selectedUserGroup?: UserGroup) {
+    public open(selectedUserGroup?: UserGroupHierarchy) {
         this.resetFormGroup(selectedUserGroup);
         this.modal.openModal();
     }
 
-    private resetFormGroup(selectedUserGroup?: UserGroup) {
-        this.userGroupService.getAllUserGroups()
-            .take(1).subscribe(allUserGroups => {
-                this.allUserGroups = allUserGroups;
+    private resetFormGroup(selectedUserGroup?: UserGroupHierarchy) {
+        this.userGroupService.getRootUserGroupHierarchy()
+            .take(1).subscribe(rootUserGroup => {
+                this.rootUserGroup = rootUserGroup;
 
                 this.formGroup = this.formBuilder.group({
                     name: [null, Validators.compose([
@@ -68,11 +68,11 @@ export class NewGroupModalComponent implements OnInit {
     onGroupSubmitted() {
         this.loaderService.startLoading();
 
-        let parentGroup: UserGroup;
+        let parentGroup: UserGroupHierarchy;
         if (this.formGroup.controls['parent'].value && this.formGroup.controls['parent'].value.length > 0)
             parentGroup = [].concat(this.formGroup.controls['parent'].value)[0];
         else
-            parentGroup = this.allUserGroups;
+            parentGroup = this.rootUserGroup;
 
         let newUserGroup: UserGroup = {
             name: this.formGroup.controls['name'].value,

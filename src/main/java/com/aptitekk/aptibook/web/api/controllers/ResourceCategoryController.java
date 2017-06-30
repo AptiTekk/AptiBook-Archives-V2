@@ -38,7 +38,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resourceCategories", method = RequestMethod.POST)
-    public APIResponse addResourceCategory(@RequestBody ResourceCategoryDTO.WithoutResources resourceCategoryDTO) {
+    public APIResponse addResourceCategory(@RequestBody ResourceCategoryDTO resourceCategoryDTO) {
         if (!authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
             return APIResponse.noPermission();
         }
@@ -73,7 +73,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.PATCH)
-    public APIResponse patchResourceCategory(@RequestBody ResourceCategoryDTO.WithoutResources resourceCategoryDTO, @PathVariable Long id) {
+    public APIResponse patchResourceCategory(@RequestBody ResourceCategoryDTO resourceCategoryDTO, @PathVariable Long id) {
         if (!authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL))
             return APIResponse.noPermission();
 

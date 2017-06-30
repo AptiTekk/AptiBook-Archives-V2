@@ -5,7 +5,7 @@
  */
 
 import {Component, Input, QueryList, ViewChildren} from "@angular/core";
-import {UserGroup} from "../../../models/user-group.model";
+import {UserGroup, UserGroupHierarchy} from "../../../models/user-group.model";
 import {TreeComponent} from "../tree.component";
 import {AnalyticsService} from "../../../core/services/analytics.service";
 
@@ -19,7 +19,7 @@ export class TreeNodeComponent {
 
     @Input() parent: TreeNodeComponent;
 
-    @Input() userGroup: UserGroup;
+    @Input() userGroup: UserGroupHierarchy;
 
     @ViewChildren(TreeNodeComponent) children: QueryList<TreeNodeComponent>;
 

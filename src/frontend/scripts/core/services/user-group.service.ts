@@ -23,7 +23,7 @@ export class UserGroupService {
     /**
      * Emits the User Group hierarchy tree.
      */
-    private allUserGroups = new ReplaySubject<UserGroupHierarchy>();
+    private rootUserGroup = new ReplaySubject<UserGroupHierarchy>();
 
     constructor(private apiService: APIService) {
     }
@@ -31,20 +31,20 @@ export class UserGroupService {
     /**
      * @returns A replay subject with all the User Groups in the form of a tree.
      */
-    public getAllUserGroups(): ReplaySubject<UserGroupHierarchy> {
-        return this.allUserGroups;
+    public getRootUserGroupHierarchy(): ReplaySubject<UserGroupHierarchy> {
+        return this.rootUserGroup;
     }
 
     /**
      * Loads all User Groups in the form of a tree, starting with the root User Group.
-     * Stores the User Groups in the allUserGroups EventEmitter.
+     * Stores the User Groups in the rootUserGroup ReplaySubject.
      *
      * Since the API only gives each group's children, and does not assign the parent (due to JSON circular references),
      * this method will also assign the parent to each child. This way, the tree can be traversed in either direction.
      *
      * @returns A Promise that gives the entire User Group hierarchy.
      */
-    public loadAllUserGroups(): void {
+    public loadRootUserGroupHierarchy(): void {
         this.apiService.get("userGroups")
             .then((userGroups: UserGroupHierarchy) => {
                 // Traverse through each User Group and their children, and assign the parent to each child.
@@ -59,7 +59,7 @@ export class UserGroupService {
                     }
                 }
 
-                this.allUserGroups.next(userGroups);
+                this.rootUserGroup.next(userGroups);
             })
     }
 
@@ -153,7 +153,7 @@ export class UserGroupService {
     public addNewUserGroup(parent: UserGroup, userGroup: UserGroup): Promise<UserGroup> {
         return this.apiService.post(`userGroups/${parent.id}/children`, userGroup)
             .then(userGroup => {
-                this.loadAllUserGroups();
+                this.loadRootUserGroupHierarchy();
                 return userGroup;
             })
     }
@@ -166,7 +166,7 @@ export class UserGroupService {
     public patchUserGroup(userGroup: UserGroup): Promise<UserGroup> {
         return this.apiService.patch("userGroups/" + userGroup.id, userGroup)
             .then(userGroup => {
-                this.loadAllUserGroups();
+                this.loadRootUserGroupHierarchy();
                 return userGroup;
             })
     }
@@ -180,7 +180,7 @@ export class UserGroupService {
     public moveUserGroup(userGroup: UserGroup, newParentUserGroup: UserGroup): Promise<UserGroup> {
         return this.apiService.patch("userGroups/" + userGroup.id + "/move?newParentId=" + newParentUserGroup.id)
             .then(userGroup => {
-                this.loadAllUserGroups();
+                this.loadRootUserGroupHierarchy();
                 return userGroup;
             })
     }
@@ -193,7 +193,7 @@ export class UserGroupService {
     public deleteUserGroup(userGroup: UserGroup): Promise<any> {
         return this.apiService.del("userGroups/" + userGroup.id)
             .then(userGroup => {
-                this.loadAllUserGroups();
+                this.loadRootUserGroupHierarchy();
                 return userGroup;
             })
     }

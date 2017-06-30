@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
-import {UserGroup} from "../../../../../models/user-group.model";
+import {UserGroup, UserGroupHierarchy} from "../../../../../models/user-group.model";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../core/services/user-group.service";
 import {User} from "../../../../../models/user.model";
@@ -29,10 +29,10 @@ export class GroupsComponent implements OnInit, OnDestroy {
     subscriptions: Subscription[] = [];
 
     @ViewChild(TreeComponent) private tree: TreeComponent;
-    allUserGroups: UserGroup;
+    rootUserGroup: UserGroupHierarchy;
 
-    selectedUserGroups: UserGroup[];
-    selectedUserGroup: UserGroup;
+    selectedUserGroups: UserGroupHierarchy[];
+    selectedUserGroup: UserGroupHierarchy;
 
     @ViewChild('detailsInfoAlert') private detailsInfoAlert: AlertComponent;
     @ViewChild('detailsDangerAlert') private detailsDangerAlert: AlertComponent;
@@ -51,7 +51,7 @@ export class GroupsComponent implements OnInit, OnDestroy {
             name: [null, Validators.compose([Validators.required, Validators.maxLength(30), Validators.pattern("[^<>;=]*")])]
         });
 
-        this.subscriptions.push(this.userGroupService.getAllUserGroups().subscribe(allUserGroups => this.allUserGroups = allUserGroups));
+        this.subscriptions.push(this.userGroupService.getRootUserGroupHierarchy().subscribe(rootUserGroup => this.rootUserGroup = rootUserGroup));
     }
 
     ngOnDestroy(): void {

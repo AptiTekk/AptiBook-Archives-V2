@@ -53,7 +53,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     /**
      * The root user group.
      */
-    allUserGroups: UserGroupHierarchy;
+    rootUserGroup: UserGroupHierarchy;
 
     /**
      * Links for use on the frontend category selection.
@@ -113,7 +113,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                 }
             });
 
-        this.userGroupService.getAllUserGroups().take(1).subscribe(allUserGroups => this.allUserGroups = allUserGroups);
+        this.userGroupService.getRootUserGroupHierarchy().take(1).subscribe(rootUserGroup => this.rootUserGroup = rootUserGroup);
     }
 
     ngOnDestroy(): void {

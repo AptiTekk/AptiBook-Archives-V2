@@ -90,7 +90,7 @@ export class AuthService {
      * Called upon sign-in as any user. Used to perform actions immediately after a user is signed in.
      */
     private onSignIn(): void {
-        this.userGroupService.loadAllUserGroups();
+        this.userGroupService.loadRootUserGroupHierarchy();
     }
 
     /**

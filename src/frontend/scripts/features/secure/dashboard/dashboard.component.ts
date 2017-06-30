@@ -51,12 +51,13 @@ export class DashboardComponent implements OnInit {
         this.authService.getCurrentUser().subscribe(user => this.currentUser = user);
 
         // Get all the resource categories for the calendar filters.
-        this.resourceCategoryService.getResourceCategories().take(1).subscribe(resourceCategories => {
+        this.resourceCategoryService.getResourceCategories()
+            .take(1).subscribe(resourceCategories => {
             this.resourceCategories = resourceCategories.map(category => {
                 category['enabled'] = true;
                 return category;
-            });
-        });
+            })
+        })
     }
 
     /**

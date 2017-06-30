@@ -123,7 +123,7 @@ public class UserGroupController extends APIControllerAbstract {
                 && !authService.doesCurrentUserHavePermission(Permission.GROUPS_MODIFY_ALL))
             return APIResponse.noPermission();
 
-        return APIResponse.ok(modelMapper.map(userGroup.getResources(), new TypeToken<List<ResourceDTO.WithoutReservations>>() {
+        return APIResponse.ok(modelMapper.map(userGroup.getResources(), new TypeToken<List<ResourceDTO>>() {
         }.getType()));
     }
 

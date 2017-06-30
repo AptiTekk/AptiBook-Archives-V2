@@ -17,7 +17,7 @@
 		<at-card id="main-groups-card"
 				 [title]="'Select a User Group'">
 			<at-card-block>
-				<p *ngIf="allUserGroups?.children?.length == 0">There are no User Groups.</p>
+				<p *ngIf="rootUserGroup?.children?.length == 0">There are no User Groups.</p>
 				
 				<tree [selectable]="true"
 					  [dragAndDrop]="true"

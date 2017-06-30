@@ -64,7 +64,7 @@ public class ResourceController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
-    public APIResponse addResource(@RequestBody ResourceDTO.WithoutReservations resourceDTO) {
+    public APIResponse addResource(@RequestBody ResourceDTO resourceDTO) {
         if (!authService.doesCurrentUserHavePermission(Permission.RESOURCES_MODIFY_ALL))
             return APIResponse.noPermission();
 
