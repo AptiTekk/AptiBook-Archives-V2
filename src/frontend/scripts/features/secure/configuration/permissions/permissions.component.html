@@ -12,11 +12,11 @@
 				<at-card-header>
 					<ul class="nav nav-tabs card-header-tabs">
 						<li class="nav-item"
-							*ngFor="let sectionLink of sectionLinks">
+							*ngFor="let permissionGroup of permissionGroups">
 							<a class="nav-link"
-							   [routerLink]="sectionLink.path"
+							   [routerLink]="'/secure/configuration/permissions/' + permissionGroup.key.toLowerCase()"
 							   [routerLinkActive]="'active'">
-								{{sectionLink.label}}
+								{{permissionGroup.name}}
 							</a>
 						</li>
 					</ul>
@@ -37,11 +37,11 @@
 											 [noTopBorder]="true">
 										<at-card-block>
 											<ul *ngIf="userAssignments != undefined">
-												<li *ngFor="let user of userAssignments[currentPermissionGroup.key][permission.key]">
+												<li *ngFor="let user of getUserAssignmentsForPermission(permission)">
 													{{user.emailAddress}}
 												</li>
 											</ul>
-											<p *ngIf="userAssignments == undefined || userAssignments[currentPermissionGroup.key][permission.key]?.length == 0">
+											<p *ngIf="userAssignments == undefined || getUserAssignmentsForPermission(permission).length == 0">
 												No Users are assigned.
 											</p>
 										</at-card-block>
@@ -57,11 +57,11 @@
 											 [noTopBorder]="true">
 										<at-card-block>
 											<ul *ngIf="userGroupAssignments != undefined">
-												<li *ngFor="let userGroup of userGroupAssignments[currentPermissionGroup.key][permission.key]">
+												<li *ngFor="let userGroup of getUserGroupAssignmentsForPermission(permission)">
 													{{userGroup.name}}
 												</li>
 											</ul>
-											<p *ngIf="userGroupAssignments == undefined || userGroupAssignments[currentPermissionGroup.key][permission.key].length == 0">
+											<p *ngIf="userGroupAssignments == undefined || getUserGroupAssignmentsForPermission(permission).length == 0">
 												No User Groups are assigned.
 											</p>
 										</at-card-block>

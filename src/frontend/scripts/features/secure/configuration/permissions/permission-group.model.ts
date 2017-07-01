@@ -4,7 +4,8 @@
  * Proprietary and confidential.
  */
 
-import {PermissionDetails} from "./permission-details.model";
+import {Permission} from "./permission.model";
+
 export interface PermissionGroup {
 
     /**
@@ -20,6 +21,6 @@ export interface PermissionGroup {
     /**
      * The group's details (descriptors)
      */
-    permissions: PermissionDetails[];
+    permissions: Permission[];
 
 }

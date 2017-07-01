@@ -7,7 +7,6 @@
 import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {ReplaySubject} from "rxjs/ReplaySubject";
-import {Permission} from "../../models/permissions/permission.model";
 import {AuthService} from "./auth.service";
 import {User} from "../../models/user.model";
 import {UserGroup} from "../../models/user-group.model";
@@ -15,7 +14,7 @@ import {UserGroup} from "../../models/user-group.model";
 @Injectable()
 export class PermissionsService {
 
-    private currentUserPermissions = new ReplaySubject<Permission[]>(1);
+    private currentUserPermissions = new ReplaySubject<string[]>(1);
 
     constructor(private apiService: APIService,
                 private authService: AuthService) {
@@ -36,14 +35,14 @@ export class PermissionsService {
      */
     public fetchCurrentUserPermissions(): void {
         this.apiService.get("/users/current/permissions")
-            .then(permissions => this.currentUserPermissions.next(permissions.map(permission => <Permission>{descriptor: permission})));
+            .then(permissions => this.currentUserPermissions.next(permissions));
     }
 
     /**
      * Gets a ReplaySubject that contains the Permissions for the current user. Emits whenever a User signs in.
      * @returns {ReplaySubject<Permission>}
      */
-    public getCurrentUserPermissions(): ReplaySubject<Permission[]> {
+    public getCurrentUserPermissions(): ReplaySubject<string[]> {
         return this.currentUserPermissions;
     }
 

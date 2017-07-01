@@ -8,11 +8,11 @@ import {Component, OnDestroy, OnInit} from "@angular/core";
 import {PermissionsService} from "../../../../core/services/permissions.service";
 import {PermissionGroup} from "./permission-group.model";
 import {PERMISSION_GROUPS} from "./permission-groups.data";
-import {NavigationLink} from "../../../../shared/navigation/navigation-link.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Subscription} from "rxjs/Subscription";
 import {User} from "../../../../models/user.model";
 import {UserGroup} from "../../../../models/user-group.model";
+import {Permission} from "./permission.model";
 
 @Component({
     selector: 'at-configuration-permissions',
@@ -21,20 +21,15 @@ import {UserGroup} from "../../../../models/user-group.model";
 })
 export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
 
-    /* Variables for cleanup on destroy */
-    paramsSubscription: Subscription;
-
-    /* Instance Variables */
+    /**
+     * Observable Subscriptions for this component.
+     */
+    subscriptions: Subscription[] = [];
 
     /**
      * All the Permission Groups available and their details.
      */
     permissionGroups: PermissionGroup[] = PERMISSION_GROUPS;
-
-    /**
-     * The Navigation Links for the Permission Group tabs.
-     */
-    sectionLinks: NavigationLink[] = [];
 
     /**
      * The currently viewed Permission Group.
@@ -54,30 +49,9 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
     constructor(private permissionsService: PermissionsService,
                 private router: Router,
                 private activatedRoute: ActivatedRoute) {
-        // Map group data to navigation links
-        this.sectionLinks = this.permissionGroups.map(permissionGroup => {
-            return {
-                label: permissionGroup.name,
-                path: ['', 'secure', 'configuration', 'permissions', permissionGroup.key.toLowerCase()]
-            }
-        });
     }
 
     ngOnInit(): void {
-        // Get the current permission group from the key param.
-        this.paramsSubscription = this.activatedRoute.params.subscribe(
-            params => {
-                let filteredGroups = this.permissionGroups.filter(group => group.key.toLowerCase() === params['key']);
-                if (filteredGroups.length == 0) {
-                    this.router.navigate(['', 'secure', 'configuration', 'permissions', this.permissionGroups[0].key.toLowerCase()]);
-                } else {
-                    this.currentPermissionGroup = filteredGroups[0];
-                }
-
-
-            }
-        );
-
         // Get the Users assigned to all Permissions.
         this.permissionsService.getUsersAssignedToPermissionsInAllGroups(false)
             .then(assignments => {
@@ -89,9 +63,41 @@ export class PermissionsConfigurationComponent implements OnInit, OnDestroy {
             .then(assignments => {
                 this.userGroupAssignments = assignments;
             });
+
+        // Get the current permission group from the key param.
+        this.subscriptions.push(this.activatedRoute.params.subscribe(
+            params => {
+                let filteredGroups = this.permissionGroups.filter(group => group.key.toLowerCase() === params['key']);
+                if (!filteredGroups) {
+                    this.router.navigate(['', 'secure', 'configuration', 'permissions', this.permissionGroups[0].key.toLowerCase()]);
+                } else {
+                    this.currentPermissionGroup = filteredGroups[0];
+                }
+            }
+        ));
     }
 
     ngOnDestroy(): void {
-        this.paramsSubscription.unsubscribe();
+        this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+    getUserAssignmentsForPermission(permission: Permission): User[] {
+        if(this.userAssignments == null)
+            return [];
+        if(!this.userAssignments[this.currentPermissionGroup.key])
+            return [];
+        if(!this.userAssignments[this.currentPermissionGroup.key][permission.key])
+            return [];
+        return this.userAssignments[this.currentPermissionGroup.key][permission.key];
+    }
+
+    getUserGroupAssignmentsForPermission(permission: Permission): User[] {
+        if(this.userGroupAssignments == null)
+            return [];
+        if(!this.userGroupAssignments[this.currentPermissionGroup.key])
+            return [];
+        if(!this.userGroupAssignments[this.currentPermissionGroup.key][permission.key])
+            return [];
+        return this.userGroupAssignments[this.currentPermissionGroup.key][permission.key];
     }
 }

@@ -11,7 +11,6 @@ import {AuthService} from "../../../core/services/auth.service";
 import {NotificationService} from "../../../core/services/notification.service";
 import {LoaderService} from "../../../core/services/loader.service";
 import {PermissionsService} from "../../../core/services/permissions.service";
-import {Permission} from "../../../models/permissions/permission.model";
 import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
 
 @Component({
@@ -29,7 +28,7 @@ export class SidebarComponent implements OnInit {
     /**
      * The permissions for the currently signed in user.
      */
-    userPermissions: Permission[] = [];
+    userPermissions: string[] = [];
 
     //noinspection JSMismatchedCollectionQueryUpdate
     /**
@@ -76,20 +75,16 @@ export class SidebarComponent implements OnInit {
 
     /**
      * Determines if the current User has any of the given permissions.
-     * @param descriptors The descriptors of the permissions to check for.
-     * @returns true if the user has permission (admin always returns true,
-     * and users with full permissions return true).
+     * @param permissions The permissions to check for.
+     * @returns true if the user has permission (admin always returns true, and users with full permissions return true).
      */
-    hasPermission(descriptors: string[]): boolean {
+    hasPermission(permissions: string[]): boolean {
         // Check for admin status
         if (this.user != null && this.user.admin)
             return true;
 
         // Filter for full permissions or the given permission.
-        return this.userPermissions
-                .filter(permission => permission.descriptor === 'GENERAL_FULL_PERMISSIONS'
-                || descriptors.includes(permission.descriptor))
-                .length > 0;
+        return this.userPermissions.some(p => p === 'GENERAL_FULL_PERMISSIONS' || permissions.includes(p));
     }
 
     /**

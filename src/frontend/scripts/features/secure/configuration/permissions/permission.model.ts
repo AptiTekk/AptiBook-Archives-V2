@@ -4,14 +4,12 @@
  * Proprietary and confidential.
  */
 
-/**
- * Describes a permission for a user or group.
- */
 export interface Permission {
 
-    /**
-     * The permission's descriptor.
-     */
-    descriptor: string;
+    name: string;
+
+    key: string;
+
+    description: string;
 
 }
