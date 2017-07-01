@@ -4,7 +4,7 @@
  * Proprietary and confidential.
  */
 
-package com.aptitekk.aptibook.web.api.controllers.usergroup;
+package com.aptitekk.aptibook.web.api.controllers;
 
 import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.entities.UserGroup;

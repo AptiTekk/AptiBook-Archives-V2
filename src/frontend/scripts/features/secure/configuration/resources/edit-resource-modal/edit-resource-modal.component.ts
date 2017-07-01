@@ -13,7 +13,7 @@ import {Resource} from "../../../../../models/resource.model";
 import {LoaderService} from "../../../../../core/services/loader.service";
 import {ResourceImageComponent} from "../../../../../shared/resource-image/resource-image.component";
 import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
-import {ResourceCategory, ResourceCategoryWithResources} from "../../../../../models/resource-category.model";
+import {ResourceCategory} from "../../../../../models/resource-category.model";
 
 @Component({
     selector: 'edit-resource-modal',
@@ -26,7 +26,7 @@ export class EditResourceModalComponent implements OnInit {
 
     formGroup: FormGroup;
 
-    resourceCategory: ResourceCategoryWithResources;
+    resourceCategory: ResourceCategory;
 
     resource: Resource;
 

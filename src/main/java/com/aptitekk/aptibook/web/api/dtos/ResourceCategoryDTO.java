@@ -6,10 +6,18 @@
 
 package com.aptitekk.aptibook.web.api.dtos;
 
+import java.util.List;
+
 public class ResourceCategoryDTO {
 
     public Long id;
 
     public String name;
+
+    public static class WithResources extends ResourceCategoryDTO {
+
+        public List<ResourceDTO> resources;
+
+    }
 
 }

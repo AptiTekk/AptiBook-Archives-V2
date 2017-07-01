@@ -7,9 +7,8 @@ import {Component, EventEmitter, OnInit, Output, ViewChild} from "@angular/core"
 import {ModalComponent} from "../../../../../shared/modal/modal.component";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../core/services/user-group.service";
-import {UserGroup} from "../../../../../models/user-group.model";
 import {ResourceService} from "../../../../../core/services/resource.service";
-import {ResourceCategory, ResourceCategoryWithResources} from "../../../../../models/resource-category.model";
+import {ResourceCategory} from "../../../../../models/resource-category.model";
 import {LoaderService} from "../../../../../core/services/loader.service";
 import {ResourceImageComponent} from "../../../../../shared/resource-image/resource-image.component";
 import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
@@ -26,7 +25,7 @@ export class NewResourceModalComponent implements OnInit {
 
     formGroup: FormGroup;
 
-    resourceCategory: ResourceCategoryWithResources;
+    resourceCategory: ResourceCategory;
 
     @ViewChild(ResourceImageComponent) resourceImage: ResourceImageComponent;
 
@@ -42,7 +41,7 @@ export class NewResourceModalComponent implements OnInit {
         this.resetFormGroup();
     }
 
-    public open(resourceCategory: ResourceCategoryWithResources) {
+    public open(resourceCategory: ResourceCategory) {
         this.resourceCategory = resourceCategory;
         this.resetFormGroup();
         this.resourceImage.clearImage();
@@ -58,7 +57,7 @@ export class NewResourceModalComponent implements OnInit {
                 UniquenessValidator.isUnique(this.resourceCategory ? this.resourceCategory.resources.map(resource => resource.name) : [])
             ])],
             needsApproval: true,
-            owner: null
+            owner: [null, Validators.required]
         });
     }
 
@@ -66,22 +65,27 @@ export class NewResourceModalComponent implements OnInit {
         this.loaderService.startLoading();
         this.resourceService.addNewResource(
             this.resourceCategory,
-            this.formGroup.controls['name'].value,
-            this.formGroup.controls['needsApproval'].value,
-            [].concat(this.formGroup.controls['owner'].value)[0]
-        ).then(resource => {
-            if (resource) {
-                this.resourceImage.upload(resource)
-                    .subscribe(success => {
-                        if (success) {
-                            this.modal.closeModal();
-                            this.submitted.next();
-                        }
+            {
+                name: this.formGroup.controls['name'].value,
+                needsApproval: this.formGroup.controls['needsApproval'].value,
+                owner: [].concat(this.formGroup.controls['owner'].value)[0]
+            })
+            .then(resource => {
+                if (resource) {
+                    this.resourceImage.upload(resource)
+                        .subscribe(success => {
+                            if (success) {
+                                this.modal.closeModal();
+                                this.submitted.next();
+                            }
 
-                        this.loaderService.stopLoading();
-                    })
-            }
-        })
+                            this.loaderService.stopLoading();
+                        })
+                }
+            })
+            .catch(err => {
+                this.loaderService.stopLoading()
+            })
     }
 
 }

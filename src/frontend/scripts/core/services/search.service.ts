@@ -28,7 +28,7 @@ export class SearchService {
      * @param end
      */
     searchForResources(start: Moment, end: Moment): void {
-        this.resourceService.fetchAvailableResources(start, end)
+        this.resourceService.getAvailableResources(start, end)
             .then(results => {
                 this.searchResults.next(results);
                 this.startTime.next(start);

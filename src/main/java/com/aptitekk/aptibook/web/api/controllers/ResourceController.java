@@ -16,6 +16,7 @@ import com.aptitekk.aptibook.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.service.entity.ReservationService;
 import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
+import com.aptitekk.aptibook.web.api.dtos.ResourceCategoryDTO;
 import com.aptitekk.aptibook.web.api.dtos.ResourceDTO;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
@@ -49,7 +50,7 @@ public class ResourceController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources", method = RequestMethod.GET)
     public APIResponse getAll() {
-        return APIResponse.ok(modelMapper.map(resourceRepository.findAll(), new TypeToken<List<ResourceDTO>>() {}.getType()));
+        return APIResponse.ok(modelMapper.map(resourceRepository.findAll(), new TypeToken<List<ResourceDTO.WithResourceCategory>>() {}.getType()));
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.GET)
@@ -60,6 +61,16 @@ public class ResourceController extends APIControllerAbstract {
             return APIResponse.notFound("No Resource was found with the given id");
 
         return APIResponse.ok(modelMapper.map(resource, ResourceDTO.class));
+    }
+
+    @RequestMapping(value = "/resources/{id}/resourceCategory", method = RequestMethod.GET)
+    public APIResponse getResourceCategory(@PathVariable("id") Long id) {
+
+        Resource resource = resourceRepository.findInCurrentTenant(id);
+        if (resource == null)
+            return APIResponse.notFound("No Resource was found with the given id");
+
+        return APIResponse.ok(modelMapper.map(resource.getResourceCategory(), ResourceCategoryDTO.WithResources.class));
     }
 
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
@@ -78,71 +89,46 @@ public class ResourceController extends APIControllerAbstract {
         }
     }
 
-    @RequestMapping(value = "/resources", method = RequestMethod.POST)
-    public APIResponse add(@RequestBody ResourceDTO resourceDTO) {
-        if (!authService.doesCurrentUserHavePermission(Permission.RESOURCES_MODIFY_ALL))
-            return APIResponse.noPermission();
+    /**
+     * Changes the Resource Category that this Resource is assigned to.
+     * @param resourceCategoryDTO Must contain the ID of the new Resource Category.
+     * @param id The ID of the Resource.
+     * @return The newly assigned Resource Category.
+     */
+    @RequestMapping(value = "/resources/{id}/resourceCategory", method = RequestMethod.PUT)
+    public APIResponse setResourceCategory(@RequestBody ResourceCategoryDTO resourceCategoryDTO, @PathVariable("id") Long id) {
 
-        Resource resource = new Resource();
-        ResourceCategory resourceCategory = null;
+        Resource resource = resourceRepository.findInCurrentTenant(id);
+        if (resource == null)
+            return APIResponse.notFound("No Resource was found with the given id.");
 
-        if (resourceDTO.resourceCategory == null)
-            return APIResponse.badRequestMissingField("resourceCategory");
-        else {
-            resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
-            if (resourceCategory == null)
-                return APIResponse.notFound("Category not found.");
-            else
-                resource.setResourceCategory(resourceCategory);
-        }
+        if(resourceCategoryDTO.id == null)
+            return APIResponse.badRequestMissingField("id");
 
-        if (resourceDTO.name == null)
-            return APIResponse.badRequestMissingField("name");
-        else if (resourceDTO.name.length() > 30)
-            return APIResponse.badRequestFieldTooLong("name", 30);
-        else if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
-            return APIResponse.badRequestInvalidCharacters("name", INVALID_CHARACTERS);
-        else if (resourceRepository.findByName(resourceDTO.name, resourceCategory) != null)
-            return APIResponse.badRequestConflict("A Resource by that name already exists!");
-        else
-            resource.setName(resourceDTO.name);
+        ResourceCategory newResourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceCategoryDTO.id);
+        if(newResourceCategory == null)
+            return APIResponse.notFound("No Resource Category was found with the given id.");
 
-        if (resourceDTO.owner == null)
-            return APIResponse.badRequestMissingField("owner");
-        else {
-            UserGroup owner = userGroupRepository.findInCurrentTenant(resourceDTO.owner.id);
-            if (owner == null)
-                return APIResponse.notFound("The resource owner group was not found.");
-            else if (owner.isRoot())
-                return APIResponse.forbidden("The resource owner group cannot be the root group.");
-            else
-                resource.setOwner(owner);
-        }
+        // Check for a conflicting Resource name in the new Resource Category.
+        Resource existingResource = resourceRepository.findByName(resource.getName(), newResourceCategory);
+        if(existingResource != null)
+            return APIResponse.badRequestConflict("A Resource with the same name already exists in the new Resource Category");
 
-        resource.setNeedsApproval(resourceDTO.needsApproval != null ? resourceDTO.needsApproval : false);
-
+        resource.setResourceCategory(newResourceCategory);
         resource = resourceRepository.save(resource);
-        return APIResponse.created(modelMapper.map(resource, ResourceDTO.class), "/resources/" + resource.getId());
+
+        return APIResponse.ok(modelMapper.map(resource.getResourceCategory(), ResourceCategoryDTO.WithResources.class));
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.PATCH)
     public APIResponse patch(@RequestBody ResourceDTO resourceDTO, @PathVariable Long id) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
-        ResourceCategory resourceCategory = null;
 
         if (resource == null)
             return APIResponse.noPermission();
 
         if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
             return APIResponse.noPermission();
-
-        if (resourceDTO.resourceCategory != null) {
-            resourceCategory = resourceCategoryRepository.findInCurrentTenant(resourceDTO.resourceCategory.id);
-            if (resourceCategory == null)
-                return APIResponse.notFound("Category not found.");
-            else
-                resource.setResourceCategory(resourceCategory);
-        }
 
         if (resourceDTO.name != null) {
             if (resourceDTO.name.length() > 30)
@@ -151,7 +137,7 @@ public class ResourceController extends APIControllerAbstract {
             if (!resourceDTO.name.matches(VALID_CHARACTER_PATTERN))
                 return APIResponse.badRequestInvalidCharacters("name", INVALID_CHARACTERS);
 
-            Resource existingResource = resourceRepository.findByName(resourceDTO.name, resourceCategory);
+            Resource existingResource = resourceRepository.findByName(resourceDTO.name, resource.getResourceCategory());
             if (existingResource != null && !existingResource.getId().equals(resourceDTO.id))
                 return APIResponse.badRequestConflict("A Resource by that name already exists!");
 

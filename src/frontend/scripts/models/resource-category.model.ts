@@ -15,13 +15,6 @@ export interface ResourceCategory {
 
     name?: string;
 
-}
-
-/**
- * An extension of the ResourceCategory model that includes an array of Resources.
- */
-export interface ResourceCategoryWithResources extends ResourceCategory {
-
     resources?: Resource[];
 
 }

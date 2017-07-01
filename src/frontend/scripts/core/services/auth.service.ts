@@ -10,6 +10,7 @@ import {ReplaySubject} from "rxjs";
 import {Headers} from "@angular/http";
 import {User} from "../../models/user.model";
 import {UserGroupService} from "./user-group.service";
+import {ResourceCategoryService} from "./resource-category.service";
 
 @Injectable()
 export class AuthService {
@@ -20,7 +21,8 @@ export class AuthService {
     private currentUser: ReplaySubject<User> = new ReplaySubject<User>(1);
 
     constructor(private apiService: APIService,
-                private userGroupService: UserGroupService) {
+                private userGroupService: UserGroupService,
+                private resourceCategoryService: ResourceCategoryService) {
         this.reloadUser();
     }
 
@@ -91,6 +93,7 @@ export class AuthService {
      */
     private onSignIn(): void {
         this.userGroupService.loadRootUserGroupHierarchy();
+        this.resourceCategoryService.fetchResourceCategories();
     }
 
     /**

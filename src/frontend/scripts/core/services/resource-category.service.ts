@@ -8,32 +8,26 @@ import {Injectable} from "@angular/core";
 import {Observable, ReplaySubject} from "rxjs";
 import {AuthService} from "./auth.service";
 import {APIService} from "./api.service";
-import {ResourceCategory, ResourceCategoryWithResources} from "../../models/resource-category.model";
+import {ResourceCategory} from "../../models/resource-category.model";
 import {Resource} from "../../models/resource.model";
 
 @Injectable()
 export class ResourceCategoryService {
-    private resourceCategories = new ReplaySubject<ResourceCategoryWithResources[]>(1);
+    private resourceCategories = new ReplaySubject<ResourceCategory[]>(1);
 
-    constructor(private authService: AuthService, private apiService: APIService) {
-        this.fetchResourceCategories();
+    constructor(private apiService: APIService) {
     }
 
     /**
      * TODO: JAVADOCS
      */
     fetchResourceCategories(): void {
-        //TODO: Fork join
-        this.apiService.get("/resourceCategories").then((categories: ResourceCategoryWithResources[]) => {
-            // Initialize Resources array for each Resource Category.
-            categories.forEach(c => c.resources = []);
+        this.apiService.get("/resourceCategories").then((categories: ResourceCategory[]) => {
 
-            // Fetch all the Resources and merge them with the Resource Categories.
-            this.apiService.get("/resources").then((resources: Resource[]) => {
-                resources.forEach(resource => {
-                    let category = categories.find(category => category.id === resource.resourceCategory.id);
-                    category.resources.push(resource);
-                    resource.resourceCategory = category;
+            // Link each Resource to its Resource Category.
+            categories.forEach(c => {
+                c.resources.forEach(r => {
+                    r.resourceCategory = c;
                 })
             });
 
@@ -44,7 +38,7 @@ export class ResourceCategoryService {
 
     /**
      * TODO: JAVADOCS
-     * @returns {ReplaySubject<ResourceCategoryWithResources[]>}
+     * @returns {ReplaySubject<ResourceCategory[]>}
      */
     getResourceCategories() {
         return this.resourceCategories;
@@ -56,7 +50,11 @@ export class ResourceCategoryService {
      * @returns {Promise<T>}
      */
     addNewResourceCategory(name: string): Promise<ResourceCategory> {
-        return this.apiService.post("/resourceCategories", {name: name});
+        return this.apiService.post("/resourceCategories", {name: name})
+            .then(resourceCategory => {
+                this.fetchResourceCategories();
+                return resourceCategory;
+            });
     }
 
     /**
@@ -65,7 +63,11 @@ export class ResourceCategoryService {
      * @returns {any}
      */
     patchResourceCategory(category: ResourceCategory): Promise<ResourceCategory> {
-        return this.apiService.patch("/resourceCategories/" + category.id, category);
+        return this.apiService.patch("/resourceCategories/" + category.id, category)
+            .then(resourceCategory => {
+                this.fetchResourceCategories();
+                return resourceCategory;
+            });
     }
 
     /**
@@ -74,7 +76,11 @@ export class ResourceCategoryService {
      * @returns {any}
      */
     deleteResourceCategory(category: ResourceCategory): Promise<any> {
-        return this.apiService.del("/resourceCategories/" + category.id);
+        return this.apiService.del("/resourceCategories/" + category.id)
+            .then(() => {
+                this.fetchResourceCategories();
+                return;
+            });
     }
 
 }

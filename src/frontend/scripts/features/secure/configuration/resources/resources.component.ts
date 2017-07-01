@@ -6,7 +6,7 @@
 
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ResourceCategoryService} from "../../../../core/services/resource-category.service";
-import {ResourceCategory, ResourceCategoryWithResources} from "../../../../models/resource-category.model";
+import {ResourceCategory} from "../../../../models/resource-category.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Resource} from "../../../../models/resource.model";
 import {ResourceService} from "../../../../core/services/resource.service";
@@ -32,7 +32,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     /**
      * All the resource categories.
      */
-    resourceCategories: ResourceCategoryWithResources[];
+    resourceCategories: ResourceCategory[];
 
     /**
      * The name of the resource category being accessed, from the URL. (In lowercase)
@@ -43,7 +43,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     /**
      * The resource category being accessed, if any.
      */
-    currentResourceCategory: ResourceCategoryWithResources;
+    currentResourceCategory: ResourceCategory;
 
     /**
      * The root User Group.
@@ -124,8 +124,6 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
             category: 'Configuration - Resources',
             action: 'CreateCategory'
         });
-        //TODO: Move this to service
-        this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
 
@@ -134,8 +132,6 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
             category: 'Configuration - Resources',
             action: 'EditCategory'
         });
-        //TODO: Move this to service
-        this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
 
@@ -149,8 +145,6 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                     action: 'DeleteCategory'
                 });
                 this.loaderService.stopLoading();
-                //TODO: Move this to service
-                this.resourceCategoryService.fetchResourceCategories();
                 this.router.navigate(['', 'secure', 'configuration', 'resources']);
             })
             .catch(err => this.loaderService.stopLoading())
@@ -161,8 +155,6 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
             category: 'Configuration - Resources',
             action: 'CreateResource'
         });
-        //TODO: Move this to service
-        this.resourceCategoryService.fetchResourceCategories();
     }
 
     onEditResource() {
@@ -170,8 +162,6 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
             category: 'Configuration - Resources',
             action: 'EditResource'
         });
-        //TODO: Move this to service
-        this.resourceCategoryService.fetchResourceCategories();
     }
 
     onDeleteResource() {
@@ -184,8 +174,6 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                     category: 'Configuration - Resources',
                     action: 'DeleteResource'
                 });
-                //TODO: Move this to service
-                this.resourceCategoryService.fetchResourceCategories();
             })
     }
 

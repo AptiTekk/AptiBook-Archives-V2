@@ -8,14 +8,15 @@ import {Injectable} from "@angular/core";
 import {APIService} from "./api.service";
 import {Resource} from "../../models/resource.model";
 import {ResourceCategory} from "../../models/resource-category.model";
-import {UserGroup} from "../../models/user-group.model";
 import Moment = moment.Moment;
 import moment = require("moment");
+import {ResourceCategoryService} from "./resource-category.service";
 
 @Injectable()
 export class ResourceService {
 
-    constructor(private apiService: APIService) {
+    constructor(private apiService: APIService,
+                private resourceCategoryService: ResourceCategoryService) {
     }
 
     /**
@@ -24,7 +25,7 @@ export class ResourceService {
      * @param end
      * @returns {any}
      */
-    fetchAvailableResources(start: Moment, end: Moment): Promise<Resource[]> {
+    getAvailableResources(start: Moment, end: Moment): Promise<Resource[]> {
         return this.apiService.get(
             "/resources/available"
             + "?start=" + start.clone().utc().format("YYYY-MM-DDTHH:mm")
@@ -33,15 +34,17 @@ export class ResourceService {
     }
 
     /**
-     * TODO: JAVADOCS
-     * @param resourceCategory
-     * @param name
-     * @param needsApproval
-     * @param owner
-     * @returns {any}
+     * Creates a new Resource under the given Resource Category.
+     * @param resourceCategory The Resource Category that the new Resource belongs to.
+     * @param resource The Resource being created. Should contain a name, owner, and whether it needs approval or not.
+     * @returns The new Resource.
      */
-    addNewResource(resourceCategory: ResourceCategory, name: string, needsApproval: boolean, owner: UserGroup): Promise<Resource> {
-        return this.apiService.post("/resources", {name, needsApproval, owner, resourceCategory});
+    addNewResource(resourceCategory: ResourceCategory, resource: Resource): Promise<Resource> {
+        return this.apiService.post(`/resourceCategories/${resourceCategory.id}/resources`, resource)
+            .then(resource => {
+                this.resourceCategoryService.fetchResourceCategories();
+                return resource;
+            });
     }
 
     /**
@@ -50,7 +53,11 @@ export class ResourceService {
      * @returns {any}
      */
     patchResource(resource: Resource): Promise<Resource> {
-        return this.apiService.patch("/resources/" + resource.id, resource);
+        return this.apiService.patch("/resources/" + resource.id, resource)
+            .then(resource => {
+                this.resourceCategoryService.fetchResourceCategories();
+                return resource;
+            });
     }
 
     /**
@@ -59,7 +66,11 @@ export class ResourceService {
      * @returns {any}
      */
     deleteResource(resource: Resource): Promise<any> {
-        return this.apiService.del("/resources/" + resource.id);
+        return this.apiService.del("/resources/" + resource.id)
+            .then(() => {
+                this.resourceCategoryService.fetchResourceCategories();
+                return;
+            });
     }
 
 }
