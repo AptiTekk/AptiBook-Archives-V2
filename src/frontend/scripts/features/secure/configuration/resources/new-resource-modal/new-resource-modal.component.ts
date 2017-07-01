@@ -9,7 +9,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {UserGroupService} from "../../../../../core/services/user-group.service";
 import {UserGroup} from "../../../../../models/user-group.model";
 import {ResourceService} from "../../../../../core/services/resource.service";
-import {ResourceCategory} from "../../../../../models/resource-category.model";
+import {ResourceCategory, ResourceCategoryWithResources} from "../../../../../models/resource-category.model";
 import {LoaderService} from "../../../../../core/services/loader.service";
 import {ResourceImageComponent} from "../../../../../shared/resource-image/resource-image.component";
 import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
@@ -26,7 +26,7 @@ export class NewResourceModalComponent implements OnInit {
 
     formGroup: FormGroup;
 
-    resourceCategory: ResourceCategory;
+    resourceCategory: ResourceCategoryWithResources;
 
     @ViewChild(ResourceImageComponent) resourceImage: ResourceImageComponent;
 
@@ -42,7 +42,7 @@ export class NewResourceModalComponent implements OnInit {
         this.resetFormGroup();
     }
 
-    public open(resourceCategory: ResourceCategory) {
+    public open(resourceCategory: ResourceCategoryWithResources) {
         this.resourceCategory = resourceCategory;
         this.resetFormGroup();
         this.resourceImage.clearImage();

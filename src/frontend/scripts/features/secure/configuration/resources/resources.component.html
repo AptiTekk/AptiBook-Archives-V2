@@ -11,11 +11,11 @@
 				<at-card-header>
 					<ul class="nav nav-tabs card-header-tabs">
 						<li class="nav-item"
-							*ngFor="let categoryLink of categoryLinks">
+							*ngFor="let resourceCategory of resourceCategories">
 							<a class="nav-link"
-							   [routerLink]="categoryLink.path"
+							   [routerLink]="'/secure/configuration/resources/' + resourceCategory.name.toLowerCase()"
 							   [routerLinkActive]="'active'">
-								{{categoryLink.label}}
+								{{resourceCategory.name}}
 							</a>
 						</li>
 						<li class="nav-item">

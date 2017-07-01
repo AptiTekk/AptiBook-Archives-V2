@@ -8,11 +8,12 @@ import {Injectable} from "@angular/core";
 import {Observable, ReplaySubject} from "rxjs";
 import {AuthService} from "./auth.service";
 import {APIService} from "./api.service";
-import {ResourceCategory} from "../../models/resource-category.model";
+import {ResourceCategory, ResourceCategoryWithResources} from "../../models/resource-category.model";
+import {Resource} from "../../models/resource.model";
 
 @Injectable()
 export class ResourceCategoryService {
-    private resourceCategories = new ReplaySubject<ResourceCategory[]>(1);
+    private resourceCategories = new ReplaySubject<ResourceCategoryWithResources[]>(1);
 
     constructor(private authService: AuthService, private apiService: APIService) {
         this.fetchResourceCategories();
@@ -22,12 +23,28 @@ export class ResourceCategoryService {
      * TODO: JAVADOCS
      */
     fetchResourceCategories(): void {
-        this.apiService.get("/resourceCategories").then(categories => this.resourceCategories.next(categories));
+        //TODO: Fork join
+        this.apiService.get("/resourceCategories").then((categories: ResourceCategoryWithResources[]) => {
+            // Initialize Resources array for each Resource Category.
+            categories.forEach(c => c.resources = []);
+
+            // Fetch all the Resources and merge them with the Resource Categories.
+            this.apiService.get("/resources").then((resources: Resource[]) => {
+                resources.forEach(resource => {
+                    let category = categories.find(category => category.id === resource.resourceCategory.id);
+                    category.resources.push(resource);
+                    resource.resourceCategory = category;
+                })
+            });
+
+            // Emit the Resource Categories.
+            this.resourceCategories.next(categories);
+        });
     }
 
     /**
      * TODO: JAVADOCS
-     * @returns {ReplaySubject<ResourceCategory[]>}
+     * @returns {ReplaySubject<ResourceCategoryWithResources[]>}
      */
     getResourceCategories() {
         return this.resourceCategories;

@@ -9,6 +9,7 @@ import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ResourceCategoryService} from "../../../../../core/services/resource-category.service";
 import {LoaderService} from "../../../../../core/services/loader.service";
 import {UniquenessValidator} from "../../../../../validators/uniqueness.validator";
+import {ResourceCategory} from "../../../../../models/resource-category.model";
 
 @Component({
     selector: 'new-category-modal',
@@ -19,7 +20,7 @@ export class NewCategoryModalComponent implements OnInit {
     @ViewChild('modal')
     modal: ModalComponent;
 
-    @Output() submitted: EventEmitter<{ name: string }> = new EventEmitter<{ name: string }>();
+    @Output() submitted: EventEmitter<ResourceCategory> = new EventEmitter<ResourceCategory>();
 
     formGroup: FormGroup;
 

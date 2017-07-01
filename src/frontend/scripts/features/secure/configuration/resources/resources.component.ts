@@ -6,7 +6,7 @@
 
 import {Component, OnDestroy, OnInit} from "@angular/core";
 import {ResourceCategoryService} from "../../../../core/services/resource-category.service";
-import {ResourceCategory} from "../../../../models/resource-category.model";
+import {ResourceCategory, ResourceCategoryWithResources} from "../../../../models/resource-category.model";
 import {ActivatedRoute, Router} from "@angular/router";
 import {Resource} from "../../../../models/resource.model";
 import {ResourceService} from "../../../../core/services/resource.service";
@@ -25,14 +25,14 @@ import {AnalyticsService} from "../../../../core/services/analytics.service";
 export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
 
     /**
-     * Subscription to getting route parameters.
+     * All Observable subscriptions for this component.
      */
-    routeSubscription: Subscription;
+    subscriptions: Subscription[] = [];
 
     /**
-     * Subscription to getting resource categories.
+     * All the resource categories.
      */
-    categorySubscription: Subscription;
+    resourceCategories: ResourceCategoryWithResources[];
 
     /**
      * The name of the resource category being accessed, from the URL. (In lowercase)
@@ -43,22 +43,12 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     /**
      * The resource category being accessed, if any.
      */
-    currentResourceCategory: ResourceCategory;
+    currentResourceCategory: ResourceCategoryWithResources;
 
     /**
-     * All the resource categories.
-     */
-    resourceCategories: ResourceCategory[];
-
-    /**
-     * The root user group.
+     * The root User Group.
      */
     rootUserGroup: UserGroupHierarchy;
-
-    /**
-     * Links for use on the frontend category selection.
-     */
-    categoryLinks: NavigationLink[] = [];
 
     /**
      * A temporary variable for keeping track of which resource is being deleted, if any.
@@ -74,53 +64,59 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        // Get category from route
-        this.routeSubscription = this.route.params.subscribe(params => {
-            this.resourceCategoryName = params['resourceCategory'] != null ? params['resourceCategory'].toLowerCase() : null;
-            this.resourceCategoryService.fetchResourceCategories();
-        });
+        // Get all the Resource Categories.
+        this.subscriptions.push(
+            this.resourceCategoryService.getResourceCategories()
+                .subscribe(resourceCategories => {
+                    this.resourceCategories = resourceCategories;
+                    this.refreshResources();
+                })
+        );
 
-        // Turn route param into category
-        this.categorySubscription = this.resourceCategoryService
-            .getResourceCategories()
-            .subscribe(resourceCategories => {
-                this.resourceCategories = resourceCategories;
+        // Get the Resource Category Name from the URL params.
+        this.subscriptions.push(
+            this.route.params.subscribe(params => {
+                this.resourceCategoryName = params['categoryName'] != null ? params['categoryName'].toLowerCase() : null;
+                this.refreshResources();
+            })
+        );
 
-                // Check if the user supplied a category name in the route.
-                if (this.resourceCategoryName != null) {
-                    // Name was supplied. Check if there is a category by that name.
-                    let filteredCategories = resourceCategories.filter(category => category.name.toLowerCase() === this.resourceCategoryName);
-                    if (filteredCategories.length == 0) {
-                        // No category found, go to root.
-                        this.router.navigate(['secure', 'configuration', 'resources']);
-                    } else {
-                        // Category found.
-
-                        // Get the category that was found.
-                        this.currentResourceCategory = filteredCategories[0];
-
-                        // Configure the category links
-                        this.categoryLinks = resourceCategories.map(category => {
-                            return {
-                                label: category.name,
-                                path: ['', 'secure', 'configuration', 'resources', category.name.toLowerCase()]
-                            }
-                        });
-                    }
-                } else if (resourceCategories.length > 0) {
-                    // No name supplied, but we have some categories, so go to the first category.
-                    this.router.navigate(['secure', 'configuration', 'resources', resourceCategories[0].name.toLowerCase()]);
-                }
-            });
-
+        // Get the Root User Group to determine if any User Groups exist.
+        // This is to warn the user and prevent them from creating Resources when no User Groups exist.
         this.userGroupService.getRootUserGroupHierarchy().take(1).subscribe(rootUserGroup => this.rootUserGroup = rootUserGroup);
     }
 
     ngOnDestroy(): void {
-        if (this.routeSubscription != null)
-            this.routeSubscription.unsubscribe();
-        if (this.categorySubscription != null)
-            this.categorySubscription.unsubscribe();
+        this.subscriptions.forEach(s => s.unsubscribe());
+    }
+
+    /**
+     * Based on the array of Resource Categories and the current url parameter, determines which Resource Category is
+     * currently selected. Afterwards, the Resources are loaded from the API.
+     */
+    refreshResources(): void {
+        // Check for Resource Categories.
+        if (this.resourceCategories == null || this.resourceCategories.length == 0) return;
+
+        // Check for the Resource Category Name URL param.
+        if (this.resourceCategoryName == null) {
+            // If no name is supplied, then navigate to the first Resource Category.
+            this.router.navigateByUrl(`/secure/configuration/resources/${this.resourceCategories[0].name.toLowerCase()}`);
+            return;
+        }
+
+        // Look for a Resource Category with the given name.
+        let resourceCategory = this.resourceCategories.find(c => c.name.toLowerCase() === this.resourceCategoryName);
+
+        // Check if a Resource Category was found.
+        if (resourceCategory == null) {
+            // Since it was not found, we fall back to the first Resource Category.
+            this.router.navigateByUrl(`/secure/configuration/resources/${this.resourceCategories[0].name.toLowerCase()}`);
+            return;
+        }
+
+        // Assign the found Resource Category to the field.
+        this.currentResourceCategory = resourceCategory;
     }
 
     onNewCategory(resourceCategory: ResourceCategory) {
@@ -128,6 +124,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
             category: 'Configuration - Resources',
             action: 'CreateCategory'
         });
+        //TODO: Move this to service
         this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
@@ -137,6 +134,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
             category: 'Configuration - Resources',
             action: 'EditCategory'
         });
+        //TODO: Move this to service
         this.resourceCategoryService.fetchResourceCategories();
         this.router.navigate(['', 'secure', 'configuration', 'resources', resourceCategory.name.toLowerCase()]);
     }
@@ -151,6 +149,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                     action: 'DeleteCategory'
                 });
                 this.loaderService.stopLoading();
+                //TODO: Move this to service
                 this.resourceCategoryService.fetchResourceCategories();
                 this.router.navigate(['', 'secure', 'configuration', 'resources']);
             })
@@ -162,6 +161,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
             category: 'Configuration - Resources',
             action: 'CreateResource'
         });
+        //TODO: Move this to service
         this.resourceCategoryService.fetchResourceCategories();
     }
 
@@ -170,6 +170,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
             category: 'Configuration - Resources',
             action: 'EditResource'
         });
+        //TODO: Move this to service
         this.resourceCategoryService.fetchResourceCategories();
     }
 
@@ -183,6 +184,7 @@ export class ResourcesConfigurationComponent implements OnInit, OnDestroy {
                     category: 'Configuration - Resources',
                     action: 'DeleteResource'
                 });
+                //TODO: Move this to service
                 this.resourceCategoryService.fetchResourceCategories();
             })
     }

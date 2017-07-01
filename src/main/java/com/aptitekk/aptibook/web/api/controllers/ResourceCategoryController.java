@@ -12,6 +12,7 @@ import com.aptitekk.aptibook.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
 import com.aptitekk.aptibook.web.api.dtos.ResourceCategoryDTO;
+import com.aptitekk.aptibook.web.api.dtos.ResourceDTO;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -32,13 +33,23 @@ public class ResourceCategoryController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resourceCategories", method = RequestMethod.GET)
-    public APIResponse getResourceCategories() {
+    public APIResponse getAll() {
         return APIResponse.ok(modelMapper.map(resourceCategoryRepository.findAll(), new TypeToken<List<ResourceCategoryDTO>>() {
         }.getType()));
     }
 
+    @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.GET)
+    public APIResponse get(@PathVariable Long id) {
+        ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
+
+        if (resourceCategory == null)
+            return APIResponse.notFound("The Resource Category could not be found.");
+
+        return APIResponse.ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.class));
+    }
+
     @RequestMapping(value = "/resourceCategories", method = RequestMethod.POST)
-    public APIResponse addResourceCategory(@RequestBody ResourceCategoryDTO resourceCategoryDTO) {
+    public APIResponse add(@RequestBody ResourceCategoryDTO resourceCategoryDTO) {
         if (!authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL)) {
             return APIResponse.noPermission();
         }
@@ -62,18 +73,8 @@ public class ResourceCategoryController extends APIControllerAbstract {
         return APIResponse.created(modelMapper.map(resourceCategory, ResourceCategoryDTO.class), "/api/resourceCategories/" + resourceCategory.getId());
     }
 
-    @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.GET)
-    public APIResponse getResourceCategory(@PathVariable Long id) {
-        ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
-
-        if (resourceCategory == null)
-            return APIResponse.notFound("The Resource Category could not be found.");
-
-        return APIResponse.ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.class));
-    }
-
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.PATCH)
-    public APIResponse patchResourceCategory(@RequestBody ResourceCategoryDTO resourceCategoryDTO, @PathVariable Long id) {
+    public APIResponse patch(@RequestBody ResourceCategoryDTO resourceCategoryDTO, @PathVariable Long id) {
         if (!authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL))
             return APIResponse.noPermission();
 
@@ -101,13 +102,23 @@ public class ResourceCategoryController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.DELETE)
-    public APIResponse deleteResourceCategory(@PathVariable Long id) {
+    public APIResponse delete(@PathVariable Long id) {
         if (!authService.doesCurrentUserHavePermission(Permission.RESOURCE_CATEGORIES_MODIFY_ALL))
             return APIResponse.noPermission();
 
         ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
         this.resourceCategoryRepository.delete(resourceCategory);
         return APIResponse.noContentResponse();
+    }
+
+    @RequestMapping(value = "/resourceCategories/{id}/resources", method = RequestMethod.GET)
+    public APIResponse getResources(@PathVariable Long id) {
+        ResourceCategory resourceCategory = resourceCategoryRepository.findInCurrentTenant(id);
+
+        if (resourceCategory == null)
+            return APIResponse.notFound("The Resource Category could not be found.");
+
+        return APIResponse.ok(modelMapper.map(resourceCategory.getResources(), new TypeToken<List<ResourceDTO>>() {}.getType()));
     }
 
 }

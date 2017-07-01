@@ -26,7 +26,7 @@ const routes: Routes = [
                 component: ResourcesConfigurationComponent
             },
             {
-                path: 'resources/:resourceCategory',
+                path: 'resources/:categoryName',
                 component: ResourcesConfigurationComponent,
             },
             { //TODO: User and User Group Guards

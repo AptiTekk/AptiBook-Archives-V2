@@ -6,17 +6,17 @@
 
 package com.aptitekk.aptibook.web.api.controllers;
 
+import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.entities.Resource;
 import com.aptitekk.aptibook.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.domain.entities.UserGroup;
-import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.repositories.ResourceCategoryRepository;
 import com.aptitekk.aptibook.domain.repositories.ResourceRepository;
 import com.aptitekk.aptibook.domain.repositories.UserGroupRepository;
-import com.aptitekk.aptibook.web.api.APIResponse;
-import com.aptitekk.aptibook.web.api.dtos.ResourceDTO;
 import com.aptitekk.aptibook.service.entity.ReservationService;
+import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
+import com.aptitekk.aptibook.web.api.dtos.ResourceDTO;
 import org.apache.commons.lang3.time.DateUtils;
 import org.modelmapper.TypeToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -47,8 +47,23 @@ public class ResourceController extends APIControllerAbstract {
         this.reservationService = reservationService;
     }
 
+    @RequestMapping(value = "/resources", method = RequestMethod.GET)
+    public APIResponse getAll() {
+        return APIResponse.ok(modelMapper.map(resourceRepository.findAll(), new TypeToken<List<ResourceDTO>>() {}.getType()));
+    }
+
+    @RequestMapping(value = "/resources/{id}", method = RequestMethod.GET)
+    public APIResponse get(@PathVariable("id") Long id) {
+
+        Resource resource = resourceRepository.findInCurrentTenant(id);
+        if (resource == null)
+            return APIResponse.notFound("No Resource was found with the given id");
+
+        return APIResponse.ok(modelMapper.map(resource, ResourceDTO.class));
+    }
+
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
-    public APIResponse getAvailableResources(@RequestParam(value = "start") String start, @RequestParam(value = "end") String end) {
+    public APIResponse getAvailable(@RequestParam(value = "start") String start, @RequestParam(value = "end") String end) {
         try {
             Date startDate = DateUtils.parseDate(start, ACCEPTED_TIME_FORMATS);
             Date endDate = DateUtils.parseDate(end, ACCEPTED_TIME_FORMATS);
@@ -64,7 +79,7 @@ public class ResourceController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resources", method = RequestMethod.POST)
-    public APIResponse addResource(@RequestBody ResourceDTO resourceDTO) {
+    public APIResponse add(@RequestBody ResourceDTO resourceDTO) {
         if (!authService.doesCurrentUserHavePermission(Permission.RESOURCES_MODIFY_ALL))
             return APIResponse.noPermission();
 
@@ -111,7 +126,7 @@ public class ResourceController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.PATCH)
-    public APIResponse patchResource(@RequestBody ResourceDTO resourceDTO, @PathVariable Long id) {
+    public APIResponse patch(@RequestBody ResourceDTO resourceDTO, @PathVariable Long id) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
         ResourceCategory resourceCategory = null;
 
@@ -161,7 +176,7 @@ public class ResourceController extends APIControllerAbstract {
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.DELETE)
-    public APIResponse deleteResource(@PathVariable Long id) {
+    public APIResponse delete(@PathVariable Long id) {
         Resource resource = resourceRepository.findInCurrentTenant(id);
 
         if (!permissionsService.canUserEditResource(resource, authService.getCurrentUser()))
