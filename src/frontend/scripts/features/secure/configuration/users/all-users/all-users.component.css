@@ -11,7 +11,7 @@
 }
 
 :host /deep/ #selected-user-card > .card > .card-block {
-    height: calc(100vh - 361px);
+    height: calc(100vh - 55px - 30px - 72px);
     overflow-y: auto;
 }
 
