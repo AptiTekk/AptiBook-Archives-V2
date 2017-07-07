@@ -71,45 +71,15 @@
 									
 									<!-- A Decision has been made; display the name of the user who made the decision. -->
 									<span *ngIf="relation.decision">
-										User
+										| Decided by
 										<span style="font-weight: bold">{{relation.decision.user.fullName}}</span>
 									</span>
-									has
-									
-									<!-- Display the decision outcome -->
-									<span class="label label-success"
-										  *ngIf="relation.decision?.approved">approved</span>
-									
-									<span class="label label-danger"
-										  *ngIf="relation.decision?.rejected">rejected</span>
-									
-									<span *ngIf="!relation.decision"
-										  style="font-weight: bold">
-										not yet decided upon
-									</span>
-									
-									this Reservation.
 									
 									<!-- If Overridden -->
 									<span *ngIf="relation.overriddenBy">
-										(<span class="label label-info">Overridden</span>
-										by the decision of
-										
-										<!-- Who decided to override -->
-										<span style="font-weight: bold">{{relation.overriddenBy.decision.user.fullName}}</span>
-										to
-										
-										<!-- What they decided -->
-										<span class="label label-success"
-											  *ngIf="relation.overriddenBy.decision.approved">approve</span>
-										<span class="label label-danger"
-											  *ngIf="relation.overriddenBy.decision.rejected">reject</span>
-										on behalf of the
-										
-										<!-- Which group they are a part of -->
+										| <span class="label label-info">Overridden</span>
+										by
 										<span style="font-weight: bold">{{relation.overriddenBy.userGroup.name}}</span>
-										
-										User Group.)
 									</span>
 								</div>
 							</div>
