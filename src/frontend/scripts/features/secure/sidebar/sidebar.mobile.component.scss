@@ -11,13 +11,9 @@
     width: 60px;
   }
 
-  #sidebar.closed #header,
-  #sidebar.closed #logo {
-    width: 75px;
-  }
-
-  #sidebar.closed #logo-image {
-    background-image: url('../../../../resources/images/logo-icon.svg');
+  #sidebar.closed #logo-container {
+    width: 60px;
+    height: 60px;
   }
 
   #sidebar.closed #notifications {
@@ -31,6 +27,10 @@
 
   #sidebar.closed #notifications-count-label {
     display: none;
+  }
+
+  #sidebar.closed #content {
+    height: calc(100vh - 60px - 40px - 50px);
   }
 
   #sidebar.closed #bottom {

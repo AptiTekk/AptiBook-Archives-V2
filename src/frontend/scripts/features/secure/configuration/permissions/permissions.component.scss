@@ -10,7 +10,7 @@
   /* Make the categories card perfectly fit the view, with internal scrolling. */
   :host /deep/ #categories-card > .card > .card-block {
     /* 100vh - header - top/bottom padding - tabs */
-    height: calc(100vh - 60px - 32px - 54px);
+    height: calc(100vh - 32px - 54px);
     overflow-y: auto;
   }
 

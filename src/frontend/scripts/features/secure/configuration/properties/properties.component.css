@@ -5,6 +5,6 @@
  */
 
 :host /deep/ #properties-card > .card > .card-block {
-    height: calc(100vh - 60px - 54px - 70px - 30px);
+    height: calc(100vh - 54px - 70px - 30px);
     overflow-y: auto;
 }

@@ -8,6 +8,10 @@
 	 (swiperight)="onSwipeRight()"
 	 (swipeleft)="onSwipeLeft()"
 	 [class.closed]="!swipedOpen">
+	<div id="logo-container" [routerLink]="'/secure'">
+		<div class="logo"></div>
+	</div>
+	
 	<div id="notifications"
 		 [class.unread]="unreadNotifications.length > 0"
 		 [routerLink]="['', 'secure', 'account', 'notifications']"
