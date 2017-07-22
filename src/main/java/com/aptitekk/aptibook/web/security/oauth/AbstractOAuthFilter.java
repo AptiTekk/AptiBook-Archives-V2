@@ -187,7 +187,7 @@ public abstract class AbstractOAuthFilter extends OncePerRequestFilter {
 
                     // Check that the URL was generated correctly.
                     if (oAuthProviderUrl != null) {
-                        APIResponse.writeToResponse(APIResponse.ok(oAuthProviderUrl), response);
+                        APIResponse.writeToResponse(APIResponse.okResponse(oAuthProviderUrl), response);
                         return;
                     }
 

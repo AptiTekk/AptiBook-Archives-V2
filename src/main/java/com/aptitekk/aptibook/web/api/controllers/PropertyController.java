@@ -42,7 +42,7 @@ public class PropertyController extends APIControllerAbstract {
             properties.putIfAbsent(key, key.getDefaultValue());
         }
 
-        return APIResponse.ok(properties);
+        return APIResponse.okResponse(properties);
     }
 
     @RequestMapping(value = "properties/{key}", method = RequestMethod.GET)
@@ -52,11 +52,11 @@ public class PropertyController extends APIControllerAbstract {
             case AUTHENTICATION_METHOD:
             case GOOGLE_SIGN_IN_WHITELIST:
             case ANALYTICS_ENABLED:
-                return APIResponse.ok(propertyService.getProperty(key));
+                return APIResponse.okResponse(propertyService.getProperty(key));
             default:
                 if (!authService.doesCurrentUserHavePermission(Permission.PROPERTIES_MODIFY_ALL))
                     return APIResponse.noPermission();
-                return APIResponse.ok(propertyService.getProperty(key));
+                return APIResponse.okResponse(propertyService.getProperty(key));
         }
 
     }
@@ -64,7 +64,7 @@ public class PropertyController extends APIControllerAbstract {
     @RequestMapping(value = "properties/allowedDomains", method = RequestMethod.GET)
     public APIResponse getAllowedDomains() {
 
-        return APIResponse.ok(propertyService.getProperty(Property.GOOGLE_SIGN_IN_WHITELIST));
+        return APIResponse.okResponse(propertyService.getProperty(Property.GOOGLE_SIGN_IN_WHITELIST));
     }
 
     @RequestMapping(value = "properties", method = RequestMethod.PATCH)
@@ -87,7 +87,7 @@ public class PropertyController extends APIControllerAbstract {
         // Update values
         propertyService.mergeProperties(tenantProperties);
 
-        return APIResponse.ok(tenantProperties);
+        return APIResponse.okResponse(tenantProperties);
     }
 
     @RequestMapping(value = "properties/{key}", method = RequestMethod.PATCH)
@@ -105,7 +105,7 @@ public class PropertyController extends APIControllerAbstract {
         // Update value
         propertyService.setProperty(key, value);
 
-        return APIResponse.ok(value);
+        return APIResponse.okResponse(value);
     }
 
 }

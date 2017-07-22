@@ -33,7 +33,7 @@ public class TenantController extends APIControllerAbstract {
         String authenticationMethod = tenant.getProperties().get(Property.AUTHENTICATION_METHOD);
         tenantDTO.authenticationMethod = authenticationMethod != null ? Property.AuthenticationMethod.valueOf(authenticationMethod) : Property.AuthenticationMethod.BUILT_IN;
 
-        return APIResponse.ok(tenantDTO);
+        return APIResponse.okResponse(tenantDTO);
     }
 
 }

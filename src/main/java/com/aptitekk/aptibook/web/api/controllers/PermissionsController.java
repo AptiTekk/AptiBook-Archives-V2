@@ -36,7 +36,7 @@ public class PermissionsController extends APIControllerAbstract {
     @RequestMapping(value = "/users/current/permissions", method = RequestMethod.GET)
     public APIResponse getCurrentUserPermissions() {
         Set<Permission> allPermissionsForUser = permissionsService.getAllPermissionsForUser(authService.getCurrentUser());
-        return APIResponse.ok(modelMapper.map(allPermissionsForUser, new TypeToken<Set<Permission>>() {
+        return APIResponse.okResponse(modelMapper.map(allPermissionsForUser, new TypeToken<Set<Permission>>() {
         }.getType()));
     }
 
@@ -57,9 +57,9 @@ public class PermissionsController extends APIControllerAbstract {
         Map<Permission.Group, Object> permissionGroupMap = new HashMap<>();
 
         // For each Permission in each Permission Group, get the assigned Users.
-        Arrays.stream(Permission.Group.values()).forEach(group -> permissionGroupMap.put(group, getUsersAssignedToPermissionsInGroup(group, inherited).getBody()));
+        Arrays.stream(Permission.Group.values()).forEach(group -> permissionGroupMap.put(group, getUsersAssignedToPermissionsInGroup(group, inherited).getContent()));
 
-        return APIResponse.ok(permissionGroupMap);
+        return APIResponse.okResponse(permissionGroupMap);
     }
 
     /**
@@ -92,7 +92,7 @@ public class PermissionsController extends APIControllerAbstract {
             }.getType()));
         }
 
-        return APIResponse.ok(permissionMapDTO);
+        return APIResponse.okResponse(permissionMapDTO);
     }
 
     /**
@@ -111,9 +111,9 @@ public class PermissionsController extends APIControllerAbstract {
         Map<Permission.Group, Object> permissionGroupMap = new HashMap<>();
 
         // For each Permission in each Permission Group, get the assigned User Groups.
-        Arrays.stream(Permission.Group.values()).forEach(group -> permissionGroupMap.put(group, getUserGroupsAssignedToPermissionsInGroup(group).getBody()));
+        Arrays.stream(Permission.Group.values()).forEach(group -> permissionGroupMap.put(group, getUserGroupsAssignedToPermissionsInGroup(group).getContent()));
 
-        return APIResponse.ok(permissionGroupMap);
+        return APIResponse.okResponse(permissionGroupMap);
     }
 
     /**
@@ -144,7 +144,7 @@ public class PermissionsController extends APIControllerAbstract {
             }.getType()));
         }
 
-        return APIResponse.ok(permissionMapDTO);
+        return APIResponse.okResponse(permissionMapDTO);
     }
 
 }

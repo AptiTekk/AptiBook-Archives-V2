@@ -6,7 +6,6 @@
 
 package com.aptitekk.aptibook.web.api.controllers;
 
-import com.aptitekk.aptibook.domain.entities.Permission;
 import com.aptitekk.aptibook.domain.entities.Resource;
 import com.aptitekk.aptibook.domain.entities.ResourceCategory;
 import com.aptitekk.aptibook.domain.entities.UserGroup;
@@ -50,7 +49,7 @@ public class ResourceController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resources", method = RequestMethod.GET)
     public APIResponse getAll() {
-        return APIResponse.ok(modelMapper.map(resourceRepository.findAll(), new TypeToken<List<ResourceDTO.WithResourceCategory>>() {}.getType()));
+        return APIResponse.okResponse(modelMapper.map(resourceRepository.findAll(), new TypeToken<List<ResourceDTO.WithResourceCategory>>() {}.getType()));
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.GET)
@@ -60,7 +59,7 @@ public class ResourceController extends APIControllerAbstract {
         if (resource == null)
             return APIResponse.notFound("No Resource was found with the given id");
 
-        return APIResponse.ok(modelMapper.map(resource, ResourceDTO.class));
+        return APIResponse.okResponse(modelMapper.map(resource, ResourceDTO.class));
     }
 
     @RequestMapping(value = "/resources/{id}/resourceCategory", method = RequestMethod.GET)
@@ -70,7 +69,7 @@ public class ResourceController extends APIControllerAbstract {
         if (resource == null)
             return APIResponse.notFound("No Resource was found with the given id");
 
-        return APIResponse.ok(modelMapper.map(resource.getResourceCategory(), ResourceCategoryDTO.WithResources.class));
+        return APIResponse.okResponse(modelMapper.map(resource.getResourceCategory(), ResourceCategoryDTO.WithResources.class));
     }
 
     @RequestMapping(value = "/resources/available", method = RequestMethod.GET)
@@ -82,7 +81,7 @@ public class ResourceController extends APIControllerAbstract {
             LocalDateTime endLocalDateTime = LocalDateTime.ofInstant(endDate.toInstant(), ZoneId.systemDefault());
 
             List<Resource> availableResources = reservationService.findAvailableResources(startLocalDateTime, endLocalDateTime);
-            return APIResponse.ok(modelMapper.map(availableResources, new TypeToken<List<ResourceDTO>>() {
+            return APIResponse.okResponse(modelMapper.map(availableResources, new TypeToken<List<ResourceDTO>>() {
             }.getType()));
         } catch (ParseException e) {
             return APIResponse.badRequestNotParsable("Could not parse start or end times.");
@@ -117,7 +116,7 @@ public class ResourceController extends APIControllerAbstract {
         resource.setResourceCategory(newResourceCategory);
         resource = resourceRepository.save(resource);
 
-        return APIResponse.ok(modelMapper.map(resource.getResourceCategory(), ResourceCategoryDTO.WithResources.class));
+        return APIResponse.okResponse(modelMapper.map(resource.getResourceCategory(), ResourceCategoryDTO.WithResources.class));
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.PATCH)
@@ -158,7 +157,7 @@ public class ResourceController extends APIControllerAbstract {
             resource.setNeedsApproval(resourceDTO.needsApproval);
 
         resource = resourceRepository.save(resource);
-        return APIResponse.ok(modelMapper.map(resource, ResourceDTO.class));
+        return APIResponse.okResponse(modelMapper.map(resource, ResourceDTO.class));
     }
 
     @RequestMapping(value = "/resources/{id}", method = RequestMethod.DELETE)

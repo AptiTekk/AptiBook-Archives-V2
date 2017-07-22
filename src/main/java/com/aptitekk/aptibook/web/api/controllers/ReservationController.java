@@ -71,7 +71,7 @@ public class ReservationController extends APIControllerAbstract {
             // Sort the reservations so that the earliest show up first in the list.
             reservations.sort(Comparator.comparing(Reservation::getStart));
 
-            return APIResponse.ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
+            return APIResponse.okResponse(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
             }.getType()));
         } catch (ParseException e) {
             return APIResponse.badRequestNotParsable("Could not parse start or end time.");
@@ -100,7 +100,7 @@ public class ReservationController extends APIControllerAbstract {
             // Sort the reservations so that the earliest show up first in the list.
             reservations.sort(Comparator.comparing(Reservation::getStart));
 
-            return APIResponse.ok(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
+            return APIResponse.okResponse(modelMapper.map(reservations, new TypeToken<List<ReservationDTO>>() {
             }.getType()));
         } catch (ParseException e) {
             return APIResponse.badRequestNotParsable("Could not parse start or end time.");
@@ -115,7 +115,7 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.PENDING);
 
-        return APIResponse.ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
+        return APIResponse.okResponse(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 
@@ -127,7 +127,7 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.APPROVED);
 
-        return APIResponse.ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
+        return APIResponse.okResponse(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 
@@ -139,7 +139,7 @@ public class ReservationController extends APIControllerAbstract {
 
         List<Reservation> reservationList = reservationService.buildReservationList(Reservation.Status.REJECTED);
 
-        return APIResponse.ok(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
+        return APIResponse.okResponse(modelMapper.map(reservationList, new TypeToken<List<ReservationWithDecisionsDTO>>() {
         }.getType()));
     }
 
@@ -194,7 +194,7 @@ public class ReservationController extends APIControllerAbstract {
             notificationService.sendReservationDecisionNotification(reservation);
         }
 
-        return APIResponse.ok(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
+        return APIResponse.okResponse(modelMapper.map(reservationDecision, new TypeToken<ReservationDecisionDTO>() {
         }.getType()));
     }
 
@@ -203,7 +203,7 @@ public class ReservationController extends APIControllerAbstract {
         Reservation reservation = reservationRepository.find(id);
         List<ReservationDecision> decisionList = reservationService.generateReservationDecisions(reservation);
 
-        return APIResponse.ok(modelMapper.map(decisionList, new TypeToken<List<ReservationDecisionDTO>>() {
+        return APIResponse.okResponse(modelMapper.map(decisionList, new TypeToken<List<ReservationDecisionDTO>>() {
         }.getType()));
     }
 
@@ -255,7 +255,7 @@ public class ReservationController extends APIControllerAbstract {
 
         reservation = reservationRepository.save(reservation);
         notificationService.sendNewReservationNotifications(reservation);
-        return APIResponse.ok(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
+        return APIResponse.okResponse(modelMapper.map(reservation, new TypeToken<ReservationDTO>() {
         }.getType()));
     }
 

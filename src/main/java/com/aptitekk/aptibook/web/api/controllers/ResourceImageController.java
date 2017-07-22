@@ -52,7 +52,7 @@ public class ResourceImageController extends APIControllerAbstract {
         if (resource.getImage() == null || resource.getImage().getData() == null)
             return APIResponse.noContentResponse();
 
-        return APIResponse.ok(resource.getImage().getData());
+        return APIResponse.okResponse(resource.getImage().getData());
     }
 
     @RequestMapping(value = "/resources/{id}/image", method = RequestMethod.PUT, consumes = MediaType.MULTIPART_FORM_DATA_VALUE, produces = MediaType.IMAGE_JPEG_VALUE)
@@ -100,7 +100,7 @@ public class ResourceImageController extends APIControllerAbstract {
                 }
 
                 // Return the image.
-                return APIResponse.ok(resource.getImage().getData());
+                return APIResponse.okResponse(resource.getImage().getData());
             } catch (IOException e) {
                 return APIResponse.badRequestNotParsable("Could not read image. It may be corrupt.");
             }

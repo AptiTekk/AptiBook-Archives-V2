@@ -41,7 +41,7 @@ public class UserGroupHierarchyController extends APIControllerAbstract {
         if (userGroup == null)
             return APIResponse.notFound("No User Groups were found with the ID: " + id);
 
-        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.HierarchyUp.class));
+        return APIResponse.okResponse(modelMapper.map(userGroup, UserGroupDTO.HierarchyUp.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}/hierarchy/down", method = RequestMethod.GET)
@@ -50,7 +50,7 @@ public class UserGroupHierarchyController extends APIControllerAbstract {
         if (userGroup == null)
             return APIResponse.notFound("No User Groups were found with the ID: " + id);
 
-        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.HierarchyDown.class));
+        return APIResponse.okResponse(modelMapper.map(userGroup, UserGroupDTO.HierarchyDown.class));
     }
 
 }

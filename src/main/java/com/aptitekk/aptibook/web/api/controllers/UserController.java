@@ -51,7 +51,7 @@ public class UserController extends APIControllerAbstract {
 
         List<User> users = userRepository.findAll();
 
-        return APIResponse.ok(modelMapper.map(users, new TypeToken<List<UserDTO>>() {
+        return APIResponse.okResponse(modelMapper.map(users, new TypeToken<List<UserDTO>>() {
         }.getType()));
     }
 
@@ -109,7 +109,7 @@ public class UserController extends APIControllerAbstract {
 
     @RequestMapping(value = "/users/current", method = RequestMethod.GET)
     public APIResponse getCurrentUser() {
-        return APIResponse.ok(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
+        return APIResponse.okResponse(modelMapper.map(authService.getCurrentUser(), UserDTO.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.GET)
@@ -122,7 +122,7 @@ public class UserController extends APIControllerAbstract {
             if (!authService.doesCurrentUserHavePermission(Permission.USERS_MODIFY_ALL))
                 return APIResponse.noPermission();
 
-        return APIResponse.ok(modelMapper.map(user, UserDTO.class));
+        return APIResponse.okResponse(modelMapper.map(user, UserDTO.class));
     }
 
 
@@ -134,7 +134,7 @@ public class UserController extends APIControllerAbstract {
             notificationSettings.putIfAbsent(notificationType, new User.NotificationToggles(notificationType.getDefaultValue()));
         }
 
-        return APIResponse.ok(modelMapper.map(notificationSettings, new TypeToken<Map<NotificationType, User.NotificationToggles>>() {
+        return APIResponse.okResponse(modelMapper.map(notificationSettings, new TypeToken<Map<NotificationType, User.NotificationToggles>>() {
         }.getType()));
     }
 
@@ -150,7 +150,7 @@ public class UserController extends APIControllerAbstract {
             user.getNotificationSettings().put(notificationType, new User.NotificationToggles(notificationToggles.isEmailEnabled()));
 
         userRepository.save(user);
-        return APIResponse.ok(modelMapper.map(user.getNotificationSettings().get(notificationType), User.NotificationToggles.class));
+        return APIResponse.okResponse(modelMapper.map(user.getNotificationSettings().get(notificationType), User.NotificationToggles.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.PATCH)
@@ -204,7 +204,7 @@ public class UserController extends APIControllerAbstract {
 
         userRepository.save(currentUser);
 
-        return APIResponse.ok(modelMapper.map(currentUser, UserDTO.class));
+        return APIResponse.okResponse(modelMapper.map(currentUser, UserDTO.class));
     }
 
     @RequestMapping(value = "/users/{id}", method = RequestMethod.DELETE)

@@ -38,7 +38,7 @@ public class NotificationController extends APIControllerAbstract {
 
         try {
             List<Notification> notifications = notificationRepository.getAllForUser(user);
-            return APIResponse.ok(modelMapper.map(notifications, new TypeToken<List<NotificationDTO>>() {
+            return APIResponse.okResponse(modelMapper.map(notifications, new TypeToken<List<NotificationDTO>>() {
             }.getType()));
         } catch (Exception e) {
             return APIResponse.badRequestNotParsable("Could not parse start or end time.");

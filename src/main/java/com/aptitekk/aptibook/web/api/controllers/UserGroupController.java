@@ -12,7 +12,6 @@ import com.aptitekk.aptibook.domain.repositories.UserGroupRepository;
 import com.aptitekk.aptibook.service.entity.UserGroupService;
 import com.aptitekk.aptibook.web.api.APIResponse;
 import com.aptitekk.aptibook.web.api.annotations.APIController;
-import com.aptitekk.aptibook.web.api.controllers.APIControllerAbstract;
 import com.aptitekk.aptibook.web.api.dtos.ResourceDTO;
 import com.aptitekk.aptibook.web.api.dtos.UserDTO;
 import com.aptitekk.aptibook.web.api.dtos.UserGroupDTO;
@@ -49,7 +48,7 @@ public class UserGroupController extends APIControllerAbstract {
      */
     @RequestMapping(value = "/userGroups", method = RequestMethod.GET)
     public APIResponse getUserGroups() {
-        return APIResponse.ok(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.HierarchyDown.class));
+        return APIResponse.okResponse(modelMapper.map(userGroupRepository.findRootGroup(), UserGroupDTO.HierarchyDown.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.GET)
@@ -58,7 +57,7 @@ public class UserGroupController extends APIControllerAbstract {
         if (userGroup == null)
             return APIResponse.notFound("No user groups were found with the ID: " + id);
 
-        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.class));
+        return APIResponse.okResponse(modelMapper.map(userGroup, UserGroupDTO.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}/children", method = RequestMethod.GET)
@@ -67,7 +66,7 @@ public class UserGroupController extends APIControllerAbstract {
         if (userGroup == null)
             return APIResponse.notFound("No user groups were found with the ID: " + id);
 
-        return APIResponse.ok(modelMapper.map(userGroup.getChildren(), new TypeToken<List<UserGroupDTO>>() {}.getType()));
+        return APIResponse.okResponse(modelMapper.map(userGroup.getChildren(), new TypeToken<List<UserGroupDTO>>() {}.getType()));
     }
 
     @RequestMapping(value = "/userGroups/{id}/children", method = RequestMethod.POST)
@@ -109,7 +108,7 @@ public class UserGroupController extends APIControllerAbstract {
                 && !authService.doesCurrentUserHavePermission(Permission.GROUPS_MODIFY_ALL))
             return APIResponse.noPermission();
 
-        return APIResponse.ok(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
+        return APIResponse.okResponse(modelMapper.map(userGroup.getUsers(), new TypeToken<List<UserDTO>>() {
         }.getType()));
     }
 
@@ -123,7 +122,7 @@ public class UserGroupController extends APIControllerAbstract {
                 && !authService.doesCurrentUserHavePermission(Permission.GROUPS_MODIFY_ALL))
             return APIResponse.noPermission();
 
-        return APIResponse.ok(modelMapper.map(userGroup.getResources(), new TypeToken<List<ResourceDTO>>() {
+        return APIResponse.okResponse(modelMapper.map(userGroup.getResources(), new TypeToken<List<ResourceDTO>>() {
         }.getType()));
     }
 
@@ -142,7 +141,7 @@ public class UserGroupController extends APIControllerAbstract {
         }
 
         userGroup = userGroupRepository.save(userGroup);
-        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.class));
+        return APIResponse.okResponse(modelMapper.map(userGroup, UserGroupDTO.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}/move", method = RequestMethod.PATCH)
@@ -166,7 +165,7 @@ public class UserGroupController extends APIControllerAbstract {
 
         // Check if they are already where they should be.
         if (userGroup.getParent().equals(newParentUserGroup))
-            return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.class));
+            return APIResponse.okResponse(modelMapper.map(userGroup, UserGroupDTO.class));
 
         // Make sure we are not placing the selected User Group below itself on the same branch.
         List<UserGroup> hierarchyDown = userGroupService.getHierarchyDown(userGroup);
@@ -179,7 +178,7 @@ public class UserGroupController extends APIControllerAbstract {
 
         //FIXME: Fix all users who now have more than one assigned group on the same branch.
 
-        return APIResponse.ok(modelMapper.map(userGroup, UserGroupDTO.class));
+        return APIResponse.okResponse(modelMapper.map(userGroup, UserGroupDTO.class));
     }
 
     @RequestMapping(value = "/userGroups/{id}", method = RequestMethod.DELETE)

@@ -44,7 +44,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
 
     @RequestMapping(value = "/resourceCategories", method = RequestMethod.GET)
     public APIResponse getAll() {
-        return APIResponse.ok(modelMapper.map(resourceCategoryRepository.findAll(), new TypeToken<List<ResourceCategoryDTO.WithResources>>() {
+        return APIResponse.okResponse(modelMapper.map(resourceCategoryRepository.findAll(), new TypeToken<List<ResourceCategoryDTO.WithResources>>() {
         }.getType()));
     }
 
@@ -55,7 +55,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
         if (resourceCategory == null)
             return APIResponse.notFound("The Resource Category could not be found.");
 
-        return APIResponse.ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.WithResources.class));
+        return APIResponse.okResponse(modelMapper.map(resourceCategory, ResourceCategoryDTO.WithResources.class));
     }
 
     @RequestMapping(value = "/resourceCategories/{id}/resources", method = RequestMethod.GET)
@@ -65,7 +65,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
         if (resourceCategory == null)
             return APIResponse.notFound("The Resource Category could not be found.");
 
-        return APIResponse.ok(modelMapper.map(resourceCategory.getResources(), new TypeToken<List<ResourceDTO>>() {}.getType()));
+        return APIResponse.okResponse(modelMapper.map(resourceCategory.getResources(), new TypeToken<List<ResourceDTO>>() {}.getType()));
     }
 
     @RequestMapping(value = "/resourceCategories", method = RequestMethod.POST)
@@ -165,7 +165,7 @@ public class ResourceCategoryController extends APIControllerAbstract {
         }
 
         resourceCategory = this.resourceCategoryRepository.save(resourceCategory);
-        return APIResponse.ok(modelMapper.map(resourceCategory, ResourceCategoryDTO.WithResources.class));
+        return APIResponse.okResponse(modelMapper.map(resourceCategory, ResourceCategoryDTO.WithResources.class));
     }
 
     @RequestMapping(value = "/resourceCategories/{id}", method = RequestMethod.DELETE)

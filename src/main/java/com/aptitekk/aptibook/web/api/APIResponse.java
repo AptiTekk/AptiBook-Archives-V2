@@ -28,13 +28,84 @@ import java.util.Map;
 public class APIResponse extends ResponseEntity<Object> {
 
     /**
+     * The content of the response.
+     */
+    @JsonIgnore
+    private Object content;
+
+    /**
+     * Builds the APIResponse with the given, mostly optional, parameters.
+     * This method is required to generate the JSON body for the ResponseEntity constructor.
+     *
+     * @param status  The status code. Not optional.
+     * @param content (Optional) The content of the response.
+     * @param error   (Optional) A machine readable error message.
+     * @param message (Optional) A human readable message.
+     * @param headers (Optional) Additional headers for the response.
+     */
+    @JsonIgnore
+    private static APIResponse buildAPIResponse(HttpStatus status, Object content, String error, String message, MultiValueMap<String, String> headers) {
+        Map<String, Object> body = new HashMap<>();
+
+        // "ok", true if 2xx or 3xx code, false otherwise.
+        body.put("ok", status.is2xxSuccessful() || status.is3xxRedirection());
+
+        // The content of the response.
+        if (content != null) body.put("content", content);
+
+        // The machine readable error message.
+        if (error != null) body.put("error", error);
+
+        // The human readable message.
+        if (message != null) body.put("message", message);
+
+        // Construct APIResponse.
+        return new APIResponse(status, body, headers);
+    }
+
+    /**
+     * Constructs an APIResponse.
+     * You should use {@link #buildAPIResponse(HttpStatus, Object, String, String, MultiValueMap)} instead of
+     * calling this method directly.
+     *
+     * @param status  The status code. Not optional.
+     * @param body    (Optional) The body of the response entity.
+     * @param headers (Optional) Additional headers.
+     */
+    private APIResponse(HttpStatus status, Map<String, Object> body, MultiValueMap<String, String> headers) {
+        super(body, headers, status);
+
+        this.content = body.get("content");
+    }
+
+    /**
+     * @return The content of the APIResponse.
+     */
+    public Object getContent() {
+        return content;
+    }
+
+    /**
+     * Writes the APIResponse to the HttpServletResponse.
+     *
+     * @param apiResponse         The APIResponse to write.
+     * @param httpServletResponse The HttpServletResponse to write to.
+     * @return The same HttpServletResponse passed in, for inline convenience.
+     */
+    public static HttpServletResponse writeToResponse(APIResponse apiResponse, HttpServletResponse httpServletResponse) throws IOException {
+        httpServletResponse.setStatus(apiResponse.getStatusCodeValue());
+        httpServletResponse.getWriter().append(new ObjectMapper().writeValueAsString(apiResponse.getBody()));
+        return httpServletResponse;
+    }
+
+    /**
      * Creates an APIResponse with a 200 status code and the given content.
      *
      * @param content The content of the response.
      * @return The generated APIResponse.
      */
     @JsonIgnore
-    public static APIResponse ok(Object content) {
+    public static APIResponse okResponse(Object content) {
         return buildAPIResponse(HttpStatus.OK, content, null, null, null);
     }
 
@@ -231,62 +302,6 @@ public class APIResponse extends ResponseEntity<Object> {
     @JsonIgnore
     public static APIResponse authenticationSchemeNotImplemented(@Nullable String message) {
         return buildAPIResponse(HttpStatus.NOT_IMPLEMENTED, null, "auth_scheme_not_implemented", message, null);
-    }
-
-    /**
-     * Builds the APIResponse with the given, mostly optional, parameters.
-     * This method is required to generate the JSON body for the ResponseEntity constructor.
-     *
-     * @param status  The status code. Not optional.
-     * @param content (Optional) The content of the response.
-     * @param error   (Optional) A machine readable error message.
-     * @param message (Optional) A human readable message.
-     * @param headers (Optional) Additional headers for the response.
-     */
-    @JsonIgnore
-    private static APIResponse buildAPIResponse(HttpStatus status, Object content, String error, String message, MultiValueMap<String, String> headers) {
-        Map<String, Object> body = new HashMap<>();
-
-        // "ok", true if 2xx or 3xx code, false otherwise.
-        body.put("ok", status.is2xxSuccessful() || status.is3xxRedirection());
-
-        // The content of the response.
-        if (content != null) body.put("content", content);
-
-        // The machine readable error message.
-        if (error != null) body.put("error", error);
-
-        // The human readable message.
-        if (message != null) body.put("message", message);
-
-        // Construct APIResponse.
-        return new APIResponse(status, body, headers);
-    }
-
-    /**
-     * Constructs an APIResponse.
-     * You should use {@link #buildAPIResponse(HttpStatus, Object, String, String, MultiValueMap)} instead of
-     * calling this method directly.
-     *
-     * @param status  The status code. Not optional.
-     * @param body    (Optional) The body of the response entity.
-     * @param headers (Optional) Additional headers.
-     */
-    private APIResponse(HttpStatus status, Map<String, Object> body, MultiValueMap<String, String> headers) {
-        super(body, headers, status);
-    }
-
-    /**
-     * Writes the APIResponse to the HttpServletResponse.
-     *
-     * @param apiResponse         The APIResponse to write.
-     * @param httpServletResponse The HttpServletResponse to write to.
-     * @return The same HttpServletResponse passed in, for inline convenience.
-     */
-    public static HttpServletResponse writeToResponse(APIResponse apiResponse, HttpServletResponse httpServletResponse) throws IOException {
-        httpServletResponse.setStatus(apiResponse.getStatusCodeValue());
-        httpServletResponse.getWriter().append(new ObjectMapper().writeValueAsString(apiResponse.getBody()));
-        return httpServletResponse;
     }
 
 }
