@@ -1,16 +1,11 @@
-.idea/inspectionProfiles/
-.idea/workspace.xml
-.idea/libraries
+.idea
+*.iml
 
 target/
 
 /node_modules/
 
 /src/main/resources/application-development.properties
-
-/.idea/dataSources/
-/.idea/dataSources.local.xml
-/.idea/dataSources.xml
 
 npm-debug.log*
 Test Results*.html
